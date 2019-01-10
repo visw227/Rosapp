@@ -11,7 +11,8 @@ import {
     StyleSheet, 
     StatusBar,
     AsyncStorage,
-    ActivityIndicator
+    ActivityIndicator,
+    Keyboard
 } from 'react-native';
 
 import { userLogin } from '../../../APIs/Account';
@@ -43,6 +44,9 @@ class LoginForm extends Component {
     
     componentDidMount() {
 
+        // this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+        // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+
         // clear any abandoned keys
         // let keys = ['userEmail', 'userPassword'];
         // AsyncStorage.multiRemove(keys, (err) => {
@@ -70,6 +74,19 @@ class LoginForm extends Component {
 
     }
 
+    // componentWillUnmount () {
+    //     this.keyboardDidShowListener.remove();
+    //     this.keyboardDidHideListener.remove();
+    // }
+
+    // _keyboardDidShow () {
+    //     //alert('Keyboard Shown');
+    // }
+
+    // _keyboardDidHide () {
+    //     //alert('Keyboard Hidden');
+    // }
+
     showAlert = (message) => {
 
         console.log("error message: ", message)
@@ -89,6 +106,8 @@ class LoginForm extends Component {
     // this will pass results back up to Login.js
     //******************************************************************
     onLoginPress = () => {
+
+        Keyboard.dismiss()
 
         // this takes on a new scope inside of the userLogin and getUserLogin callback, so make a copy
         let _this = this
@@ -166,55 +185,9 @@ class LoginForm extends Component {
             //     "My_Entrprise_Id": null,
             //     "Rosnet_Employee": false,
             //     "Sites": [
-            //         "ROS",
-            //         "BLOOMIN",
-            //         "CARLOS",
-            //         "SRR",
             //         "DOHERTY",
             //         "AAG",
             //         "AMETRO",
-            //         "ROSE",
-            //         "ROMULUS",
-            //         "ATX",
-            //         "TLCANNON",
-            //         "NRPFL",
-            //         "DYNAPPLE",
-            //         "NRP",
-            //         "QRC",
-            //         "NORTHCOTT",
-            //         "DOHERTYFL",
-            //         "SLIMCHKNS",
-            //         "TINLIZZYS",
-            //         "JLP",
-            //         "MDO",
-            //         "PMCHILIS",
-            //         "PMOTB",
-            //         "APP",
-            //         "PEAK",
-            //         "ATEAM",
-            //         "SPLATLC",
-            //         "DChevys",
-            //         "PANAM",
-            //         "OTR",
-            //         "MRUCHILIS",
-            //         "CRGROBIN",
-            //         "HGPAN",
-            //         "IMSJAMBA",
-            //         "JKIHOP",
-            //         "CBC",
-            //         "AHG",
-            //         "JSV",
-            //         "KINGSBOWL",
-            //         "YFG",
-            //         "WILLYS",
-            //         "PARRYS",
-            //         "JAE",
-            //         "CARINOSZEN",
-            //         "BKGULF",
-            //         "CARMEL",
-            //         "WOMACKPOP",
-            //         "SRG",
-            //         "MOLINOS"
             //     ]
             // }
 
@@ -335,6 +308,7 @@ class LoginForm extends Component {
                             keyboardType='email-address' 
                             returnKeyType="next" 
                             placeholder='Email Address'
+                            placeholderTextColor={brand.colors.silver}
                             value={this.state.userName}
                             onChangeText={(text) => this.setState({userName: text})}
                 />
@@ -342,14 +316,15 @@ class LoginForm extends Component {
                 <TextInput style={styles.input}   
                            returnKeyType="go" ref={(input)=> this.passwordInput = input} 
                            placeholder='Password' 
+                           placeholderTextColor={brand.colors.silver}
                            secureTextEntry
                            value={this.state.password}
-                            onChangeText={(text) => this.setState({password: text})}
+                           onChangeText={(text) => this.setState({password: text})}
                 />
 
               {this.state.sending &&
               <View style={{ marginTop: 10, marginBottom: 10 }} >
-                <ActivityIndicator size="large" color={brand.colors.primary} />
+                <ActivityIndicator size="large" color={brand.colors.white} />
                 </View>
               }
 
@@ -361,7 +336,7 @@ class LoginForm extends Component {
                         marginBottom: 15,
                         marginTop: 10
                     }}>
-                        <Text>{this.state.requestStatus.message}</Text>
+                        <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
                     </View>
                 }
 
@@ -394,14 +369,17 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         padding: 10,
         color: brand.colors.primary,
-        borderColor: brand.colors.silver, 
+        borderColor: brand.colors.primary, 
         borderWidth: 1,
-        borderRadius: 5
+        borderRadius: 10
     },
     buttonContainer:{
+        marginTop: 20,
         backgroundColor: brand.colors.primary,
         paddingVertical: 15,
-        borderRadius: 30
+        borderRadius: 30,
+                borderColor: brand.colors.white, 
+        borderWidth: 2,
     },
     buttonDisabledContainer:{
         backgroundColor: brand.colors.primary,
@@ -415,11 +393,11 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     }, 
     loginButton:{
-        backgroundColor:  '#2980b6',
+        backgroundColor:  brand.colors.secondary,
         color: '#fff'
     },
     forgotPassword:{
-        color: brand.colors.secondary,
+        color: brand.colors.white,
         fontSize: 14,
         textAlign: 'center',
         marginTop: 20

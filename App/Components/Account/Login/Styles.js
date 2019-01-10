@@ -5,7 +5,7 @@ import brand from '../../../Styles/brand'
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: brand.colors.white
+        backgroundColor: brand.colors.primary
     },
     loginContainer:{
         alignItems: 'center',
@@ -16,6 +16,7 @@ export default StyleSheet.create({
         position: 'absolute',
         // width: 400,
         // height: 200
+        maxHeight: 150
     },
     title:{
         color: "#FFF",
