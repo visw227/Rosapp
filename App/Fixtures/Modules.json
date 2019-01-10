@@ -1,0 +1,134 @@
+﻿[
+  {
+    "id": 1,
+    "name": "Food",
+    "description": "",
+    "ordinal": 10,
+    "icon": "cutlery",
+    "subs": [
+      {
+        "id": 17,
+        "name": "Food Prep",
+        "description": "",
+        "ordinal": 1050,
+        "items": [
+          {
+            "id": 1558,
+            "name": "Prep On Hand Entry",
+            "description": "Enter on hand amounts to determine amts needed for prep list",
+            "href": "/Mobile/PrepOnHandEntry",
+            "favorite": false,
+            "path": "Food > Food Prep"
+          }
+        ]
+      },
+      {
+        "id": 19,
+        "name": "Inventory",
+        "description": "",
+        "ordinal": 1070,
+        "items": [
+          {
+            "id": 950,
+            "name": "Inventory Entry",
+            "description": "Enter/edit inventory counts.",
+            "href": "/Mobile/Inventory",
+            "favorite": false,
+            "path": "Food > Inventory"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Labor",
+    "description": "",
+    "ordinal": 30,
+    "icon": "user",
+    "subs": [
+      {
+        "id": 33,
+        "name": "Payroll Completion",
+        "description": "",
+        "ordinal": 2070,
+        "items": [
+          {
+            "id": 1745,
+            "name": "Punch Edit",
+            "description": "Edit punches for edit enabled jobs",
+            "href": "/Labor/PunchEdit",
+            "favorite": false,
+            "path": "Labor > Payroll Completion"
+          }
+        ]
+      },
+      {
+        "id": 35,
+        "name": "Scheduling",
+        "description": "",
+        "ordinal": 2090,
+        "items": [
+          {
+            "id": 1813,
+            "name": "Staff Card",
+            "description": "Displays information on employees scheduled to work during specific shifts.",
+            "href": "/Mobile/StaffCards",
+            "favorite": false,
+            "path": "Labor > Scheduling"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Purchasing",
+    "description": "",
+    "ordinal": 50,
+    "icon": "money",
+    "subs": [
+      {
+        "id": 99,
+        "name": "Entry",
+        "description": "",
+        "ordinal": 10080,
+        "items": [
+          {
+            "id": 929,
+            "name": "Order Recommendation",
+            "description": "",
+            "href": "/Purchase/Order",
+            "favorite": false,
+            "path": "Purchasing > Entry"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Checklist",
+    "description": "",
+    "ordinal": 60,
+    "icon": "check-square-o",
+    "subs": [
+      {
+        "id": 55,
+        "name": "Entry",
+        "description": "",
+        "ordinal": 6010,
+        "items": [
+          {
+            "id": 1626,
+            "name": "Checklist Entry",
+            "description": "Check List Entry",
+            "href": "/checklist/entry",
+            "favorite": false,
+            "path": "Checklist > Entry"
+          }
+        ]
+      }
+    ]
+  }
+]

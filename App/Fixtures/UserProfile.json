@@ -1,0 +1,108 @@
+{
+   "name": {
+      "full": "",
+      "first": "Dana",
+      "last": "Adamusik",
+      "initials": "DA",
+      "firstAndLast": "Dana Adamusik"
+   },
+   "phone": "908-596-8836",
+   "email": "Danaaxxo@gmail.com",
+   "sharePhone": false,
+   "shareEmail": false,
+   "photo": "https://api.stafflinq.com/image-server/profile-pics/2414",
+   "locations": [
+      {
+         "company": {
+            "client": "DOHERTY",
+            "companyId": 38,
+            "startMinuteOfDay": 240,
+            "suppressOutTimes": 1,
+            "stopSwapHrs": 4,
+            "enableProfilePics": 1,
+            "enableCalendarSync": 1
+         },
+         "location": {
+            "id": "135901123",
+            "key": 165,
+            "name": "Phillipsburg",
+            "employeeId": 67474
+         }
+      },
+      {
+         "company": {
+            "client": "DOHERTY",
+            "companyId": 38,
+            "startMinuteOfDay": 240,
+            "suppressOutTimes": 1,
+            "stopSwapHrs": 4,
+            "enableProfilePics": 1,
+            "enableCalendarSync": 1
+         },
+         "location": {
+            "id": "135901123",
+            "key": 162,
+            "name": "Flemington",
+            "employeeId": 71062
+         }
+      },
+      {
+         "company": {
+            "client": "DOHERTY",
+            "companyId": 38,
+            "startMinuteOfDay": 240,
+            "suppressOutTimes": 1,
+            "stopSwapHrs": 4,
+            "enableProfilePics": 1,
+            "enableCalendarSync": 1
+         },
+         "location": {
+            "id": "135901123",
+            "key": 160,
+            "name": "Bridgewater",
+            "employeeId": 52319
+         }
+      }
+   ],
+   "userClients": [
+      {
+         "client": "DOHERTY",
+         "companyId": 38,
+         "startMinuteOfDay": 240,
+         "suppressOutTimes": 1,
+         "stopSwapHrs": 4,
+         "enableProfilePics": 1,
+         "enableCalendarSync": 1,
+         "multiSiteEmployee": {
+            "slEmpCompanyId": 58207,
+            "slEmpUserId": 2414,
+            "companyId": 38,
+            "ftIdentity": "DOHERTY"
+         },
+         "userLocations": [
+            {
+               "identifier": "135901123",
+               "employee_Id": 67474,
+               "location": 165,
+               "name": "ADAMUSIK, DANA",
+               "location_Name": "Phillipsburg"
+            },
+            {
+               "identifier": "135901123",
+               "employee_Id": 71062,
+               "location": 162,
+               "name": "ADAMUSIK, DANA",
+               "location_Name": "Flemington"
+            },
+            {
+               "identifier": "135901123",
+               "employee_Id": 52319,
+               "location": 160,
+               "name": "ADAMUSIK, DANA",
+               "location_Name": "Bridgewater"
+            }
+         ]
+      }
+   ],
+   "userId": 2414
+}

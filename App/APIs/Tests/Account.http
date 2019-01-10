@@ -1,0 +1,5 @@
+
+
+POST http://2d40eef3.ngrok.io/api/ManagerAppAuth/AuthenticateUser?userName=dywayne.johnson&password=
+
+

@@ -1,0 +1,967 @@
+import React from 'react';
+import { AppState, AsyncStorage, StyleSheet, Text, View, Image } from 'react-native';
+
+import { createAppContainer, createStackNavigator, createDrawerNavigator, NavigationActions, StackActions } from 'react-navigation'
+
+import { createBottomTabNavigator } from 'react-navigation-tabs'
+
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicon from 'react-native-vector-icons/Ionicons'
+import Entypo from 'react-native-vector-icons/Entypo'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+
+import brand from './App/Styles/brand'
+
+
+
+import NavigationService from './App/Lib/NavigationService';
+
+import { generateRandomNumber, checkForNotifications } from './App/APIs/Background';
+
+import { getMobileMenuItems } from './App/APIs/Modules';
+
+
+
+// hide warnings for now...
+console.disableYellowBox = true;
+
+
+
+// *******************************************************************************
+// Launch and Lock screen
+// *******************************************************************************
+
+import LaunchScreen from './App/Components/LaunchScreen'
+import LockScreen from './App/Components/Account/Security/LockScreen'
+
+
+let LaunchStack = createStackNavigator({ 
+  screen: LaunchScreen,
+  navigationOptions: ({ navigation, screenProps }) => ({
+      //
+  })
+});
+
+let LockScreenStack = createStackNavigator({ LockScreen });
+
+
+// *******************************************************************************
+// Login stack
+// *******************************************************************************
+
+import LoginScreen from './App/Components/Account/Login/Index'
+import ForgotPasswordScreen from './App/Components/Account/ForgotPassword/Index'
+
+
+let LoginStack = createStackNavigator({
+
+    Login: { 
+        
+        screen: LoginScreen,
+
+        navigationOptions: ({ navigation }) => ({
+            header: null
+        })
+            
+    },
+    ForgotPassword: { 
+        
+        screen: ForgotPasswordScreen,
+
+        navigationOptions: ({ navigation }) => ({
+            title: 'Forgot Password'
+        })
+            
+        
+    },
+
+
+}, {
+    initialRouteName: 'Login',
+    // headerMode: 'float',
+    // navigationOptions: ({navigation}) => ({
+    //     headerStyle: {backgroundColor: global.colors.brand.primary },
+    //     headerTintColor: 'white',
+    //     gesturesEnabled: false,
+    // })
+  
+})
+
+
+// *******************************************************************************
+// Account
+// *******************************************************************************
+
+import AccountScreen from './App/Components/Account/Index'
+import SettingsScreen from './App/Components/Account/Settings/Index'
+import ProfileScreen from './App/Components/Account/Profile/Index'
+import PasswordScreen from './App/Components/Account/Password/Index'
+import SecurityScreen from './App/Components/Account/Security/Index'
+
+let AccountStack = createStackNavigator({ 
+  Account: {
+    screen: AccountScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+  Settings: {
+    screen: SettingsScreen
+  },
+  Profile: {
+    screen: ProfileScreen
+  },
+  Password: {
+    screen: PasswordScreen
+  },
+  Security: {
+    screen: SecurityScreen
+  } 
+});
+
+
+
+// *******************************************************************************
+// Dashboard 
+// *******************************************************************************
+import DashboardScreen from './App/Components/Dashboard/Index'
+
+let DashboardStack = createStackNavigator({ 
+  Dashboard: {
+    screen: DashboardScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  }
+
+});
+
+// to hide the tabBar on nested screens, you must do it this way
+DashboardStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: navigation.state.index === 0,
+  };
+};
+
+// *******************************************************************************
+// My Dashboard 
+// *******************************************************************************
+import MyDashboardScreen from './App/Components/MyDashboard/Index'
+
+let MyDashboardStack = createStackNavigator({ 
+  MyDashboard: {
+    screen: MyDashboardScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  }
+
+});
+
+// to hide the tabBar on nested screens, you must do it this way
+MyDashboardStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: navigation.state.index === 0,
+  };
+};
+
+// *******************************************************************************
+// Modules 
+// *******************************************************************************
+
+//import ModulesScreen from './App/Components/Modules/Index'
+import ModulesSubMenuScreen from './App/Components/Modules/SubMenu'
+import ModulesItemsScreen from './App/Components/Modules/Items'
+import ModulesWebViewScreen from './App/Components/Modules/WebView'
+import ModulesSearchItemsScreen from './App/Components/Modules/SearchItems'
+
+let ModulesStack = createStackNavigator({ 
+  // Modules: {
+  //   screen: ModulesScreen,
+  //   // to hide the back title for any child screens, it must be set to null here
+  //   navigationOptions: ({ navigation }) => ({
+  //     headerBackTitle: null
+  //   }),
+  // },
+  ModulesSubMenu: {
+    screen: ModulesSubMenuScreen
+  },
+  ModulesItems: {
+    screen: ModulesItemsScreen
+  },
+  SearchItems: {
+    screen: ModulesSearchItemsScreen
+  },
+  ModulesWebView: {
+    screen: ModulesWebViewScreen
+  },
+
+});
+
+
+// to hide the tabBar on nested screens, you must do it this way
+ModulesStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: navigation.state.index === 0,
+  };
+};
+
+
+// *******************************************************************************
+// Alerts 
+// *******************************************************************************
+import AlertScreen from './App/Components/Alerts/Index'
+import AlertCreateScreen from './App/Components/Alerts/Create/Index'
+import AlertDetailScreen from './App/Components/Alerts/Detail/Index'
+
+let AlertStack = createStackNavigator({ 
+  Alerts: {
+    screen: AlertScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+  AlertDetail: {
+    screen: AlertDetailScreen
+  },
+  AlertCreate: {
+    screen: AlertCreateScreen
+  },
+
+});
+
+// to hide the tabBar on nested screens, you must do it this way
+AlertStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: navigation.state.index === 0,
+  };
+};
+
+// *******************************************************************************
+// Conversations 
+// *******************************************************************************
+
+import WorkflowScreen from './App/Components/Workflow/Index'
+
+let WorkflowStack = createStackNavigator({ 
+  Workflow: {
+    screen: WorkflowScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+
+
+});
+
+
+// to hide the tabBar on nested screens, you must do it this way
+WorkflowStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: navigation.state.index === 0,
+  };
+};
+
+// *******************************************************************************
+// Conversations 
+// *******************************************************************************
+
+import ConversationListScreen from './App/Components/Conversations/Index'
+import CreateConversationScreen from './App/Components/Conversations/Create'
+import ConversationScreen from './App/Components/Conversations/Conversation'
+
+let ConversationStack = createStackNavigator({ 
+  ConversationList: {
+    screen: ConversationListScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+  CreateConversation: {
+    screen: CreateConversationScreen
+  },
+  Conversation: {
+    screen: ConversationScreen
+  },
+
+});
+
+
+// to hide the tabBar on nested screens, you must do it this way
+ConversationStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: navigation.state.index === 0,
+  };
+};
+
+
+// *******************************************************************************
+// Tabbed UI 
+// *******************************************************************************
+
+let TabStack = createBottomTabNavigator({
+
+  Dashboard: {
+    screen: DashboardStack,
+    navigationOptions: ({ navigation, screenProps }) => ({
+
+        // title and headerTitle DO NOT WORK HERE
+        // the title must be set in the screen
+        // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+        tabBarLabel: 'Dashboards',
+        tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
+
+
+    })
+
+  },
+
+  // MyDashboard: {
+  //   screen: MyDashboardStack,
+  //   navigationOptions: ({ navigation, screenProps }) => ({
+
+  //       // title and headerTitle DO NOT WORK HERE
+  //       // the title must be set in the screen
+  //       // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+  //       tabBarLabel: 'My Dashboard',
+  //       tabBarIcon: () => <FontAwesome name="cubes" size={20} color={brand.colors.primary} />
+  //       // tabBarIcon: ({ tintColor }) =>
+  //       //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+  //       //     <Image source={require('./App/Images/TabBar/clock-7.png')} />
+  //       //   </View>
+
+  //   })
+  // },
+
+
+  Workflow: {
+    screen: WorkflowStack,
+    navigationOptions: ({ navigation, screenProps }) => ({
+
+        // title and headerTitle DO NOT WORK HERE
+        // the title must be set in the screen
+        // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+        tabBarLabel: 'Workflow',
+        tabBarIcon: () => <Entypo name="flow-branch" size={20} color={brand.colors.primary} />
+        // tabBarIcon: () => <MaterialCommunityIcon name="clipboard-flow" size={20} color={brand.colors.primary} />
+        // tabBarIcon: ({ tintColor }) =>
+        //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        //     <Image source={require('./App/Images/TabBar/list-simple-star-7.png')} />
+        //   </View>
+
+    })
+  },
+
+
+  Conversations: {
+    screen: ConversationStack,
+    navigationOptions: ({ navigation, screenProps }) => ({
+
+        // title and headerTitle DO NOT WORK HERE
+        // the title must be set in the screen
+        // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+        tabBarLabel: 'Chat',
+        // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
+        tabBarIcon: () => 
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary} />
+
+
+            {screenProps.state.messageCount > 0 &&
+            <View style={{ 
+                position: 'absolute', 
+                paddingLeft: 4, 
+                paddingRight: 4,
+                right: -20, 
+                top: 1, 
+                backgroundColor: brand.colors.secondary, 
+                borderRadius: 10, 
+                height: 20, 
+                //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+                minWidth: 20, // this keeps it round with borderRadius=10
+                justifyContent: 'center', 
+                alignItems: 'center' }}>
+              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.messageCount}</Text>
+            </View>
+            }
+     
+
+          </View>
+
+    })
+
+  },
+
+  Alerts: {
+    screen: AlertStack,
+    navigationOptions: ({ navigation, screenProps }) => ({
+
+        // title and headerTitle DO NOT WORK HERE
+        // the title must be set in the screen
+        // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+        tabBarLabel: 'Alerts',
+        tabBarIcon: () => 
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <FontAwesome name="bell" size={20} color={brand.colors.primary} />
+
+
+            {screenProps.state.alertCount > 0 &&
+            <View style={{ 
+                position: 'absolute', 
+                paddingLeft: 4, 
+                paddingRight: 4,
+                right: -17, 
+                top: 1, 
+                backgroundColor: brand.colors.orange, 
+                borderRadius: 10, 
+                height: 20, 
+                //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+                minWidth: 20, // this keeps it round with borderRadius=10
+                justifyContent: 'center', 
+                alignItems: 'center' }}>
+              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.alertCount}</Text>
+            </View>
+            }
+     
+
+          </View>
+
+
+    })
+  },
+
+
+
+}, {
+    //initialRouteName: 'TimeOff',
+    tabBarOptions: {
+      activeTintColor: brand.colors.primary, // not really being used with our images
+      inactiveTintColor: 'gray',
+      style: {
+        backgroundColor: '#ffffff',
+      },
+      showIcon: true,
+      showLabel: true
+    },
+  
+})
+
+// added this to introduce screenProps into the stack
+TabStack.navigationOptions = ({ navigation, screenProps }) => {
+  return {
+  };
+};
+
+
+// *******************************************************************************
+// About
+// *******************************************************************************
+
+import AboutScreen from './App/Components/About/Index'
+import TermsScreen from './App/Components/About/Terms/Index'
+import PrivacyScreen from './App/Components/About/Privacy/Index'
+import DeviceScreen from './App/Components/About/Device/Index'
+
+let AboutStack = createStackNavigator({ 
+  About: {
+    screen: AboutScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+  Terms: {
+    screen: TermsScreen
+  },
+  Privacy: {
+    screen: PrivacyScreen
+  },
+  Device: {
+    screen: DeviceScreen
+  } 
+});
+
+
+
+
+// *******************************************************************************
+// Staff List
+// *******************************************************************************
+import StaffListScreen from './App/Components/StaffList/Index'
+import StaffListMemberScreen from './App/Components/StaffList/Member/Index'
+
+let StaffListStack = createStackNavigator({ 
+  StaffList: {
+    screen: StaffListScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+  Member: {
+    screen: StaffListMemberScreen
+  },
+
+});
+
+
+
+// *******************************************************************************
+// Support
+// *******************************************************************************
+
+
+
+
+// *******************************************************************************
+// About
+// *******************************************************************************
+
+import SupportScreen from './App/Components/Support/Index'
+
+import SupportViewScreen from './App/Components/Support/View/Index'
+import SupportRequestScreen from './App/Components/Support/Request/Index'
+
+let SupportStack = createStackNavigator({ 
+  Support: {
+    screen: SupportScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+  SupportView: {
+    screen: SupportViewScreen
+  },
+  SupportRequest: {
+    screen: SupportRequestScreen
+  }
+});
+
+
+
+
+// *******************************************************************************
+// Drawer Items
+// *******************************************************************************
+
+import DrawerContainer from './App/Components/DrawerContainer'
+
+const DrawerStack = createDrawerNavigator({
+
+  Tabs: { 
+    screen: TabStack,
+    navigationOptions: ({ navigation }) => ({
+
+      // this drawer lable for the stack MUST be defined here for some 
+      // react-navigation v2 squirrelly reason
+      // drawerLabel: 'My Home',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/clock-alarm-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    }),
+
+  },
+
+
+
+  Modules: { 
+    screen: ModulesStack,
+  
+    navigationOptions: ({ navigation }) => ({
+
+      // drawerLabel: 'Availability',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    })
+
+  },
+
+
+  About: { 
+    screen: AboutStack,
+  
+    navigationOptions: ({ navigation }) => ({
+
+      // drawerLabel: 'Availability',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    })
+
+  },
+
+  Account: { 
+    screen: AccountStack,
+  
+    navigationOptions: ({ navigation }) => ({
+
+      // drawerLabel: 'Availability',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    })
+
+  },
+
+
+
+  Support: { 
+    screen: SupportStack,
+  
+    navigationOptions: ({ navigation }) => ({
+
+      // drawerLabel: 'Availability',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    })
+
+  },
+
+
+
+  StaffList: { 
+    screen: StaffListStack,
+  
+    navigationOptions: ({ navigation }) => ({
+
+      // drawerLabel: 'Availability',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    })
+
+  },
+
+
+}, {
+      // The drawerLabel is defined in DrawerContainer.js
+      contentComponent: DrawerContainer,
+})
+
+
+
+// *******************************************************************************
+// * the final combined stack
+// *******************************************************************************
+
+const AppStack = createStackNavigator({
+  LaunchStack: { screen: LaunchStack },
+  LoginStack: { screen: LoginStack },
+  LockStack: { screen: LockScreenStack },
+  DrawerStack: { screen: DrawerStack },
+
+}, {
+    initialRouteName: 'LaunchStack',
+    // drawerPosition: 'left',
+    // gesturesEnabled: true,
+    // contentComponent: DrawerContainer,
+    headerMode: 'none', // this is key for react-navigation v3
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  
+})
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 24,
+    height: 24,
+  },
+});
+
+
+
+// *******************************************************************************
+// * the exported class
+// *******************************************************************************
+
+const AppContainer = createAppContainer(AppStack);
+
+
+//export default AppStack
+export default class App extends React.Component {
+
+
+    constructor(props) {
+        super(props);
+
+
+        // check if userData has been persisted in local storage
+        // NOTE: this seems to not fire soon enough, so moving this to LaunchScreen.js, which will
+        // share globally through _globalStateChange
+        // AsyncStorage.getItem('userData').then((data) => {
+        //   let userData = JSON.parse(data)
+        // })
+
+        this.state = {
+          showLock: false,
+          userData: null,
+          appState: AppState.currentState,
+          alertCount: 0,
+          messageCount: 0
+        }
+
+        // this kicks off a background timer loop to check things like forced re-login, etc.
+        this.backgroundCheckUserStatus()
+
+        // this kicks off a background timer loop to check for notifications at set intervals
+        this.backgroundNotificationsTimer()
+
+    }
+
+    //**********************************************************************************
+    // globally share any state changes - just pass the object to update in the global state
+    // these state values are shared throughout the app as this.props.screenProps.state.userData, etc.
+    //**********************************************************************************
+    _globalStateChange = (data) => {
+
+
+        //console.log(">> GLOBAL STATE CHANGE FROM:", data.source, data)
+
+        if(data.userData) {
+
+          this.setState({
+            userData: data.userData
+          })
+          //}, () => console.log(">>> global state change to userData", JSON.stringify(this.state.userData, null, 2)) )
+
+        }
+        
+        if(data.menuItems) {
+
+          this.setState({
+            menuItems: data.menuItems
+          })
+          //}, () => console.log(">>> global state change to menuItems", JSON.stringify(this.state.menuItems, null, 2)) )
+
+        }
+        
+        if(data.selectedSite) {
+
+          this.setState({
+            selectedSite: data.selectedSite
+          })
+          //}, () => console.log(">>> global state change to selectedSite", JSON.stringify(this.state.selectedSite, null, 2)) )
+
+        }
+
+    }
+
+
+
+    //**********************************************************************************
+    // check for things like forced re-login, etc.
+    //**********************************************************************************
+    backgroundCheckUserStatus = () => {
+
+      let _this = this
+      
+      if(this.state.userData) {
+        //console.log("background checking of user status...")
+
+      }
+
+      let timeout = 10000 // 60000 * 5 = 5 minutes
+      setTimeout(_this.backgroundCheckUserStatus, timeout);
+
+
+    }
+
+    //**********************************************************************************
+    // check for alerts and things
+    //**********************************************************************************
+    backgroundNotificationsTimer = () => {
+
+      let _this = this
+
+      if(this.state.userData) {
+        //console.log("background checking for notifications...")
+
+        // checkForNotifications(this.state.userData.token, function(err, data){
+        //   console.log(">>> found notifications", data)
+        //   _this.setState({
+        //     alertCount: data.length,
+        //     notifications: data
+        //   })
+        // })
+        // console.log(">>> found notifications", data)
+
+        let alertCount = generateRandomNumber(0,15)
+        let messageCount = generateRandomNumber(0,3)
+
+
+        _this.setState({
+          messageCount: messageCount,
+          alertCount: alertCount
+        })
+
+
+
+
+      }
+
+      let timeout = 2000 // 60000 * 5 = 5 minutes
+      setTimeout(_this.backgroundNotificationsTimer, timeout);
+
+
+    }
+
+
+    componentDidMount() {
+
+        // check if userData has been persisted in local storage
+        // NOTE: this seems to not fire soon enough, so moving this to LaunchScreen.js, which will
+        // share globally through _globalStateChange
+
+        // AsyncStorage.getItem('userData').then((data) => {
+        //   console.log("...root set userData from ROOT!!!!")
+        //   this.setState({
+        //     userData: JSON.parse(data)
+        //   })
+        // })
+
+        //console.log("...root componentDidMount")
+        AppState.addEventListener('change', this.onAppStateChange);
+    }
+
+    componentWillUnmount() {
+        console.log("...root componentWillUnmount")
+        AppState.removeEventListener('change', this.onAppStateChange);
+    }
+
+
+    onAppStateChange = (nextAppState) => {
+
+      //console.log(">>>>>>> handleAppStateChange <<<<<<<<")
+
+      const { appState } = this.state
+
+      // active, inactive, background
+      //console.log('current appState', appState)
+      //console.log('next appState   ', nextAppState)
+
+      // IMPORTANT: ONLY check for "background" not "inactive" here or the LockScreen will render in a loop
+      if (appState.match(/background/) && nextAppState === 'active') {
+
+          console.log('App has moved to the foreground')
+
+          if(this.state.userData) {
+
+            // console.log("userData", this.state.userData, "appState", nextAppState)
+
+            console.log("User is logged in, so showing lock screen.")
+
+            // this is needed since props.navigation isn't present for unmounted screen components
+            NavigationService.navigate('LockStack');
+
+          }
+          else {
+
+              console.log("User is not logged in")
+
+          }
+
+          
+      }
+      else if (appState.match(/active/) && nextAppState === 'inactive') {
+
+          console.log('App has moved to the background')
+
+      }
+
+      this.setState({appState: nextAppState});
+    }
+
+
+    render() {
+
+        // gets the current screen from navigation state
+        function getCurrentRouteName(navigationState) {
+          if (!navigationState) {
+            return null;
+          }
+          const route = navigationState.routes[navigationState.index];
+          // dig through the nested navigators
+          if (route.routes) {
+            return getCurrentRouteName(route);
+          }
+          return route.routeName;
+        }
+
+        return (
+
+            <AppContainer 
+              screenProps={{ 
+                state: this.state, 
+                _globalStateChange: this._globalStateChange
+              }} 
+
+              // this is necessary for the NavigationService.navigate to LockStack to work
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef)
+              }}
+
+              onNavigationStateChange={(prevState, currentState, action) => {
+
+                // this isn't really useful currently, but keeping just in case...
+
+                const currentScreen = getCurrentRouteName(currentState);
+                const prevScreen = getCurrentRouteName(prevState);
+
+                this.setState({
+                  currentScreen: currentScreen,
+                  prevScreen: prevScreen
+                })
+
+                //console.log("currentScreen", currentScreen)
+                //console.log("prevScreen", prevScreen)
+
+                //if (prevScreen !== currentScreen) {
+                //  console.log('navigating to this screen', currentScreen);
+                //} 
+                
+              }}
+
+         
+            />
+
+        )
+      
+
+    }
+
+}
+

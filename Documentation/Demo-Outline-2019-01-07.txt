@@ -1,0 +1,13 @@
+
+
+I’m assuming we’ll keep the tech talk pretty light, but I do hope we can give them a sense of having a very solid foundation in place that is well organized and will allow us to iterate and pivot very quickly on this app as we continue to develop it. 
+
+Login (fully functional)
+“Home” screen (where the user starts after login - currently the Dashboard)
+Discuss the current and future state of the Dashboard web view
+Discuss the 4 tabs at the bottom for Workflow, Chat, and Alerts and demo each of these concepts
+Security Lock feature that requires Face ID, Touch ID, or Passcode entry - depending on the device
+Menu - Discuss the organization and choices
+Demo organization and group of About, Account, Support
+Demo use of module parents listed there Food, Labor, Purchasing, Checklist - navigation and the final display of the report/module in the web view
+Demo the StaffLinQ Employees screen and the features to call, SMS, and email that currently work
