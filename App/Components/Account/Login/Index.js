@@ -172,7 +172,8 @@ class Login extends Component {
     //******************************************************************
     onLoginPress = () => {
 
-        Keyboard.dismiss()
+        // for some reason, this doesn't work for all scenarios below, but calling it within each scenario works
+        // Keyboard.dismiss()
 
         // this takes on a new scope inside of the userLogin and getUserLogin callback, so make a copy
         let _this = this
@@ -197,6 +198,8 @@ class Login extends Component {
         
 
         if(this.state.userName === 'demo') {
+
+            Keyboard.dismiss()
 
             // FAKED for demoing...
             setTimeout(() => {
@@ -260,6 +263,8 @@ class Login extends Component {
             userLogin(request, function(err, response){        
 
                 if(err) {
+
+                    Keyboard.dismiss()
                     console.log("userLogin error", err)
                     _this.showAlert(err.message)
 
@@ -333,7 +338,7 @@ class Login extends Component {
 
                     }
                     else {
-
+                        Keyboard.dismiss()
                         _this.showAlert("Invalid login request. Please check your email address and password and try again.")
 
                     }
