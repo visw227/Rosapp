@@ -110,29 +110,45 @@ class Login extends Component {
 
 
     keyboardWillShow = (event) => {
+
+        this.setState({
+            requestStatus: {
+                hasError: false,
+                message: null
+            }
+        })
+
         Animated.timing(this.imageHeight, {
-        duration: event.duration,
-        toValue: MIN_HEIGHT,
+            duration: event.duration,
+            toValue: MIN_HEIGHT,
         }).start();
     };
 
     keyboardWillHide = (event) => {
         Animated.timing(this.imageHeight, {
-        duration: event.duration,
-        toValue: MAX_HEIGHT,
+            duration: event.duration,
+            toValue: MAX_HEIGHT,
         }).start();
     };
 
 
     keyboardDidShow = (event) => {
+
+        this.setState({
+            requestStatus: {
+                hasError: false,
+                message: null
+            }
+        })
+
         Animated.timing(this.imageHeight, {
-        toValue: MIN_HEIGHT,
+            toValue: MIN_HEIGHT,
         }).start();
     };
 
     keyboardDidHide = (event) => {
         Animated.timing(this.imageHeight, {
-        toValue: MAX_HEIGHT,
+            toValue: MAX_HEIGHT,
         }).start();
     };
 

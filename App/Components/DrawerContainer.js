@@ -57,7 +57,7 @@ export default class DrawerContainer extends React.Component {
     DrawerLabel = ({ label, icon, routeName, routeParam, routeKey, iconSize, iconType, logout }) => (
       <TouchableHighlight  
       
-        
+        underlayColor="#fff"
 
         onPress={() => logout ? this.logout() : this.navigateTo(routeName, routeParam, routeKey) }>
 
@@ -68,7 +68,7 @@ export default class DrawerContainer extends React.Component {
           paddingLeft: 5,
           width: '100%',
           backgroundColor: brand.colors.primary,
-          marginBottom: 5
+          marginBottom: 1
         }}>
           <View style={{ alignItems: 'center', width: 30, backgroundColor: brand.colors.primary }}>
             {iconType && iconType === 'Ionicons' ? (
