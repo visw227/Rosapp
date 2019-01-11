@@ -1,4 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+// const window = Dimensions.get('window');
+// export const IMAGE_HEIGHT = window.width / 2;
+// export const IMAGE_HEIGHT_SMALL = window.width / 5;
+
+export const MIN_HEIGHT = 80;
+export const MAX_HEIGHT = 200;
+
 import brand from '../../../Styles/brand'
 
 // define your styles
@@ -16,14 +24,8 @@ export default StyleSheet.create({
         position: 'absolute',
         // width: 400,
         // height: 200
-        maxHeight: 150
-    },
-    title:{
-        color: "#FFF",
-        marginTop: 120,
-        width: 180,
-        textAlign: 'center',
-        opacity: 0.9
+        maxHeight: 150,
+        maxWidth: 150
     },
     formContainer: {
         marginBottom: 100

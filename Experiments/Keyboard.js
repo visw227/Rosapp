@@ -1,72 +1,102 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, KeyboardAvoidingView, TextInput, ScrollView, SafeAreaView, Image } from 'react-native';
-import { Constants } from 'expo';
+import { View, TextInput, Image, Animated, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
+
+import logo from '../App/Images/logo-lg-white.png';
 
 
-import brand from '../App/Styles/brand'
-// hide warnings for now...
-console.disableYellowBox = true;
 
-content = [1,2,3,4,5,6,7,8,9,10]
 
-export default class App extends Component {
+class Demo extends Component {
+  constructor(props) {
+    super(props);
+
+    this.imageHeight = new Animated.Value(IMAGE_HEIGHT);
+  }
+
+  componentWillMount () {
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove();
+    this.keyboardWillHideSub.remove();
+  }
+
+  keyboardWillShow = (event) => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: IMAGE_HEIGHT_SMALL,
+    }).start();
+  };
+
+  keyboardWillHide = (event) => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: IMAGE_HEIGHT,
+    }).start();
+  };
+
   render() {
     return (
-
-<SafeAreaView style={styles.container}>
-   <KeyboardAvoidingView style={styles.keyboardAvoidContainer} behavior="padding">
-     <ScrollView style={{flex: 1}}>
-          <View style={styles.header}></View>
-          <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
-          
-      </ScrollView>
-      <TextInput style={{height: 40, width: '100%', backgroundColor: '#fff', paddingLeft: 10,  color: '#fff'}} placeholder={'Enter text here'}/>
-    </KeyboardAvoidingView>
- </SafeAreaView>
-
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+      >
+          <Animated.Image source={logo} style={[styles.logo, { height: this.imageHeight }]} />
+          <TextInput
+            placeholder="Email"
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Username"
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Password"
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Confirm Password"
+            style={styles.input}
+          />
+      </KeyboardAvoidingView>
     );
   }
-}
+};
 
+const IMAGE_HEIGHT = window.width / 2;
+const IMAGE_HEIGHT_SMALL = window.width /7;
 const styles = StyleSheet.create({
-      header:{
-    backgroundColor: brand.colors.secondary,
-    height:130,
-    width: '100%'
-  },
-  avatar: {
-    width: 130,
-    height: 130,
-    borderRadius: 63,
-    borderWidth: 4,
-    borderColor: "white",
-    marginBottom:10,
-    alignSelf:'center',
-    position: 'absolute',
-    marginTop:60
-  },
-  container: {
+ container: {
+    backgroundColor: '#4c69a5',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: 'white',
   },
-    input:{
-        height: 40,
-        backgroundColor: '#ffffff',
-        marginBottom: 10,
-        padding: 10,
-        color: 'green',
-        borderColor: '#e9e9e9', 
-        borderWidth: 1,
-        borderRadius: 5
-    },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'red',
+  input: {
+    height: 50,
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
+    marginVertical: 5,
+   // paddingVertical: 5,
+    // paddingHorizontal: 15,
+    width: window.width - 30,
   },
+  logo: {
+    height: IMAGE_HEIGHT,
+    resizeMode: 'contain',
+    marginBottom: 20,
+    padding:10,
+    marginTop:20
+  },
+  register:{
+    marginBottom:20, 
+    width:window.width -100,
+    alignItems:'center',
+    justifyContent:'center',
+    height:50,
+    backgroundColor: '#ffae',}
 });
+
+export default Demo;
