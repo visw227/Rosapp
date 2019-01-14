@@ -137,7 +137,7 @@ class DashboardScreen extends React.Component {
       uri: "https://" + clientCode + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
       headers: {
         "managerAppToken":  userData.token,
-        "Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
+        //"Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
       }
     }
 
@@ -176,7 +176,7 @@ class DashboardScreen extends React.Component {
       uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
       headers: {
         "managerAppToken": this.props.screenProps.state.userData.token,
-        "Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
+       // "Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
       }
     }
 
@@ -208,6 +208,7 @@ class DashboardScreen extends React.Component {
         x[0].style.display = "none";
       }
       `;
+      
 
       return (
         
@@ -219,7 +220,7 @@ class DashboardScreen extends React.Component {
                 startInLoadingState = {true}
                 onLoadProgress={e => console.log(e.nativeEvent.progress)}
                 renderLoading={this._renderLoading}
-                injectedJavaScript={ hideSiteNav }
+                injectedJavaScript = { hideSiteNav }
                 style={{ flex: 1 }}
               />
             }

@@ -31,7 +31,7 @@ class WebViewScreen extends React.Component {
     title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Modules': navigate.navigation.state.params.title,
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+     headerStyle: {backgroundColor: brand.colors.primary },
     headerTintColor: 'white',
 
     headerRight : 

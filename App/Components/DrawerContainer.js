@@ -135,6 +135,12 @@ export default class DrawerContainer extends React.Component {
             /> 
            ))}
 
+            <DrawerLabel
+            icon={'search'}
+            label={'Search Modules'}
+            routeName={'SearchItems'}
+            iconSize={25}
+          /> 
        
 
 
