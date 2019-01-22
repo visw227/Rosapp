@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   searchSection: {
     flexDirection: 'row',
   borderWidth: 1,
-  margin:5,
+  margin:1,
   borderColor: '#D3D3D3',
   backgroundColor:'#D3D3D3',
   padding: 10,

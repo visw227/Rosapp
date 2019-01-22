@@ -25,7 +25,13 @@ class ModuleItems extends React.Component {
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
     headerTintColor: 'white',
-
+    headerLeft : <Ionicon
+        name="md-menu"
+        size={35}
+        color={brand.colors.white}
+        style={{ paddingLeft: 10 }}
+        onPress={() => navigate.navigation.toggleDrawer() }
+    />,
 
   })
 
@@ -51,14 +57,34 @@ class ModuleItems extends React.Component {
 
     this.props.navigation.setParams({ title: item.name })
 
+
+    console.log("item", item)
+
+    let items = []
+
+    if(item.subs && item.subs.length > 0) {
+
+      item.subs.forEach(function(child){
+
+        child.items.forEach(function(c){
+          items.push(c)
+        })
+
+
+      })
+    }
+
+    console.log("items", JSON.stringify(items, null, 2))
+
     this.setState({
       item: item, 
-      data: item.items
+      data: items
     })
 
 
   }
 
+  
   onSelect = (item) => {
 
     console.log("opening web view", item)
@@ -86,8 +112,15 @@ class ModuleItems extends React.Component {
                             titleStyle={{ color: brand.colors.gray }}
                             
                         subtitle={
-                        <View style={styles.subtitleView}>
-                            <Text style={styles.ratingText}>{item.description}</Text>
+                        <View>
+                          {item.description.length > 0 &&
+                            <View style={styles.subtitleView}>
+                                <Text style={styles.ratingText}>{item.description}</Text>
+                            </View>
+                          }
+                          {/* <View style={styles.subtitleView}>
+                              <Text style={styles.ratingText}>{item.path}</Text>
+                          </View> */}
                         </View>
                         }
                         avatar={<Avatar rounded medium

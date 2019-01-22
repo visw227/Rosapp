@@ -3,10 +3,11 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView,TextInpu
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-import { getSubMenuItems } from '../../APIs/Modules';
 import AlertMessage from '../ReusableComponents/AlertMessage'
 import SearchBar from '../ReusableComponents/SearchBar'
-// let fakedMenu = require('../../Fixtures/Modules')
+
+
+import Ionicon from 'react-native-vector-icons/Ionicons'
 
 
 
@@ -15,11 +16,23 @@ class SearchItems extends React.Component {
   // this is a child/nested screen in the SchedulesStack
   // Look at SchedulesStack for tricks with hiding the tabBar and hiding the back button title
   static navigationOptions = (navigate) => ({
-    title: 'Search Modules',
+
+    title: 'Search',
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
     headerTintColor: 'white',
+        headerLeft : <Ionicon
+        name="md-menu"
+        size={35}
+        color={brand.colors.white}
+        style={{ paddingLeft: 10 }}
+        onPress={() => navigate.navigation.toggleDrawer() }
+    />,
+
   })
+
+
+
   constructor(props) {
       super(props);
 

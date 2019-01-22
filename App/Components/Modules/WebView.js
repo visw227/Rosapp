@@ -28,7 +28,7 @@ class WebViewScreen extends React.Component {
   // Look at SchedulesStack for tricks with hiding the tabBar and hiding the back button title
   static navigationOptions = (navigate) => ({
 
-    title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Modules': navigate.navigation.state.params.title,
+    title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? '': navigate.navigation.state.params.title,
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },

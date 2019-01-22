@@ -2,7 +2,7 @@
   "expo": {
     "name": "Rosnet",
     "slug": "rosnet-app",
-    "privacy": "public",
+    "privacy": "unlisted",
     "sdkVersion": "31.0.0",
     "platforms": [
       "ios",

@@ -172,8 +172,7 @@ MyDashboardStack.navigationOptions = ({ navigation }) => {
 // Modules 
 // *******************************************************************************
 
-//import ModulesScreen from './App/Components/Modules/Index'
-import ModulesSubMenuScreen from './App/Components/Modules/SubMenu'
+// import ModulesSubMenuScreen from './App/Components/Modules/SubMenu'
 import ModulesItemsScreen from './App/Components/Modules/Items'
 import ModulesWebViewScreen from './App/Components/Modules/WebView'
 import ModulesSearchItemsScreen from './App/Components/Modules/SearchItems'
@@ -186,9 +185,9 @@ let ModulesStack = createStackNavigator({
   //     headerBackTitle: null
   //   }),
   // },
-  ModulesSubMenu: {
-    screen: ModulesSubMenuScreen
-  },
+  // ModulesSubMenu: {
+  //   screen: ModulesSubMenuScreen
+  // },
   ModulesItems: {
     screen: ModulesItemsScreen
   },
@@ -731,7 +730,12 @@ export default class App extends React.Component {
           userData: null,
           appState: AppState.currentState,
           alertCount: 0,
-          messageCount: 0
+          messageCount: 0,
+
+          // these state objects are shared across the entire app through screenProps
+          userData: null,
+          menuItems: [],
+          selectedSite: ""
         }
 
         // this kicks off a background timer loop to check things like forced re-login, etc.
