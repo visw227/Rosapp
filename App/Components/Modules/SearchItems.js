@@ -3,8 +3,7 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView,TextInpu
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-import AlertMessage from '../ReusableComponents/AlertMessage'
-import SearchBar from '../ReusableComponents/SearchBar'
+import SearchBar from './SearchBar'
 
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -54,7 +53,7 @@ class SearchItems extends React.Component {
           sending: true,
           receiving: true,
           data: items,
-          text:null,
+          text: '',
           searchData : [],
           timePassed:true
       }
@@ -83,11 +82,41 @@ class SearchItems extends React.Component {
     this.state.data.forEach(element => {
       // just to normalize a Name attribute to match the ["Hierarchy"] collection
       element.Name = element.name
-      if(element.description.toLowerCase().indexOf(this.state.text && this.state.text.toLowerCase()) !== -1) {
+      if(element.name.toLowerCase().indexOf(this.state.text && this.state.text.toLowerCase()) !== -1) {
+        sortedData.push(element)
+      }
+      else if(element.description.toLowerCase().indexOf(this.state.text && this.state.text.toLowerCase()) !== -1) {
         sortedData.push(element)
       }
     });
-    //const finalData = sortedArray.length > 0 ? sortedArray : []
+
+
+    getResultsMessage = () => {
+
+      if(this.state.text === '') {
+        return (
+          <Text style={{color: brand.colors.primary }}>{'Please enter a search term'}</Text>
+        )
+      }
+      else if(this.state.text != '' && sortedData.length === 1) {
+        return (
+          <Text style={{color: brand.colors.primary }}>{sortedData.length + ' result found'}</Text>
+        )
+      }
+      else if(this.state.text != '' && sortedData.length > 1) {
+        return (
+          <Text style={{color: brand.colors.primary }}>{sortedData.length + ' results found'}</Text>
+        )
+      }
+      else if(this.state.text != '' && sortedData.length === 0) {
+        return (
+          <Text style={{color: brand.colors.primary }}>{'Sorry, no search results were found that match your search term.'}</Text>
+        )
+      }
+
+    }
+
+
 
     return (
       
@@ -96,75 +125,70 @@ class SearchItems extends React.Component {
         <View style = {{marginTop:20}}>
           
           <SearchBar
-          lightTheme={true}
-          color ='blue'
-          value={this.state.text}
-          placeholder='Search Modules'
-          onChangeText = {(text)=> {
-            this.setState({
-              timePassed :true
-            })
-            setTimeout(() => {this.setState({timePassed: false})}, 4000)
+            lightTheme={true}
+            color ='blue'
+            value={this.state.text}
+            placeholder='Search Modules'
+            onChangeText = {(text)=> {
+              this.setState({
+                timePassed :false
+              })
+              //setTimeout(() => {this.setState({timePassed: false})}, 4000)
 
-            this.setState({
-              text
-            })
+              this.setState({
+                text
+              })
           }}/>
             
         </View>
 
-        <View style ={{marginLeft:114,
-                   position: 'absolute',
-                  top: 35}}>
-        {
-          this.state.text !== '' ? <AlertMessage title = {sortedData.length + ' results found'}/> :
-          <AlertMessage title = '0 results found'/>
-        }
+
+        {/* This will allow the alert message to flex correctly for tablets too */}
+        <View style={{ 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            marginBottom: 15,
+            marginTop: 10
+        }}>
+            {getResultsMessage()}
         </View>
+ 
 
         
+        {this.state.text !== '' && sortedData.length > 0 &&
 
-        {
-          sortedData.length < 1 && this.state.text !== ''? <AlertMessage title = 'Modify Search'/>
+          <View style ={{marginTop : -20}}>
           
-          : this.state.timePassed ?  <View style={styles.loader}> 
-          
-          <Image source={require('../../Images/ajax-loader.gif')} style={{width: 50, height: 50,marginTop:70}}/>
-          
-          </View>     : this.state.text === '' ? <AlertMessage title = 'Start Search'/> :
+            <ScrollView>
 
-          <View style ={{marginTop : 20}}>
-          
-          <ScrollView style={{ backgroundColor: '#ffffff' }}>
+              <List style={styles.list}>
 
-            <List style={styles.list}>
+                {sortedData.map((item, index) => (
+                    <ListItem
 
-              {sortedData.map((item, index) => (
-                  <ListItem
+                        key={index}
+                        style={styles.listItem}
+                        title={item.name}
+                            titleStyle={{ color: brand.colors.gray }}
+                            
+                        subtitle={
+                        <View style={styles.subtitleView}>
+                            <Text style={styles.ratingText}>{item.description}</Text>
+                        </View>
+                        }
+                        avatar={<Avatar rounded medium
+                            overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                            icon={{name: 'codepen', type: 'font-awesome'}}/>}
+                        
+                        onPress={() => { this.onSelect(item) }}
+                    
+                    />
+                  ))
+                }
 
-                      key={index}
-                      style={styles.listItem}
-                      title={item.name}
-                          titleStyle={{ color: brand.colors.gray }}
-                          
-                      subtitle={
-                      <View style={styles.subtitleView}>
-                          <Text style={styles.ratingText}>{item.description}</Text>
-                      </View>
-                      }
-                      avatar={<Avatar rounded medium
-                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
-                          icon={{name: 'codepen', type: 'font-awesome'}}/>}
-                      
-                      onPress={() => { this.onSelect(item) }}
-                  
-                  />
-                ))
-              }
+              </List>
 
-            </List>
-
-          </ScrollView>
+            </ScrollView>
 
           </View>
         

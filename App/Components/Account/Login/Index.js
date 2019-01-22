@@ -436,11 +436,12 @@ class Login extends Component {
                                 onChangeText={(text) => this.setState({password: text})}
                         />
 
-                    {this.state.sending &&
-                    <View style={{ marginTop: 10, marginBottom: 10 }} >
-                        <ActivityIndicator size="large" color={brand.colors.white} />
-                        </View>
-                    }
+
+                        {this.state.sending &&
+                        <View style={{ marginTop: 10, marginBottom: 10 }} >
+                            <ActivityIndicator size="large" color={brand.colors.white} />
+                            </View>
+                        }
 
 
                         {!this.state.sending && this.state.requestStatus.hasError &&

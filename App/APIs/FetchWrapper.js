@@ -3,7 +3,7 @@
 // this is a handy wrapper for fetch requests
 //******************************************************************************
 
-import { getHost, withCacheBustingTimestamp } from './Domain';
+import appConfig from '../app-config.json'
 
 const parseFetchResponse = response => response.json().then(text => ({
   status: response.status,
@@ -15,7 +15,7 @@ const parseFetchResponse = response => response.json().then(text => ({
 export function fetchWrapper(url, method, jsonBody, token, callback) {
     
     //let url = withCacheBustingTimestamp(getHost() + '/api/schedule/createTimeOff')
-    let fullUrl = withCacheBustingTimestamp(getHost() + url)
+    let fullUrl = withCacheBustingTimestamp(appConfig.API_HOST + url)
 
     //console.log("createTimeOffRequest- request: ", JSON.stringify(data, null, 2))
     
@@ -59,6 +59,8 @@ export function fetchWrapper(url, method, jsonBody, token, callback) {
         }
         else if(results.status === 401) {
 
+          console.log("forced re-login...")
+          
           callback( { forceLogin: true }, null)
           
         }
