@@ -1,5 +1,5 @@
 import appConfig from '../app-config.json'
-import { dynamicSort } from '../Lib/DynamicSort';
+import { dynamicSort } from '../Helpers/DynamicSort';
 
 // NOTE: See getSwapEmployeeSchedule for an improved way to handle HTTP error responses
 

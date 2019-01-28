@@ -32,9 +32,6 @@ import brand from '../../Styles/brand'
 import Styles from './Styles'
 
 
-import { getStorageItem } from '../../Lib/StorageHelper'
-
-
 import appConfig from '../../app-config.json'
 
 

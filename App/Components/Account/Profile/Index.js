@@ -18,7 +18,7 @@ import brand from '../../../Styles/brand'
 
 import Styles from './Styles'
 
-import { getUserProfile } from '../../../APIs/Account'
+import { getUserProfile } from '../../../Services/Account'
 
 import AvatarInitials from '../../ReusableComponents/AvatarInitials'
 

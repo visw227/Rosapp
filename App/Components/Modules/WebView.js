@@ -17,7 +17,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
 import * as Progress from 'react-native-progress'
-import { getFavorites, saveFavorite, emptyFavorites } from '../../Lib/Favorites';
+import { getFavorites, saveFavorite, emptyFavorites } from '../../Helpers/Favorites';
 
 import appConfig from '../../app-config.json'
 

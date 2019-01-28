@@ -27,8 +27,8 @@ import LocationButtons from '../ReusableComponents/LocationButtons';
 let fakedData = require('../../Fixtures/StaffList')
 let fakedUserProfile = require('../../Fixtures/UserProfile')
 
-import { parseName, parsePhone } from '../../Lib/Parser';
-import { dynamicSort } from '../../Lib/DynamicSort';
+import { parseName, parsePhone } from '../../Helpers/Parser';
+import { dynamicSort } from '../../Helpers/DynamicSort';
 
 
 class StaffListScreen extends React.Component {

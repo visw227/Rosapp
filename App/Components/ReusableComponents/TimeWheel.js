@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Picker } from 'react-native';
 
 
 import brand from '../../Styles/brand'
-import { getTimeRangesForClient, getTimeSelectionsForClient } from '../../Lib/Utilities'
+import { getTimeRangesForClient, getTimeSelectionsForClient } from '../../Helpers/Utilities'
 
 
 

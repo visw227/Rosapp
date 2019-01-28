@@ -4,11 +4,11 @@ import { StyleSheet, Text, View, Image, Button, AsyncStorage, ScrollView, Refres
 
 import PillButtons from '../App/Components/ReusableComponents/PillButtons'
 
-import { getUserProfile } from '../App/APIs/Account';
-import { getEmployeeRoles } from '../App/APIs/Employee';
+import { getUserProfile } from '../App/Services/Account';
+import { getEmployeeRoles } from '../App/Services/Employee';
 
 import brand from '../App/Styles/brand'
-import { getTimeRangesForClient, getTimeSelectionsForClient } from '../App/Lib/Utilities'
+import { getTimeRangesForClient, getTimeSelectionsForClient } from '../App/Helpers/Utilities'
 
 let roleData = require('../App/Fixtures/EmployeeRoles')
 

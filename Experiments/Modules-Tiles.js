@@ -10,7 +10,7 @@ import brand from '../App/Styles/brand'
 
 let fakedMenu = require('../App/Fixtures/Modules')
 
-import { dynamicSort } from '../App/Lib/DynamicSort';
+import { dynamicSort } from '../App/Helpers/DynamicSort';
 
 // hide warnings for now...
 console.disableYellowBox = true;

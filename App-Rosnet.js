@@ -14,11 +14,11 @@ import brand from './App/Styles/brand'
 
 
 
-import NavigationService from './App/Lib/NavigationService';
+import NavigationService from './App/Helpers/NavigationService';
 
-import { generateRandomNumber, checkForNotifications } from './App/APIs/Background';
+import { generateRandomNumber, checkForNotifications } from './App/Services/Background';
 
-import { getMobileMenuItems } from './App/APIs/Menu';
+import { getMobileMenuItems } from './App/Services/Menu';
 
 
 
