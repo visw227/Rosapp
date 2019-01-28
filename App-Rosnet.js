@@ -18,7 +18,7 @@ import NavigationService from './App/Lib/NavigationService';
 
 import { generateRandomNumber, checkForNotifications } from './App/APIs/Background';
 
-import { getMobileMenuItems } from './App/APIs/Modules';
+import { getMobileMenuItems } from './App/APIs/Menu';
 
 
 

@@ -1,5 +1,5 @@
 {
-  "API_HOST": "http://06ada8f0.ngrok.io",
+  "API_HOST": "http://e495edf9.ngrok.io",
   "WEB_HOST": "rosnetdev.com", // rosnetdev.com, rosnetqa.com, rosnet.com
   "APP_VERSION": "0.0.1"
 }

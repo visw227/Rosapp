@@ -1,8 +1,6 @@
 import appConfig from '../app-config.json'
 import { dynamicSort } from '../Lib/DynamicSort';
 
-let fakedMenu = require('../Fixtures/Modules')
-
 // NOTE: See getSwapEmployeeSchedule for an improved way to handle HTTP error responses
 
 // NOTE: an improved way to handle HTTP error responses
@@ -17,7 +15,7 @@ const parseFetchResponse = response => response.json().then(text => ({
 export function getMobileMenuItems(cookies, callback) {
 
   let resStatus = 0
-  let url = appConfig.API_HOST + '/api/ManagerAppModule/MobileNestedV1'
+  let url = appConfig.API_HOST + '/api/ManagerAppMenu'
 
   console.log("getMobileMenuItems", url, cookies)
 

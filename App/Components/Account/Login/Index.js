@@ -21,7 +21,7 @@ import {
 import { NavigationActions, StackActions } from 'react-navigation'
 
 import { userLogin } from '../../../APIs/Account';
-import { getMobileMenuItems } from '../../../APIs/Modules';
+import { getMobileMenuItems } from '../../../APIs/Menu';
 
 import brand from '../../../Styles/brand'
 import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
