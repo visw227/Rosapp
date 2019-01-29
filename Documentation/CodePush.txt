@@ -3,3 +3,6 @@ Good, recent article on CodePush
 
 https://medium.com/spritle-software/react-native-codepush-b86f0ea8432c
 
+App Center Link:
+
+https://appcenter.ms/orgs/Rosnet/apps/iOS-Stafflinq/distribute/code-push

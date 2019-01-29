@@ -30,4 +30,16 @@ App.json, set "privacy" to "unlisted"
 
 
 
+Ejecting
+---------------------------
+
+Due to Expo's limitations, we ejected it using this command:
+
+$ npm run eject
+
+This will create separate /ios and /android directories
+
+
+
+
     
