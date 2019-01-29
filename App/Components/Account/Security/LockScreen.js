@@ -3,7 +3,6 @@
 
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert, Platform, Image } from 'react-native';
-import Expo, { Constants } from 'expo';
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
@@ -40,38 +39,41 @@ class LockScreen extends React.Component {
 
   componentDidMount() {
 
-    this.checkDeviceForHardware();
-    this.checkForFingerprints();
+    // this.checkDeviceForHardware();
+    // this.checkForFingerprints();
   }
   
-  checkDeviceForHardware = async () => {
-    let hasHardwareAsync = await Expo.LocalAuthentication.hasHardwareAsync();
-    this.setState({hasHardwareAsync})
+  // checkDeviceForHardware = async () => {
+  //   let hasHardwareAsync = await Expo.LocalAuthentication.hasHardwareAsync();
+  //   this.setState({hasHardwareAsync})
 
-    console.log("hasHardwareAsync", hasHardwareAsync)
-  }
+  //   console.log("hasHardwareAsync", hasHardwareAsync)
+  // }
   
-  checkForFingerprints = async () => {
-    let isEnrolledAsync = await Expo.LocalAuthentication.isEnrolledAsync();
-    this.setState({isEnrolledAsync})
+  // checkForFingerprints = async () => {
+  //   let isEnrolledAsync = await Expo.LocalAuthentication.isEnrolledAsync();
+  //   this.setState({isEnrolledAsync})
 
-    console.log("isEnrolledAsync", isEnrolledAsync)
-  }
+  //   console.log("isEnrolledAsync", isEnrolledAsync)
+  // }
   
-  getTouchFaceOrPasscode = async () => {
-    let result = await Expo.LocalAuthentication.authenticateAsync('Scan your finger.');
-    console.log('Authentication Result:', result)
+  // getTouchFaceOrPasscode = async () => {
+  //   let result = await Expo.LocalAuthentication.authenticateAsync('Scan your finger.');
+  //   console.log('Authentication Result:', result)
 
-    if(result.success) {
-      const resetAction = StackActions.reset({
-          index: 0,
-          key: null, // this is the trick that allows this to work
-          actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
-      });
-      this.props.navigation.dispatch(resetAction);
-    }
-    
+  //   if(result.success) {
+  //     this.letsContinue()
+  //   }
+  // }
 
+  letsContinueForNow = () => {
+
+    const resetAction = StackActions.reset({
+        index: 0,
+        key: null, // this is the trick that allows this to work
+        actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+    });
+    this.props.navigation.dispatch(resetAction);
 
   }
   
@@ -99,7 +101,7 @@ class LockScreen extends React.Component {
           As an extra security measure, please press 'Continue' to access Rosnet using Face ID, Touch ID or your device passcode.
         </Text>
 
-        <TouchableOpacity onPress={this.showAlert} style={styles.button}>
+        <TouchableOpacity onPress={this.letsContinueForNow} style={styles.button}>
           <Text style={styles.buttonText}>
             Continue
           </Text>
