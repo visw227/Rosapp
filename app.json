@@ -23,11 +23,14 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.rosnet.mobile", 
       "supportsTablet": true,
       "infoPlist": {
         "NSFaceIDUsageDescription": "Rosnet would like to use Face ID for security purposes."
       }
-
-    }
+    },
+    "android": {
+			"package": "com.rosnet.mobile"
+		}
   }
 }
