@@ -1,0 +1,34 @@
+
+
+This project was started using this command:
+
+$ react-native init Rosnet
+
+
+Then I copied in the /App folder and ./App-Rosnet.js file from the app created in expo
+
+Then I copied the expo project's depencies into this project's
+
+Then tried to run the app...
+
+$ react-native run-ios
+
+
+Had errors. To get running, I had to install a couple of npm modules
+
+$ yarn add react-native-vector-icons
+
+React Navigation v3 requires react-native-gesture-handler
+
+$ yarn add react-native-gesture-handler
+
+AFTER installing react-native-gesture-handler, I had to link it
+
+# react-native link
+
+
+
+
+
+
+
