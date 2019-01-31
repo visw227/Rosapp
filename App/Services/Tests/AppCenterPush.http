@@ -1,0 +1,37 @@
+
+### 8E595DDE-F76A-40B5-8605-23A9A5E94BBF	99211152-5B93-4F6E-9CB2-3D3B42B9A275	2	13636	2018-08-09 10:54:00
+
+### Send to all users
+
+POST https://appcenter.ms/api/v0.1/apps/Rosnet/iOS-Stafflinq/push/notifications
+content-type: application/json
+X-API-Token: 30b871cf9ae2c7d3aa1570815c4bff165b95cce4
+
+{
+ "notification_content" : {
+  "name" : "StaffLinQ",
+  "title" : "Dywayne Test - Push Using App Center API",
+  "body" : "Please let me know if you get this.",
+  "custom_data" : {"key1" : "val1", "key2" : "val2"}
+  }
+}
+
+### Send to specific users by device ID
+### Dywayne's App Center Install ID: 239411D8-704F-45D4-98FF-08668288D391
+
+POST https://appcenter.ms/api/v0.1/apps/Rosnet/iOS-Stafflinq/push/notifications
+content-type: application/json
+X-API-Token: 30b871cf9ae2c7d3aa1570815c4bff165b95cce4
+
+{
+    "notification_content" : {
+        "name" : "StaffLinQ",
+        "title" : "Dywayne Test - Push Using App Center API",
+        "body" : "Please let me know if you get this.",
+        "custom_data" : {"key1" : "val1", "key2" : "val2"}
+    },
+    "notification_target" : {
+        "type" : "devices_target",
+        "devices" : ["99211152-5B93-4F6E-9CB2-3D3B42B9A275"]
+    }
+}
