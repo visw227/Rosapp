@@ -1,0 +1,16 @@
+StaffLinQ is the employee companion for Rosnet’s PowerCenter labor scheduling system.  It is the optimum way for the entire team to communicate about the work schedule.  Employees can check schedules, request changes, and get important messages with anytime-anywhere access.  StaffLinQ also allows employees to set scheduling preferences and request time off.  All manager-approved changes automatically update within StaffLinQ and immediately notifies employees, no surprises.
+ 
+Important!  The Rosnet StaffLinQ application requires your manager register your email address in PowerCenter, which will send you an invitation to get signed up.
+ 
+Employee Features:
+ 
+•	View the current schedule and any future schedules that are published 
+•	Receive Push Notifications for messages, available shifts or shifts wanted and schedule updates  
+•	Set scheduling preferences
+•	Request time off 
+•	Sync StaffLinQ schedule directly into your mobile device’s calendar
+•	Send and Receive messages with your manager
+•	Request to pick up or swap shifts
+•	Message other co-workers
+ 
+For help, contact Rosnet Client Services 24-7, 365 days a year at StafflinqSupport@rosnet.com

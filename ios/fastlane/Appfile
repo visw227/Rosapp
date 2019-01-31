@@ -1,0 +1,7 @@
+app_identifier "com.rosnet" # The bundle identifier of your app
+apple_id "AppleId-Dev@rosnet.com" # Your Apple email address
+
+team_id "9SSSVWSAJR" # Developer Portal Team ID
+
+# you can even provide different app identifiers, Apple IDs and team names per lane:
+# More information: https://docs.fastlane.tools/advanced/#appfile
