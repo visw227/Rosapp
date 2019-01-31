@@ -15,6 +15,11 @@ export default StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 5
   },
+  subtitleText: {
+    paddingLeft: 0,
+    color: '#808080',
+    fontSize: 12
+  },
   list: {
     marginTop: -20,
     paddingTop: 0,
@@ -27,5 +32,6 @@ export default StyleSheet.create({
     paddingLeft: 0,
     color: '#808080'
   },
+
 
 })

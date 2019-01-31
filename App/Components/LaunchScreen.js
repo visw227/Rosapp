@@ -13,6 +13,8 @@ import { NavigationActions, StackActions } from 'react-navigation'
 
 import brand from '../Styles/brand'
 
+import AppCenter from 'appcenter'
+
 class LaunchScreen extends React.Component {
 
     // MUST BE PRESENT or NO title will appear
@@ -32,6 +34,13 @@ class LaunchScreen extends React.Component {
 
 
       let _this = this
+
+      // this will change on each installation, so always check on launch
+      // this is async
+      AppCenter.getInstallId().then(async (response) => {
+        console.log('App Center Install Id: ', response)
+        AsyncStorage.setItem('AppCenterInstallId', response)
+      })
 
 
       // get all stored keys
