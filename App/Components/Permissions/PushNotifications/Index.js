@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Alert, Platform, Image } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Alert, Platform, Image, AsyncStorage } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
@@ -9,6 +9,10 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import brand from '../../../Styles/brand'
 
 import logo from '../../../Images/logo-lg-white-square.png';
+
+import Push from 'appcenter-push'
+
+
 
 class PushNotifications extends React.Component {
 
@@ -44,7 +48,11 @@ class PushNotifications extends React.Component {
 
   onAllow = () => {
 
+    // only set this flag here so that we can ask again later
+    AsyncStorage.setItem('askedToSendPushNotifs', '1')
+
     // do something to show the device permission dialog 
+    Push.setEnabled(true)
     
     this.keepGoing()
 
@@ -53,7 +61,7 @@ class PushNotifications extends React.Component {
   onDontAllow = () => {
 
     // dont trigger the device permission dialog - save that for another time
-    
+
     this.keepGoing()
 
   }

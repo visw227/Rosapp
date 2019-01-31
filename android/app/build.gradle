@@ -134,6 +134,10 @@ android {
 }
 
 dependencies {
+    implementation project(':appcenter-crashes')
+    implementation project(':appcenter-analytics')
+    implementation project(':appcenter')
+    implementation project(':appcenter-push')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-touch-id')
     implementation project(':react-native-gesture-handler')

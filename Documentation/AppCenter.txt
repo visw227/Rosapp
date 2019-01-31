@@ -1,4 +1,40 @@
 
 
+This is a good article on how to 
 https://docs.microsoft.com/en-us/appcenter/sdk/getting-started/react-native
+
+
+$ yarn add appcenter appcenter-analytics appcenter-crashes appcenter-push --exact
+
+Requires it to be linked
+
+$ react-native link 
+
+Note: Per the link above, If see an error like this:
+
+Added code to initialize iOS App Center SDK in ios/reactnativesample/AppDelegate.m
+Analyzing dependencies [!] Unable to find a specification for AppCenterReactNativeShared (~> {version})
+
+Run this command...
+
+$ pod repo update
+
+
+
+AppCenter push
+------------------------------
+
+https://docs.microsoft.com/en-us/appcenter/sdk/push/react-native-ios
+
+
+
+
+
+
+
+
+
+
+
+
 

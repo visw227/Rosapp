@@ -383,20 +383,28 @@ class Login extends Component {
         }
         else if(userData && userData.token) {
 
+            let stackName = 'DrawerStack'
 
-            let stackName = 'PushNotificationsPermissionStack' //'DrawerStack'
+            // check this setting before deciding where to go next...
+            AsyncStorage.getItem('askedToSendPushNotifs').then((asked) => {
 
+                console.log("askedToSendPushNotifs", asked)
 
+                if(!asked) {
+                    stackName = 'PushNotificationsPermissionStack' 
+                }
 
-            // this shows a back arrow, so don't use this
-            //this.props.navigation.navigate('TabStack')
-            // instead, reset the navigation
-            const resetAction = StackActions.reset({
-                index: 0,
-                key: null, // this is the trick that allows this to work
-                actions: [NavigationActions.navigate({ routeName: stackName })],
-            });
-            this.props.navigation.dispatch(resetAction);
+                // this shows a back arrow, so don't use this
+                //this.props.navigation.navigate('TabStack')
+                // instead, reset the navigation
+                const resetAction = StackActions.reset({
+                    index: 0,
+                    key: null, // this is the trick that allows this to work
+                    actions: [NavigationActions.navigate({ routeName: stackName })],
+                });
+                this.props.navigation.dispatch(resetAction);
+
+            })
 
         }
 
