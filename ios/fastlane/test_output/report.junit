@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites name='StafflinqUnitTests.xctest' tests='2' failures='0'>
+  <testsuite name='StafflinqUnitTests.StafflinqUnitTests' tests='2' failures='0'>
+    <testcase classname='StafflinqUnitTests.StafflinqUnitTests' name='testExample' time='0.011'/>
+    <testcase classname='StafflinqUnitTests.StafflinqUnitTests' name='testPerformanceExample' time='1.065'/>
+  </testsuite>
+</testsuites>

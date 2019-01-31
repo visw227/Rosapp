@@ -1,0 +1,9 @@
+git_url("https://djohnson_rosnet@bitbucket.org/rosnet/certificates.git")
+
+type("development") # The default type, can be: appstore, adhoc, enterprise or development
+
+app_identifier "com.rosnet.mobile"
+
+Username "AppleId-Dev@rosnet.com"
+team_id "9SSSVWSAJR"
+

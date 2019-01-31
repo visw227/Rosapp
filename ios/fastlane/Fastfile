@@ -1,0 +1,33 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    # cocoapods
+    # bump version number and commit
+  end
+
+  desc "Fetches the provisioning profiles so you can build locally and deploy to your device"
+  lane :certs do
+    match(type: "development", force_for_new_devices: true)
+    match(type: "adhoc", force_for_new_devices: true)
+    #match(type: "appstore")
+  end
+
+  lane :test do
+    scan(
+      scheme: "rosnet-app (development)",
+      clean: true
+    )
+  end
+end
