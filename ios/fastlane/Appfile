@@ -1,4 +1,4 @@
-app_identifier "com.rosnet" # The bundle identifier of your app
+app_identifier "com.rosnet.mobile" # The bundle identifier of your app
 apple_id "AppleId-Dev@rosnet.com" # Your Apple email address
 
 team_id "9SSSVWSAJR" # Developer Portal Team ID
