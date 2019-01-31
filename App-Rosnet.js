@@ -88,6 +88,8 @@ let LoginStack = createStackNavigator({
 })
 
 
+
+
 // *******************************************************************************
 // Account
 // *******************************************************************************
@@ -458,6 +460,7 @@ TabStack.navigationOptions = ({ navigation, screenProps }) => {
 };
 
 
+
 // *******************************************************************************
 // About
 // *******************************************************************************
@@ -515,13 +518,6 @@ let StaffListStack = createStackNavigator({
 // Support
 // *******************************************************************************
 
-
-
-
-// *******************************************************************************
-// About
-// *******************************************************************************
-
 import SupportScreen from './App/Components/Support/Index'
 
 import SupportViewScreen from './App/Components/Support/View/Index'
@@ -543,6 +539,26 @@ let SupportStack = createStackNavigator({
   }
 });
 
+
+// *******************************************************************************
+// Permissions
+// *******************************************************************************
+
+import PushNotificationsScreen from './App/Components/Permissions/PushNotifications/Index'
+
+let PushNotificationsPermissionStack = createStackNavigator({ PushNotificationsScreen });
+
+// let PushNotificationsPermissionStack = createStackNavigator({ 
+//   PushNotifications: {
+//     screen: PushNotificationsScreen,
+//     // to hide the back title for any child screens, it must be set to null here
+//     navigationOptions: ({ navigation }) => ({
+//       headerBackTitle: null
+//     }),
+//   },
+
+
+// });
 
 
 
@@ -681,6 +697,7 @@ const AppStack = createStackNavigator({
   LoginStack: { screen: LoginStack },
   LockStack: { screen: LockScreenStack },
   DrawerStack: { screen: DrawerStack },
+  PushNotificationsPermissionStack: { screen: PushNotificationsPermissionStack }
 
 }, {
     initialRouteName: 'LaunchStack',

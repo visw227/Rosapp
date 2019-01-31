@@ -383,13 +383,18 @@ class Login extends Component {
         }
         else if(userData && userData.token) {
 
+
+            let stackName = 'PushNotificationsPermissionStack' //'DrawerStack'
+
+
+
             // this shows a back arrow, so don't use this
             //this.props.navigation.navigate('TabStack')
             // instead, reset the navigation
             const resetAction = StackActions.reset({
                 index: 0,
                 key: null, // this is the trick that allows this to work
-                actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+                actions: [NavigationActions.navigate({ routeName: stackName })],
             });
             this.props.navigation.dispatch(resetAction);
 

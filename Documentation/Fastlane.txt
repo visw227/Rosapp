@@ -1,0 +1,5 @@
+
+
+https://docs.fastlane.tools/getting-started/cross-platform/react-native/
+https://carloscuesta.me/blog/shipping-react-native-apps-with-fastlane/
+
