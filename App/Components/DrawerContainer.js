@@ -37,7 +37,7 @@ export default class DrawerContainer extends React.Component {
   // using routeKey allows us to reuse the same ModulesSubMenu route but with different menu data being passed to it
   navigateTo = (routeName, routeParams, routeKey) => {
 
-    console.log("navigateTo", routeName, routeParams, routeKey)
+    console.log("DrawerContainer - navigateTo", routeName, routeParams, routeKey)
 
     this.props.navigation.navigate({
       routeName: routeName,

@@ -82,14 +82,29 @@ export class About extends React.Component {
               message: ""
           },
           selectedSite: "",
-          userData: { sites: ["AAG", "DOHERTY"] }
+          userData: { sites: ["AAG", "DOHERTY"] },
+          changed: false
 
       }
+
+      props.navigation.addListener('willFocus', () => this.willFocus())
+      props.navigation.addListener('willBlur', () => this.willBlur())
 
 
   }
 
-componentDidMount() {
+  willFocus = () => {
+
+    console.log("willFocus...")
+    this.setState({changed: false})
+
+  }
+  willBlur = () => {
+    console.log("willBlur...")
+    this.setState({changed: false})
+  }
+
+  componentDidMount() {
 
     let _this = this 
 
@@ -117,7 +132,8 @@ componentDidMount() {
 
 
     this.setState({
-      selectedSite: value
+      selectedSite: value,
+      changed: true
     })
   
   }
@@ -137,7 +153,7 @@ componentDidMount() {
 
                   <View style={{ paddingLeft: 20, paddingRight: 20 }}>
                     <Text style={{ textAlign: 'center', fontSize: 18, color: brand.colors.primary }}>
-                      To select a different Rosnet site, scroll to one of the sites listed below.</Text>
+                      To access Rosnet features for a different site, scroll to one of the sites listed below.</Text>
                   </View>
 
 
@@ -172,8 +188,14 @@ componentDidMount() {
                       </Text>
                     </TouchableOpacity> */}
 
+                      {this.state.changed &&
                     <Text style={{ textAlign: 'center', fontSize: 18, color: brand.colors.primary }}>
-                      Your current site selection is {this.state.selectedSite}</Text>
+
+
+                      You have selected {this.state.selectedSite}
+
+                    </Text>
+                      }
 
                   </View> 
 
