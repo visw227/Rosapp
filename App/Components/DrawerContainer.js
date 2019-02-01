@@ -125,6 +125,20 @@ export default class DrawerContainer extends React.Component {
           /> 
 
           <DrawerLabel
+            icon={'window-restore'}
+            label={'Select a Site'}
+            routeName={'ClientSelection'}
+            iconSize={25}
+          /> 
+
+          <DrawerLabel
+            icon={'user-plus'}
+            label={'Session Override'}
+            routeName={'SessionOverride'}
+            iconSize={25}
+          /> 
+
+          <DrawerLabel
             icon={'tachometer'}
             label={'Dashboard'}
             routeName={'Tabs'}

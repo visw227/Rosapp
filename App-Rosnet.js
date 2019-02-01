@@ -591,6 +591,46 @@ let PushNotificationsPermissionStack = createStackNavigator({ PushNotificationsS
 // });
 
 
+// *******************************************************************************
+// Client Selection
+// *******************************************************************************
+
+import ClientSelectionScreen from './App/Components/ClientSelection/Index'
+
+let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
+
+// let PushNotificationsPermissionStack = createStackNavigator({ 
+//   PushNotifications: {
+//     screen: PushNotificationsScreen,
+//     // to hide the back title for any child screens, it must be set to null here
+//     navigationOptions: ({ navigation }) => ({
+//       headerBackTitle: null
+//     }),
+//   },
+
+
+// });
+
+
+// *******************************************************************************
+// Session Override
+// *******************************************************************************
+
+import SessionOverrideScreen from './App/Components/SessionOverride/Index'
+
+let SessionOverrideStack = createStackNavigator({ SessionOverrideScreen });
+
+// let PushNotificationsPermissionStack = createStackNavigator({ 
+//   PushNotifications: {
+//     screen: PushNotificationsScreen,
+//     // to hide the back title for any child screens, it must be set to null here
+//     navigationOptions: ({ navigation }) => ({
+//       headerBackTitle: null
+//     }),
+//   },
+
+
+// });
 
 // *******************************************************************************
 // Drawer Items
@@ -711,6 +751,42 @@ const DrawerStack = createDrawerNavigator({
   },
 
 
+
+  ClientSelection: { 
+    screen: ClientSelectionStack,
+  
+    navigationOptions: ({ navigation }) => ({
+
+      // drawerLabel: 'Availability',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    })
+
+  },
+
+  SessionOverride: { 
+    screen: SessionOverrideStack,
+  
+    navigationOptions: ({ navigation }) => ({
+
+      // drawerLabel: 'Availability',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    })
+
+  },
+
+
 }, {
       // The drawerLabel is defined in DrawerContainer.js
       contentComponent: DrawerContainer,
@@ -800,7 +876,7 @@ export default class App extends React.Component {
     _globalStateChange = (data) => {
 
 
-        //console.log(">> GLOBAL STATE CHANGE FROM:", data.source, data)
+        console.log(">> GLOBAL STATE CHANGE FROM:", data.source, data)
 
         if(data.userData) {
 
