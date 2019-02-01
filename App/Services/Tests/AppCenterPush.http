@@ -34,6 +34,6 @@ X-API-Token: 30b871cf9ae2c7d3aa1570815c4bff165b95cce4
     },
     "notification_target" : {
         "type" : "devices_target",
-        "devices" : ["8752DCF2-120F-47F4-B417-32AD86485A00"]
+        "devices" : ["96E26609-F7CE-4CC9-BE4C-EF74E12C2A6A"]
     }
 }

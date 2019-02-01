@@ -153,7 +153,6 @@ class SearchItems extends React.Component {
             {getResultsMessage()}
         </View>
  
-
         
         {this.state.text !== '' && sortedData.length > 0 &&
 
