@@ -4,7 +4,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 // export const IMAGE_HEIGHT = window.width / 2;
 // export const IMAGE_HEIGHT_SMALL = window.width / 5;
 
-export const MIN_HEIGHT = 80;
+export const MIN_HEIGHT = 150;
 export const MAX_HEIGHT = 200;
 
 import brand from '../../../Styles/brand'
@@ -25,9 +25,10 @@ export default StyleSheet.create({
         // width: 400,
         // height: 200
         maxHeight: 150,
-        maxWidth: 150
+        maxWidth: 150,
+        marginTop: 150
     },
     formContainer: {
-        marginBottom: 100
+        marginBottom: 50
     }
 });
