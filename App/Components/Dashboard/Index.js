@@ -115,9 +115,29 @@ class DashboardScreen extends React.Component {
 
       console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
 
-      this.setState({selectedSite: selectedSite });
-
       this.props.navigation.setParams({ title: selectedSite })
+
+      let userData = this.props.screenProps.state.userData
+      
+      let env = appConfig.WEB_HOST // rosnetdev.com, rosnetqa.com, rosnet.com
+
+      let source = {
+        uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        headers: {
+          "managerAppToken":  userData.token,
+          //"Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
+        }
+      }
+      
+      console.log("source updated: ", JSON.stringify(source, null, 2))
+
+      
+      this.setState({ 
+        selectedSite: selectedSite,
+        source: source
+      });
+
+
     }
 
   }
