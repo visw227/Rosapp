@@ -12,13 +12,10 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 
 import brand from './App/Styles/brand'
 
-
-
 import NavigationService from './App/Helpers/NavigationService';
 
 import { generateRandomNumber, checkForNotifications } from './App/Services/Background';
 
-import { getMobileMenuItems } from './App/Services/Menu';
 
 import Push from 'appcenter-push'
 

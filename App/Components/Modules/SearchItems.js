@@ -110,7 +110,7 @@ class SearchItems extends React.Component {
       }
       else if(this.state.text != '' && sortedData.length === 0) {
         return (
-          <Text style={{color: brand.colors.primary }}>{'Sorry, no search results were found that match your search term.'}</Text>
+          <Text style={{color: brand.colors.primary }}>{'Sorry, no results found.'}</Text>
         )
       }
 

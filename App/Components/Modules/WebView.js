@@ -109,7 +109,7 @@ class WebViewScreen extends React.Component {
     let userData = this.props.screenProps.state.userData
 
     let selectedSite = this.props.screenProps.state.selectedSite
-    let env = appConfig.WEB_HOST // rosnetdev.com, rosnetqa.com, rosnet.com
+    let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
 
     let source = {

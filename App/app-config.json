@@ -1,5 +1,5 @@
 {
-  "API_HOST": "http://e495edf9.ngrok.io",
-  "WEB_HOST": "rosnetdev.com", // rosnetdev.com, rosnetqa.com, rosnet.com
+  "API_HOST": "https://dashboard.rosnetqa.com",
+  "DOMAIN": "rosnetqa.com", // rosnetdev.com, rosnetqa.com, rosnet.com
   "APP_VERSION": "0.0.1"
 }

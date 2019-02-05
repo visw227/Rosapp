@@ -119,7 +119,7 @@ class DashboardScreen extends React.Component {
 
       let userData = this.props.screenProps.state.userData
       
-      let env = appConfig.WEB_HOST // rosnetdev.com, rosnetqa.com, rosnet.com
+      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
         uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
@@ -156,7 +156,7 @@ class DashboardScreen extends React.Component {
     this.props.navigation.setParams({ title: selectedSite })
 
     let clientCode = userData.sites[0].toLowerCase()
-    let env = appConfig.WEB_HOST // rosnetdev.com, rosnetqa.com, rosnet.com
+    let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
 
 

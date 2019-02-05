@@ -281,10 +281,12 @@ class Login extends Component {
 
                         let cookies = "rememberme=" + response.Browse_User_Name + "; clientCode=" + clientCode + "; rosnetToken=" + response.SecurityToken
 
-                        getMobileMenuItems(cookies, function(err, menuItems){
+                        getMobileMenuItems(clientCode, cookies, function(err, menuItems){
                             
                             if(err) {
-
+                                Keyboard.dismiss()
+                                console.log("err - getMobileMenuItems", err)
+                                _this.showAlert(err.message)
                             }
                             else {
 

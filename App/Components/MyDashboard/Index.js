@@ -131,7 +131,7 @@ class MyDashboardScreen extends React.Component {
 
 
       let clientCode = userData.sites[0].toLowerCase()
-      let env = appConfig.WEB_HOST // rosnetdev.com, rosnetqa.com, rosnet.com
+      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
 
 

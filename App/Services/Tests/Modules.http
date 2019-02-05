@@ -1,10 +1,16 @@
 
 
 
-GET http://876ddea7.ngrok.io/api/ManagerAppModule/MobileNestedV1
+GET http://876ddea7.ngrok.io/api/ManagerAppMenu
 Cookie: rememberme=dywayne.johnson; clientCode=aag; rosnetToken=91ebce15-5a52-4fe3-9291-a281ec76f167
 
 ###
 
-GET https://aag.rosnetdev.com/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B"
-Cookie: "rememberme=vchikkala@rosnet.com; clientCode=aag; rosnetToken=ec626161-16e9-47a7-bcfb-8fcb56bb7812"
+GET https://aag.rosnetqa.com/api/ManagerAppMenu
+Cookie: rememberme=dywayne.johnson; clientCode=aag; rosnetToken=8390bd37-dc40-4b35-b239-326dceea6a3a
+
+
+###
+
+GET https://aag.rosnetqa.com/api/ManagerAppMenu
+Cookie: rememberme=dywayne.johnson; clientCode=aag; rosnetToken=03a425e1-56fe-4dd2-96d6-bfb2c96e2dda

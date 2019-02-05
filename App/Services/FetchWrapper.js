@@ -3,43 +3,80 @@
 // this is a handy wrapper for fetch requests
 //******************************************************************************
 
-import appConfig from '../app-config.json'
+import config from '../app-config.json'
+import { withCacheBustingTimestamp } from '../Helpers/WithCacheBustingTimestamp';
 
-const parseFetchResponse = response => response.json().then(text => ({
-  status: response.status,
-  statusText: response.statusText,
-  json: text,
-  meta: response,
-}))
+// const parseFetchResponse = response => response.json().then(text => ({
+//   status: response.status,
+//   statusText: response.statusText,
+//   json: text,
+//   meta: response,
+// }))
 
-export function fetchWrapper(url, method, jsonBody, token, callback) {
+const parseFetchResponse = (response) => {
+  
+  console.log("RESPONSE", response)
+
+  let results = response.json().then(text => ({
+    status: response.status,
+    statusText: response.statusText,
+    json: text,
+    meta: response,
+  }))
+
+  return results
+}
+
+export function fetchWrapper(url, method, jsonBody, subDomain, cookies, callback) {
     
-    //let url = withCacheBustingTimestamp(getHost() + '/api/schedule/createTimeOff')
-    let fullUrl = withCacheBustingTimestamp(appConfig.API_HOST + url)
+    let fullUrl = ''
+    let protocol = "https://"
 
-    //console.log("createTimeOffRequest- request: ", JSON.stringify(data, null, 2))
+    // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
+    if(config.DOMAIN.indexOf('rosnet') == -1) {
+      protocol = "http://"
+    }
+
+    // e.g. https://aag.rosnetqa.com/api/...
+    // e.g. https://dashboard.rosnetqa.com/api/...
+    fullUrl = protocol + subDomain + "." + config.DOMAIN + url
+
+
+    // tack on timestamp as a cache buster
+    // fullUrl = withCacheBustingTimestamp(fullUrl)
+
+    let headers = null
+
     
-    let config =  {  
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
+    let request =  {  
+      method: method
+    }
+
+    if(cookies) {
+      headers = {
+        Cookie: cookies
       }
     }
 
-    // only add Authorization to header if token is provided
-    if(token) {
-      config.headers.Authorization = token
+    if(headers) {
+      request.header = headers
     }
 
     // only add the body if this is a POST/PUT
-    if(method === 'POST' || method === 'PUT') { 
-      config.body = JSON.stringify(jsonBody) 
+    if(jsonBody && (method === 'POST' || method === 'PUT') ) { 
+      request.body = JSON.stringify(jsonBody) 
     }
 
-    fetch(fullUrl, config)
+    console.log("url: ", fullUrl)
+    console.log("request: ", JSON.stringify(request, null, 2))
+
+    fetch(fullUrl, request)
       .then(parseFetchResponse) // parses the standard HTTP response with any custom JSON body
       // make sure result body is sent back from API
       .then((results) => {
+
+        console.log("RESULTS", results)
+
         if(results && results.length > 0) {
           return results.json();
         }
@@ -49,6 +86,7 @@ export function fetchWrapper(url, method, jsonBody, token, callback) {
       })
       .then(results => {
   
+        console.log("FINAL RESULTS", results)
   
         if(results.status === 200) {
   
@@ -69,8 +107,8 @@ export function fetchWrapper(url, method, jsonBody, token, callback) {
           callback({ status: results.status, message: results.json.message || results.statusText }, null)
         }
       })
-      .catch(function(error) {
-          console.log("error:", error)
+      .catch(function(error, t, s) {
+          console.log("error:", error, "t:", t, "s:", s)
           callback(error)
       });
   

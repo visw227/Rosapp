@@ -2,4 +2,9 @@
 
 POST http://2d40eef3.ngrok.io/api/ManagerAppAuth/AuthenticateUser?userName=dywayne.johnson&password=
 
+###
+
+
+POST https://dashboard.rosnetqa.com/api/ManagerAppAuth/AuthenticateUser?userName=dywayne.johnson&password=
+
 
