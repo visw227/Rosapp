@@ -52,14 +52,15 @@ export function fetchWrapper(url, method, jsonBody, subDomain, cookies, callback
       method: method
     }
 
+    // for some reason, fetch request gets redirected to login if the Cookie header is provided
     if(cookies) {
       headers = {
-        Cookie: cookies
+        //Cookie: cookies
       }
     }
 
     if(headers) {
-      request.header = headers
+      request.headers = headers
     }
 
     // only add the body if this is a POST/PUT
