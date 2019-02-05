@@ -104,6 +104,7 @@ export class About extends React.Component {
     this.setState({changed: false})
   }
 
+
   componentDidMount() {
 
     let _this = this 
@@ -139,67 +140,62 @@ export class About extends React.Component {
   }
 
 
+  getAvatar = (item) => {
+
+    if(item === this.state.selectedSite) {
+      return (
+          <Avatar rounded medium
+                  overlayContainerStyle={{backgroundColor: 'green'}}
+                  icon={{name: 'check', type: 'font-awesome', size: 20}}/>
+      )
+    }
+    else {
+      return (
+          <Avatar rounded medium
+                  overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                  icon={{name: 'window-restore', type: 'font-awesome', size: 20}}/>
+      )
+    }
+
+  }
+
   render() {
+
+
         return (
 
-              <View style={{ flex: 1,
-                  marginTop: 40,
-                  paddingLeft: 40,
-                  paddingRight: 40,
-                  justifyContent: 'space-around',
-                  backgroundColor: brand.colors.white
-              }}>
-          
 
-                  <View style={{ paddingLeft: 20, paddingRight: 20 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 18, color: brand.colors.primary }}>
-                      To access Rosnet features for a different site, scroll to one of the sites listed below.</Text>
-                  </View>
+                  <View style ={{marginTop : -20}}>
+                  
+                    <ScrollView>
 
+                      <List style={styles.list}>
 
-                  <View style={{ alignItems: 'center', marginBottom: 100 }}>
-                    <Picker
-                        selectedValue={this.state.selectedSite}
-                        style={{ height: 40, width: '90%' }}
-                        itemStyle={{
-                            fontSize: 25,
-                        }}
-                        onValueChange={(itemValue, itemIndex) => this.onSelectedSite (itemValue)
-                        }>
-                        {this.state.userData && this.state.userData.sites && this.state.userData.sites.map(item => (
-                            <Picker.Item 
-                                key={item}
-                                label={item} value={item} 
+                        {this.state.userData.sites.map((item, index) => (
+                            <ListItem
+
+                                hideChevron={true}
+                                key={index}
+                                style={styles.listItem}
+                                title={item}
+                                    titleStyle={{ color: brand.colors.gray }}
+                                    
+                                avatar={this.getAvatar(item)}
+                                
+                                onPress={() => { this.onSelectedSite(item) }}
+                            
                             />
-                        ))}
-                    </Picker>
+                          ))
+                        }
+
+                      </List>
+
+                    </ScrollView>
+
                   </View>
 
 
-                   <View style={{ alignItems: 'center', marginBottom: 100 }}>
 
-                    {/* <TouchableOpacity                 
-                      onPress={() => {
-                        this.onSelectedSite (this.state.selectedSite)
-                        this.setState({ showClientModal: false }) ;
-                      }} style={styles.button}>
-                      <Text style={styles.buttonText}>
-                        Continue
-                      </Text>
-                    </TouchableOpacity> */}
-
-                      {this.state.changed &&
-                    <Text style={{ textAlign: 'center', fontSize: 18, color: brand.colors.primary }}>
-
-
-                      You have selected {this.state.selectedSite}
-
-                    </Text>
-                      }
-
-                  </View> 
-
-              </View>
         )
   }
 }

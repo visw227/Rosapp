@@ -58,6 +58,24 @@ class SearchUsers extends React.Component {
       }
   }
 
+  // this will catch an global state updates - via screenProps
+  componentWillReceiveProps(nextProps){
+
+    let selectedSite = nextProps.screenProps.state.selectedSite
+
+    // ONLY if something has changed
+    if(selectedSite !== this.state.selectedSite){
+
+      console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
+      
+      this.setState({ 
+        selectedSite: selectedSite
+      });
+
+
+    }
+
+  }
 
   componentDidMount() {
 
@@ -79,6 +97,7 @@ class SearchUsers extends React.Component {
     
   }
 
+  
 
   onSelect = (item) => {
 
