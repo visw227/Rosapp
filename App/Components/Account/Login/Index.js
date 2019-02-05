@@ -212,7 +212,8 @@ class Login extends Component {
                     userName: this.state.userName,
                     commonName: "Demo User",
                     password: this.state.password,
-                    sites: [ "AAG", "DOHERTY" ]
+                    sites: [ "AAG", "DOHERTY" ],
+                    isRosnetEmployee: false
                 }
 
                 // sort before persisting
@@ -298,7 +299,8 @@ class Login extends Component {
                                     userName: _this.state.userName, //response.Browse_User_Name,
                                     commonName: response.Common_Name,
                                     password: _this.state.password,
-                                    sites: response.Sites
+                                    sites: response.Sites,
+                                    isRosnetEmployee: response.Rosnet_Employee
                                 }
 
                                 // sort before persisting

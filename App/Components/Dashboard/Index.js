@@ -59,24 +59,24 @@ class DashboardScreen extends React.Component {
         onPress={() => navigate.navigation.toggleDrawer() }
     />,
 
-    headerRight : 
-      <View style={{
-        alignItems: 'center',
-        flexDirection: 'row',
-        height: 40,
-        paddingRight: 10,
-        width: '100%'
-      }}>
+    // headerRight : 
+    //   <View style={{
+    //     alignItems: 'center',
+    //     flexDirection: 'row',
+    //     height: 40,
+    //     paddingRight: 10,
+    //     width: '100%'
+    //   }}>
 
-        <FontAwesome
-            name="window-restore"
-            size={20}
-            color={brand.colors.white}
-            style={{ marginRight: 10 }}
-            onPress={ navigate.navigation.getParam('toggleClientModal') }
-        />
+    //     <FontAwesome
+    //         name="window-restore"
+    //         size={20}
+    //         color={brand.colors.white}
+    //         style={{ marginRight: 10 }}
+    //         onPress={ navigate.navigation.getParam('toggleClientModal') }
+    //     />
 
-      </View>,
+    //   </View>,
 
   })
 
@@ -95,7 +95,6 @@ class DashboardScreen extends React.Component {
               message: ""
           },
           userProfile: fakedUserProfile,
-          showClientModal: false,
           selectedSite: "",
           userData: { sites: ["AAG", "DOHERTY"] }
       }
@@ -105,13 +104,42 @@ class DashboardScreen extends React.Component {
 
 
 
-  toggleClientModal = () => {
-    this.setState({
-      showClientModal: !this.state.showClientModal
-    })
-  }
-  setClientModalVisible(visible) {
-    this.setState({modalVisible: visible});
+
+  // this will catch an global state updates - via screenProps
+  componentWillReceiveProps(nextProps){
+
+    let selectedSite = nextProps.screenProps.state.selectedSite
+
+    // ONLY if something has changed
+    if(selectedSite !== this.state.selectedSite){
+
+      console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
+
+      this.props.navigation.setParams({ title: selectedSite })
+
+      let userData = this.props.screenProps.state.userData
+      
+      let env = appConfig.WEB_HOST // rosnetdev.com, rosnetqa.com, rosnet.com
+
+      let source = {
+        uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        headers: {
+          "managerAppToken":  userData.token,
+          //"Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
+        }
+      }
+      
+      console.log("source updated: ", JSON.stringify(source, null, 2))
+
+      
+      this.setState({ 
+        selectedSite: selectedSite,
+        source: source
+      });
+
+
+    }
+
   }
 
 
@@ -121,10 +149,12 @@ class DashboardScreen extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ title: userData.sites[0] })
-
-
     let selectedSite = this.props.screenProps.state.selectedSite
+
+    console.log("dashboard: ", selectedSite)
+
+    this.props.navigation.setParams({ title: selectedSite })
+
     let clientCode = userData.sites[0].toLowerCase()
     let env = appConfig.WEB_HOST // rosnetdev.com, rosnetqa.com, rosnet.com
 
@@ -144,7 +174,8 @@ class DashboardScreen extends React.Component {
 
     _this.setState({
       userData: userData,
-      source: source
+      source: source,
+      selectedSite: selectedSite
     })
 
 
@@ -154,40 +185,6 @@ class DashboardScreen extends React.Component {
   }
 
  
-
-  onSelectedSite = (value) => {
-
-    console.log("changed site", value)
-
-    let selectedSite = value.toLowerCase()
-
-    // this shares the persisted userData to the App-Rosnet.js wrapper
-    this.props.screenProps._globalStateChange( { source: "Dashboard", selectedSite: selectedSite })
-
-    let userData = this.props.screenProps.state.userData
-
-
-    let env = appConfig.WEB_HOST // rosnetdev.com, rosnetqa.com, rosnet.com
-
-    let source = {
-      uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
-      headers: {
-        "managerAppToken": this.props.screenProps.state.userData.token,
-       // "Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
-      }
-    }
-
-    console.log("source", JSON.stringify(source, null, 2))
-
-    this.props.navigation.setParams({ title: value })
-
-    this.setState({
-      selectedSite: value,
-      source: source
-    })
-  
-  }
-
  
   _renderLoading = () => {
     return (
@@ -221,67 +218,6 @@ class DashboardScreen extends React.Component {
                 style={{ flex: 1 }}
               />
             }
-
-            <Modal
-              animationType="slide"
-              transparent={false}
-              visible={this.state.showClientModal}
-              onRequestClose={() => {
-                this.setState({ showClientModal: false })
-              }}>
-              <View style={{ flex: 1,
-                  marginTop: 40,
-                  paddingLeft: 40,
-                  paddingRight: 40,
-                  justifyContent: 'space-around',
-                  backgroundColor: brand.colors.white
-              }}>
-          
-                  <View style={{ alignItems: 'center'}}>
-                    <Text style={{ fontSize: 20, color: brand.colors.primary }}>Select a Site</Text>
-                  </View>
-
-                  <View style={{ paddingLeft: 20, paddingRight: 20 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 18, color: brand.colors.primary }}>To select a different Rosnet site, scroll to one of the sites listed below and press 'Continue'.</Text>
-                  </View>
-
-
-                  <View style={{ alignItems: 'center', marginBottom: 100 }}>
-                    <Picker
-                        selectedValue={this.state.selectedSite}
-                        style={{ height: 40, width: '90%' }}
-                        itemStyle={{
-                            fontSize: 25,
-                        }}
-                        onValueChange={(itemValue, itemIndex) => this.setState({
-                          selectedSite : itemValue
-                        })}>
-                        {this.state.userData && this.state.userData.sites && this.state.userData.sites.map(item => (
-                            <Picker.Item 
-                                key={item}
-                                label={item} value={item} 
-                            />
-                        ))}
-                    </Picker>
-                  </View>
-
-
-                  <View style={{ alignItems: 'center', marginBottom: 100 }}>
-
-                    <TouchableOpacity                 
-                      onPress={() => {
-                        this.onSelectedSite (this.state.selectedSite)
-                        this.setState({ showClientModal: false }) ;
-                      }} style={styles.button}>
-                      <Text style={styles.buttonText}>
-                        Continue
-                      </Text>
-                    </TouchableOpacity>
-
-                  </View>
-
-              </View>
-            </Modal>
 
 
           </View>

@@ -28,7 +28,6 @@ export default class SearchBar extends React.Component {
               value={this.props.value}
               onChangeText ={this.props.onChangeText}
               placeholder ={this.props.placeholder}
-              color= '#000'
           />
           <TouchableOpacity>
           <FontAwesome style={styles.searchIcon} name="search" size={17} color= "#778899"/>

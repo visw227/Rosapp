@@ -729,7 +729,7 @@ appcenter-link-scripts@1.12.0:
     which "^1.2.11"
     xcode "^1.0.0"
 
-appcenter-push@^1.12.0:
+appcenter-push@1.12.0:
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/appcenter-push/-/appcenter-push-1.12.0.tgz#7c0d3003220e8dfc830c954cc6c09c355e9e33e4"
   dependencies:
@@ -889,6 +889,10 @@ babel-code-frame@^6.26.0:
     esutils "^2.0.2"
     js-tokens "^3.0.2"
 
+babel-core@7.0.0-bridge.0:
+  version "7.0.0-bridge.0"
+  resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
+
 babel-core@^6.0.0, babel-core@^6.26.0:
   version "6.26.3"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.26.3.tgz#b2e2f09e342d0f0c88e2f02e067794125e75c207"
@@ -912,10 +916,6 @@ babel-core@^6.0.0, babel-core@^6.26.0:
     private "^0.1.8"
     slash "^1.0.0"
     source-map "^0.5.7"
-
-babel-core@^7.0.0-bridge.0:
-  version "7.0.0-bridge.0"
-  resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
 
 babel-generator@^6.18.0, babel-generator@^6.26.0:
   version "6.26.1"
@@ -4642,7 +4642,7 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
-react-native-autogrow-input@^0.2.1:
+react-native-autogrow-input@0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/react-native-autogrow-input/-/react-native-autogrow-input-0.2.1.tgz#4b0fb440b570efdedfde32666036db666d3ac4ec"
   dependencies:
@@ -4669,9 +4669,9 @@ react-native-communications@2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
 
-react-native-device-info@0.22.5:
-  version "0.22.5"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.22.5.tgz#9b1882cbb030f2926cff77336e7cd2e87edf52bf"
+react-native-device-info@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.26.1.tgz#5e23d46a17232f0e1b3db33973b1715b670fd575"
 
 react-native-elements@0.19.1:
   version "0.19.1"
@@ -4682,7 +4682,7 @@ react-native-elements@0.19.1:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
-react-native-gesture-handler@^1.0.12, react-native-gesture-handler@^1.0.15:
+react-native-gesture-handler@1.0.15, react-native-gesture-handler@^1.0.12:
   version "1.0.15"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.15.tgz#7e0d0a457820a3c9325a3d492daaed14400508a6"
   dependencies:
@@ -4690,11 +4690,11 @@ react-native-gesture-handler@^1.0.12, react-native-gesture-handler@^1.0.15:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
-react-native-keyboard-spacer@^0.4.1:
+react-native-keyboard-spacer@0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-spacer/-/react-native-keyboard-spacer-0.4.1.tgz#46f18a320432098a25ea9fa89f5143dd254d332d"
 
-react-native-progress@^3.5.0:
+react-native-progress@3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-3.5.0.tgz#d1ccc7f96dc17c609aedb43b2e6695d67deae0ec"
   dependencies:
@@ -4716,11 +4716,11 @@ react-native-tab-view@^1.0.0, react-native-tab-view@^1.2.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-native-touch-id@^4.3.0:
+react-native-touch-id@4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/react-native-touch-id/-/react-native-touch-id-4.3.0.tgz#c25abd1d03d1ce5075f73ca87b18b47e7d60fa71"
 
-react-native-vector-icons@^6.2.0:
+react-native-vector-icons@6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.2.0.tgz#2682b718099eb9470c0defd38da47deb844a0f9c"
   dependencies:

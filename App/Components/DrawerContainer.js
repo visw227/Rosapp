@@ -37,7 +37,7 @@ export default class DrawerContainer extends React.Component {
   // using routeKey allows us to reuse the same ModulesSubMenu route but with different menu data being passed to it
   navigateTo = (routeName, routeParams, routeKey) => {
 
-    console.log("navigateTo", routeName, routeParams, routeKey)
+    console.log("DrawerContainer - navigateTo", routeName, routeParams, routeKey)
 
     this.props.navigation.navigate({
       routeName: routeName,
@@ -123,6 +123,24 @@ export default class DrawerContainer extends React.Component {
             routeName={'SearchItems'}
             iconSize={25}
           /> 
+
+          {/* {this.props.screenProps.state.userData.sites.length > 0 && */}
+            <DrawerLabel
+              icon={'window-restore'}
+              label={'Select a Site'}
+              routeName={'ClientSelection'}
+              iconSize={25}
+            /> 
+          {/* } */}
+
+          {/* {this.props.screenProps.state.userData.isRosnetEmployee && */}
+            <DrawerLabel
+              icon={'user-plus'}
+              label={'Session Override'}
+              routeName={'SessionOverride'}
+              iconSize={25}
+            /> 
+          {/* } */}
 
           <DrawerLabel
             icon={'tachometer'}

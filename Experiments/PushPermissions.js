@@ -56,26 +56,25 @@ class PushNotifications extends React.Component {
 
         <Image source={logo} style={styles.logo} />
 
-  
-        <Text style={styles.h1}>
-          Always Be In The Loop
-        </Text>
+
 
         <Text style={styles.text}>
           To help you stay more connected to your restaurant operations, Rosnet would like to send you push notifications.
         </Text>
 
-        <TouchableOpacity 
-            style={styles.buttonContainer}
-            onPress={this.onAllow}>
-            <Text  style={styles.buttonText}>Allow Push Notifications</Text>
-        </TouchableOpacity> 
+        <View style={styles.buttonGroup}>
+            <TouchableOpacity 
+                style={styles.buttonContainer}
+                onPress={this.onAllow}>
+                <Text  style={styles.buttonText}>Allow Push Notifications</Text>
+            </TouchableOpacity> 
 
-        <TouchableOpacity 
-            style={styles.buttonContainer}
-            onPress={this.onDontAllow}>
-            <Text  style={styles.buttonText}>Maybe Later</Text>
-        </TouchableOpacity> 
+            <TouchableOpacity 
+                style={styles.buttonContainer}
+                onPress={this.onDontAllow}>
+                <Text  style={styles.buttonText}>Maybe Later</Text>
+            </TouchableOpacity> 
+        </View>
 
       </View>
     );
@@ -86,10 +85,10 @@ class PushNotifications extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
         alignItems: 'center',
-        // justifyContent: 'space-around',
-        paddingTop: 80,
+        justifyContent: 'space-around',
+        paddingTop: 20,
         backgroundColor: brand.colors.primary,
         paddingLeft: 20,
         paddingRight: 20
@@ -115,6 +114,9 @@ const styles = StyleSheet.create({
         maxHeight: 200,
         maxWidth: 200
     },
+    buttonGroup: {
+        flex: 0
+    },
     buttonContainer:{
         backgroundColor: brand.colors.primary,
         paddingVertical: 15,
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
         borderColor: brand.colors.white, 
         borderWidth: 2,
         width: 300,
-        marginBottom: 40
+        marginBottom: 10
     },
     buttonText:{
         color: '#fff',
@@ -130,6 +132,7 @@ const styles = StyleSheet.create({
         fontSize: 15
     }
 });
+
 
 
 //make this component available to the app
