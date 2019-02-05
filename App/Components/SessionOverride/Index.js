@@ -27,7 +27,10 @@ class SearchUsers extends React.Component {
   // Look at SchedulesStack for tricks with hiding the tabBar and hiding the back button title
   static navigationOptions = (navigate) => ({
 
-    title: 'Search Rosnet Users',
+    //title: 'Search Rosnet Users',
+    title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Search Rosnet Users': navigate.navigation.state.params.title,
+
+
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
     headerTintColor: 'white',
@@ -41,7 +44,17 @@ class SearchUsers extends React.Component {
 
   })
 
+  getTitle = (navigate) => {
 
+    if(typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title)) {
+       return 'Search Rosnet Users'
+    }
+    else {
+       return navigate.navigation.state.params.title
+    }
+
+
+  }
 
   constructor(props) {
       super(props);
@@ -67,6 +80,8 @@ class SearchUsers extends React.Component {
     if(selectedSite !== this.state.selectedSite){
 
       console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
+
+      this.props.navigation.setParams({ title: 'Search ' + selectedSite + ' Users' })
       
       this.setState({ 
         selectedSite: selectedSite
@@ -94,6 +109,7 @@ class SearchUsers extends React.Component {
       cookies: cookies
     })
 
+    this.props.navigation.setParams({ title: 'Search ' + selectedSite + ' Users' })
     
   }
 
