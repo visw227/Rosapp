@@ -101,6 +101,9 @@ export default class DrawerContainer extends React.Component {
             source={require('../Images/logo-xs-white.png')} />
         </View>
 
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ paddingTop: 20, color: 'white', fontSize: 16 }}>Welcome, {this.props.screenProps.state.userData.commonName}</Text>
+        </View>
 
         {/* // 'separator' line */}
         <View
@@ -133,14 +136,14 @@ export default class DrawerContainer extends React.Component {
             /> 
            } 
 
-           {/* {this.props.screenProps.state.userData.isRosnetEmployee &&  */}
+            {this.props.screenProps.state.userData.isRosnetEmployee &&  
             <DrawerLabel
               icon={'user-plus'}
               label={'Session Override'}
               routeName={'SessionOverride'}
               iconSize={25}
             /> 
-           {/* }  */}
+            }  
 
           <DrawerLabel
             icon={'tachometer'}

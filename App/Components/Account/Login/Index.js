@@ -173,7 +173,7 @@ class Login extends Component {
     onLoginPress = () => {
 
         // for some reason, this doesn't work for all scenarios below, but calling it within each scenario works
-        // Keyboard.dismiss()
+        Keyboard.dismiss()
 
         // this takes on a new scope inside of the userLogin and getUserLogin callback, so make a copy
         let _this = this
@@ -198,8 +198,6 @@ class Login extends Component {
         
 
         if(this.state.userName === 'demo') {
-
-            Keyboard.dismiss()
 
             // FAKED for demoing...
             setTimeout(() => {
@@ -265,7 +263,6 @@ class Login extends Component {
 
                 if(err) {
 
-                    Keyboard.dismiss()
                     console.log("userLogin error", err)
                     _this.showAlert(err.message)
 
@@ -281,10 +278,9 @@ class Login extends Component {
 
                         let cookies = "rememberme=" + response.Browse_User_Name + "; clientCode=" + clientCode + "; rosnetToken=" + response.SecurityToken
 
-                        getMobileMenuItems(clientCode, cookies, function(err, menuItems){
+                        getMobileMenuItems(clientCode, response.SecurityToken, function(err, menuItems){
                             
                             if(err) {
-                                Keyboard.dismiss()
                                 console.log("err - getMobileMenuItems", err)
                                 _this.showAlert(err.message)
                             }
@@ -342,7 +338,6 @@ class Login extends Component {
 
                     }
                     else {
-                        Keyboard.dismiss()
                         _this.showAlert("Invalid login request. Please check your email address and password and try again.")
 
                     }

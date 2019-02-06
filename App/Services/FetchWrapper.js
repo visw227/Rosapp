@@ -27,7 +27,7 @@ const parseFetchResponse = (response) => {
   return results
 }
 
-export function fetchWrapper(url, method, jsonBody, subDomain, cookies, callback) {
+export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) {
     
     let fullUrl = ''
     let protocol = "https://"
@@ -53,9 +53,9 @@ export function fetchWrapper(url, method, jsonBody, subDomain, cookies, callback
     }
 
     // for some reason, fetch request gets redirected to login if the Cookie header is provided
-    if(cookies) {
+    if(token) {
       headers = {
-        //Cookie: cookies
+        "managerAppToken": token
       }
     }
 
