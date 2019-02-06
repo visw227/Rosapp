@@ -1,10 +1,30 @@
 
 
-POST http://2d40eef3.ngrok.io/api/ManagerAppAuth/AuthenticateUser?userName=dywayne.johnson&password=
+POST https://aag.rosnetqa.com/api/ManagerAppAuth/AuthenticateUser?userName=vchikkala@rosnet.com&password=Vamsi@227
 
 ###
 
 
 POST https://dashboard.rosnetqa.com/api/ManagerAppAuth/AuthenticateUser?userName=dywayne.johnson&password=
 
+###
+
+POST https://aag.rosnetqa.com/Signon/PasswordChange/
+
+###
+ 
+POST https://tbiytc.rosnetdev.com/Signon/PasswordChangeExec?__dt=1549485051016&userId=29269&password=Vamsi@123
+content-type: application/json
+
+
+###
+POST https://tbiytc.rosnetdev.com/SignOn/PasswordChangeExec
+content-type: application/json
+X-API-Token: 30b871cf9ae2c7d3aa1570815c4bff165b95cce4
+
+{
+
+"password": "Vamsi@2296",
+ "userId": "29269"
+}
 
