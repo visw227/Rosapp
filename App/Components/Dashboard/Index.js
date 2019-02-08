@@ -108,9 +108,36 @@ class DashboardScreen extends React.Component {
   componentWillReceiveProps(nextProps){
 
     let selectedSite = nextProps.screenProps.state.userData.selectedSite
+    let token = nextProps.screenProps.state.userData.token
+
+        // ONLY if something has changed
+    if(token !== this.state.userData.token){
+
+      console.log(">>> Dashboard picked up new token: ", token)
+
+      let userData = this.props.screenProps.state.userData
+      
+      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+
+      let source = {
+        uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        headers: {
+          "managerAppToken":  token
+        }
+      }
+      
+      console.log("source updated: ", JSON.stringify(source, null, 2))
+
+      
+      this.setState({ 
+        selectedSite: selectedSite,
+        source: source
+      });
+
+    }
 
     // ONLY if something has changed
-    if(selectedSite !== this.state.selectedSite){
+    if(selectedSite !== this.state.userData.selectedSite){
 
       console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
 
@@ -123,8 +150,7 @@ class DashboardScreen extends React.Component {
       let source = {
         uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
         headers: {
-          "managerAppToken":  userData.token,
-          //"Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
+          "managerAppToken":  userData.token
         }
       }
       
