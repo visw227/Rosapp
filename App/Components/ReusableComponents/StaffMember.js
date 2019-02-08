@@ -100,7 +100,7 @@ constructor(props) {
                 <Text style={Styles.info}>{member.email}</Text>
                 }
                 
-                <View  style={{  flexDirection: 'row', alignItems: 'flex-start'}}>
+                <View  style={{  marginTop: 20, flexDirection: 'row', alignItems: 'flex-start'}}>
                   {member.sharePhone &&
 
 

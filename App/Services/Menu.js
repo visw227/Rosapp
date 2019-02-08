@@ -1,8 +1,8 @@
 import { fetchWrapper } from './FetchWrapper'
 
-export function getMobileMenuItems(client, cookies, callback) {
+export function getMobileMenuItems(client, token, callback) {
 
-  fetchWrapper('/api/ManagerAppMenu', 'GET', null, client, cookies, function(err, resp) {
+  fetchWrapper('/api/ManagerAppMenu', 'GET', null, client, token, function(err, resp) {
 
     if(err) {
       callback(err)

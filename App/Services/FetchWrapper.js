@@ -27,19 +27,32 @@ const parseFetchResponse = (response) => {
   return results
 }
 
-export function fetchWrapper(url, method, jsonBody, subDomain, cookies, callback) {
+export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) {
     
     let fullUrl = ''
-    let protocol = "https://"
+    let protocol = ''
 
     // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
-    if(config.DOMAIN.indexOf('rosnet') == -1) {
+    if(config.DOMAIN.indexOf('rosnet') !== -1) {
+
+      protocol = "https://"
+
+      // e.g. https://aag.rosnetqa.com/api/...
+      // e.g. https://dashboard.rosnetqa.com/api/...
+      fullUrl = protocol + subDomain + "." + config.DOMAIN + url
+
+    }
+    else {
+
       protocol = "http://"
+
+      // e.g. 670b8c88.ngrok.io
+      fullUrl = protocol + config.DOMAIN + url
+
+
     }
 
-    // e.g. https://aag.rosnetqa.com/api/...
-    // e.g. https://dashboard.rosnetqa.com/api/...
-    fullUrl = protocol + subDomain + "." + config.DOMAIN + url
+
 
 
     // tack on timestamp as a cache buster
@@ -53,9 +66,9 @@ export function fetchWrapper(url, method, jsonBody, subDomain, cookies, callback
     }
 
     // for some reason, fetch request gets redirected to login if the Cookie header is provided
-    if(cookies) {
+    if(token) {
       headers = {
-        //Cookie: cookies
+        "managerAppToken": token
       }
     }
 
