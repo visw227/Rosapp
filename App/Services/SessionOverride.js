@@ -1,8 +1,10 @@
 import { fetchWrapper } from './FetchWrapper'
 
-export function searchUsers(query, limit, client, cookies, callback) {
+export function searchUsers(query, limit, client, token, callback) {
 
-  fetchWrapper('/api/ManagerAppSessionOverride/UserSearch?limit=' + limit + "&query=" + query, 'GET', null, client, cookies, function(err, resp) {
+  let url = '/api/ManagerAppSessionOverride/UserSearch?limit=' + limit + "&query=" + query
+
+  fetchWrapper(url, 'GET', null, client, token, function(err, resp) {
 
     if(err) {
       callback(err)

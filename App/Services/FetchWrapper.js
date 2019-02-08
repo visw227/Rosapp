@@ -15,7 +15,7 @@ import { withCacheBustingTimestamp } from '../Helpers/WithCacheBustingTimestamp'
 
 const parseFetchResponse = (response) => {
   
-  console.log("RESPONSE", response)
+  //console.log("RESPONSE", response)
 
   let results = response.json().then(text => ({
     status: response.status,
@@ -87,7 +87,7 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
       // make sure result body is sent back from API
       .then((results) => {
 
-        console.log("RESULTS", results)
+        //console.log("RESULTS", results)
 
         if(results && results.length > 0) {
           return results.json();
@@ -98,7 +98,7 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
       })
       .then(results => {
   
-        console.log("FINAL RESULTS", results)
+        //console.log("FINAL RESULTS", results)
   
         if(results.status === 200) {
   

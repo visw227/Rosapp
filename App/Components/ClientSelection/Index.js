@@ -81,8 +81,7 @@ export class About extends React.Component {
               hasError: false,
               message: ""
           },
-          selectedSite: "",
-          userData: { sites: ["AAG", "DOHERTY"] },
+          userData: { sites: ["AAG", "DOHERTY"], selectedSite: "" },
           changed: false
 
       }
@@ -111,12 +110,9 @@ export class About extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
-    let selectedSite = this.props.screenProps.state.selectedSite
-
-
+    
     _this.setState({
-      userData: userData,
-      selectedSite: selectedSite
+      userData: userData
     })
 
     
@@ -128,21 +124,25 @@ export class About extends React.Component {
 
     console.log("changed site", value)
 
-    // this shares the persisted userData to the App-Rosnet.js wrapper
-    this.props.screenProps._globalStateChange( { source: "ClientSelection", selectedSite: value })
-
+    let userData = this.state.userData
+    userData.selectedSite = value
 
     this.setState({
-      selectedSite: value,
+      userData: userData,
       changed: true
-    })
+    }, () => 
   
+      // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
+      this.props.screenProps._globalStateChange( { source: "ClientSelection", action: "change-client", userData: userData })
+   );
+
+
   }
 
 
   getAvatar = (item) => {
 
-    if(item === this.state.selectedSite) {
+    if(item === this.state.userData.selectedSite) {
       return (
           <Avatar rounded medium
                   overlayContainerStyle={{backgroundColor: 'green'}}

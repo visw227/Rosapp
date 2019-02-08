@@ -8,20 +8,23 @@ import {
   ScrollView,
   TextInput, 
   Image, 
-  ActivityIndicator 
+  ActivityIndicator,
+  Modal
 } from 'react-native'
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
 import SearchBar from './SearchBar'
 
+import { NavigationActions, StackActions } from 'react-navigation'
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import FontAwesome5Free from 'react-native-vector-icons/FontAwesome5'
 
 import { searchUsers, impersonateUser } from '../../Services/SessionOverride';
 
 import { parseUser } from '../../Helpers/UserDataParser';
-
+import { getMobileMenuItems } from '../../Services/Menu';
 
 class SearchUsers extends React.Component {
 
@@ -65,28 +68,33 @@ class SearchUsers extends React.Component {
       this.state = {
           sending: false,
           receiving: false,
-          selectedSite: "",
-          userData: { sites: ["AAG", "DOHERTY"] },
-          cookies: "",
+          userData: { sites: ["AAG", "DOHERTY"], selectedSite: "AAG" },
           items: [],
-          query: ''
+          query: '',
+          showModal: false,
+          impersonatedUser: {
+            commonName: ''
+          }
       }
   }
 
   // this will catch an global state updates - via screenProps
   componentWillReceiveProps(nextProps){
 
-    let selectedSite = nextProps.screenProps.state.selectedSite
+    let selectedSite = nextProps.screenProps.state.userData.selectedSite
 
     // ONLY if something has changed
-    if(selectedSite !== this.state.selectedSite){
+    if(selectedSite !== this.state.userData.selectedSite){
 
       console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
 
       this.props.navigation.setParams({ title: 'Search ' + selectedSite + ' Users' })
       
+      let userData = this.state.userData
+      userData.selectedSite = selectedSite
+
       this.setState({ 
-        selectedSite: selectedSite
+        userData: userData
       });
 
 
@@ -96,22 +104,14 @@ class SearchUsers extends React.Component {
 
   componentDidMount() {
 
-    let _this = this 
 
     let userData = this.props.screenProps.state.userData
 
-    let selectedSite = this.props.screenProps.state.selectedSite
-
-    let cookies = "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token
-
-
-    _this.setState({
-      userData: userData,
-      selectedSite: selectedSite,
-      cookies: cookies
+    this.setState({
+      userData: userData
     })
 
-    this.props.navigation.setParams({ title: 'Search ' + selectedSite + ' Users' })
+    this.props.navigation.setParams({ title: 'Search ' + userData.selectedSite + ' Users' })
     
   }
 
@@ -119,13 +119,14 @@ class SearchUsers extends React.Component {
 
   onSelect = (item) => {
 
+    let _this = this
+
     console.log("selected user: ", item)
     // this.props.navigation.navigate('ModulesWebView', { item: item })
 
-    let originalUserData = this.props.screenProps.state.userData
-    let originalSelectedSite = this.props.screenProps.state.selectedSite
+    let userData = this.props.screenProps.state.userData
 
-    impersonateUser(selectedSite, item.userName, userData.token, function(err, response){
+    impersonateUser(userData.selectedSite, item.userName, userData.token, function(err, response){
 
       if(err) {
         console.log("err", err)
@@ -135,17 +136,36 @@ class SearchUsers extends React.Component {
 
         // get the data for the user we are impersonating
         let impersonatedUser = parseUser(response)
-        let selectedSite = impersonatedUser.sites[0].toLowerCase()
 
-        let newUserData = impersonatedUser
-        let newSelectedSite = selectedSite
 
-        impersonatedUser.superUser = originalUserData
+        getMobileMenuItems(impersonatedUser.selectedSite, impersonatedUser.token, function(err, menuItems){
+            
+            if(err) {
+                console.log("err - getMobileMenuItems", err)
+                _this.showAlert(err.message)
+            }
+            else {
 
-        console.log("userData", JSON.stringify(userData, null, 2))
+                _this.setState({
+                  showModal: true
+                })
 
-        // this shares the persisted userData to the App-Rosnet.js wrapper
-        //this.props.screenProps._globalStateChange( { source: "Login", userData: userData, selectedSite: selectedSite, menuItems: menuItems })
+                // rename the FontAwesome icons by removing the fa- preface
+                menuItems.forEach(function(item){
+                    item.icon = item.icon.replace('fa-', '')
+                })
+
+                impersonatedUser.menuItems = menuItems
+
+                _this.setState({
+                  impersonatedUser: impersonatedUser
+                })
+
+
+            }
+
+        })
+
 
 
       }
@@ -153,6 +173,27 @@ class SearchUsers extends React.Component {
 
     })
 
+
+  }
+
+  doImpersonation = (mode) => {
+
+      // always close the modal
+      this.setState({ showModal: false })
+
+      // only do impersonation if the user presses 'Continue'
+      if(mode === true) {
+        // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
+        this.props.screenProps._globalStateChange( { source: "SessionOverride", action: "session-override", userData: this.state.impersonatedUser, superUser: this.props.screenProps.state.userData })
+      
+        const resetAction = StackActions.reset({
+            index: 0,
+            key: null, // this is the trick that allows this to work
+            actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+        });
+        this.props.navigation.dispatch(resetAction);
+
+      }
 
 
   }
@@ -170,7 +211,7 @@ class SearchUsers extends React.Component {
       receiving: true
     })
 
-    searchUsers(query, 100, this.state.selectedSite, this.state.cookies, function(err, resp){
+    searchUsers(query, 100, this.state.userData.selectedSite, this.state.userData.token, function(err, resp){
 
       if(err) {
         _this.setState({
@@ -300,6 +341,79 @@ class SearchUsers extends React.Component {
         
         }
 
+
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={this.state.showModal}
+              onRequestClose={() => {
+                this.setState({ showModal: false })
+              }}>
+              <View style={{ flex: 1,
+                  marginTop: 40,
+                  paddingLeft: 40,
+                  paddingRight: 40,
+                  justifyContent: 'space-around',
+                  backgroundColor: brand.colors.white
+              }}>
+          
+                  <View style={{ alignItems: 'center'}}>
+
+                    <FontAwesome5Free
+                        name="smile-wink"
+                        size={100}
+                        color={brand.colors.primary}
+                        style={{ marginBottom: 50 }}
+                    />
+
+                    <Text style={{ textAlign: 'center', fontSize: 35, color: brand.colors.primary }}>
+                      Well, hello "{this.state.impersonatedUser.commonName}"!
+                    </Text>
+
+                  </View>
+
+                  <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+                    <Text style={{ textAlign: 'center', fontSize: 18, color: brand.colors.primary }}>
+                      Would like to do a session override as {this.state.impersonatedUser.commonName}?
+                    </Text>
+                  </View>
+
+
+                  <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+                    <Text style={{ textAlign: 'center', fontSize: 16, color: brand.colors.primary }}>
+                      You can undo this action by clicking the swap icon in the left drawer menu.
+                    </Text>
+                  </View>
+
+
+                  <View style={{ alignItems: 'center', marginBottom: 100 }}>
+
+
+
+                    <TouchableOpacity 
+                        style={styles.buttonContainer}
+                        onPress={() => {
+                                this.doImpersonation(true)
+                              }}>
+                        <Text  style={styles.buttonText}>Continue</Text>
+                    </TouchableOpacity> 
+
+                    <TouchableOpacity 
+                        style={styles.buttonContainer}
+                        onPress={() => {
+                                this.doImpersonation(false)
+                              }}>
+                        <Text  style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity> 
+
+
+                  </View>
+
+              </View>
+            </Modal>
+
+
+
       </View>
 
     ) 
@@ -317,6 +431,20 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     marginTop: -20
   },
+    buttonContainer:{
+        backgroundColor: brand.colors.white,
+        paddingVertical: 15,
+        borderRadius: 30,
+        borderColor: brand.colors.primary, 
+        borderWidth: 2,
+        width: 300,
+        marginBottom: 10
+    },
+    buttonText:{
+        color: brand.colors.primary,
+        textAlign: 'center',
+        fontSize: 15
+    },  
   loader : {
     flex:1,
     flexDirection:'column',
