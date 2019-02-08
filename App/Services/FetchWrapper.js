@@ -33,7 +33,7 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
     let protocol = ''
 
     // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
-    if(config.DOMAIN.indexOf('rosnet') !== -1) {
+    if(config.DOMAIN.indexOf('rosnet') !== -1 || config.DOMAIN.indexOf('roslocal') !== -1) {
 
       protocol = "https://"
 
@@ -58,23 +58,21 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
     // tack on timestamp as a cache buster
     // fullUrl = withCacheBustingTimestamp(fullUrl)
 
-    let headers = null
 
     
     let request =  {  
-      method: method
+      method: method,
+      headers: {
+        "content-type": "application/json"
+      }
     }
 
     // for some reason, fetch request gets redirected to login if the Cookie header is provided
     if(token) {
-      headers = {
-        "managerAppToken": token
-      }
+      request.headers.managerAppToken = token
     }
 
-    if(headers) {
-      request.headers = headers
-    }
+
 
     // only add the body if this is a POST/PUT
     if(jsonBody && (method === 'POST' || method === 'PUT') ) { 

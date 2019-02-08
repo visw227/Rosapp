@@ -30,6 +30,8 @@ let fakedMenu = require('../../../Fixtures/Modules')
 
 import logo from '../../../Images/logo-lg-white-square.png';
 
+import { parseUser } from '../../../Helpers/UserDataParser';
+
 // create a component
 class Login extends Component {
 
@@ -273,12 +275,14 @@ class Login extends Component {
 
                     if(response && response.SecurityToken) {
 
-                        response.Sites.sort()
-                        let clientCode = response.Sites[0].toLowerCase()
+                        // this repackages the response a bit...
+                        let userData = parseUser(response)
 
-                        let cookies = "rememberme=" + response.Browse_User_Name + "; clientCode=" + clientCode + "; rosnetToken=" + response.SecurityToken
+                        let selectedSite = userData.sites[0].toLowerCase()
 
-                        getMobileMenuItems(clientCode, response.SecurityToken, function(err, menuItems){
+                        let cookies = "rememberme=" + response.Browse_User_Name + "; clientCode=" + selectedSite + "; rosnetToken=" + response.SecurityToken
+
+                        getMobileMenuItems(selectedSite, response.SecurityToken, function(err, menuItems){
                             
                             if(err) {
                                 console.log("err - getMobileMenuItems", err)
@@ -290,24 +294,6 @@ class Login extends Component {
                                 menuItems.forEach(function(item){
                                     item.icon = item.icon.replace('fa-', '')
                                 })
-
-                                let userData = {
-                                    token: response.SecurityToken,
-                                    userId: response.Rosnet_User_ID,
-                                    userName: _this.state.userName, //response.Browse_User_Name,
-                                    commonName: response.Common_Name,
-                                    password: _this.state.password,
-                                    sites: response.Sites,
-                                    isRosnetEmployee: response.Rosnet_Employee
-                                }
-
-                                // sort before persisting
-                                userData.sites.sort()
-                                // default the first one as selected
-                                let selectedSite = ''
-                                if(userData.sites.length > 0) {
-                                    selectedSite = userData.sites[0]
-                                }
 
 
                                 let keys = [
@@ -330,10 +316,6 @@ class Login extends Component {
 
                             }
                         })
-
-
-
-
 
 
                     }

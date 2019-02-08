@@ -5,7 +5,14 @@ POST https://aag.rosnetqa.com/api/ManagerAppAuth/AuthenticateUser?userName=vchik
 ###
 
 
-POST https://dashboard.rosnetqa.com/api/ManagerAppAuth/AuthenticateUser?userName=dywayne.johnson&password=gorosnet1$
+POST https://dashboard.rosnetqa.com/api/ManagerAppAuth/AuthenticateUser
+content-type: application/json
+
+{
+    "userName": "dywayne.johnson",
+    "password": "***"
+}
+
 
 ###
 
