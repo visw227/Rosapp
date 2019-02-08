@@ -24,6 +24,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import brand from '../../../Styles/brand'
 //import PasswordStrengthChecker from 'react-native-password-strength-checker';
 import PasswordStrengthCheck from './PasswordStrengthCheck'
+import { changePassword } from '../../../Services/Account';
+
 
 
 
@@ -62,6 +64,26 @@ class Password extends React.Component {
   
   _onChangePassword(password, isValid) {
     this.setState({ password: { value: password, isValid: isValid } })
+  }
+
+  onSubmitPress() {
+    let request = {
+        userId: 29269, 
+        password: 'Vamsi@227', 
+    }
+      changePassword(request, function (err,response){
+          if (err){
+            Keyboard.dismiss()
+            console.log("userLogin error", err)
+          }
+
+          else {
+            console.log("changePassword success:", response)
+
+            console('success')
+          }
+      })
+
   }
   
 
@@ -111,12 +133,13 @@ class Password extends React.Component {
 
     return (
       
-        <ScrollView>
+    <ScrollView>
 
-<View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
 
-<Text style={{margin:10,marginTop:30}}>Current Password</Text> 
-<TextInput style={styles.input}   
+            <Text style={{margin:10,marginTop:30}}>Current Password</Text> 
+
+                <TextInput style={styles.input}   
                          returnKeyType="go" ref={(input)=> this.passwordInput = input} 
                          placeholder='Current Password' 
                          placeholderTextColor={brand.colors.silver}
@@ -124,31 +147,27 @@ class Password extends React.Component {
                          //value={this.state.password}
                          onChangeText={(text) => this.setState({password: text})}
                  />
-                 <Text style={{margin:10}}>New Password</Text>
-                 {/* <TextInput style={styles.input}   
-                         returnKeyType="go" ref={(input)=> this.passwordInput = input} 
-                         placeholder='New Password' 
-                         placeholderTextColor={brand.colors.silver}
-                         secureTextEntry
-                         //value={this.state.password}
-                         onChangeText={text => this.setState({ password: { value: text } })}
-                 /> */}
+                 
+            <Text style={{margin:10}}>New Password</Text>
+                
                  <PasswordStrengthCheck 
-            secureTextEntry
-            minLength={4}
-            ruleNames="symbols|words"
-            strengthLevels={strengthLevels}
-            tooShort={tooShort}
-            minLevel={0}
-            barWidthPercent={65}
-            showBarOnEmpty={false}
-            barColor="#CCC"
-            inputStyle = {styles.passwordInput}
-            onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid } })} 
-            />
+                    secureTextEntry
+                    minLength={4}
+                    ruleNames="symbols|words"
+                    strengthLevels={strengthLevels}
+                    tooShort={tooShort}
+                    minLevel={0}
+                    barWidthPercent={65}
+                    showBarOnEmpty={false}
+                    barColor="#CCC"
+                    inputStyle = {styles.passwordInput}
+                    onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid } })} 
+                    />
 
 
-                 <Text style={{margin:10}}>Confirm Password</Text>
+            <Text style={{margin:10}}>Confirm Password</Text>
+                 
+                 
                  <TextInput style={styles.input}   
                          returnKeyType="go" ref={(input)=> this.passwordInput = input} 
                          placeholder='Confirm Password' 
@@ -157,19 +176,18 @@ class Password extends React.Component {
                          //value={this.state.password}
                          onChangeText={text => this.setState({ password: { value: text } })}
                  />
-
-<TouchableOpacity 
-                     style={styles.buttonContainer }
-                     >
-                     <Text  style={styles.buttonText}>Submit</Text>
-                 </TouchableOpacity> 
-
-
-            </View>
+                
+                
+            <TouchableOpacity style={styles.buttonContainer }>
+                <Text  style={styles.buttonText} onPress = {this.onSubmitPress}>Submit</Text>
+            </TouchableOpacity> 
 
 
+        </View>
 
-        </ScrollView>           
+
+
+    </ScrollView>           
       
       
     );

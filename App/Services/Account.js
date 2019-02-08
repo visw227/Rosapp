@@ -20,3 +20,21 @@ export function userLogin(request, callback) {
 
 }
 
+export function changePassword (request, callback) {
+
+
+  let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password)
+
+  fetchWrapper(url, 'POST', null, 'aag' , null, function(err, resp) {
+    if (err) {
+      callback(err)
+
+    }
+     else { 
+       callback(null,resp)
+     }
+  } )
+
+
+}
+

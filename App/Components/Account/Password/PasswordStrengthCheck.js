@@ -194,7 +194,6 @@ export default class PasswordStrengthCheck extends Component {
   }
   
   onChangeText(password) {
-      console.log('<<text',password)
     const level = this.getPasswordStrengthLevel(password);
     this.setState({
       level: level
@@ -205,7 +204,6 @@ export default class PasswordStrengthCheck extends Component {
   
   renderPasswordInput() {
     const { inputWrapperStyle, inputStyle } = this.props;
-    console.log('<<style',inputStyle)
     return (
       <View  >
         <TextInput 
