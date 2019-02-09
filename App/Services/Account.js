@@ -1,6 +1,22 @@
 import { fetchWrapper } from './FetchWrapper'
 
 
+// {
+//     "Success": true,
+//     "ErrorMsg": null,
+//     "SecurityToken": "4a739193-80aa-4f42-a5e8-5536ef92ff21",
+//     "Rosnet_User_ID": 26472,
+//     "Browse_User_Name": "dywayne.johnson",
+//     "Common_Name": "Dywayne Johnson",
+//     "My_Entrprise_Id": null,
+//     "Rosnet_Employee": false,
+//     "Sites": [
+//         "DOHERTY",
+//         "AAG",
+//         "AMETRO",
+//     ]
+// }
+
 export function userLogin(request, callback) {
   
   // login method received credentials as query string params

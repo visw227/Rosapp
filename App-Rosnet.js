@@ -848,14 +848,15 @@ export default class App extends React.Component {
         this.state = {
           showLock: false,
           userData: null,
+          superUser: null, 
           appState: AppState.currentState,
           alertCount: 0,
           messageCount: 0,
 
           // these state objects are shared across the entire app through screenProps
-          userData: null,
-          menuItems: [],
-          selectedSite: ""
+          // userData: null,
+          // menuItems: [],
+          // selectedSite: ""
         }
 
         // this kicks off a background timer loop to check things like forced re-login, etc.
@@ -879,28 +880,28 @@ export default class App extends React.Component {
 
           this.setState({
             userData: data.userData
-          })
-          //}, () => console.log(">>> global state change to userData", JSON.stringify(this.state.userData, null, 2)) )
+          }, () => console.log(">>> global state change to userData", this.state.userData ) )
 
         }
         
-        if(data.menuItems) {
+        if(data.superUser) {
 
           this.setState({
-            menuItems: data.menuItems
-          })
-          //}, () => console.log(">>> global state change to menuItems", JSON.stringify(this.state.menuItems, null, 2)) )
+            superUser: data.superUser
+          }, () => console.log(">>> global state change to superUSer", this.state.superUser ) )
+
+        }
+
+        if(data.action && data.action === "undo-session-override") {
+
+          this.setState({
+            superUser: null
+          }, () => console.log(">>> global state change to superUSer", this.state.superUser ) )
+
 
         }
         
-        if(data.selectedSite) {
 
-          this.setState({
-            selectedSite: data.selectedSite
-          })
-          //}, () => console.log(">>> global state change to selectedSite", JSON.stringify(this.state.selectedSite, null, 2)) )
-
-        }
 
     }
 

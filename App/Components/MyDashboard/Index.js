@@ -96,7 +96,6 @@ class MyDashboardScreen extends React.Component {
           },
           userProfile: fakedUserProfile,
           showClientModal: false,
-          selectedSite: "",
           userData: { sites: ["AAG", "DOHERTY"] }
       }
 

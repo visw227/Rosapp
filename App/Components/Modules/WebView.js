@@ -108,14 +108,14 @@ class WebViewScreen extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
-    let selectedSite = this.props.screenProps.state.selectedSite
+    //let selectedSite = this.props.screenProps.state.selectedSite
     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
 
     let source = {
-      uri: "https://" + selectedSite + "." + env + item.href,
+      uri: "https://" + userData.selectedSite + "." + env + item.href,
       headers: {
-        "Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
+        "Cookie": "rememberme=" + userData.userName + "; clientCode=" + userData.selectedSite + "; rosnetToken=" + userData.token 
       }
     }
 

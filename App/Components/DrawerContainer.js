@@ -48,6 +48,15 @@ export default class DrawerContainer extends React.Component {
     });
   }
 
+  undoImpersonation = () => {
+
+      let userData = this.props.screenProps.state.superUser
+
+      // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
+      this.props.screenProps._globalStateChange( { source: "SessionOverride", action: "undo-session-override", userData: userData, superUser: null })
+      
+
+  }
 
   render() {
 
@@ -103,6 +112,11 @@ export default class DrawerContainer extends React.Component {
 
         <View style={{ alignItems: 'center' }}>
           <Text style={{ paddingTop: 20, color: 'white', fontSize: 16 }}>Welcome, {this.props.screenProps.state.userData.commonName}</Text>
+           {this.props.screenProps.state.superUser &&
+            <Ionicon name={'md-swap'} size={30} color={brand.colors.white} 
+              onPress={() => { this.undoImpersonation() }}
+            />
+           }
         </View>
 
         {/* // 'separator' line */}
@@ -127,7 +141,7 @@ export default class DrawerContainer extends React.Component {
             iconSize={25}
           /> 
 
-           {this.props.screenProps.state.userData.sites.length > 0 && 
+           {this.props.screenProps.state.userData.sites.length > 1 && 
             <DrawerLabel
               icon={'window-restore'}
               label={'Select a Site'}
@@ -153,7 +167,7 @@ export default class DrawerContainer extends React.Component {
           /> 
 
 
-          {this.props.screenProps.state.menuItems.map(item => (
+          {this.props.screenProps.state.userData.menuItems.map(item => (
 
             <DrawerLabel
               key={item.id}

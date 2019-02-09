@@ -55,8 +55,8 @@ class Login extends Component {
                 hasError: false,
                 message: ""
             },
-            userName: '',
-            password: '',
+            userName: 'dywayne.johnson',
+            password: 'gorosnet1$',
             userData: null
         }
 
@@ -213,52 +213,18 @@ class Login extends Component {
                     commonName: "Demo User",
                     password: this.state.password,
                     sites: [ "AAG", "DOHERTY" ],
-                    isRosnetEmployee: false
+                    isRosnetEmployee: false,
+                    selectedSite: "AAG",
+                    menuItems: JSON.stringify(fakedMenu)
                 }
 
-                // sort before persisting
-                userData.sites.sort()
-
-                let keys = [
-                    [ 'userData', JSON.stringify(userData) ],
-                    [ 'menuItems', JSON.stringify(fakedMenu) ],
-                    [ 'selectedSite', userData.sites[0] ]
-                ]
-
-                console.log("saving keys", JSON.stringify(keys, null, 2))
-
-                AsyncStorage.multiSet(keys, function(err){
-
-                    _this.setState({
-                        sending: false
-                    })
-                    _this.onLoginResponse(userData, userData.sites[0], fakedMenu, null)
-
-                })
+                AsyncStorage.setItem('userData', JSON.stringify(userData))
                 
-
 
             }, 1000);
 
         }
         else {
-
-
-            // {
-            //     "Success": true,
-            //     "ErrorMsg": null,
-            //     "SecurityToken": "4a739193-80aa-4f42-a5e8-5536ef92ff21",
-            //     "Rosnet_User_ID": 26472,
-            //     "Browse_User_Name": "dywayne.johnson",
-            //     "Common_Name": "Dywayne Johnson",
-            //     "My_Entrprise_Id": null,
-            //     "Rosnet_Employee": false,
-            //     "Sites": [
-            //         "DOHERTY",
-            //         "AAG",
-            //         "AMETRO",
-            //     ]
-            // }
 
             // real login request
             userLogin(request, function(err, response){        
@@ -278,11 +244,7 @@ class Login extends Component {
                         // this repackages the response a bit...
                         let userData = parseUser(response)
 
-                        let selectedSite = userData.sites[0].toLowerCase()
-
-                        let cookies = "rememberme=" + response.Browse_User_Name + "; clientCode=" + selectedSite + "; rosnetToken=" + response.SecurityToken
-
-                        getMobileMenuItems(selectedSite, response.SecurityToken, function(err, menuItems){
+                        getMobileMenuItems(userData.selectedSite, userData.token, function(err, menuItems){
                             
                             if(err) {
                                 console.log("err - getMobileMenuItems", err)
@@ -295,23 +257,16 @@ class Login extends Component {
                                     item.icon = item.icon.replace('fa-', '')
                                 })
 
+                                userData.menuItems = menuItems
 
-                                let keys = [
-                                    [ 'userData', JSON.stringify(userData) ],
-                                    [ 'menuItems', JSON.stringify(menuItems) ],
-                                    [ 'selectedSite', selectedSite ]
-                                ]
 
-                                console.log("saving keys", JSON.stringify(keys, null, 2))
-
-                                AsyncStorage.multiSet(keys, function(err){
-
-                                    _this.setState({
-                                        sending: false
-                                    })
-                                    _this.onLoginResponse(userData, selectedSite, menuItems, null)
-
+                                _this.setState({
+                                    sending: false
                                 })
+                                _this.onLoginResponse(userData, null)
+
+                                // stringify the object before storing
+                                AsyncStorage.setItem('userData', JSON.stringify(userData))
 
 
                             }
@@ -342,12 +297,12 @@ class Login extends Component {
 
 
 
-    onLoginResponse = (userData, selectedSite, menuItems, redirect) => {
+    onLoginResponse = (userData, redirect) => {
 
         console.log("userData passed back to login screen:", JSON.stringify(userData, null, 2))
 
         // this shares the persisted userData to the App-Rosnet.js wrapper
-        this.props.screenProps._globalStateChange( { source: "Login", userData: userData, selectedSite: selectedSite, menuItems: menuItems })
+        this.props.screenProps._globalStateChange( { source: "Login", action: "login", userData: userData })
 
         if(redirect) {
 

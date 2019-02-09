@@ -43,46 +43,23 @@ class LaunchScreen extends React.Component {
       })
 
 
-      // get all stored keys
-      AsyncStorage.getAllKeys((err, keys) => {
+      AsyncStorage.getItem('userData').then((data) => {
 
-        AsyncStorage.multiGet(keys, (err, stores) => {
+        let routeName = ''
+
+        if(data) {
+
+          let userData = JSON.parse(data)
+
+          // this shares the persisted state objects to the App-Rosnet.js wrapper
+          _this.props.screenProps._globalStateChange( { source: "Launch", action: "init", userData: userData } )
 
 
-          let userData = null
-          let selectedSite = ''
-          let menuItems = null
-
-          stores.map((result, i, store) => {
-
-            // get at each store's key/value so you can work with it
-            let key = store[i][0];
-            let value = store[i][1];
-
-            if(key === 'userData') {
-              userData = JSON.parse(value)
-            }
-            else if(key === 'selectedSite') {
-              selectedSite = value
-            }
-            else if(key === 'menuItems') {
-              menuItems = JSON.parse(value)
-            }
-
-          });
-
-          // if userData is null, all other keys are invalid since the user is not logged in
-          if(userData) {
-
-            // this shares the persisted state objects to the App-Rosnet.js wrapper
-            _this.props.screenProps._globalStateChange( { source: "Launch", userData: userData, selectedSite: selectedSite, menuItems: menuItems } )
-
-          }
 
           // This will switch to the App screen or Auth screen and this loading
           // screen will be unmounted and thrown away.
           //this.props.navigation.navigate(userToken ? 'DrawerStack' : 'LoginStack');
-          let routeName = userData ? 'DrawerStack' : 'LoginStack'
+          routeName = 'DrawerStack'
           // instead, reset the navigation
           const resetAction = StackActions.reset({
               index: 0,
@@ -92,9 +69,23 @@ class LaunchScreen extends React.Component {
           this.props.navigation.dispatch(resetAction);
 
 
+        }
+        else {
 
-        });
-      });
+          routeName = 'LoginStack'
+          // instead, reset the navigation
+          const resetAction = StackActions.reset({
+              index: 0,
+              key: null, // this is the trick that allows this to work
+              actions: [NavigationActions.navigate({ routeName: routeName })],
+          });
+          this.props.navigation.dispatch(resetAction);
+
+        }
+
+
+      })
+
 
 
 
