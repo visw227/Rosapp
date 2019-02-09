@@ -15,3 +15,23 @@ export function searchUsers(query, limit, client, cookies, callback) {
 
 
 }
+
+
+export function impersonateUser(client, userName, token, callback) {
+  
+  // login method received credentials as query string params
+  let url = '/api/ManagerAppAuth/SuperUser?userName=' + userName
+
+  // IMPORTANT: request IS NULL since params are passed in the url of this POST request
+  fetchWrapper(url, 'POST', null, client, token, function(err, resp) {
+
+    if(err) {
+      callback(err)
+    }
+    else {
+      callback(null, resp)
+    }
+
+  })
+
+}

@@ -41,7 +41,7 @@ class Password extends React.Component {
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
     headerTintColor: 'white',
-
+    
 
   })
 
@@ -58,29 +58,60 @@ class Password extends React.Component {
       password: {
         value: '',
         isValid: false
-      }
+      },
+      changePasswordAct : false,
+      resonseMessage : '',
+      sending : 'false'
     };
   }
   
-  _onChangePassword(password, isValid) {
+  _onChangePassword = (password, isValid) => {
     this.setState({ password: { value: password, isValid: isValid } })
   }
 
-  onSubmitPress() {
+
+  onSubmitPress = (token) => {
     let request = {
         userId: 29269, 
         password: 'Vamsi@227', 
     }
-      changePassword(request, function (err,response){
+
+    let _this = this
+
+    _this.setState({
+      sending : 'true',
+    },()=> {
+      console.log('sendingSetT',_this.state.sending)
+    })
+    
+      changePassword(request, token, function (err,response){
+
+        
+
+        
+
           if (err){
             Keyboard.dismiss()
             console.log("userLogin error", err)
           }
 
           else {
+            
             console.log("changePassword success:", response)
 
-            console('success')
+            console.log('success')
+            
+
+            if(response){
+              //alert('got response')
+              _this.setState({
+                resonseMessage: response.message,
+                changePasswordAct : true,
+                sending : 'false'
+              } , ()=> {
+                console.log('sendingSetF',_this.state.sending)
+              })
+            }
           }
       })
 
@@ -89,6 +120,8 @@ class Password extends React.Component {
 
 
   render() {
+
+    console.log('sending',this.state.sending)
 
     const strengthLevels = [
       {
@@ -179,9 +212,27 @@ class Password extends React.Component {
                 
                 
             <TouchableOpacity style={styles.buttonContainer }>
-                <Text  style={styles.buttonText} onPress = {this.onSubmitPress}>Submit</Text>
+                <Text  style={styles.buttonText} onPress = { ()=> this.onSubmitPress(this.props.screenProps.state.userData.token) }>Submit</Text>
             </TouchableOpacity> 
 
+            {this.state.sending === 'true' ? <ActivityIndicator size="large" color={brand.colors.primary} style ={{margin:10}} />: null}
+            {this.state.changePasswordAct && this.state.resonseMessage ? <View style={{ 
+                                justifyContent: 'center', 
+                                alignItems: 'center',
+                                marginBottom: 15,
+                                marginTop: 10,
+                                margin:5,
+                                flexDirection:'column',
+                                borderColor: brand.colors.danger,
+                                borderWidth:2,
+                                borderBottomWidth:2
+                            }}> 
+                                <Ionicon name = 'md-alert' 
+                                size={35}
+                                color={brand.colors.danger}
+                                style={{ paddingLeft: 10 }}/>
+                                <Text style={{color: brand.colors.primary,padding:5 }}>{this.state.resonseMessage}</Text>
+                            </View> : null}
 
         </View>
 

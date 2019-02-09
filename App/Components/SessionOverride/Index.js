@@ -18,7 +18,9 @@ import SearchBar from './SearchBar'
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { searchUsers } from '../../Services/SessionOverride';
+import { searchUsers, impersonateUser } from '../../Services/SessionOverride';
+
+import { parseUser } from '../../Helpers/UserDataParser';
 
 
 class SearchUsers extends React.Component {
@@ -119,6 +121,39 @@ class SearchUsers extends React.Component {
 
     console.log("selected user: ", item)
     // this.props.navigation.navigate('ModulesWebView', { item: item })
+
+    let originalUserData = this.props.screenProps.state.userData
+    let originalSelectedSite = this.props.screenProps.state.selectedSite
+
+    impersonateUser(selectedSite, item.userName, userData.token, function(err, response){
+
+      if(err) {
+        console.log("err", err)
+      }
+      else {
+        console.log("response", response)
+
+        // get the data for the user we are impersonating
+        let impersonatedUser = parseUser(response)
+        let selectedSite = impersonatedUser.sites[0].toLowerCase()
+
+        let newUserData = impersonatedUser
+        let newSelectedSite = selectedSite
+
+        impersonatedUser.superUser = originalUserData
+
+        console.log("userData", JSON.stringify(userData, null, 2))
+
+        // this shares the persisted userData to the App-Rosnet.js wrapper
+        //this.props.screenProps._globalStateChange( { source: "Login", userData: userData, selectedSite: selectedSite, menuItems: menuItems })
+
+
+      }
+
+
+    })
+
+
 
   }
 
