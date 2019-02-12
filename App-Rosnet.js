@@ -874,7 +874,7 @@ export default class App extends React.Component {
     _globalStateChange = (data) => {
 
 
-        console.log(">> GLOBAL STATE CHANGE FROM:", data.source, data)
+        console.log(">> GLOBAL STATE CHANGE:", data)
 
         if(data.userData) {
 

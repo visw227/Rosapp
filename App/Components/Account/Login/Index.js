@@ -312,7 +312,7 @@ class Login extends Component {
         console.log("userData passed back to login screen:", JSON.stringify(userData, null, 2))
 
         // this shares the persisted userData to the App-Rosnet.js wrapper
-        this.props.screenProps._globalStateChange( { source: "Login", action: "login", userData: userData })
+        this.props.screenProps._globalStateChange( { action: "login", userData: userData })
 
         if(redirect) {
 

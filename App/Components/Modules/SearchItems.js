@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView,TextInpu
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-import SearchBar from './SearchBar'
+import SearchBar from '../ReusableComponents/SearchBar'
 
 
 import Ionicon from 'react-native-vector-icons/Ionicons'

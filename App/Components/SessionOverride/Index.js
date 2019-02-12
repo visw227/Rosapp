@@ -14,7 +14,7 @@ import {
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-import SearchBar from './SearchBar'
+import SearchBar from '../ReusableComponents/SearchBar'
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
@@ -156,7 +156,7 @@ class SearchUsers extends React.Component {
             else {
 
                 _this.setState({
-                  showModal: true,
+                  //showModal: true,
                   receiving: false
                 })
 
@@ -169,7 +169,11 @@ class SearchUsers extends React.Component {
 
                 _this.setState({
                   impersonatedUser: impersonatedUser
-                })
+                }, () => 
+  
+                    // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
+                    _this.doImpersonation(true)
+                )
 
 
             }
@@ -189,12 +193,12 @@ class SearchUsers extends React.Component {
   doImpersonation = (mode) => {
 
       // always close the modal
-      this.setState({ showModal: false })
+      //this.setState({ showModal: false })
 
       // only do impersonation if the user presses 'Continue'
       if(mode === true) {
         // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
-        this.props.screenProps._globalStateChange( { source: "SessionOverride", action: "session-override", userData: this.state.impersonatedUser, superUser: this.props.screenProps.state.userData })
+        this.props.screenProps._globalStateChange( { action: "session-override", userData: this.state.impersonatedUser, superUser: this.props.screenProps.state.userData })
       
         const resetAction = StackActions.reset({
             index: 0,

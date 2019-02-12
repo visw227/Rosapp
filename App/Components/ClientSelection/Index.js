@@ -15,6 +15,9 @@ import {
   Picker,
   WebView
 } from 'react-native';
+
+import { NavigationActions, StackActions } from 'react-navigation'
+
 import { List, ListItem, Avatar } from 'react-native-elements'
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -22,6 +25,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import brand from '../../Styles/brand'
 import Styles from './Styles'
+
+import SearchBar from '../ReusableComponents/SearchBar'
+
 
 export class About extends React.Component {
 
@@ -82,6 +88,7 @@ export class About extends React.Component {
               message: ""
           },
           userData: { sites: ["AAG", "DOHERTY"], selectedSite: "" },
+          filtered: [ "AAG"],
           changed: false
 
       }
@@ -110,9 +117,12 @@ export class About extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
+    console.log("ClientSelection", userData)
+
     
     _this.setState({
-      userData: userData
+      userData: userData,
+      filtered: userData.sites
     })
 
     
@@ -132,13 +142,37 @@ export class About extends React.Component {
       changed: true
     }, () => 
   
-      // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
-      this.props.screenProps._globalStateChange( { source: "ClientSelection", action: "change-client", userData: userData })
+      this.doClientChange()
    );
 
 
   }
 
+  doClientChange = () => {
+
+      // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
+      this.props.screenProps._globalStateChange( { action: "change-client", userData: this.state.userData })
+
+      const resetAction = StackActions.reset({
+          index: 0,
+          key: null, // this is the trick that allows this to work
+          actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+      });
+      this.props.navigation.dispatch(resetAction);
+
+  }
+
+  matchSites = (query) => {
+
+    console.log("query", query)
+
+    let filtered = this.state.userData.sites.filter(item => item.toLowerCase().indexOf(query.toLowerCase()) !== -1)
+
+    this.setState({
+      filtered: filtered
+    })
+
+  }
 
   getAvatar = (item) => {
 
@@ -165,13 +199,22 @@ export class About extends React.Component {
         return (
 
 
-                  <View style ={{marginTop : -20}}>
+                  <View style = {{marginTop:0}}>
+          
+                    <SearchBar
+                      lightTheme={true}
+                      color ='blue'
+                      value={this.state.text}
+                      placeholder='Search Term'
+                      onChangeText = {(text)=> { this.matchSites(text) }}/>
+            
+
                   
-                    <ScrollView>
+                    <ScrollView style={{ marginTop: -20 }}>
 
                       <List style={styles.list}>
 
-                        {this.state.userData.sites.map((item, index) => (
+                        {this.state.filtered.map((item, index) => (
                             <ListItem
 
                                 hideChevron={true}

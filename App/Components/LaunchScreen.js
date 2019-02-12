@@ -52,7 +52,7 @@ class LaunchScreen extends React.Component {
           let userData = JSON.parse(data)
 
           // this shares the persisted state objects to the App-Rosnet.js wrapper
-          _this.props.screenProps._globalStateChange( { source: "Launch", action: "init", userData: userData } )
+          _this.props.screenProps._globalStateChange( { action: "launch", userData: userData } )
 
 
 
