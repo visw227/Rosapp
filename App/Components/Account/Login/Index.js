@@ -55,8 +55,8 @@ class Login extends Component {
                 hasError: false,
                 message: ""
             },
-            userName: 'dywayne.johnson',
-            password: 'gorosnet1$',
+            userName: '',
+            password: '',
             userData: null
         }
 
@@ -215,11 +215,15 @@ class Login extends Component {
                     sites: [ "AAG", "DOHERTY" ],
                     isRosnetEmployee: false,
                     selectedSite: "AAG",
-                    menuItems: JSON.stringify(fakedMenu)
+                    menuItems: fakedMenu
                 }
 
                 AsyncStorage.setItem('userData', JSON.stringify(userData))
                 
+
+                _this.setState({
+                    sending: false
+                })
 
             }, 1000);
 
@@ -246,6 +250,7 @@ class Login extends Component {
 
                         getMobileMenuItems(userData.selectedSite, userData.token, function(err, menuItems){
                             
+
                             if(err) {
                                 console.log("err - getMobileMenuItems", err)
                                 _this.showAlert(err.message)
@@ -263,13 +268,19 @@ class Login extends Component {
                                 _this.setState({
                                     sending: false
                                 })
+
                                 _this.onLoginResponse(userData, null)
 
                                 // stringify the object before storing
                                 AsyncStorage.setItem('userData', JSON.stringify(userData))
 
-
                             }
+
+
+                            _this.setState({
+                                sending: false
+                            })
+
                         })
 
 
@@ -282,9 +293,6 @@ class Login extends Component {
 
                 }
 
-                _this.setState({
-                    sending: false
-                })
 
             })
 
@@ -404,11 +412,13 @@ class Login extends Component {
                             </View>
                         }
 
-                        <TouchableOpacity disabled={this.state.sending} 
-                            style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
-                            onPress={this.onLoginPress}>
-                            <Text  style={styles.buttonText}>LOGIN</Text>
-                        </TouchableOpacity> 
+
+                            <TouchableOpacity disabled={this.state.sending} 
+                                style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
+                                onPress={this.onLoginPress}>
+                                <Text  style={ this.state.sending ? styles.buttonDisabledText   : styles.buttonText }>LOGIN</Text>
+                            </TouchableOpacity> 
+
                         <View>
                             <Text 
                                 disabled={this.state.sending} 
@@ -446,19 +456,28 @@ const styles = StyleSheet.create({
         backgroundColor: brand.colors.primary,
         paddingVertical: 15,
         borderRadius: 30,
-                borderColor: brand.colors.white, 
+        borderColor: brand.colors.white, 
         borderWidth: 2,
     },
-    buttonDisabledContainer:{
-        backgroundColor: brand.colors.primary,
-        opacity: .5,
-        paddingVertical: 15,
-        borderRadius: 30
-    },
     buttonText:{
-        color: '#fff',
+        color: 'white',
         textAlign: 'center',
         fontWeight: '700'
+    }, 
+    buttonDisabledContainer:{
+        marginTop: 20,
+        backgroundColor: brand.colors.primary,
+        paddingVertical: 15,
+        borderRadius: 30,
+        borderColor: brand.colors.white, 
+        borderWidth: 2,
+        opacity: .1
+    },
+    buttonDisabledText:{
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: '700',
+        opacity: .8
     }, 
     loginButton:{
         backgroundColor:  brand.colors.secondary,
