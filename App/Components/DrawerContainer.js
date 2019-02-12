@@ -110,13 +110,19 @@ export default class DrawerContainer extends React.Component {
             source={require('../Images/logo-xs-white.png')} />
         </View>
 
-        <View style={{ alignItems: 'center' }}>
-          <Text style={{ paddingTop: 20, color: 'white', fontSize: 16 }}>Welcome, {this.props.screenProps.state.userData.commonName}</Text>
-           {this.props.screenProps.state.superUser &&
-            <Ionicon name={'md-swap'} size={30} color={brand.colors.white} 
+        <View style={{  flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        alignContent: 'space-between', 
+                        marginTop: 10 }}>
+          <Text style={{ margin: 5, color: 'white', fontSize: 16 }}>
+           {this.props.screenProps.state.userData.commonName}
+           </Text>
+           {this.props.screenProps.state.superUser && 
+            <FontAwesome name={'undo'} size={20} style={{ margin: 5, color: brand.colors.white}}
               onPress={() => { this.undoImpersonation() }}
             />
-           }
+            } 
         </View>
 
         {/* // 'separator' line */}

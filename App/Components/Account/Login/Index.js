@@ -247,6 +247,8 @@ class Login extends Component {
 
                         // this repackages the response a bit...
                         let userData = parseUser(response)
+                        // we are including password in the userData for the change password screen to have access the current password for validation
+                        userData.password = _this.state.password 
 
                         getMobileMenuItems(userData.selectedSite, userData.token, function(err, menuItems){
                             
