@@ -38,7 +38,7 @@ class SearchItems extends React.Component {
 
       let items = []
 
-      this.props.screenProps.state.menuItems.forEach(function(root){
+      this.props.screenProps.state.userData.menuItems.forEach(function(root){
 
         root.subs.forEach(function(sub){
           sub.items.forEach(function(item){

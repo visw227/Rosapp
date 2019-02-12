@@ -121,6 +121,10 @@ class SearchUsers extends React.Component {
 
     let _this = this
 
+    _this.setState({
+      receiving: true
+    })
+
     console.log("selected user: ", item)
     // this.props.navigation.navigate('ModulesWebView', { item: item })
 
@@ -143,11 +147,17 @@ class SearchUsers extends React.Component {
             if(err) {
                 console.log("err - getMobileMenuItems", err)
                 _this.showAlert(err.message)
+
+                _this.setState({
+                  receiving: false
+                })
+
             }
             else {
 
                 _this.setState({
-                  showModal: true
+                  showModal: true,
+                  receiving: false
                 })
 
                 // rename the FontAwesome icons by removing the fa- preface
