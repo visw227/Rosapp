@@ -550,7 +550,6 @@ import SupportScreen from './App/Components/Support/Index'
 import SupportViewScreen from './App/Components/Support/View/Index'
 import SupportRequestScreen from './App/Components/Support/Request/Index'
 import SupportContactScreen from './App/Components/Support/Contact/Index'
-import SupportSocialMediaScreen from './App/Components/Support/SocialMedia/Index'
 
 let SupportStack = createStackNavigator({ 
   Support: {
@@ -568,9 +567,6 @@ let SupportStack = createStackNavigator({
   },
   Contact: {
     screen: SupportContactScreen
-  },
-  SocialMedia: {
-    screen: SupportSocialMediaScreen
   }
 });
 
@@ -624,6 +620,27 @@ let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
 import SessionOverrideScreen from './App/Components/SessionOverride/Index'
 
 let SessionOverrideStack = createStackNavigator({ SessionOverrideScreen });
+
+// let PushNotificationsPermissionStack = createStackNavigator({ 
+//   PushNotifications: {
+//     screen: PushNotificationsScreen,
+//     // to hide the back title for any child screens, it must be set to null here
+//     navigationOptions: ({ navigation }) => ({
+//       headerBackTitle: null
+//     }),
+//   },
+
+
+// });
+
+
+// *******************************************************************************
+// Social Media
+// *******************************************************************************
+
+import SocialMediaScreen from './App/Components/SocialMedia/Index'
+
+let SocialMediaStack = createStackNavigator({ SocialMediaScreen });
 
 // let PushNotificationsPermissionStack = createStackNavigator({ 
 //   PushNotifications: {
@@ -791,6 +808,22 @@ const DrawerStack = createDrawerNavigator({
 
   },
 
+  SocialMedia: { 
+    screen: SocialMediaStack,
+  
+    navigationOptions: ({ navigation }) => ({
+
+      // drawerLabel: 'Availability',
+      // drawerIcon: ({ tintColor }) => (
+      //   <Image
+      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     style={[styles.icon, {tintColor: tintColor}]}
+      //   />
+      // ),
+
+    })
+
+  },
 
 }, {
       // The drawerLabel is defined in DrawerContainer.js

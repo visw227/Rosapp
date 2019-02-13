@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, AsyncStorage, TouchableHighlight, Scroll
 import { NavigationActions, StackActions } from 'react-navigation'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import Entypo from 'react-native-vector-icons/Entypo'
 
 import brand from '../Styles/brand'
 
@@ -83,8 +84,8 @@ export default class DrawerContainer extends React.Component {
           marginBottom: 1
         }}>
           <View style={{ alignItems: 'center', width: 30, backgroundColor: brand.colors.primary }}>
-            {iconType && iconType === 'Ionicons' ? (
-             <Ionicon name={icon} size={iconSize} color={brand.colors.white} />
+            {iconType && iconType === 'Entypo' ? (
+             <Entypo name={icon} size={iconSize} color={brand.colors.white} />
             ) : (
              <FontAwesome name={icon} size={iconSize} color={brand.colors.white} />
             )}
@@ -226,6 +227,14 @@ export default class DrawerContainer extends React.Component {
             iconSize={25}
           /> 
 
+
+          <DrawerLabel
+            icon={'share'}
+            label={'Social Media'}
+            routeName={'SocialMedia'}
+            iconSize={25}
+            iconType={'Entypo'}
+          /> 
 
           <DrawerLabel
             icon={'sign-out'}

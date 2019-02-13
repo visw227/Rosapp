@@ -4,11 +4,11 @@ import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
-import brand from '../../../Styles/brand'
+import brand from '../../Styles/brand'
 
 import Styles from './Styles'
 
-import logo from '../../../Images/logo-lg-white-square.png';
+import logo from '../../Images/logo-lg-white-square.png';
 
 import FontAwesome5Free from 'react-native-vector-icons/FontAwesome5'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -28,6 +28,13 @@ class Contact extends React.Component {
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
     headerTintColor: 'white',
+    headerLeft : <Ionicon
+        name="md-menu"
+        size={35}
+        color={brand.colors.white}
+        style={{ paddingLeft: 10 }}
+        onPress={() => navigate.navigation.toggleDrawer() }
+/>,
 
 
   })
