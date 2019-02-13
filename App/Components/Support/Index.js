@@ -119,8 +119,43 @@ export class About extends React.Component {
 
                   />
 
+                  <ListItem
+                      roundAvatar
+                      style={Styles.listItem}
+                      title='Contact Information'
+                          titleStyle={{ color: brand.colors.gray }}
+                          
+                      subtitle={
+                      <View style={Styles.subtitleView}>
+                          <Text style={Styles.ratingText}>Call or Email Rosnet</Text>
+                      </View>
+                      }
+                      avatar={<Avatar rounded medium 
+                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                          icon={{name: 'support', type: 'font-awesome' }}/>}
 
+                      onPress={() => this.props.navigation.navigate('Contact') }
 
+                  />
+
+                  <ListItem
+                      roundAvatar
+                      style={Styles.listItem}
+                      title='Social Media'
+                          titleStyle={{ color: brand.colors.gray }}
+                          
+                      subtitle={
+                      <View style={Styles.subtitleView}>
+                          <Text style={Styles.ratingText}>Visit us on Facebook, Twitter, and LinkedIn</Text>
+                      </View>
+                      }
+                      avatar={<Avatar rounded medium 
+                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                          icon={{name: 'share', type: 'entypo' }}/>}
+
+                      onPress={() => this.props.navigation.navigate('SocialMedia') }
+
+                  />
 
 
               </List>
