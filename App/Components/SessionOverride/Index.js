@@ -9,7 +9,8 @@ import {
   TextInput, 
   Image, 
   ActivityIndicator,
-  Modal
+  Modal,
+  Keyboard
 } from 'react-native'
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
@@ -44,10 +45,21 @@ class SearchUsers extends React.Component {
         size={35}
         color={brand.colors.white}
         style={{ paddingLeft: 10 }}
-        onPress={() => navigate.navigation.toggleDrawer() }
+        onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
     />,
 
   })
+
+  // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
+  // this is passed in to navigationOptions as menuIconClickHandler
+  onMenuIconClick = (navigate) => {
+
+    navigate.navigation.toggleDrawer()
+    Keyboard.dismiss()
+
+  }
+
+
 
   getTitle = (navigate) => {
 
@@ -111,11 +123,9 @@ class SearchUsers extends React.Component {
       userData: userData
     })
 
-    this.props.navigation.setParams({ title: 'Search ' + userData.selectedSite + ' Users' })
+    this.props.navigation.setParams({ title: 'Search ' + userData.selectedSite + ' Users', menuIconClickHandler: this.onMenuIconClick })
     
   }
-
-  
 
   onSelect = (item) => {
 

@@ -213,28 +213,12 @@ export default class DrawerContainer extends React.Component {
           /> 
 
           <DrawerLabel
-            icon={'info-circle'}
-            label={'About'}
-            routeName={'About'}
-            iconSize={30}
-          /> 
-
-
-          <DrawerLabel
             icon={'support'}
-            label={'Help Center'}
+            label={'Support'}
             routeName={'Support'}
             iconSize={25}
           /> 
 
-
-          <DrawerLabel
-            icon={'share'}
-            label={'Social Media'}
-            routeName={'SocialMedia'}
-            iconSize={25}
-            iconType={'Entypo'}
-          /> 
 
           <DrawerLabel
             icon={'sign-out'}

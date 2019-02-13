@@ -13,7 +13,8 @@ import {
   TouchableHighlight,
   Modal,
   Picker,
-  WebView
+  WebView,
+  Keyboard
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -46,7 +47,7 @@ export class About extends React.Component {
         size={35}
         color={brand.colors.white}
         style={{ paddingLeft: 10 }}
-        onPress={() => navigate.navigation.toggleDrawer() }
+        onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
     />,
 
     // headerRight : 
@@ -75,6 +76,16 @@ export class About extends React.Component {
     //   />
     // ),
   })
+
+  // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
+  // this is passed in to navigationOptions as menuIconClickHandler
+  onMenuIconClick = (navigate) => {
+
+    navigate.navigation.toggleDrawer()
+    Keyboard.dismiss()
+
+  }
+
 
   constructor(props) {
       super(props);
@@ -119,6 +130,8 @@ export class About extends React.Component {
 
     console.log("ClientSelection", userData)
 
+    this.props.navigation.setParams({ menuIconClickHandler: this.onMenuIconClick })
+    
     
     _this.setState({
       userData: userData,

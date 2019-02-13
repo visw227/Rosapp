@@ -132,10 +132,68 @@ export class About extends React.Component {
                       }
                       avatar={<Avatar rounded medium 
                           overlayContainerStyle={{backgroundColor: '#31B0D5'}}
-                          icon={{name: 'support', type: 'font-awesome' }}/>}
+                          icon={{name: 'email', type: 'entypo' }}/>}
 
                       onPress={() => this.props.navigation.navigate('Contact') }
 
+                  />
+
+
+                  <ListItem
+
+                      style={Styles.listItem}
+                      title='App & Device Info'
+                          titleStyle={{ color: brand.colors.gray }}
+                          
+                      subtitle={
+                      <View style={Styles.subtitleView}>
+                          <Text style={Styles.ratingText}>Info for this app on your device</Text>
+                      </View>
+                      }
+                      avatar={<Avatar rounded medium
+                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                          icon={{name: 'info', type: 'font-awesome'}}/>}
+                      
+                      onPress={() => this.props.navigation.navigate('Device') }
+                  
+                  />
+                  
+                  <ListItem
+                      roundAvatar
+                      style={Styles.listItem}
+                      title='Terms & Conditions'
+                          titleStyle={{ color: brand.colors.gray }}
+                          
+                      subtitle={
+                      <View style={Styles.subtitleView}>
+                          <Text style={Styles.ratingText}>Terms and conditions for using this app</Text>
+                      </View>
+                      }
+                      avatar={<Avatar rounded medium 
+                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                          icon={{name: 'list-ol', type: 'font-awesome' }}/>}
+
+                      onPress={() => this.props.navigation.navigate('Terms') }
+
+                  />
+
+                  <ListItem
+
+                      style={Styles.listItem}
+                      title='Privacy Policy'
+                          titleStyle={{ color: brand.colors.gray }}
+
+                      subtitle={
+                      <View style={Styles.subtitleView}>
+                          <Text style={Styles.ratingText}>How we protect your privacy</Text>
+                      </View>
+                      }
+                      avatar={<Avatar rounded medium
+                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                          icon={{name: 'user-secret', type: 'font-awesome'}}/>}
+                      
+                      onPress={() => this.props.navigation.navigate('Privacy') }
+                  
                   />
 
 

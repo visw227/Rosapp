@@ -492,29 +492,29 @@ TabStack.navigationOptions = ({ navigation, screenProps }) => {
 // About
 // *******************************************************************************
 
-import AboutScreen from './App/Components/About/Index'
-import TermsScreen from './App/Components/About/Terms/Index'
-import PrivacyScreen from './App/Components/About/Privacy/Index'
-import DeviceScreen from './App/Components/About/Device/Index'
+// import AboutScreen from './App/Components/About/Index'
+// import TermsScreen from './App/Components/About/Terms/Index'
+// import PrivacyScreen from './App/Components/About/Privacy/Index'
+// import DeviceScreen from './App/Components/About/Device/Index'
 
-let AboutStack = createStackNavigator({ 
-  About: {
-    screen: AboutScreen,
-    // to hide the back title for any child screens, it must be set to null here
-    navigationOptions: ({ navigation }) => ({
-      headerBackTitle: null
-    }),
-  },
-  Terms: {
-    screen: TermsScreen
-  },
-  Privacy: {
-    screen: PrivacyScreen
-  },
-  Device: {
-    screen: DeviceScreen
-  } 
-});
+// let AboutStack = createStackNavigator({ 
+//   About: {
+//     screen: AboutScreen,
+//     // to hide the back title for any child screens, it must be set to null here
+//     navigationOptions: ({ navigation }) => ({
+//       headerBackTitle: null
+//     }),
+//   },
+//   Terms: {
+//     screen: TermsScreen
+//   },
+//   Privacy: {
+//     screen: PrivacyScreen
+//   },
+//   Device: {
+//     screen: DeviceScreen
+//   } 
+// });
 
 
 
@@ -551,6 +551,11 @@ import SupportViewScreen from './App/Components/Support/View/Index'
 import SupportRequestScreen from './App/Components/Support/Request/Index'
 import SupportContactScreen from './App/Components/Support/Contact/Index'
 
+import TermsScreen from './App/Components/Support/Terms/Index'
+import PrivacyScreen from './App/Components/Support/Privacy/Index'
+import DeviceScreen from './App/Components/Support/Device/Index'
+
+
 let SupportStack = createStackNavigator({ 
   Support: {
     screen: SupportScreen,
@@ -567,7 +572,16 @@ let SupportStack = createStackNavigator({
   },
   Contact: {
     screen: SupportContactScreen
-  }
+  },
+  Terms: {
+    screen: TermsScreen
+  },
+  Privacy: {
+    screen: PrivacyScreen
+  },
+  Device: {
+    screen: DeviceScreen
+  } 
 });
 
 
@@ -634,25 +648,6 @@ let SessionOverrideStack = createStackNavigator({ SessionOverrideScreen });
 // });
 
 
-// *******************************************************************************
-// Social Media
-// *******************************************************************************
-
-import SocialMediaScreen from './App/Components/SocialMedia/Index'
-
-let SocialMediaStack = createStackNavigator({ SocialMediaScreen });
-
-// let PushNotificationsPermissionStack = createStackNavigator({ 
-//   PushNotifications: {
-//     screen: PushNotificationsScreen,
-//     // to hide the back title for any child screens, it must be set to null here
-//     navigationOptions: ({ navigation }) => ({
-//       headerBackTitle: null
-//     }),
-//   },
-
-
-// });
 
 // *******************************************************************************
 // Drawer Items
@@ -700,22 +695,22 @@ const DrawerStack = createDrawerNavigator({
   },
 
 
-  About: { 
-    screen: AboutStack,
+  // About: { 
+  //   screen: AboutStack,
   
-    navigationOptions: ({ navigation }) => ({
+  //   navigationOptions: ({ navigation }) => ({
 
-      // drawerLabel: 'Availability',
-      // drawerIcon: ({ tintColor }) => (
-      //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
-      //     style={[styles.icon, {tintColor: tintColor}]}
-      //   />
-      // ),
+  //     // drawerLabel: 'Availability',
+  //     // drawerIcon: ({ tintColor }) => (
+  //     //   <Image
+  //     //     source={require('./App/Images/TabBar/calendar-7.png')}
+  //     //     style={[styles.icon, {tintColor: tintColor}]}
+  //     //   />
+  //     // ),
 
-    })
+  //   })
 
-  },
+  // },
 
   Account: { 
     screen: AccountStack,
@@ -808,22 +803,7 @@ const DrawerStack = createDrawerNavigator({
 
   },
 
-  SocialMedia: { 
-    screen: SocialMediaStack,
-  
-    navigationOptions: ({ navigation }) => ({
 
-      // drawerLabel: 'Availability',
-      // drawerIcon: ({ tintColor }) => (
-      //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
-      //     style={[styles.icon, {tintColor: tintColor}]}
-      //   />
-      // ),
-
-    })
-
-  },
 
 }, {
       // The drawerLabel is defined in DrawerContainer.js
@@ -1050,8 +1030,9 @@ export default class App extends React.Component {
 
             console.log("User is logged in, so showing lock screen.")
 
+            // Feb 13, 2019 - Commenting out this feature until the business rules are more fully baked
             // this is needed since props.navigation isn't present for unmounted screen components
-            NavigationService.navigate('LockStack');
+            //NavigationService.navigate('LockStack');
 
           }
           else {
