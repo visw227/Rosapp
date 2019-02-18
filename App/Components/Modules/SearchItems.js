@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView,TextInput,Image } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView,TextInput,Image, Keyboard } from 'react-native'
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-import SearchBar from './SearchBar'
+import SearchBar from '../ReusableComponents/SearchBar'
 
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -25,12 +25,19 @@ class SearchItems extends React.Component {
         size={35}
         color={brand.colors.white}
         style={{ paddingLeft: 10 }}
-        onPress={() => navigate.navigation.toggleDrawer() }
+        onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
     />,
 
   })
 
+  // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
+  // this is passed in to navigationOptions as menuIconClickHandler
+  onMenuIconClick = (navigate) => {
 
+    navigate.navigation.toggleDrawer()
+    Keyboard.dismiss()
+
+  }
 
   constructor(props) {
       super(props);
@@ -38,7 +45,7 @@ class SearchItems extends React.Component {
 
       let items = []
 
-      this.props.screenProps.state.menuItems.forEach(function(root){
+      this.props.screenProps.state.userData.menuItems.forEach(function(root){
 
         root.subs.forEach(function(sub){
           sub.items.forEach(function(item){
@@ -66,6 +73,7 @@ class SearchItems extends React.Component {
     // const parent = navigation.getParam('item', { id: 0, name: null} );
     // this.props.navigation.setParams({ title: parent.Name })
 
+    this.props.navigation.setParams({ menuIconClickHandler: this.onMenuIconClick })
 
   }
 

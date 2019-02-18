@@ -130,7 +130,7 @@ class DashboardScreen extends React.Component {
 
       
       this.setState({ 
-        selectedSite: selectedSite,
+        userData: userData,
         source: source
       });
 

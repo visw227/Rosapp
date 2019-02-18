@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, AsyncStorage, TouchableHighlight, Scroll
 import { NavigationActions, StackActions } from 'react-navigation'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import Entypo from 'react-native-vector-icons/Entypo'
 
 import brand from '../Styles/brand'
 
@@ -53,7 +54,7 @@ export default class DrawerContainer extends React.Component {
       let userData = this.props.screenProps.state.superUser
 
       // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
-      this.props.screenProps._globalStateChange( { source: "SessionOverride", action: "undo-session-override", userData: userData, superUser: null })
+      this.props.screenProps._globalStateChange( { action: "undo-session-override", userData: userData, superUser: null })
       
 
   }
@@ -83,8 +84,8 @@ export default class DrawerContainer extends React.Component {
           marginBottom: 1
         }}>
           <View style={{ alignItems: 'center', width: 30, backgroundColor: brand.colors.primary }}>
-            {iconType && iconType === 'Ionicons' ? (
-             <Ionicon name={icon} size={iconSize} color={brand.colors.white} />
+            {iconType && iconType === 'Entypo' ? (
+             <Entypo name={icon} size={iconSize} color={brand.colors.white} />
             ) : (
              <FontAwesome name={icon} size={iconSize} color={brand.colors.white} />
             )}
@@ -110,13 +111,19 @@ export default class DrawerContainer extends React.Component {
             source={require('../Images/logo-xs-white.png')} />
         </View>
 
-        <View style={{ alignItems: 'center' }}>
-          <Text style={{ paddingTop: 20, color: 'white', fontSize: 16 }}>Welcome, {this.props.screenProps.state.userData.commonName}</Text>
-           {this.props.screenProps.state.superUser &&
-            <Ionicon name={'md-swap'} size={30} color={brand.colors.white} 
+        <View style={{  flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        alignContent: 'space-between', 
+                        marginTop: 10 }}>
+          <Text style={{ margin: 5, color: 'white', fontSize: 16 }}>
+           {this.props.screenProps.state.userData.commonName}
+           </Text>
+           {this.props.screenProps.state.superUser && 
+            <FontAwesome name={'undo'} size={20} style={{ margin: 5, color: brand.colors.white}}
               onPress={() => { this.undoImpersonation() }}
             />
-           }
+            } 
         </View>
 
         {/* // 'separator' line */}
@@ -141,23 +148,6 @@ export default class DrawerContainer extends React.Component {
             iconSize={25}
           /> 
 
-           {this.props.screenProps.state.userData.sites.length > 1 && 
-            <DrawerLabel
-              icon={'window-restore'}
-              label={'Select a Site'}
-              routeName={'ClientSelection'}
-              iconSize={25}
-            /> 
-           } 
-
-            {this.props.screenProps.state.userData.isRosnetEmployee &&  
-            <DrawerLabel
-              icon={'user-plus'}
-              label={'Session Override'}
-              routeName={'SessionOverride'}
-              iconSize={25}
-            /> 
-            }  
 
           <DrawerLabel
             icon={'tachometer'}
@@ -190,6 +180,24 @@ export default class DrawerContainer extends React.Component {
               marginBottom: 10
           }}/>
 
+           {this.props.screenProps.state.userData.sites.length > 1 && 
+            <DrawerLabel
+              icon={'window-restore'}
+              label={'Select a Site'}
+              routeName={'ClientSelection'}
+              iconSize={25}
+            /> 
+           } 
+
+            {this.props.screenProps.state.userData.isRosnetEmployee &&  
+            <DrawerLabel
+              icon={'user-plus'}
+              label={'Session Override'}
+              routeName={'SessionOverride'}
+              iconSize={25}
+            /> 
+            }  
+            
           <DrawerLabel
             icon={'user'}
             label={'StaffLinQ Employees'}
@@ -205,16 +213,8 @@ export default class DrawerContainer extends React.Component {
           /> 
 
           <DrawerLabel
-            icon={'info-circle'}
-            label={'About'}
-            routeName={'About'}
-            iconSize={30}
-          /> 
-
-
-          <DrawerLabel
             icon={'support'}
-            label={'Help Center'}
+            label={'Support'}
             routeName={'Support'}
             iconSize={25}
           /> 

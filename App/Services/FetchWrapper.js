@@ -32,28 +32,18 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
     let fullUrl = ''
     let protocol = ''
 
+    console.log('subDomain', subDomain)
+
     // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
-    if(config.DOMAIN.indexOf('rosnet') !== -1 || config.DOMAIN.indexOf('roslocal') !== -1) {
-
+    if(config.DOMAIN.indexOf('rosnet') !== -1) {
       protocol = "https://"
-
-      // e.g. https://aag.rosnetqa.com/api/...
-      // e.g. https://dashboard.rosnetqa.com/api/...
-      fullUrl = protocol + subDomain + "." + config.DOMAIN + url
-
     }
     else {
-
       protocol = "http://"
-
-      // e.g. 670b8c88.ngrok.io
-      fullUrl = protocol + config.DOMAIN + url
-
-
     }
 
-
-
+    fullUrl = protocol + subDomain + "." + config.DOMAIN + url
+    console.log("fullUrl", fullUrl)
 
     // tack on timestamp as a cache buster
     // fullUrl = withCacheBustingTimestamp(fullUrl)

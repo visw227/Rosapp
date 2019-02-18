@@ -68,7 +68,7 @@ class PushNotifications extends React.Component {
 
 
 
-    render() {
+render() {
     return (
       <View style={styles.container}>
 

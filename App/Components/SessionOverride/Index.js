@@ -9,12 +9,13 @@ import {
   TextInput, 
   Image, 
   ActivityIndicator,
-  Modal
+  Modal,
+  Keyboard
 } from 'react-native'
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-import SearchBar from './SearchBar'
+import SearchBar from '../ReusableComponents/SearchBar'
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
@@ -44,10 +45,21 @@ class SearchUsers extends React.Component {
         size={35}
         color={brand.colors.white}
         style={{ paddingLeft: 10 }}
-        onPress={() => navigate.navigation.toggleDrawer() }
+        onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
     />,
 
   })
+
+  // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
+  // this is passed in to navigationOptions as menuIconClickHandler
+  onMenuIconClick = (navigate) => {
+
+    navigate.navigation.toggleDrawer()
+    Keyboard.dismiss()
+
+  }
+
+
 
   getTitle = (navigate) => {
 
@@ -111,15 +123,17 @@ class SearchUsers extends React.Component {
       userData: userData
     })
 
-    this.props.navigation.setParams({ title: 'Search ' + userData.selectedSite + ' Users' })
+    this.props.navigation.setParams({ title: 'Search ' + userData.selectedSite + ' Users', menuIconClickHandler: this.onMenuIconClick })
     
   }
-
-  
 
   onSelect = (item) => {
 
     let _this = this
+
+    _this.setState({
+      receiving: true
+    })
 
     console.log("selected user: ", item)
     // this.props.navigation.navigate('ModulesWebView', { item: item })
@@ -143,11 +157,17 @@ class SearchUsers extends React.Component {
             if(err) {
                 console.log("err - getMobileMenuItems", err)
                 _this.showAlert(err.message)
+
+                _this.setState({
+                  receiving: false
+                })
+
             }
             else {
 
                 _this.setState({
-                  showModal: true
+                  //showModal: true,
+                  receiving: false
                 })
 
                 // rename the FontAwesome icons by removing the fa- preface
@@ -159,7 +179,11 @@ class SearchUsers extends React.Component {
 
                 _this.setState({
                   impersonatedUser: impersonatedUser
-                })
+                }, () => 
+  
+                    // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
+                    _this.doImpersonation(true)
+                )
 
 
             }
@@ -179,12 +203,12 @@ class SearchUsers extends React.Component {
   doImpersonation = (mode) => {
 
       // always close the modal
-      this.setState({ showModal: false })
+      //this.setState({ showModal: false })
 
       // only do impersonation if the user presses 'Continue'
       if(mode === true) {
         // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
-        this.props.screenProps._globalStateChange( { source: "SessionOverride", action: "session-override", userData: this.state.impersonatedUser, superUser: this.props.screenProps.state.userData })
+        this.props.screenProps._globalStateChange( { action: "session-override", userData: this.state.impersonatedUser, superUser: this.props.screenProps.state.userData })
       
         const resetAction = StackActions.reset({
             index: 0,
