@@ -21,8 +21,8 @@ import {
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
+
 import brand from '../../../Styles/brand'
-//import PasswordStrengthChecker from 'react-native-password-strength-checker';
 import PasswordStrengthCheck from './PasswordStrengthCheck'
 import { changePassword } from '../../../Services/Account';
 
@@ -61,12 +61,42 @@ class Password extends React.Component {
       },
       changePasswordAct : false,
       resonseMessage : '',
-      sending : 'false'
+      sending : 'false',
+      currentPassword : this.props.screenProps.state.userData.password,
+      validating:false,
+      unValidated:false
     };
   }
   
   _onChangePassword = (password, isValid) => {
     this.setState({ password: { value: password, isValid: isValid } })
+  }
+
+  validateCurrentPass = (text) => {
+
+    _this = this
+
+    _this.setState({
+      validating:true,
+      unValidated :false,
+      validated:false
+    })
+
+    if (_this.state.currentPassword === text){
+      _this.setState({
+        validated :true,
+        validating :false,
+        unValidated:false
+      })
+    }
+    
+    else if(_this.state.changePassword !== text){
+      _this.setState({
+        validated:false,
+        validating:false,
+        unValidated:true
+      })
+    }
   }
 
 
@@ -121,8 +151,6 @@ class Password extends React.Component {
 
   render() {
 
-    console.log('sending',this.state.sending)
-
     const strengthLevels = [
       {
         label: 'Weak',
@@ -171,19 +199,32 @@ class Password extends React.Component {
         <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
 
             <Text style={{margin:10,marginTop:30}}>Current Password</Text> 
-
+                <View style={{flexDirection :'row'}}>
                 <TextInput style={styles.input}   
                          returnKeyType="go" ref={(input)=> this.passwordInput = input} 
                          placeholder='Current Password' 
                          placeholderTextColor={brand.colors.silver}
                          secureTextEntry
                          //value={this.state.password}
-                         onChangeText={(text) => this.setState({password: text})}
+                         onChangeText={(text) => this.validateCurrentPass(text)}
                  />
+              {this.state.validating &&  <ActivityIndicator size="small" color={brand.colors.primary} style ={{margin:10,position:'absolute',marginLeft:'55%'}} />}
+              {this.state.validated && <Ionicon name = 'md-checkmark-circle' 
+                                size={30}
+                                color={brand.colors.success}
+                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
+                {this.state.unValidated && <Ionicon name = 'md-checkmark-circle' 
+                                size={30}
+                                color={brand.colors.lightGray}
+                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
+
+                </View>
+                
                  
             <Text style={{margin:10}}>New Password</Text>
-                
-                 <PasswordStrengthCheck 
+
+            <View>
+            <PasswordStrengthCheck
                     secureTextEntry
                     minLength={4}
                     ruleNames="symbols|words"
@@ -191,11 +232,15 @@ class Password extends React.Component {
                     tooShort={tooShort}
                     minLevel={0}
                     barWidthPercent={65}
-                    showBarOnEmpty={false}
+                    showBarOnEmpty={true}
                     barColor="#CCC"
-                    inputStyle = {styles.passwordInput}
+                    placeholder ={'Text me'}
+                    //inputWrapperStyle = {styles.input}
                     onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid } })} 
                     />
+            </View>
+                
+                 
 
 
             <Text style={{margin:10}}>Confirm Password</Text>
@@ -253,7 +298,7 @@ const styles = StyleSheet.create({
       height: 40,
       backgroundColor: '#ffffff',
       marginBottom: 10,
-      width:'60%',
+      width:'64%',
       padding: 10,
       color: brand.colors.primary,
       borderColor: brand.colors.primary, 

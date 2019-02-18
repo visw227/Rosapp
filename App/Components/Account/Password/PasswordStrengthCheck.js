@@ -6,6 +6,7 @@ import _ from 'lodash';
 import brand from '../../../Styles/brand'
 
 
+
 const { width: wWidth } = Dimensions.get('window');
 
 const widthByPercent = (percentage, containerWidth = wWidth) => {
@@ -27,42 +28,41 @@ export default class PasswordStrengthCheck extends Component {
     minLevel: 2,
     minLength: 0,
     ruleNames: 'lowerCase|upperCase|digits|symbols',
-
     strengthLevels: [
       {
         label: 'Weak',
-        labelColor: 'blue',
+        labelColor: '#fff',
         widthPercent: 33,
         innerBarColor: '#fe6c6c'
       },
       {
         label: 'Weak',
-        labelColor: 'blue',
+        labelColor: '#fff',
         widthPercent: 33,
         innerBarColor: '#fe6c6c'
       },
       {
         label: 'Fair',
-        labelColor: 'blue',
+        labelColor: '#fff',
         widthPercent: 67,
         innerBarColor: '#feb466'
       },
       {
         label: 'Fair',
-        labelColor: 'blue',
+        labelColor: '#fff',
         widthPercent: 67,
         innerBarColor: '#feb466'
       },
       {
         label: 'Strong',
-        labelColor: 'blue',
+        labelColor: '#fff',
         widthPercent: 100,
         innerBarColor: '#6cfeb5'
       }
     ],
     tooShort: {
       enabled: false,
-      labelColor: 'blue',
+      labelColor: '#fff',
       label: 'Too short',
       widthPercent: 33,
       innerBarColor: '#fe6c6c'
@@ -72,23 +72,23 @@ export default class PasswordStrengthCheck extends Component {
     showBarOnEmpty: true
   };
   
-//   static propTypes = {
-//     onChangeText: PropTypes.func.isRequired,
-//     minLength: PropTypes.number,
-//     ruleNames: PropTypes.string,
-//     strengthLevels: PropTypes.array,
-//     tooShort: PropTypes.object,
-//     minLevel: PropTypes.number,
-//     inputWrapperStyle: View.propTypes.style,
-//     inputStyle: TextInput.propTypes.style,
-//     strengthWrapperStyle: View.propTypes.style,
-//     strengthBarStyle: View.propTypes.style,
-//     innerStrengthBarStyle: View.propTypes.style,
-//     strengthDescriptionStyle: Text.propTypes.style,
-//     barColor: PropTypes.string,
-//     barWidthPercent: PropTypes.number,
-//     showBarOnEmpty: PropTypes.bool
-//   };
+  // static propTypes = {
+  //   onChangeText: PropTypes.func.isRequired,
+  //   minLength: PropTypes.number,
+  //   ruleNames: PropTypes.string,
+  //   strengthLevels: PropTypes.array,
+  //   tooShort: PropTypes.object,
+  //   minLevel: PropTypes.number,
+  //   inputWrapperStyle: View.propTypes.style,
+  //   inputStyle: TextInput.propTypes.style,
+  //   strengthWrapperStyle: View.propTypes.style,
+  //   strengthBarStyle: View.propTypes.style,
+  //   innerStrengthBarStyle: View.propTypes.style,
+  //   strengthDescriptionStyle: Text.propTypes.style,
+  //   barColor: PropTypes.string,
+  //   barWidthPercent: PropTypes.number,
+  //   showBarOnEmpty: PropTypes.bool
+  // };
   
   constructor(props) {
     super(props);
@@ -205,21 +205,16 @@ export default class PasswordStrengthCheck extends Component {
   renderPasswordInput() {
     const { inputWrapperStyle, inputStyle } = this.props;
     return (
-      <View  >
-        <TextInput 
-            style={[inputStyle]}
-          //selectionColor="#"
+      <View style={{flexDirection:'row'}}>
+        <TextInput
+          style = {styles.customizedInput}
+          secureTextEntry
           autoCapitalize="none"
-          autoCorrect={false}
-          multiline={false}
-          //underlineColorAndroid="transparent"
+          placeholder = "New Password"
           {...this.props}
-          
+          autoCorrect={false}
           onChangeText={text => this.onChangeText(text)}
-          placeholder={'New Password'}
         />
-
-        
       </View>
     );
   }
@@ -236,7 +231,6 @@ export default class PasswordStrengthCheck extends Component {
       strengthDescriptionStyle,
       showBarOnEmpty
     } = this.props;
-    
     
     const barWidth = widthByPercent(barWidthPercent);
     
@@ -281,18 +275,20 @@ export default class PasswordStrengthCheck extends Component {
     }).start();
     
     return (
-      <View style={[styles.passwordStrengthWrapper, strengthWrapperStyle]}>
+      <View style={{justifyContent:'space-between',flexDirection:'column',marginBottom:20}}>
         <Animated.View style={[styles.passwordStrengthBar, strengthBarStyle, { backgroundColor: barColor, width: this.animatedBarWidth }]}>
           <Animated.View style={[styles.innerPasswordStrengthBar, innerStrengthBarStyle, { ...strengthLevelBarStyle, width: this.animatedInnerBarWidth }]} />
         </Animated.View>
-        <Text style={[styles.strengthDescription, strengthDescriptionStyle, { ...strengthLevelLabelStyle }]}>{strengthLevelLabel}</Text>
+        <View style={{alignItems:'flex-end',flexDirection:'row',justifyContent:'flex-end',marginRight:0}}>
+        <Text style={[styles.strengthDescription, strengthDescriptionStyle, { ...strengthLevelLabelStyle,marginTop:'5%' }]}>{strengthLevelLabel}</Text>
+        </View>
       </View>
     );
   }
   
   render() {
     return (
-      <View style={styles.wrapper}>
+      <View style={{flexDirection:'column',justifyContent:"space-around",alignItems:'center'}}>
         {this.renderPasswordInput()}
         {this.renderPasswordStrength()}
       </View>
@@ -303,6 +299,19 @@ export default class PasswordStrengthCheck extends Component {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: 'transparent',
+  },
+  customizedInput : {
+    height: 40,
+            // flexDirection:'row',
+            flex: 1,
+            backgroundColor: '#ffffff',
+            marginBottom: 10,
+            width:'10%',
+            padding: 10,
+            color: brand.colors.primary,
+            borderColor: brand.colors.primary, 
+            borderWidth: 1,
+            borderRadius: 10
   },
   inputWrapper: {
     flex: 1,
@@ -321,8 +330,9 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   passwordStrengthWrapper: {
-    flexDirection: 'column',
-    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    //flexWrap: 'wrap',
     marginBottom: 10
   },
   passwordStrengthBar: {
@@ -345,16 +355,5 @@ const styles = StyleSheet.create({
     right: 5,
     top: 1,
     fontSize: 14
-  },
-  input:{
-    height: 40,
-    backgroundColor: '#ffffff',
-    marginBottom: 10,
-    width:'60%',
-    padding: 10,
-    color: brand.colors.primary,
-    borderColor: brand.colors.primary, 
-    borderWidth: 1,
-    borderRadius: 10
-}
+  }
 });
