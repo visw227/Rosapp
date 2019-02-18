@@ -37,3 +37,22 @@ export function userLogin(request, callback) {
 }
 
 
+
+export function forgotPassword(request, callback) {
+  
+  // login method received credentials as query string params
+  let url = '/api/ManagerAppAuth/ForgotPassword'
+
+  // IMPORTANT: request IS NULL since params are passed in the url of this POST request
+  fetchWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
+
+    if(err) {
+      callback(err)
+    }
+    else {
+      callback(null, resp)
+    }
+
+  })
+
+}

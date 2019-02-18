@@ -220,6 +220,7 @@ class Login extends Component {
 
                 AsyncStorage.setItem('userData', JSON.stringify(userData))
                 
+                _this.onLoginResponse(userData, null)
 
                 _this.setState({
                     sending: false
@@ -359,7 +360,7 @@ class Login extends Component {
     onForgotPassword = () => {
 
         // this should allow for the back button to appear in the header
-        this.props.navigation.navigate('ForgotPassword')
+        this.props.navigation.navigate('ForgotPassword', { userName: this.state.userName })
 
     }
 
