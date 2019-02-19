@@ -20,12 +20,14 @@ import {
 } from 'react-native';
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { NavigationActions, StackActions } from 'react-navigation'
 //import Entypo from 'react-native-vector-icons/Entypo'
+import { parseUser } from '../../../Helpers/UserDataParser'
 import _ from 'lodash'
 import zxcvbn from 'zxcvbn'
 import brand from '../../../Styles/brand'
 import PasswordStrengthCheck from './PasswordStrengthCheck'
-import { changePassword } from '../../../Services/Account';
+import { changePassword,userLogin } from '../../../Services/Account';
 
 const regex = {
   digitsPattern: /\d/,
@@ -60,9 +62,7 @@ class Password extends React.Component {
       fullName: {
         value: ''
       },
-      userName: {
-        value: ''
-      },
+      userName: this.props.screenProps.state.userData.userName,
       password: {
         value: '',
         isValid: false
@@ -78,10 +78,21 @@ class Password extends React.Component {
       error : 'false',
       confirmError:'false',
       currentPassError:'false',
-      levelError : 'false'
+      levelError : 'false',
+      tempPass:''
     };
   }
+  
+  componentWillMount () {
 
+    this.setState({
+      validated : false,
+      unValidated : true,
+      passwordConfirmed : 'false'
+
+    })
+
+  }
   
   
   _onChangePassword = (password, isValid) => {
@@ -109,9 +120,10 @@ class Password extends React.Component {
         error :false,
         //currentError :false
       })
+      return true
     }
     
-    else if(_this.state.changePassword !== text){
+    else if(_this.state.currentPassword !== text){
       _this.setState({
         validated:false,
         validating:false,
@@ -119,6 +131,7 @@ class Password extends React.Component {
         error:true,
         //currentError :true
       })
+      return false
     }
   }
 
@@ -135,6 +148,7 @@ class Password extends React.Component {
 
     if (_this.state.password.value === text) {
       _this.setState({passwordConfirmed : 'true'})
+      
     }
     else if(_this.state.changePassword !== text){
       _this.setState({
@@ -238,15 +252,13 @@ class Password extends React.Component {
   onSubmitPress = (token,strengthLevels) => {
 
     console.log('passval',this.state.password.value)
-    console.log('strengthLevels',strengthLevels)
+    
     let _this = this
 
     const level = _this.getPasswordStrengthLevel(this.state.password.value)
     console.log ('<<level',level)
 
-    // _this.setState ({
-    //   error :false
-    // })
+    
     
     let request = {
         userId: this.props.screenProps.state.userData.userId, 
@@ -255,17 +267,18 @@ class Password extends React.Component {
     }
 
     var Confirm = this.state.passwordConfirmed
+    var Current = this.state.validated ? 'false' : 'true'
     _this.setState({
       error : false,
       sending : 'true',
     },()=> {
-      console.log('sendingSetT',_this.state.sending)
+      console.log('sendingSetT',_this.state.sending,this.state.error)
     })
 
-    console.log('<<confirm pass',Confirm,this.state.error,level)
+    //console.log('<<confirm pass',Confirm,this.state.error,level)
 
      
-     if ( Confirm === 'true' && this.state.error === 'false' && level >= 2) {
+     if (Confirm === 'true' && this.state.validated && level >= 2) {
 
       changePassword(request, token, function (err,response){
 
@@ -275,12 +288,8 @@ class Password extends React.Component {
         }
 
         else {
-          
-          console.log("changePassword success:", response)
 
-          console.log('success')
           if(response){
-            //alert('got response')
             _this.setState({
               resonseMessage: response.message,
               changePasswordAct : true,
@@ -293,6 +302,45 @@ class Password extends React.Component {
               console.log('sendingSetF',_this.state.sending)
             })
           }
+          
+           if (_this.state.changePasswordAct) {
+
+            userData = _this.props.screenProps.state.userData
+
+            userData.password = _this.state.password.value
+
+            AsyncStorage.setItem('userData', JSON.stringify(userData))
+
+            _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })
+
+            _this.setState({
+              currentPassword : _this.state.password.value
+            })
+
+            _this.textInput.clear()
+            _this.confirmPassInput.clear()
+            _this.setState({
+              tempPass : ''
+            },()=> console.log('temp',_this.state.tempPass))
+            //_this.props.navigation.navigate('Dashboard')
+
+            let stackName = 'DrawerStack'
+
+            const resetAction = StackActions.reset({
+              index: 0,
+              key: null, // this is the trick that allows this to work
+              actions: [NavigationActions.navigate({ routeName: stackName })],
+          });
+          _this.props.navigation.dispatch(resetAction);
+
+
+
+          }
+
+          console.log("changePassword success:", response)
+
+            console.log('success')
+         
         }
     })
 
@@ -307,14 +355,32 @@ class Password extends React.Component {
         sending:'false'
       })
     }
-    else {
-      _this.setState({
-        error : 'true',
+    else if (!this.state.validated && Confirm === 'false'){
+      _this.setState ({
         confirmError : 'true',
         currentPassError : 'true',
-        sending:'false'
+        sending : 'false'
       })
+    }
+    else if (!this.state.validated) {
+      _this.setState({
+        //error : 'true',
+        //confirmError : !Confirm,
+        currentPassError : 'true' ,
+        sending:'false'
+      }, ()=> console.log('<<currentPass',this.state.currentPassError))
     } 
+
+    else if (Confirm === 'false') {
+
+      _this.setState({
+        //error : 'true',
+        confirmError : 'true',
+        //currentPassError : 'true' ,
+        sending:'false'
+      }, ()=> console.log('<<confirmPass',this.state.confirmError))
+
+    }
 
 
   }
@@ -373,7 +439,8 @@ class Password extends React.Component {
             <Text style={{margin:10,marginTop:30}}>Current Password</Text> 
                 <View style={{flexDirection :'row'}}>
                 <TextInput style={styles.input}   
-                         returnKeyType="go" ref={(input)=> this.passwordInput = input} 
+                        ref={input => { this.textInput = input }}
+                         //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
                          placeholder='Current Password' 
                          placeholderTextColor={brand.colors.silver}
                          secureTextEntry
@@ -402,8 +469,9 @@ class Password extends React.Component {
             <View>
             <PasswordStrengthCheck
                     secureTextEntry
-                    //editable = {this.state.validated}
                     minLength={4}
+                    value = {this.state.tempPass}
+                    ref={input => { this.newPassInput = input }}
                     ruleNames="symbols|words"
                     strengthLevels={strengthLevels}
                     tooShort={tooShort}
@@ -412,9 +480,7 @@ class Password extends React.Component {
                     showBarOnEmpty={true}
                     barColor="#CCC"
                     placeholder ={'Text me'}
-                    //inputWrapperStyle = {styles.input}
-                    //onChangeText = {(text,isValid) => this.newPassword(text,isValid)}
-                    onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid },levelError : 'false' })} 
+                    onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid },levelError : 'false',tempPass:text })} 
                     />
             </View>
                 
@@ -425,8 +491,9 @@ class Password extends React.Component {
                  
                  <View style={{flexDirection:'row'}}>
                  <TextInput style={styles.input}   
-                         returnKeyType="go" ref={(input)=> this.passwordInput = input} 
+                         returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
                          placeholder='Confirm Password' 
+                         ref={input => { this.confirmPassInput = input }}
                          //editable = {this.state.validated}
                          placeholderTextColor={brand.colors.silver}
                          secureTextEntry
@@ -437,7 +504,7 @@ class Password extends React.Component {
                                 size={30}
                                 color={brand.colors.success}
                                 style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
-                {this.state.passwordConfirmed === 'false' && this.state.confirmPressed && <Ionicon name = 'md-checkmark-circle' 
+                {this.state.passwordConfirmed === 'false' && <Ionicon name = 'md-checkmark-circle' 
                                 size={30}
                                 color={brand.colors.lightGray}
                                 style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
@@ -473,7 +540,8 @@ class Password extends React.Component {
                             </View> : null}
 
 
-                            {this.state.error === 'true' && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Errors exist in the fields entered. Try Again till you get two green checkmarks</Text>}
+                            {this.state.currentPassError === 'true'  && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Current Password Error. Try entering again till you get a green checkmark or try forgot password</Text>}
+                            {this.state.confirmError === 'true'   && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Passwords do not match. Try entering again till you get a green checkmark</Text>}
                             { this.state.levelError === 'true' && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Password too weak. Try using special characters and alphanumerics</Text>}
 
 
