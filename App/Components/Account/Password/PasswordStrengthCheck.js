@@ -195,6 +195,7 @@ export default class PasswordStrengthCheck extends Component {
   
   onChangeText(password) {
     const level = this.getPasswordStrengthLevel(password);
+    console.log('<<Levels',level)
     this.setState({
       level: level
     });

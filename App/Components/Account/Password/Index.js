@@ -4,7 +4,8 @@ import {
   Image,
   Text, 
   TextInput, 
-  TouchableOpacity, 
+  TouchableOpacity,
+  TouchableHighlight,
   Alert, 
   Button, 
   StyleSheet, 
@@ -20,13 +21,20 @@ import {
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
-
-
+import _ from 'lodash'
+import zxcvbn from 'zxcvbn'
 import brand from '../../../Styles/brand'
 import PasswordStrengthCheck from './PasswordStrengthCheck'
 import { changePassword } from '../../../Services/Account';
 
-
+const regex = {
+  digitsPattern: /\d/,
+  lettersPattern: /[a-zA-Z]/,
+  lowerCasePattern: /[a-z]/,
+  upperCasePattern: /[A-Z]/,
+  wordsPattern: /\w/,
+  symbolsPattern: /\W/
+};
 
 
 
@@ -64,9 +72,17 @@ class Password extends React.Component {
       sending : 'false',
       currentPassword : this.props.screenProps.state.userData.password,
       validating:false,
-      unValidated:false
+      unValidated:false,
+      validated:false,
+      passwordConfirmed : 'false',
+      error : 'false',
+      confirmError:'false',
+      currentPassError:'false',
+      levelError : 'false'
     };
   }
+
+  
   
   _onChangePassword = (password, isValid) => {
     this.setState({ password: { value: password, isValid: isValid } })
@@ -75,18 +91,23 @@ class Password extends React.Component {
   validateCurrentPass = (text) => {
 
     _this = this
+    console.log('<<CurrentPass',this.state.currentPassword)
+    console.log('<<Text',text)
 
     _this.setState({
       validating:true,
       unValidated :false,
-      validated:false
+      validated:false,
+      currentPassError : 'false'
     })
 
     if (_this.state.currentPassword === text){
       _this.setState({
         validated :true,
         validating :false,
-        unValidated:false
+        unValidated:false,
+        error :false,
+        //currentError :false
       })
     }
     
@@ -94,56 +115,207 @@ class Password extends React.Component {
       _this.setState({
         validated:false,
         validating:false,
-        unValidated:true
+        unValidated:true,
+        error:true,
+        //currentError :true
       })
     }
   }
 
+  confirmPassword = (text) => {
 
-  onSubmitPress = (token) => {
-    let request = {
-        userId: 29269, 
-        password: 'Vamsi@227', 
-    }
-
-    let _this = this
+    _this = this
+    
 
     _this.setState({
+      passwordConfirmed : 'false',
+      confirmPressed : true,
+      confirmError : 'false'
+    })
+
+    if (_this.state.password.value === text) {
+      _this.setState({passwordConfirmed : 'true'})
+    }
+    else if(_this.state.changePassword !== text){
+      _this.setState({
+        passwordConfirmed : 'false'
+      })
+    }
+
+  }
+
+  isTooShort(password) {
+    //const { minLength } = this.props;
+    const minLength = 4
+    if (!minLength) {
+      return true;
+    }
+    return password.length < minLength;
+  }
+  
+  isMatchingRules(password) {
+    //const { ruleNames } = this.props;
+    const ruleNames = 'symbols|words'
+    if (!ruleNames) {
+      return true;
+    }
+    
+    const rules = _.chain(ruleNames)
+      .split('|')
+      .filter(rule => !!rule)
+      .map(rule => rule.trim())
+      .value();
+    
+    for (const rule of rules) {
+      if (!this.isMatchingRule(password, rule)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  isMatchingRule(password, rule) {
+    switch (rule) {
+      case 'symbols':
+        return regex.symbolsPattern.test(password);
+      case 'words':
+        return regex.wordsPattern.test(password);
+      case 'digits':
+        return regex.digitsPattern.test(password);
+      case 'letters':
+        return regex.lettersPattern.test(password);
+      case 'lowerCase':
+        return regex.lowerCasePattern.test(password);
+      case 'upperCase':
+        return regex.upperCasePattern.test(password);
+      default:
+        return true;
+    }
+  }
+  
+  calculateScore(text) {
+    if (!text) {
+      this.setState({
+        isTooShort: false
+      });
+      return -1;
+    }
+    
+    if (this.isTooShort(text)) {
+      this.setState({
+        isTooShort: true
+      });
+      return 0;
+    }
+    
+    this.setState({
+      isTooShort: false
+    });
+    
+    if (!this.isMatchingRules(text)) {
+      return 0;
+    }
+    
+    return zxcvbn(text).score;
+  }
+  
+  getPasswordStrengthLevel(password) {
+    return this.calculateScore(password);
+  }
+
+  newPassword = (text,isValid) => {
+
+
+
+    _this = this
+
+    _this.setState ({
+      password: { value: text, isValid: isValid }
+    })
+  }
+
+
+  onSubmitPress = (token,strengthLevels) => {
+
+    console.log('passval',this.state.password.value)
+    console.log('strengthLevels',strengthLevels)
+    let _this = this
+
+    const level = _this.getPasswordStrengthLevel(this.state.password.value)
+    console.log ('<<level',level)
+
+    // _this.setState ({
+    //   error :false
+    // })
+    
+    let request = {
+        userId: this.props.screenProps.state.userData.userId, 
+        password: this.state.password.value, 
+        //password:'Rowdy fellow'
+    }
+
+    var Confirm = this.state.passwordConfirmed
+    _this.setState({
+      error : false,
       sending : 'true',
     },()=> {
       console.log('sendingSetT',_this.state.sending)
     })
-    
+
+    console.log('<<confirm pass',Confirm,this.state.error,level)
+
+     
+     if ( Confirm === 'true' && this.state.error === 'false' && level >= 2) {
+
       changePassword(request, token, function (err,response){
 
-        
+        if (err){
+          Keyboard.dismiss()
+          console.log("userLogin error", err)
+        }
 
-        
+        else {
+          
+          console.log("changePassword success:", response)
 
-          if (err){
-            Keyboard.dismiss()
-            console.log("userLogin error", err)
+          console.log('success')
+          if(response){
+            //alert('got response')
+            _this.setState({
+              resonseMessage: response.message,
+              changePasswordAct : true,
+              error:false,
+              confirmError :'false',
+              currentPassError:false,
+              confirmPassword:false,
+              sending : 'false'
+            } , ()=> {
+              console.log('sendingSetF',_this.state.sending)
+            })
           }
+        }
+    })
 
-          else {
-            
-            console.log("changePassword success:", response)
-
-            console.log('success')
-            
-
-            if(response){
-              //alert('got response')
-              _this.setState({
-                resonseMessage: response.message,
-                changePasswordAct : true,
-                sending : 'false'
-              } , ()=> {
-                console.log('sendingSetF',_this.state.sending)
-              })
-            }
-          }
+    } 
+    else if (level < 2) {
+      _this.setState ({
+        error : 'false',
+        levelError : 'true',
+        //error : 'true',
+        confirmError : 'false',
+        currentPassError : 'false',
+        sending:'false'
       })
+    }
+    else {
+      _this.setState({
+        error : 'true',
+        confirmError : 'true',
+        currentPassError : 'true',
+        sending:'false'
+      })
+    } 
+
 
   }
   
@@ -217,6 +389,10 @@ class Password extends React.Component {
                                 size={30}
                                 color={brand.colors.lightGray}
                                 style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
+                {this.state.currentPassError === 'true'  && <Ionicon name = 'md-close-circle' 
+                                size={30}
+                                color={brand.colors.danger}
+                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
 
                 </View>
                 
@@ -226,6 +402,7 @@ class Password extends React.Component {
             <View>
             <PasswordStrengthCheck
                     secureTextEntry
+                    //editable = {this.state.validated}
                     minLength={4}
                     ruleNames="symbols|words"
                     strengthLevels={strengthLevels}
@@ -236,7 +413,8 @@ class Password extends React.Component {
                     barColor="#CCC"
                     placeholder ={'Text me'}
                     //inputWrapperStyle = {styles.input}
-                    onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid } })} 
+                    //onChangeText = {(text,isValid) => this.newPassword(text,isValid)}
+                    onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid },levelError : 'false' })} 
                     />
             </View>
                 
@@ -245,20 +423,35 @@ class Password extends React.Component {
 
             <Text style={{margin:10}}>Confirm Password</Text>
                  
-                 
+                 <View style={{flexDirection:'row'}}>
                  <TextInput style={styles.input}   
                          returnKeyType="go" ref={(input)=> this.passwordInput = input} 
                          placeholder='Confirm Password' 
+                         //editable = {this.state.validated}
                          placeholderTextColor={brand.colors.silver}
                          secureTextEntry
                          //value={this.state.password}
-                         onChangeText={text => this.setState({ password: { value: text } })}
+                         onChangeText= {(text) => this.confirmPassword(text)}
                  />
+                 {this.state.passwordConfirmed === 'true' &&<Ionicon name = 'md-checkmark-circle' 
+                                size={30}
+                                color={brand.colors.success}
+                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
+                {this.state.passwordConfirmed === 'false' && this.state.confirmPressed && <Ionicon name = 'md-checkmark-circle' 
+                                size={30}
+                                color={brand.colors.lightGray}
+                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
+                {this.state.confirmError === 'true' && this.state.confirmPressed && <Ionicon name = 'md-close-circle' 
+                                size={30}
+                                color={brand.colors.danger}
+                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
+                 </View>
                 
                 
-            <TouchableOpacity style={styles.buttonContainer }>
-                <Text  style={styles.buttonText} onPress = { ()=> this.onSubmitPress(this.props.screenProps.state.userData.token) }>Submit</Text>
-            </TouchableOpacity> 
+                
+           {<TouchableHighlight style={styles.buttonContainer } >
+                <Text  style={styles.buttonText} onPress = { ()=> this.onSubmitPress(this.props.screenProps.state.userData.token,strengthLevels) }>Submit</Text>
+    </TouchableHighlight> }
 
             {this.state.sending === 'true' ? <ActivityIndicator size="large" color={brand.colors.primary} style ={{margin:10}} />: null}
             {this.state.changePasswordAct && this.state.resonseMessage ? <View style={{ 
@@ -278,6 +471,11 @@ class Password extends React.Component {
                                 style={{ paddingLeft: 10 }}/>
                                 <Text style={{color: brand.colors.primary,padding:5 }}>{this.state.resonseMessage}</Text>
                             </View> : null}
+
+
+                            {this.state.error === 'true' && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Errors exist in the fields entered. Try Again till you get two green checkmarks</Text>}
+                            { this.state.levelError === 'true' && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Password too weak. Try using special characters and alphanumerics</Text>}
+
 
         </View>
 
