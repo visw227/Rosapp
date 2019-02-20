@@ -237,7 +237,7 @@ class Login extends Component {
                 if(err) {
 
                     console.log("userLogin error", err)
-                    _this.showAlert(err.message)
+                    _this.showAlert(err.message || "Invalid login request. Please check your email address and password and try again.")
 
                 }
                 else {
