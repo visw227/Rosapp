@@ -81,11 +81,13 @@ export class Account extends React.Component {
 
      var changePass;
 
+     clientCode = this.props.screenProps.state
+
      let request = {
-         //clientCode : this.props.screenProps.state.userdata.clientCode
+         clientCode : this.props.screenProps.state.userData.selectedSite
      }
 
-    changePasswordAccess('aag',function(err,resp){
+    changePasswordAccess(request.clientCode,function(err,resp){
         if (err){
             console.log('error changePassAcc',err)
             _this.setState({
@@ -103,7 +105,7 @@ export class Account extends React.Component {
         }
     })
 
-    console.log('changePassAcc',this.state.changePassAcess)
+    console.log('ClientCode',clientCode)
   }
     
 

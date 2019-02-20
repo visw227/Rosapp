@@ -58,7 +58,7 @@ export function changePasswordAccess (request,callback) {
 
   let url = '/api/ManagerAppAuth/changePasswordAccess'
 
-  fetchWrapper(url, 'GET', null,'aag',null,function(err,resp){
+  fetchWrapper(url, 'GET', null,request,null,function(err,resp){
     if (err){
       callback(err)
 
