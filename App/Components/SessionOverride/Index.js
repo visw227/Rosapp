@@ -140,7 +140,11 @@ class SearchUsers extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
-    impersonateUser(userData.selectedSite, item.userName, userData.token, function(err, response){
+    let request = {
+      userName: item.userName
+    }
+
+    impersonateUser(userData.selectedSite, item.token, request, function(err, response){
 
       if(err) {
         console.log("err", err)

@@ -5,6 +5,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 
+import { userLogout } from '../Services/Account';
+
 import brand from '../Styles/brand'
 
 export default class DrawerContainer extends React.Component {
@@ -19,16 +21,23 @@ export default class DrawerContainer extends React.Component {
 
         AsyncStorage.removeItem('userData', function(err){
 
-          // this shows a back arrow, so don't use this
-          //this.props.navigation.navigate('LoginStack')
+          // this API request will delete the user's token from the database
+          userLogout(_this.props.screenProps.state.userData.selectedSite, _this.props.screenProps.state.userData.token, function(err,resp){
 
-          // instead, reset the navigation
-          const resetAction = StackActions.reset({
-              index: 0,
-              key: null, // this is the trick that allows this to work
-              actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
-          });
-          _this.props.navigation.dispatch(resetAction);
+            // this shows a back arrow, so don't use this
+            //this.props.navigation.navigate('LoginStack')
+
+            // instead, reset the navigation
+            const resetAction = StackActions.reset({
+                index: 0,
+                key: null, // this is the trick that allows this to work
+                actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
+            });
+            _this.props.navigation.dispatch(resetAction);
+
+          })
+
+
           
         })
 

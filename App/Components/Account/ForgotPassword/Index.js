@@ -45,7 +45,7 @@ export class ForgotPassword extends React.Component {
                 hasError: false,
                 message: ""
             },
-            userName: '',
+            email: '',
             password: '',
             userData: null
         }
@@ -53,19 +53,6 @@ export class ForgotPassword extends React.Component {
     }
 
   componentDidMount () {
-
-    let _this = this
-
-    const { navigation } = this.props;
-
-    const userName = navigation.getParam('userName', '' );
-
-    console.log("userName", userName)
-
-
-    this.setState({
-      userName: userName
-    })
 
     if (Platform.OS=='ios'){
         this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
@@ -161,7 +148,7 @@ export class ForgotPassword extends React.Component {
         Keyboard.dismiss()
 
         // input validation
-        if(this.state.userName === '') {
+        if(this.state.email === '') {
 
           this.setState({
             sending: false,
@@ -183,10 +170,10 @@ export class ForgotPassword extends React.Component {
         })
 
 
-        console.log("submitting...", this.state.userName)
+        console.log("submitting...", this.state.email)
 
         let request = {
-          userName: this.state.userName
+          email: this.state.email
         }
 
 
@@ -194,9 +181,25 @@ export class ForgotPassword extends React.Component {
 
           if(err) {
 
+            _this.setState({
+                sending: false,
+                requestStatus: {
+                    hasError: true,
+                    message: err
+                }
+            })
+
           }
           else {
             
+            _this.setState({
+                sending: false,
+                requestStatus: {
+                    hasError: true,
+                    message: resp
+                }
+            })
+
           }
 
         })
@@ -237,8 +240,8 @@ export class ForgotPassword extends React.Component {
                                     returnKeyType="next" 
                                     placeholder='Email Address'
                                     placeholderTextColor={brand.colors.silver}
-                                    value={this.state.userName}
-                                    onChangeText={(text) => this.setState({userName: text})}
+                                    value={this.state.email}
+                                    onChangeText={(text) => this.setState({email: text})}
                         />
 
 
