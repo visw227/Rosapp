@@ -41,7 +41,7 @@ export function changePassword (request, token, callback) {
 
   let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password)
 
-  fetchWrapper(url, 'POST', null, 'aag' , token, function(err, resp) {
+  fetchWrapper(url, 'POST', null, request.clientCode , token, function(err, resp) {
     if (err) {
       callback(err)
 
@@ -51,6 +51,22 @@ export function changePassword (request, token, callback) {
      }
   } )
 
+
+}
+
+export function changePasswordAccess (request,callback) {
+
+  let url = '/api/ManagerAppAuth/changePasswordAccess'
+
+  fetchWrapper(url, 'GET', null,'aag',null,function(err,resp){
+    if (err){
+      callback(err)
+
+    }
+    else {
+      callback(null,resp)
+    }
+  })
 
 }
 

@@ -79,7 +79,8 @@ class Password extends React.Component {
       confirmError:'false',
       currentPassError:'false',
       levelError : 'false',
-      tempPass:''
+      changeSuccess : false,
+      fadeAnim: new Animated.Value(0)
     };
   }
   
@@ -92,9 +93,13 @@ class Password extends React.Component {
 
     })
 
+    console.log('userDate',this.props.screenProps.state.userData)
+
   }
-  
-  
+
+  componentDidMount () {
+   
+  }
   _onChangePassword = (password, isValid) => {
     this.setState({ password: { value: password, isValid: isValid } })
   }
@@ -103,8 +108,6 @@ class Password extends React.Component {
 
     _this = this
     console.log('<<CurrentPass',this.state.currentPassword)
-    console.log('<<Text',text)
-
     _this.setState({
       validating:true,
       unValidated :false,
@@ -117,12 +120,10 @@ class Password extends React.Component {
         validated :true,
         validating :false,
         unValidated:false,
-        error :false,
-        //currentError :false
+        error :false
       })
       return true
     }
-    
     else if(_this.state.currentPassword !== text){
       _this.setState({
         validated:false,
@@ -239,8 +240,6 @@ class Password extends React.Component {
 
   newPassword = (text,isValid) => {
 
-
-
     _this = this
 
     _this.setState ({
@@ -256,27 +255,20 @@ class Password extends React.Component {
     let _this = this
 
     const level = _this.getPasswordStrengthLevel(this.state.password.value)
-    console.log ('<<level',level)
-
-    
     
     let request = {
         userId: this.props.screenProps.state.userData.userId, 
-        password: this.state.password.value, 
-        //password:'Rowdy fellow'
+        password: this.state.password.value,
+        clientCode : this.props.screenProps.state.userData.selectedSite
     }
 
     var Confirm = this.state.passwordConfirmed
-    var Current = this.state.validated ? 'false' : 'true'
     _this.setState({
       error : false,
       sending : 'true',
     },()=> {
       console.log('sendingSetT',_this.state.sending,this.state.error)
     })
-
-    //console.log('<<confirm pass',Confirm,this.state.error,level)
-
      
      if (Confirm === 'true' && this.state.validated && level >= 2) {
 
@@ -314,15 +306,17 @@ class Password extends React.Component {
             _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })
 
             _this.setState({
-              currentPassword : _this.state.password.value
+              currentPassword : _this.state.password.value,
+              changeSuccess : true
             })
 
-            _this.textInput.clear()
-            _this.confirmPassInput.clear()
-            _this.setState({
-              tempPass : ''
-            },()=> console.log('temp',_this.state.tempPass))
-            //_this.props.navigation.navigate('Dashboard')
+            Animated.timing(                  // Animate over time
+              _this.state.fadeAnim,            // The animated value to drive
+              {
+                toValue: 1,                   // Animate to opacity: 1 (opaque)
+                duration: 1000,              // Make it take a while
+              }
+            ).start();  
 
             let stackName = 'DrawerStack'
 
@@ -331,20 +325,20 @@ class Password extends React.Component {
               key: null, // this is the trick that allows this to work
               actions: [NavigationActions.navigate({ routeName: stackName })],
           });
-          _this.props.navigation.dispatch(resetAction);
 
-
-
+          setTimeout(() => {_this.props.navigation.dispatch(resetAction)},4000)
+          
           }
 
           console.log("changePassword success:", response)
 
-            console.log('success')
+          console.log('success')
          
         }
     })
 
     } 
+    //else conditions not executing as expected.. Adding else if for prompt execution
     else if (level < 2) {
       _this.setState ({
         error : 'false',
@@ -546,6 +540,14 @@ class Password extends React.Component {
 
 
         </View>
+
+        {this.state.changeSuccess &&<Animated.View style = {{flexDirection : 'column',justifyContent:'flex-end',alignItems:'center',marginTop:20,opacity:this.state.fadeAnim}}>
+         <Ionicon name = 'md-thumbs-up' 
+                                size={60}
+                                color={brand.colors.success}
+                                style={{ marginTop:10,justifyContent:"center",marginBottom:5 }}/>
+          <Animated.Text style={{color : brand.colors.success}}> Password changed successfully!</Animated.Text>
+        </Animated.View>}
 
 
 

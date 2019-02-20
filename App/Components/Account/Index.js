@@ -7,6 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import brand from '../../Styles/brand'
 import Styles from './Styles'
+import { changePasswordAccess } from '../../Services/Account';
 
 
 export class Account extends React.Component {
@@ -67,10 +68,42 @@ export class Account extends React.Component {
               hasError: false,
               message: ""
           },
+          changePassAcess : false
 
       }
 
 
+  }
+
+  componentDidMount () {
+
+    _this  = this
+
+     var changePass;
+
+     let request = {
+         //clientCode : this.props.screenProps.state.userdata.clientCode
+     }
+
+    changePasswordAccess('aag',function(err,resp){
+        if (err){
+            console.log('error changePassAcc',err)
+            _this.setState({
+                changePassAcess : false
+            })
+
+        }
+        else {
+            console.log('Success Change Pass Acc :-)')
+            
+            _this.setState({
+                changePassAcess : true
+            })
+
+        }
+    })
+
+    console.log('changePassAcc',this.state.changePassAcess)
   }
     
 
@@ -120,7 +153,7 @@ export class Account extends React.Component {
                   />
 
 
-                  <ListItem
+                  {this.state.changePassAcess&&<ListItem
 
                       style={Styles.listItem}
                       title='Change Password'
@@ -137,7 +170,7 @@ export class Account extends React.Component {
                       
                       onPress={() => this.props.navigation.navigate('Password') }
                   
-                  />
+                  />}
 
                   {/* <ListItem
 

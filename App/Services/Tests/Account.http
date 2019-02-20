@@ -37,3 +37,18 @@ content-type: application/json
  
 }
 
+###
+POST https://aag.rosnetdev.com/SignOn/RetrievePassword?Email=vchikkala@rosnet.com&ClientCode=Doherty
+content-type: application/json
+
+###
+
+{
+"userId": "vchikkala@rosnet.com",
+//"password": "Rosnet@123"
+"ClientCode" : "AAG"
+ 
+}
+
+
+
