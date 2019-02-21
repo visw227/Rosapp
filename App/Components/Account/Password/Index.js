@@ -28,6 +28,8 @@ import zxcvbn from 'zxcvbn'
 import brand from '../../../Styles/brand'
 import PasswordStrengthCheck from './PasswordStrengthCheck'
 import { changePassword,userLogin } from '../../../Services/Account';
+import { getSiteSecuritySettings} from '../../../Services/Security';
+
 
 const regex = {
   digitsPattern: /\d/,
@@ -98,6 +100,23 @@ class Password extends React.Component {
   }
 
   componentDidMount () {
+
+    var result = this.props.screenProps.state.userData.selectedSite
+
+    var response = (request) => {
+
+       getSiteSecuritySettings (request, function(err,resp){
+         if (err){
+           console.log ('Error siteSettings',err)
+         }
+         else {
+           return resp
+         }
+       })
+       
+    }
+
+    console.log ('<<Respose'.JSON.stringify(response))
    
   }
   _onChangePassword = (password, isValid) => {
