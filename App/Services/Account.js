@@ -36,6 +36,7 @@ export function userLogin(request, callback) {
 
 }
 
+
 export function userLogout(client, token, callback) {
   
   // login method received credentials as query string params
@@ -51,6 +52,20 @@ export function userLogout(client, token, callback) {
       callback(null, resp)
     }
 
+  })
+
+export function changePasswordAccess (request,callback) {
+
+  let url = '/api/ManagerAppAuth/changePasswordAccess'
+
+  fetchWrapper(url, 'GET', null,request,null,function(err,resp){
+    if (err){
+      callback(err)
+
+    }
+    else {
+      callback(null,resp)
+    }
   })
 
 }
