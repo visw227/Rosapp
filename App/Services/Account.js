@@ -20,7 +20,7 @@ import { fetchWrapper } from './FetchWrapper'
 export function userLogin(request, callback) {
   
   // login method received credentials as query string params
-  let url = '/api/ManagerAppAuth/AuthenticateUser'
+  let url = '/api/ManagerAppAuth/Login'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
   fetchWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
@@ -35,6 +35,22 @@ export function userLogin(request, callback) {
   })
 
 }
+
+
+export function userLogout(client, token, callback) {
+    
+   // login method received credentials as query string params
+   let url = '/api/ManagerAppAuth/Logout'
+
+  // IMPORTANT: request IS NULL since params are passed in the url of this POST request
+  fetchWrapper(url, 'GET', null, client, token, function(err, resp) {
+    if(err) {
+      callback(err)
+    }
+    else {
+            callback(null, resp)
+        } })
+      }
 
 export function changePassword (request, token, callback) {
 
@@ -74,7 +90,7 @@ export function changePasswordAccess (request,callback) {
 export function forgotPassword(request, callback) {
   
   // login method received credentials as query string params
-  let url = '/api/ManagerAppAuth/ForgotPassword'
+  let url = '/api/ManagerAppAuth/RetrievePassword'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
   fetchWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
