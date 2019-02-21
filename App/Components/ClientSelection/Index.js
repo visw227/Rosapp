@@ -218,7 +218,7 @@ export class About extends React.Component {
                       lightTheme={true}
                       color ='blue'
                       value={this.state.text}
-                      placeholder='Search Term'
+                      placeholder='Search Sites'
                       onChangeText = {(text)=> { this.matchSites(text) }}/>
             
 

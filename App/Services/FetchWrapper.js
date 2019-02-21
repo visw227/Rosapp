@@ -99,18 +99,18 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
         }
         else if(results.status === 401) {
 
-          console.log("forced re-login...")
+          console.log("401 response, so send to login screen...")
           
           callback( { forceLogin: true }, null)
           
         }
         else {
-          console.log("error!!")
+          console.log(results.status + " response, so not sure what to do: ", results)
           callback({ status: results.status, message: results.json.message || results.statusText }, null)
         }
       })
-      .catch(function(error, t, s) {
-          console.log("error:", error, "t:", t, "s:", s)
+      .catch(function(error) {
+          console.log("fetchWrapper had an unexpected error:", error)
           callback(error)
       });
   

@@ -268,22 +268,22 @@ class SearchUsers extends React.Component {
 
       if(this.state.query === '') {
         return (
-          <Text style={{color: brand.colors.primary }}>{'Please enter a search term'}</Text>
+          <Text style={{color: brand.colors.primary }}>{'Please enter a user name'}</Text>
         )
       }
       else if(this.state.query != '' && this.state.items.length === 1) {
         return (
-          <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' result found'}</Text>
+          <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' user found'}</Text>
         )
       }
       else if(this.state.query != '' && this.state.items.length > 1) {
         return (
-          <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' results found'}</Text>
+          <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' users found'}</Text>
         )
       }
       else if(this.state.query != '' && this.state.items.length === 0) {
         return (
-          <Text style={{color: brand.colors.primary }}>{'Sorry, no results found.'}</Text>
+          <Text style={{color: brand.colors.primary }}>{'Sorry, no users found.'}</Text>
         )
       }
 
@@ -301,7 +301,7 @@ class SearchUsers extends React.Component {
             lightTheme={true}
             color ='blue'
             value={this.state.text}
-            placeholder='Search Term'
+            placeholder='Search Users'
             onChangeText = {(text)=> { this.getUsers(text) }}/>
             
         </View>

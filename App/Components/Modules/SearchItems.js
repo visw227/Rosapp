@@ -108,12 +108,12 @@ class SearchItems extends React.Component {
       }
       else if(this.state.text != '' && sortedData.length === 1) {
         return (
-          <Text style={{color: brand.colors.primary }}>{sortedData.length + ' result found'}</Text>
+          <Text style={{color: brand.colors.primary }}>{sortedData.length + ' item found'}</Text>
         )
       }
       else if(this.state.text != '' && sortedData.length > 1) {
         return (
-          <Text style={{color: brand.colors.primary }}>{sortedData.length + ' results found'}</Text>
+          <Text style={{color: brand.colors.primary }}>{sortedData.length + ' items found'}</Text>
         )
       }
       else if(this.state.text != '' && sortedData.length === 0) {
@@ -136,7 +136,7 @@ class SearchItems extends React.Component {
             lightTheme={true}
             color ='blue'
             value={this.state.text}
-            placeholder='Search Modules'
+            placeholder='Search Term'
             onChangeText = {(text)=> {
               this.setState({
                 timePassed :false

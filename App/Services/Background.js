@@ -1,3 +1,4 @@
+import { fetchWrapper } from './FetchWrapper'
 
 
 export function generateRandomNumber(min, max) 
@@ -5,31 +6,20 @@ export function generateRandomNumber(min, max)
     return Math.round(Math.random() * (max-min) + min )
 } 
 
-export function checkForNotifications(token, callback) {
+export function checkForNotifications(client, token, callback) {
     
 
-    fetch('https://jsonplaceholder.typicode.com/users', {  
-      method: 'GET',
-      headers: {
-        'Authorization': token,
-        'Content-Type': 'application/json',
-      }
-    })
-    // .then(this.handleErrors)
-    .then((results) => {
-      return results.json();
-    })
-    .then(data => {
+    fetchWrapper('/api/ManagerAppAlerts', 'GET', null, client, token, function(err, resp) {
 
-        callback(null, data)
-
-
+        if(err) {
+            callback(err)
+        }
+        else {
+            callback(null, resp)
+        }
 
     })
-    .catch(function(error) {
-        console.log("error: " , error);
-        callback(error)
-    });
+
 
 
 
