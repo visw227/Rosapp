@@ -54,6 +54,8 @@ export function userLogout(client, token, callback) {
 
   })
 
+}
+
 export function changePasswordAccess (request,callback) {
 
   let url = '/api/ManagerAppAuth/changePasswordAccess'
