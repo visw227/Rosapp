@@ -18,7 +18,7 @@ export class About extends React.Component {
     title: 'Support',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     headerLeft : <Ionicon
         name="md-menu"
@@ -69,6 +69,13 @@ export class About extends React.Component {
 
       }
 
+
+  }
+
+  componentDidMount () {
+    let userData = this.props.screenProps.state.userData
+
+    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
 
   }
     

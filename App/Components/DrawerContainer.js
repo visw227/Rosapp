@@ -71,10 +71,21 @@ export default class DrawerContainer extends React.Component {
 
       this.setState({backgroundColor:brand.colors.primary})
 
+      this.props.navigation.setParams({backgroundColor : brand.colors.primary})
+
       // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
       this.props.screenProps._globalStateChange( { action: "undo-session-override", userData: userData, superUser: null, backgroundColor :brand.colors.primary })
 
-  }
+      const resetAction = StackActions.reset({
+        index: 0,
+        key: null, // this is the trick that allows this to work
+        actions: [NavigationActions.navigate({ routeName: 'DrawerStack',params:{backgroundColor:brand.colors.danger} })],
+    });
+    console.log('<<color',this.props.screenProps.state)
+    this.props.navigation.dispatch(resetAction);
+  
+  
+    }
 
   componentDidMount () {
 
@@ -236,6 +247,7 @@ export default class DrawerContainer extends React.Component {
             icon={'user-circle-o'}
             label={'Account'}
             routeName={'Account'}
+            routeParam={this.props.navigation.state.params}
             iconSize={25}
           /> 
 

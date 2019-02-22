@@ -18,7 +18,7 @@ class SearchItems extends React.Component {
 
     title: 'Search',
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
         headerLeft : <Ionicon
         name="md-menu"
@@ -73,7 +73,7 @@ class SearchItems extends React.Component {
     // const parent = navigation.getParam('item', { id: 0, name: null} );
     // this.props.navigation.setParams({ title: parent.Name })
 
-    this.props.navigation.setParams({ menuIconClickHandler: this.onMenuIconClick })
+    this.props.navigation.setParams({ menuIconClickHandler: this.onMenuIconClick,backgroundColor:this.props.screenProps.state.backgroundColor })
 
   }
 

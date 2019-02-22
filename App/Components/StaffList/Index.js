@@ -38,7 +38,7 @@ class StaffListScreen extends React.Component {
     title: 'StaffLinQ Employees',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     headerLeft : <Ionicon
         name="md-menu"
@@ -89,7 +89,11 @@ class StaffListScreen extends React.Component {
   }
 
 
-  componentWillMount () {
+  componentDidMount () {
+
+    let userData = this.props.screenProps.state.userData
+
+    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
 
 
   }

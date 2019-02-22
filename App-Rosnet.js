@@ -912,6 +912,13 @@ export default class App extends React.Component {
             superUser: data.superUser
           }, () => console.log(">>> global state change to superUSer", this.state.superUser ) )
 
+          
+        }
+
+        if (data.backgroundColor) {
+          this.setState({
+            backgroundColor : data.backgroundColor
+          },() => console.log('>>>>>global state change for bgColor',this.state.backgroundColor))
         }
 
         if(data.action && data.action === "undo-session-override") {
