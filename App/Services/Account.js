@@ -70,7 +70,6 @@ export function changePassword (request, token, callback) {
 
 }
 
-}
 
 export function changePasswordAccess (request,callback) {
 
