@@ -28,6 +28,9 @@ import zxcvbn from 'zxcvbn'
 import brand from '../../../Styles/brand'
 import PasswordStrengthCheck from './PasswordStrengthCheck'
 import { changePassword,userLogin } from '../../../Services/Account';
+import { getSiteSecuritySettings} from '../../../Services/Security';
+import AlerMessage from '../../Modules/AlertMessage'
+
 
 const regex = {
   digitsPattern: /\d/,
@@ -49,7 +52,7 @@ class Password extends React.Component {
     title: 'Change Password',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     
 
@@ -80,7 +83,8 @@ class Password extends React.Component {
       currentPassError:'false',
       levelError : 'false',
       changeSuccess : false,
-      fadeAnim: new Animated.Value(0)
+      fadeAnim: new Animated.Value(0),
+      secSetting : {}
     };
   }
   
@@ -98,11 +102,35 @@ class Password extends React.Component {
   }
 
   componentDidMount () {
-   
+
+    let userData = this.props.screenProps.state.userData
+
+    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+
+
+    _this = this
+
+    var request = this.props.screenProps.state.userData.selectedSite
+
+     getSiteSecuritySettings (request, function(err,resp) {
+      if (err){
+        console.log ('Error siteSettings',err)
+      }
+      else {
+
+        _this.setState ({
+          secSetting : resp
+        },()=> console.log('<<resp',_this.state.secSetting))
+        
+      }
+         
+      })
   }
   _onChangePassword = (password, isValid) => {
     this.setState({ password: { value: password, isValid: isValid } })
   }
+  
+   
 
   validateCurrentPass = (text) => {
 
@@ -161,7 +189,7 @@ class Password extends React.Component {
 
   isTooShort(password) {
     //const { minLength } = this.props;
-    const minLength = 4
+    const minLength = this.state.secSetting.Min_Pswd_Length
     if (!minLength) {
       return true;
     }
@@ -270,7 +298,7 @@ class Password extends React.Component {
       console.log('sendingSetT',_this.state.sending,this.state.error)
     })
      
-     if (Confirm === 'true' && this.state.validated && level >= 2) {
+     if (Confirm === 'true' && this.state.validated && level >= this.state.secSetting.Pswd_Complexity) {
 
       changePassword(request, token, function (err,response){
 
@@ -339,7 +367,7 @@ class Password extends React.Component {
 
     } 
     //else conditions not executing as expected.. Adding else if for prompt execution
-    else if (level < 2) {
+    else if (level < this.state.secSetting.Pswd_Complexity) {
       _this.setState ({
         error : 'false',
         levelError : 'true',
@@ -423,8 +451,8 @@ class Password extends React.Component {
       labelColor: 'red'
     };
     
-
-    return (
+if (this.state.secSetting.Pswd_Change_By_User){
+  return (
       
     <ScrollView>
 
@@ -463,7 +491,7 @@ class Password extends React.Component {
             <View>
             <PasswordStrengthCheck
                     secureTextEntry
-                    minLength={4}
+                    minLength={this.state.secSetting.Min_Pswd_Length}
                     value = {this.state.tempPass}
                     ref={input => { this.newPassInput = input }}
                     ruleNames="symbols|words"
@@ -536,7 +564,7 @@ class Password extends React.Component {
 
                             {this.state.currentPassError === 'true'  && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Current Password Error. Try entering again till you get a green checkmark or try forgot password</Text>}
                             {this.state.confirmError === 'true'   && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Passwords do not match. Try entering again till you get a green checkmark</Text>}
-                            { this.state.levelError === 'true' && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Password too weak. Try using special characters and alphanumerics</Text>}
+                            {this.state.levelError === 'true' && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Password too weak. Try using special characters and alphanumerics</Text>}
 
 
         </View>
@@ -549,12 +577,17 @@ class Password extends React.Component {
           <Animated.Text style={{color : brand.colors.success}}> Password changed successfully!</Animated.Text>
         </Animated.View>}
 
-
-
     </ScrollView>           
       
       
     );
+} 
+else {
+  return (
+    <AlerMessage title = 'You are not authorized to change your password. Please contact your administrator'/>
+  )
+}
+   
   }
 }
 

@@ -38,7 +38,7 @@ class AlertsScreen extends React.Component {
     title: 'Alerts',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     headerLeft : <Ionicon
         name="md-menu"
@@ -103,6 +103,8 @@ class AlertsScreen extends React.Component {
       let _this = this 
 
       console.log("notif will mount")
+      this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+
 
 
   }

@@ -38,21 +38,37 @@ export function userLogin(request, callback) {
 
 
 export function userLogout(client, token, callback) {
-  
-  // login method received credentials as query string params
-  let url = '/api/ManagerAppAuth/Logout'
+    
+   // login method received credentials as query string params
+   let url = '/api/ManagerAppAuth/Logout'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
   fetchWrapper(url, 'GET', null, client, token, function(err, resp) {
-
     if(err) {
       callback(err)
     }
     else {
-      callback(null, resp)
-    }
+            callback(null, resp)
+        } })
+      }
 
-  })
+export function changePassword (request, token, callback) {
+
+
+  let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password)
+
+  fetchWrapper(url, 'POST', null, request.clientCode , token, function(err, resp) {
+    if (err) {
+      callback(err)
+
+    }
+     else { 
+       callback(null,resp)
+     }
+  } )
+
+
+}
 
 }
 

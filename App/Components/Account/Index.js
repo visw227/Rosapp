@@ -20,7 +20,7 @@ export class Account extends React.Component {
     title: 'Account',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     headerLeft : <Ionicon
         name="md-menu"
@@ -68,7 +68,8 @@ export class Account extends React.Component {
               hasError: false,
               message: ""
           },
-          changePassAcess : false
+          changePassAcess : false,
+          color :  this.props.navigation.getParam('backgroundColor')
 
       }
 
@@ -80,6 +81,14 @@ export class Account extends React.Component {
     _this  = this
 
      var changePass;
+
+
+     let userData = this.props.screenProps.state.userData
+
+     this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+ 
+
+     console.log('componentDID',this.props.screenProps.state.backgroundColor)
 
      clientCode = this.props.screenProps.state
 
@@ -110,10 +119,12 @@ export class Account extends React.Component {
     
 
   render() {
+
+    const { params } = this.props.navigation.state;
+
         return (
 
             <View style={Styles.container}>
-
               <List style={Styles.list}>
 
                   {/* <ListItem

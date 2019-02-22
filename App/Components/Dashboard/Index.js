@@ -49,7 +49,7 @@ class DashboardScreen extends React.Component {
      title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Dashboard': navigate.navigation.state.params.title,
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     headerLeft : <Ionicon
         name="md-menu"
@@ -174,7 +174,7 @@ class DashboardScreen extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ title: userData.selectedSite })
+    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
 
     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 

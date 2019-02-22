@@ -12,6 +12,13 @@ import brand from '../Styles/brand'
 export default class DrawerContainer extends React.Component {
 
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      backgroundColor : brand.colors.primary
+    }
+  }
+
 
   logout = () => {
 
@@ -62,9 +69,31 @@ export default class DrawerContainer extends React.Component {
 
       let userData = this.props.screenProps.state.superUser
 
+      this.setState({backgroundColor:brand.colors.primary})
+
+      this.props.navigation.setParams({backgroundColor : brand.colors.primary})
+
       // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
-      this.props.screenProps._globalStateChange( { action: "undo-session-override", userData: userData, superUser: null })
-      
+      this.props.screenProps._globalStateChange( { action: "undo-session-override", userData: userData, superUser: null, backgroundColor :brand.colors.primary })
+
+      const resetAction = StackActions.reset({
+        index: 0,
+        key: null, // this is the trick that allows this to work
+        actions: [NavigationActions.navigate({ routeName: 'DrawerStack',params:{backgroundColor:brand.colors.danger} })],
+    });
+    console.log('<<color',this.props.screenProps.state)
+    this.props.navigation.dispatch(resetAction);
+  
+  
+    }
+
+  componentDidMount () {
+
+    if (this.props.screenProps.state.superUser) {
+      this.setState({backgroundColor : brand.colors.danger})
+    }else {
+      this.setState({backgroundColor:brand.colors.primary})
+    }
 
   }
 
@@ -89,10 +118,10 @@ export default class DrawerContainer extends React.Component {
           height: 40,
           paddingLeft: 5,
           width: '100%',
-          backgroundColor: brand.colors.primary,
+          backgroundColor: this.state.backgroundColor,
           marginBottom: 1
         }}>
-          <View style={{ alignItems: 'center', width: 30, backgroundColor: brand.colors.primary }}>
+          <View style={{ alignItems: 'center', width: 30, backgroundColor: this.state.backgroundColor }}>
             {iconType && iconType === 'Entypo' ? (
              <Entypo name={icon} size={iconSize} color={brand.colors.white} />
             ) : (
@@ -112,7 +141,7 @@ export default class DrawerContainer extends React.Component {
 
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{backgroundColor:this.state.backgroundColor}]}>
 
         <View style={{ alignItems: 'center' }}>
           <Image
@@ -218,6 +247,7 @@ export default class DrawerContainer extends React.Component {
             icon={'user-circle-o'}
             label={'Account'}
             routeName={'Account'}
+            routeParam={this.props.navigation.state.params}
             iconSize={25}
           /> 
 
@@ -247,7 +277,7 @@ export default class DrawerContainer extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: brand.colors.primary,
+    //backgroundColor: 'red',
     paddingTop: 60,
     paddingHorizontal: 20
   },

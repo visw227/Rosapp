@@ -23,7 +23,7 @@ class ModuleItems extends React.Component {
     title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Modules': navigate.navigation.state.params.title,
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     headerLeft : <Ionicon
         name="md-menu"
@@ -55,7 +55,8 @@ class ModuleItems extends React.Component {
 
     const item = navigation.getParam('item', { } );
 
-    this.props.navigation.setParams({ title: item.name })
+
+    this.props.navigation.setParams({ title: item.name,backgroundColor:this.props.screenProps.state.backgroundColor })
 
 
     console.log("item", item)
