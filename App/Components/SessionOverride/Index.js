@@ -212,7 +212,7 @@ class SearchUsers extends React.Component {
       // only do impersonation if the user presses 'Continue'
       if(mode === true) {
         // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
-        this.props.screenProps._globalStateChange( { action: "session-override", userData: this.state.impersonatedUser, superUser: this.props.screenProps.state.userData })
+        this.props.screenProps._globalStateChange( { action: "session-override", userData: this.state.impersonatedUser, superUser: this.props.screenProps.state.userData,backgroundColor:brand.colors.danger })
       
         const resetAction = StackActions.reset({
             index: 0,

@@ -873,6 +873,7 @@ export default class App extends React.Component {
           appState: AppState.currentState,
           alertCount: 0,
           messageCount: 0,
+          backgroundColor :brand.colors.primary
 
           // these state objects are shared across the entire app through screenProps
           // userData: null,
