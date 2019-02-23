@@ -250,6 +250,7 @@ class Login extends Component {
                         let userData = parseUser(response)
                         // we are including password in the userData for the change password screen to have access the current password for validation
                         userData.password = _this.state.password 
+                        userData.email = (_this.state.userName).indexOf('@') !== -1 ? _this.state.userName : _this.state.userName+'@rosnet.com'
 
                         getMobileMenuItems(userData.selectedSite, userData.token, function(err, menuItems){
                             

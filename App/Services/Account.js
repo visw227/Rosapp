@@ -57,13 +57,26 @@ export function changePassword (request, token, callback) {
 
   let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password)
 
-  fetchWrapper(url, 'POST', null, request.clientCode , token, function(err, resp) {
+  fetchWrapper(url, 'GET', null, request.clientCode , token, function(err, resp) {
     if (err) {
       callback(err)
 
     }
      else { 
        callback(null,resp)
+       
+       let emailUrl = '/api/ManagerAppAuth/EmailPasswordChange?email='+encodeURI(request.email)+'&selectedSite'+encodeURI(request.clientCode)+'&userID='+encodeURI(request.userId)
+       
+       fetchWrapper(emailUrl, 'POST', null, request.clientCode , token, function(err, resp) {
+        if (err) {
+          //callback(err)
+          console.log('email Error')
+    
+        }
+         else { 
+           console.log('email sent to user')      
+         }
+      } )
      }
   } )
 
