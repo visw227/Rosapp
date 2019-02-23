@@ -39,8 +39,8 @@ export function userLogin(request, callback) {
 
 export function userLogout(client, token, callback) {
     
-   // login method received credentials as query string params
-   let url = '/api/ManagerAppAuth/Logout'
+  // login method received credentials as query string params
+  let url = '/api/ManagerAppAuth/Logout'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
   fetchWrapper(url, 'GET', null, client, token, function(err, resp) {
@@ -49,8 +49,9 @@ export function userLogout(client, token, callback) {
     }
     else {
             callback(null, resp)
-        } })
-      }
+    } 
+  })
+}
 
 export function changePassword (request, token, callback) {
 
