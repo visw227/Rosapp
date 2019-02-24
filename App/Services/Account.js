@@ -66,9 +66,9 @@ export function changePassword (request, token, callback) {
      else { 
        callback(null,resp)
        
-       let emailUrl = '/api/ManagerAppAuth/EmailPasswordChange?email='+encodeURI(request.email)+'&selectedSite'+encodeURI(request.clientCode)+'&userID='+encodeURI(request.userId)
+       let emailUrl = '/api/ManagerAppAuth/EmailPasswordChange?email='+encodeURI(request.email)+'&selectedSite='+encodeURI(request.clientCode)+'&userID='+encodeURI(request.userId)
        
-       fetchWrapper(emailUrl, 'POST', null, request.clientCode , token, function(err, resp) {
+       fetchWrapper(emailUrl, 'GET', null, request.clientCode , token, function(err, resp) {
         if (err) {
           //callback(err)
           console.log('email Error')

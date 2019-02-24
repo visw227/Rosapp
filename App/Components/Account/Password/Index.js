@@ -324,7 +324,7 @@ class Password extends React.Component {
             })
           }
           
-           if (_this.state.changePasswordAct && _this.state.resonseMessage == '') {
+           if (_this.state.changePasswordAct && _this.state.resonseMessage !== '') {
 
             userData = _this.props.screenProps.state.userData
 
@@ -544,7 +544,7 @@ if (this.state.secSetting.Pswd_Change_By_User){
     </TouchableHighlight> }
 
             {this.state.sending === 'true' ? <ActivityIndicator size="large" color={brand.colors.primary} style ={{margin:10}} />: null}
-            {this.state.changePasswordAct && this.state.resonseMessage !== '' ? <View style={{ 
+            {this.state.changePasswordAct && this.state.resonseMessage ? <View style={{ 
                                 justifyContent: 'center', 
                                 alignItems: 'center',
                                 marginBottom: 15,
