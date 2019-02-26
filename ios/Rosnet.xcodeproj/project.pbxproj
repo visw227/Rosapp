@@ -58,6 +58,7 @@
 		9187ACDF8F3C4CF9B582E347 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F0D51A2EDFD4E7489F90E3D /* FontAwesome.ttf */; };
 		9B26F8F7A980423B93926BDD /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D51E6942A54DF485CA853F /* libAppCenterReactNativeAnalytics.a */; };
 		9F323F77BA2849579B084C9C /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B448D66F1A4F4FBDBB18AEF0 /* FontAwesome5_Brands.ttf */; };
+		A16BFABB2225ADF90069C462 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A16BFAB72225AD3D0069C462 /* libRNImagePicker.a */; };
 		A5B3233236504EBF828E76D6 /* libAppCenterReactNativePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97F1C53A02CE43F6B727FD0E /* libAppCenterReactNativePush.a */; };
 		A7E065FEDB42457F91959552 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = B65BDF21225D4095A9839C41 /* AppCenter-Config.plist */; };
 		A8BAFB425C9E4679844EDE01 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA2CCA5DD04E46C38C450CCE /* FontAwesome5_Solid.ttf */; };
@@ -311,6 +312,13 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		A16BFAB62225AD3D0069C462 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A16BFA862225AD3D0069C462 /* RNImagePicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
+			remoteInfo = RNImagePicker;
+		};
 		ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
@@ -477,6 +485,7 @@
 		960B5713130C5E1E05208968 /* Pods-Rosnet-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rosnet-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rosnet-tvOS/Pods-Rosnet-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		97F1C53A02CE43F6B727FD0E /* libAppCenterReactNativePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNativePush.a; sourceTree = "<group>"; };
 		9CF60B77B320460585DB1D81 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
+		A16BFA862225AD3D0069C462 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		A4650213C812321C44D61FAC /* libPods-Rosnet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rosnet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B11CB1C131E94EB1983B2FBD /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -510,6 +519,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A16BFABB2225ADF90069C462 /* libRNImagePicker.a in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
@@ -791,6 +801,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A16BFA862225AD3D0069C462 /* RNImagePicker.xcodeproj */,
 				13B07FAE1A68108700A75B9A /* Rosnet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* RosnetTests */,
@@ -813,6 +824,14 @@
 				00E356EE1AD99517003FC87E /* RosnetTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* Rosnet-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* Rosnet-tvOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A16BFA872225AD3D0069C462 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A16BFAB72225AD3D0069C462 /* libRNImagePicker.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1108,6 +1127,10 @@
 					ProjectRef = E8E98D7CB35A4C078F523A44 /* RNGestureHandler.xcodeproj */;
 				},
 				{
+					ProductGroup = A16BFA872225AD3D0069C462 /* Products */;
+					ProjectRef = A16BFA862225AD3D0069C462 /* RNImagePicker.xcodeproj */;
+				},
+				{
 					ProductGroup = C254BD7722037E69004941E6 /* Products */;
 					ProjectRef = 9CF60B77B320460585DB1D81 /* RNVectorIcons.xcodeproj */;
 				},
@@ -1349,6 +1372,13 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A16BFAB72225AD3D0069C462 /* libRNImagePicker.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNImagePicker.a;
+			remoteRef = A16BFAB62225AD3D0069C462 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */ = {
