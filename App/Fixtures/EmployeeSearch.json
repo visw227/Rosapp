@@ -1,0 +1,42 @@
+[  
+   {  
+      "id":390,
+      "userName":"scosola",
+      "name":"Steve Cosola",
+      "group":"Area Director",
+      "location":0,
+      "level":3
+   },
+   {  
+      "id":1030,
+      "userName":"sfranklin",
+      "name":"Steven Franklin",
+      "group":"Area Director",
+      "location":0,
+      "level":3
+   },
+   {  
+      "id":695,
+      "userName":"jscanlon",
+      "name":"Jennifer Steele",
+      "group":"HR",
+      "location":null,
+      "level":3
+   },
+   {  
+      "id":1367,
+      "userName":"parmbruster",
+      "name":"Patrick Armbruster",
+      "group":"IT",
+      "location":null,
+      "level":3
+   },
+   {  
+      "id":872,
+      "userName":"smerrill",
+      "name":"Steve Merrill",
+      "group":"Senior Mgmt",
+      "location":0,
+      "level":3
+   }
+]

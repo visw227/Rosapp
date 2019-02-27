@@ -204,7 +204,7 @@ class Login extends Component {
             // FAKED for demoing...
             setTimeout(() => {
         
-                const FAKE_TOKEN = 'FAKE-ABCD-1234'
+                const FAKE_TOKEN = 'FAKE-TOKEN'
 
                 let userData = {
                     token: FAKE_TOKEN,
@@ -215,7 +215,8 @@ class Login extends Component {
                     sites: [ "AAG", "DOHERTY" ],
                     isRosnetEmployee: false,
                     selectedSite: "AAG",
-                    menuItems: fakedMenu
+                    menuItems: fakedMenu,
+                    isRosnetEmployee: true
                 }
 
                 AsyncStorage.setItem('userData', JSON.stringify(userData))

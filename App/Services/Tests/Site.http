@@ -1,0 +1,5 @@
+
+
+GET http://aag.dywaynes-pc.com/api/ManagerAppSite/SecuritySettings
+Content-Type: application/json
+managerAppToken: bf771ed4-8319-4472-bb18-9b10c36f4058
