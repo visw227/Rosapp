@@ -21,6 +21,7 @@
     "react-native-device-info": "^0.26.1",
     "react-native-elements": "0.19.1",
     "react-native-gesture-handler": "1.0.15",
+    "react-native-image-picker": "^0.28.0",
     "react-native-keyboard-spacer": "0.4.1",
     "react-native-password-strength-checker": "^1.0.13",
     "react-native-progress": "3.5.0",

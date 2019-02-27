@@ -4,7 +4,7 @@ import {
   View,
   Image,
   Text,
-  Button
+  Button,TouchableHighlight
 } from 'react-native';
 import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -14,6 +14,15 @@ import brand from '../../../Styles/brand'
 
 import Styles from './Styles'
 
+import ImagePicker from 'react-native-image-picker'
+
+var options = {
+  
+  storageOptions: {
+    skipBackup: true,
+    path: 'images'
+  }
+};
 
 class SupportRequest extends React.Component {
 
@@ -30,14 +39,74 @@ class SupportRequest extends React.Component {
 
   })
 
+  constructor(props) {
+    super(props)
+
+    // improve the name display
+    // From: CANDICE DOMINGUEZ FIELDS
+    // To: {
+    //   "first": "Candice",
+    //   "last": "Dominguez",
+    //   "initials": "CD",
+    //   "name": "Candice Dominguez"
+    // }
+    //let nameObj = parseName(this.props.name)
+ 
+
+    let avatarUrl = null
+    // if(this.props.imageName) {
+    //   options = { ...options, customButtons }
+    //   avatarUrl = getHost() + '/image-server/profile-pics/' + props.userId + '?ts=' + moment.utc()
+    // }
+
+    console.log(">>>>>> avatarUrl constructor: " + avatarUrl)
+
+    this.state = {
+      // avatarSource: source.uri,
+      avatarUrl: avatarUrl,
+      //name: nameObj,
+      options
+    }
+  }
+
+  handleImage = () => {
+    ImagePicker.showImagePicker(this.state.options, (response) => {
+      console.log('Response = ', response);
+     
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        let source = { uri: response.uri };
+     
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+     
+        this.setState({
+          avatarSource: source
+        });
+      }
+    })
+  }
+
 
   render() {
 
     return (
 
             <View style={Styles.container}>
-              <Text>Report an Issue
+            <TouchableHighlight onPress = {()=> this.handleImage()}>
+            <Text>Report an Issue
               </Text>
+
+            </TouchableHighlight>
+              
             </View>
     );
 

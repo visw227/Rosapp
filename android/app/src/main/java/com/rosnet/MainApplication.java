@@ -15,6 +15,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.imagepicker.ImagePickerPackage; 
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
     }
+    
 
     @Override
     protected List<ReactPackage> getPackages() {
@@ -38,7 +40,11 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new FingerprintAuthPackage(),
             new RNGestureHandlerPackage(),
-            new RNDeviceInfo()
+            new RNDeviceInfo(),
+           
+            new ImagePickerPackage() // <-- add this line 
+            // OR if you want to customize dialog style 
+            
       );
     }
 
