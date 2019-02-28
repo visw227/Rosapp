@@ -1,0 +1,7 @@
+POST https://aag.rosnetqa.com/zendesk/ReportIssue
+Content-Type: application/json
+managerAppToken: 683f731b-b031-4636-8b03-75d5ab499b75
+
+{
+    "subject" : "hey"
+}
