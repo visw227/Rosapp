@@ -144,7 +144,7 @@ class SearchUsers extends React.Component {
       userName: item.userName
     }
 
-    impersonateUser(userData.selectedSite, item.token, request, function(err, response){
+    impersonateUser(userData.selectedSite, userData.token, request, function(err, response){
 
       if(err) {
         console.log("err", err)

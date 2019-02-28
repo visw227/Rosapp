@@ -1,25 +1,40 @@
 
 
-POST https://aag.rosnetqa.com/api/ManagerAppAuth/aag.rosnetdev.com/api/ManagerAppAuth/AuthenticateUser?userName=vchikkala@rosnet.com&password=Rosnet@123
+### trying to connect to my windows pc....
+POST http://dashboard.dywaynes-pc.com/api/ManagerAppAuth/Login
+Content-Type: application/json
 
 {
-    "userName" : "vchikkala@rosnet.com",
+    "userName" : "dywayne.johnson",
+    "password": "gorosnet1$"
     
 }
 
 ###
+
+
+
+POST https://dashboard.rosnetqa.com/api/ManagerAppAuth/Login
+Content-Type: application/json
+
+{
+    "userName" : "dywayne.johnson",
+    "password": "gorosnet1$"
+    
+}
+
+###
+
 
 {
     "userName": "dywayne.johnson",
     "password": "***"
 }
 
-POST https://dashboard.rosnetqa.com/api/ManagerAppAuth/AuthenticateUser?userName=dywayne.johnson&password=gorosnet1$
 
-###
 
 POST https://aag.rosnetqa.com/Signon/PasswordChange?__dt=1549485051016&userId=29269&password=Rosnet@123
-Content-Type: application/application/json
+Content-Type: application/json
 
 ###
  
