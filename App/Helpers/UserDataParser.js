@@ -9,7 +9,8 @@ export function parseUser(response) {
         userName: response.Browse_User_Name,
         commonName: response.Common_Name,
         sites: response.Sites || [], // just in case null
-        isRosnetEmployee: response.Rosnet_Employee
+        isRosnetEmployee: response.Rosnet_Employee,
+        mustChangePassword: response.Must_Change_Password
     }
 
     // sort before persisting

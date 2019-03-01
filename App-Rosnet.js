@@ -124,6 +124,7 @@ let LoginStack = createStackNavigator({
 import AccountScreen from './App/Components/Account/Index'
 import SettingsScreen from './App/Components/Account/Settings/Index'
 import ProfileScreen from './App/Components/Account/Profile/Index'
+// NOTE: This screen is shared by 2 stacks
 import PasswordScreen from './App/Components/Account/Password/Index'
 import SecurityScreen from './App/Components/Account/Security/Index'
 
@@ -821,7 +822,8 @@ const AppStack = createStackNavigator({
   LoginStack: { screen: LoginStack },
   LockStack: { screen: LockScreenStack },
   DrawerStack: { screen: DrawerStack },
-  PushNotificationsPermissionStack: { screen: PushNotificationsPermissionStack }
+  PushNotificationsPermissionStack: { screen: PushNotificationsPermissionStack },
+  PasswordChangeRequiredStack: { screen: PasswordScreen }
 
 }, {
     initialRouteName: 'LaunchStack',

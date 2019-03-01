@@ -409,6 +409,17 @@ class Password extends React.Component {
   }
   
 
+  onTestContinue = () => {
+
+    const resetAction = StackActions.reset({
+        index: 0,
+        key: null, // this is the trick that allows this to work
+        actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+    });
+    this.props.navigation.dispatch(resetAction);
+  }
+
+
 
   render() {
 
@@ -585,7 +596,22 @@ if (this.state.secSetting.Pswd_Change_By_User){
 } 
 else {
   return (
-    <AlerMessage title = 'You are not authorized to change your password. Please contact your administrator'/>
+    
+
+
+                           <View style={{flex: 1,
+                              backgroundColor: '#fff',
+                              alignItems: 'center',
+                              justifyContent: 'center'}}>
+                             <AlerMessage title = 'You are not authorized to change your password. Please contact your administrator'/>
+
+                            <Text 
+                                style={{ color: brand.colors.primary }} 
+                                onPress={this.onTestContinue}>
+                                Continue to Dashboard
+                            </Text>
+                        </View>
+
   )
 }
    

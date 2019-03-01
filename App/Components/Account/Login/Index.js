@@ -216,12 +216,18 @@ class Login extends Component {
                     isRosnetEmployee: false,
                     selectedSite: "AAG",
                     menuItems: fakedMenu,
-                    isRosnetEmployee: true
+                    isRosnetEmployee: true,
+                    mustChangePassword: true
                 }
 
                 AsyncStorage.setItem('userData', JSON.stringify(userData))
+
+                let redirect = null
+                if(userData.mustChangePassword) {
+                    redirect = "PasswordChangeRequiredStack"
+                }
                 
-                _this.onLoginResponse(userData, null)
+                _this.onLoginResponse(userData, redirect)
 
                 _this.setState({
                     sending: false
@@ -274,7 +280,12 @@ class Login extends Component {
                                     sending: false
                                 })
 
-                                _this.onLoginResponse(userData, null)
+                                let redirect = null
+                                if(userData.mustChangePassword) {
+                                    redirect = "PasswordChangeRequiredStack"
+                                }
+                                
+                                _this.onLoginResponse(userData, redirect)
 
                                 // stringify the object before storing
                                 AsyncStorage.setItem('userData', JSON.stringify(userData))

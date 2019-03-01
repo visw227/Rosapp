@@ -11,6 +11,11 @@ To exit:
 control + x
 
 
+To flush the cache:
+
+$ sudo dscacheutil -flushcache
+
+
 ##
 # Host Database
 #
@@ -28,4 +33,7 @@ control + x
 ## the address below is my PC's IP address while at home on the Rosnet VPN
 192.168.1.15 dashboard.dywaynes-pc.com
 192.168.1.15 aag.dywaynes-pc.com
+
+## 2aa17895.ngrok.io dashboard.dywaynes-pc.com
+## 2aa17895.ngrok.io aag.dywaynes-pc.com
 
