@@ -102,6 +102,8 @@ class AlertsScreen extends React.Component {
 
       let _this = this 
 
+      let userData = this.props.screenProps.state.userData
+
       console.log("notif will mount")
       this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
 
