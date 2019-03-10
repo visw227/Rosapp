@@ -1,16 +1,9 @@
 
 
 
-GET http://876ddea7.ngrok.io/api/ManagerAppMenu
-Cookie: rememberme=dywayne.johnson; clientCode=aag; rosnetToken=91ebce15-5a52-4fe3-9291-a281ec76f167
-
-###
-
 GET https://aag.rosnetqa.com/api/ManagerAppMenu
-Cookie: rememberme=dywayne.johnson; clientCode=aag; rosnetToken=8390bd37-dc40-4b35-b239-326dceea6a3a
+Content-Type: application/json
+managerAppToken: 1ad591c4-4d8d-499f-81f6-101889ac7b1c
 
 
 ###
-
-GET https://aag.rosnetqa.com/api/ManagerAppMenu
-Cookie: rememberme=dywayne.johnson; clientCode=aag; rosnetToken=6b9b7944-811b-4693-9dc5-d58363e698d0

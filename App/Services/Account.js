@@ -27,9 +27,11 @@ export function userLogin(request, callback) {
   fetchWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
 
     if(err) {
+      console.log("login error", err)
       callback(err)
     }
     else {
+      console.log("login success", resp)
       callback(null, resp)
     }
 

@@ -55,8 +55,8 @@ class Login extends Component {
                 hasError: false,
                 message: ""
             },
-            userName: '',
-            password: '',
+            userName: 'dywayne.johnson',
+            password: 'gorosnet1$',
             userData: null
         }
 
@@ -244,7 +244,8 @@ class Login extends Component {
                 if(err) {
 
                     console.log("userLogin error", err)
-                    _this.showAlert(err.message || "Invalid login request. Please check your email address and password and try again.")
+                    // show the real error message when can - otherwise show the default message
+                    _this.showAlert("Sorry, we were unable to complete the login process. The exact error was: 'Login: " + err.message +  "'.")
 
                 }
                 else {
@@ -264,7 +265,8 @@ class Login extends Component {
 
                             if(err) {
                                 console.log("err - getMobileMenuItems", err)
-                                _this.showAlert(err.message)
+                                 // show the real error message when can - otherwise show the default message
+                                _this.showAlert("Sorry, we were unable to complete the login process for " + userData.selectedSite + ". The exact error was: 'Menu: " + err.message + "'.")
                             }
                             else {
 
