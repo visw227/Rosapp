@@ -49,24 +49,23 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
     // tack on timestamp as a cache buster
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
-    let request =  {  
-      method: method,
-      headers: {
-        "content-type": "application/json"
-      }
-    }
+    // let request =  {  
+    //   method: method,
+    //   headers: {
+    //     "content-type": "application/json"
+    //   }
+    // }
 
-    // for some reason, fetch request gets redirected to login if the Cookie header is provided
-    if(token) {
-      request.headers.managerAppToken = token
-    }
+    // // for some reason, fetch request gets redirected to login if the Cookie header is provided
+    // if(token) {
+    //   request.headers.managerAppToken = token
+    // }
 
 
-
-    // only add the body if this is a POST/PUT
-    if(jsonBody && (method === 'POST' || method === 'PUT') ) { 
-      request.body = JSON.stringify(jsonBody) 
-    }
+    // // only add the body if this is a POST/PUT
+    // if(jsonBody && (method === 'POST' || method === 'PUT') ) { 
+    //   request.body = JSON.stringify(jsonBody) 
+    // }
 
     console.log("url: ", fullUrl)
     //console.log("request: ", JSON.stringify(request, null, 2))
@@ -142,8 +141,16 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
     // The second argument is the endpoint URL
     xhr.open(method, fullUrl);
     xhr.setRequestHeader("Content-Type", "application/json");
-    // xhr.setRequestHeader("Accept", "application/json");
-    xhr.send(JSON.stringify(jsonBody) );
+    if(token) {
+      xhr.setRequestHeader("managerAppToken", token);
+    }
+    // send the request
+    if(jsonBody && (method === 'POST' || method === 'PUT') ) { 
+      xhr.send(JSON.stringify(jsonBody));
+    }
+    else {
+      xhr.send(); // GET
+    }
 
 }
 
