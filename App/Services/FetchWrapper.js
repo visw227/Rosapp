@@ -69,7 +69,7 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
     }
 
     console.log("url: ", fullUrl)
-    console.log("request: ", JSON.stringify(request, null, 2))
+    //console.log("request: ", JSON.stringify(request, null, 2))
 
 
 
@@ -105,16 +105,27 @@ export function fetchWrapper(url, method, jsonBody, subDomain, token, callback) 
       // Process our return data
       if (xhr.status >= 200 && xhr.status < 300) {
 
+        // var isValidJSON = true;
+        // try { 
+        //   JSON.parse(xhr.response) 
+        // }
+        // catch(e) { 
+        //   isValidJSON = false 
+        // }
 
         let json = JSON.parse(xhr.response)
 
         console.log("xhr.response", json)
 
-        // What do when the request is successful
-        //console.log('success', JSON.parse(xhr.responseText));
         callback(null, json)
 
-      } else {
+      }
+      else if(xhr.status === 401) {
+
+        // the user's token has expired
+
+      } 
+      else {
 
         let message = xhr._response
 

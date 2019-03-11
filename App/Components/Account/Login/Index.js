@@ -55,8 +55,8 @@ class Login extends Component {
                 hasError: false,
                 message: ""
             },
-            userName: 'dywayne.johnson',
-            password: 'gorosnet1$',
+            userName: '',
+            password: '',
             userData: null
         }
 
@@ -174,11 +174,16 @@ class Login extends Component {
     //******************************************************************
     onLoginPress = () => {
 
+        // this takes on a new scope inside of the userLogin and getUserLogin callback, so make a copy
+        let _this = this
+
         // for some reason, this doesn't work for all scenarios below, but calling it within each scenario works
         Keyboard.dismiss()
 
-        // this takes on a new scope inside of the userLogin and getUserLogin callback, so make a copy
-        let _this = this
+        if(this.state.userName === '' || this.state.password === '') {
+            _this.showAlert("Please enter your user name and password.")
+            return
+        }
 
         this.setState({
             sending: true,
@@ -245,7 +250,7 @@ class Login extends Component {
 
                     console.log("userLogin error", err)
                     // show the real error message when can - otherwise show the default message
-                    _this.showAlert("Sorry, we were unable to complete the login process. The exact error was: 'Login: " + err.message +  "'.")
+                    _this.showAlert("Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'")
 
                 }
                 else {
@@ -266,7 +271,7 @@ class Login extends Component {
                             if(err) {
                                 console.log("err - getMobileMenuItems", err)
                                  // show the real error message when can - otherwise show the default message
-                                _this.showAlert("Sorry, we were unable to complete the login process for " + userData.selectedSite + ". The exact error was: 'Menu: " + err.message + "'.")
+                                _this.showAlert("Your login was successful, but we were unable to access your Rosnet menu options for " + userData.selectedSite + ". The exact error was: '" + err.message + "'")
                             }
                             else {
 
