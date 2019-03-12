@@ -1,4 +1,4 @@
-import { fetchWrapper } from './FetchWrapper'
+import { serviceWrapper } from './ServiceWrapper'
 
 
 // {
@@ -24,7 +24,7 @@ export function userLogin(request, callback) {
   let url = '/api/ManagerAppAuth/Login'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-  fetchWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
+  serviceWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
 
     if(err) {
       console.log("login error", err)
@@ -46,7 +46,7 @@ export function userLogout(client, token, callback) {
   let url = '/api/ManagerAppAuth/Logout'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-  fetchWrapper(url, 'GET', null, client, token, function(err, resp) {
+  serviceWrapper(url, 'GET', null, client, token, function(err, resp) {
     if(err) {
       callback(err)
     }
@@ -61,7 +61,7 @@ export function changePassword (request, token, callback) {
 
   let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password)
 
-  fetchWrapper(url, 'GET', null, request.clientCode , token, function(err, resp) {
+  serviceWrapper(url, 'GET', null, request.clientCode , token, function(err, resp) {
     if (err) {
       callback(err)
 
@@ -71,7 +71,7 @@ export function changePassword (request, token, callback) {
        
        let emailUrl = '/api/ManagerAppAuth/EmailPasswordChange?email='+encodeURI(request.email)+'&selectedSite='+encodeURI(request.clientCode)+'&userID='+encodeURI(request.userId)
        
-       fetchWrapper(emailUrl, 'GET', null, request.clientCode , token, function(err, resp) {
+       serviceWrapper(emailUrl, 'GET', null, request.clientCode , token, function(err, resp) {
         if (err) {
           //callback(err)
           console.log('email Error')
@@ -92,7 +92,7 @@ export function changePasswordAccess (request,callback) {
 
   let url = '/api/ManagerAppAuth/changePasswordAccess'
 
-  fetchWrapper(url, 'GET', null,request,null,function(err,resp){
+  serviceWrapper(url, 'GET', null,request,null,function(err,resp){
     if (err){
       callback(err)
 
@@ -111,7 +111,7 @@ export function forgotPassword(request, callback) {
   let url = '/api/ManagerAppAuth/RetrievePassword'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-  fetchWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
+  serviceWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
 
     if(err) {
       callback(err)

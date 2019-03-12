@@ -1,4 +1,4 @@
-import { fetchWrapper } from './FetchWrapper'
+import { serviceWrapper } from './ServiceWrapper'
 
 /*
 
@@ -10,7 +10,7 @@ import { fetchWrapper } from './FetchWrapper'
 
 export function getSecuritySettings(client, token, callback) {
 
-  fetchWrapper('/api/ManagerAppSite/SecuritySettings', 'GET', null, client, token, function(err, resp) {
+  serviceWrapper('/api/ManagerAppSite/SecuritySettings', 'GET', null, client, token, function(err, resp) {
 
     if(err) {
       callback(err)

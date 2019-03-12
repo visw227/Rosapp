@@ -1,10 +1,10 @@
-import { fetchWrapper } from './FetchWrapper'
+import { serviceWrapper } from './ServiceWrapper'
 
 export function getSiteSecuritySettings (request,callback) {
 
   let url = '/api/Security/ManagerAppSecSetting?selectedClient='+request
 
-  fetchWrapper(url, 'GET', null, request, null, function(err,resp){
+  serviceWrapper(url, 'GET', null, request, null, function(err,resp){
     if (err){
       callback(err)
 

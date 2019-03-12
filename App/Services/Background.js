@@ -1,4 +1,4 @@
-import { fetchWrapper } from './FetchWrapper'
+import { serviceWrapper } from './ServiceWrapper'
 
 
 export function generateRandomNumber(min, max) 
@@ -9,7 +9,7 @@ export function generateRandomNumber(min, max)
 export function checkForNotifications(client, token, callback) {
     
 
-    fetchWrapper('/api/ManagerAppAlerts', 'GET', null, client, token, function(err, resp) {
+    serviceWrapper('/api/ManagerAppAlerts', 'GET', null, client, token, function(err, resp) {
 
         if(err) {
             callback(err)

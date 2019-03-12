@@ -1,8 +1,8 @@
-import { fetchWrapper } from './FetchWrapper'
+import { serviceWrapper } from './ServiceWrapper'
 
 export function getMobileMenuItems(client, token, callback) {
 
-  fetchWrapper('/api/ManagerAppMenu', 'GET', null, client, token, function(err, resp) {
+  serviceWrapper('/api/ManagerAppMenu', 'GET', null, client, token, function(err, resp) {
 
     if(err) {
       callback(err)

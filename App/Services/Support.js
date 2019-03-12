@@ -1,4 +1,4 @@
-import { fetchWrapper } from './FetchWrapper'
+import { serviceWrapper } from './ServiceWrapper'
 
 export function reportIssue(client, token, request, callback) {
   
@@ -6,7 +6,7 @@ export function reportIssue(client, token, request, callback) {
     let url = '/zendesk/ReportIssue/'
   
     // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-    fetchWrapper(url, 'POST', request, client, token, function(err, resp) {
+    serviceWrapper(url, 'POST', request, client, token, function(err, resp) {
   
       if(err) {
         callback(err)
