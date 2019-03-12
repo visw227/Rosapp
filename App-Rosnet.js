@@ -271,7 +271,7 @@ AlertStack.navigationOptions = ({ navigation }) => {
 };
 
 // *******************************************************************************
-// Conversations 
+// Workflow 
 // *******************************************************************************
 
 import WorkflowScreen from './App/Components/Workflow/Index'
@@ -328,6 +328,14 @@ ConversationStack.navigationOptions = ({ navigation }) => {
     tabBarVisible: navigation.state.index === 0,
   };
 };
+
+
+// *******************************************************************************
+// Chat - Replaces Conversastions 
+// *******************************************************************************
+
+import ChatScreen from './App/Components/Chat/Index'
+let ChatStack = createStackNavigator({ ChatScreen });
 
 
 // *******************************************************************************
@@ -389,7 +397,7 @@ let TabStack = createBottomTabNavigator({
 
 
   Conversations: {
-    screen: ConversationStack,
+    screen: ChatStack,
     navigationOptions: ({ navigation, screenProps }) => ({
 
         // title and headerTitle DO NOT WORK HERE
