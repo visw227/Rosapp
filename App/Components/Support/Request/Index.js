@@ -191,7 +191,7 @@ class SupportRequest extends React.Component {
                   />
                   <View style = {{flexDirection : 'column'}}>
 
-                   <View style ={{flexDirection : 'row',justifyContent:'space-around',alignItems:'center',margin:10}}>
+                   {/* <View style ={{flexDirection : 'row',justifyContent:'space-around',alignItems:'center',margin:10}}>
 
                       <Text style={{margin:10}}>upload supporting image</Text>
 
@@ -200,7 +200,7 @@ class SupportRequest extends React.Component {
 </TouchableHighlight>
 
 
-                    </View>
+                    </View> */}
 
 
                   {this.state.imageName !== null ? <TouchableHighlight onPress = {()=>this.handleImage()}>
