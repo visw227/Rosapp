@@ -40,13 +40,15 @@ import LocationButtons from '../ReusableComponents/LocationButtons'
 
 let fakedUserProfile = require('../../Fixtures/UserProfile')
 
+let chatUrl = "http://localhost:3000/theme/index3.html"
+// let chatUrl = "http://dj-chat-app.herokuapp.com/#/"
 
 
 class DashboardScreen extends React.Component {
 
   static navigationOptions = (navigate) => ({
 
-     title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Dashboard': navigate.navigation.state.params.title,
+    title: 'Chat',
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
@@ -120,7 +122,7 @@ class DashboardScreen extends React.Component {
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://www.google.com",
+        uri: chatUrl,
         headers: {
           "managerAppToken":  token
         }
@@ -148,7 +150,7 @@ class DashboardScreen extends React.Component {
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://www.google.com",
+        uri: chatUrl,
         headers: {
           "managerAppToken":  userData.token
         }
@@ -181,7 +183,7 @@ class DashboardScreen extends React.Component {
 
 
     let source = {
-      uri: "https://" + userData.selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+      uri: chatUrl,
       headers: {
         "managerAppToken":  userData.token,
         //"Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
@@ -205,36 +207,31 @@ class DashboardScreen extends React.Component {
 
  
  
-  _renderLoading = () => {
-    return (
+  // _renderLoading = () => {
+  //   return (
      
-      <Progress.Bar progress={0.4} width={700} />
+  //     <Progress.Bar progress={0.4} width={700} />
   
-    )
-  }
+  //   )
+  // }
 
   render() {
 
-      const hideSiteNav = `
-      let x = document.getElementsByTagName('nav')
-      if(x.length > 0) {
-        x[0].style.display = "none";
-      }
-      `;
-      
+
 
       return (
         
-          <View style={{ backgroundColor: '#ffffff', height: '100%' }}>
+          <View style={{ backgroundColor: brand.colors.primary, height: '100%' }}>
 
             {this.state.source &&
               <WebView
                 source={this.state.source}
                 startInLoadingState = {true}
-                onLoadProgress={e => console.log(e.nativeEvent.progress)}
-                renderLoading={this._renderLoading}
-                injectedJavaScript = { hideSiteNav }
+                //onLoadProgress={e => console.log(e.nativeEvent.progress)}
+                //renderLoading={this._renderLoading}
+                //injectedJavaScript = { hideSiteNav }
                 style={{ flex: 1 }}
+                scrollEnabled={false}
               />
             }
 
@@ -256,7 +253,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     paddingTop: 20,
-    backgroundColor: brand.colors.white,
+    backgroundColor: brand.colors.primary,
     paddingLeft: 40,
     paddingRight: 40
   },

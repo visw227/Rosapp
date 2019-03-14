@@ -482,6 +482,7 @@ let TabStack = createBottomTabNavigator({
       inactiveTintColor: 'gray',
       style: {
         backgroundColor: '#ffffff',
+        paddingTop: 5,
       },
       showIcon: true,
       showLabel: true
