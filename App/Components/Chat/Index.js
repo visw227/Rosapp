@@ -38,8 +38,8 @@ import LocationButtons from '../ReusableComponents/LocationButtons'
 
 let fakedUserProfile = require('../../Fixtures/UserProfile')
 
-//let chatUrl = "http://localhost:3000" ///theme/conversation-home-3.html"
-let chatUrl = "http://dj-chat-app.herokuapp.com/#/"
+let chatUrl = "http://localhost:3000" ///theme/conversation-home-3.html"
+//let chatUrl = "http://dj-chat-app.herokuapp.com/#/"
 
 
 class DashboardScreen extends React.Component {
@@ -245,8 +245,7 @@ class DashboardScreen extends React.Component {
                     }
 
 
-                    <
-                    /View>
+                    </View>
 
                 ) // end return
 

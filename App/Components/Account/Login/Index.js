@@ -64,14 +64,16 @@ class Login extends Component {
     
     componentDidMount() {
 
-        // this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
-        // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+        // this was added as a timeout buster - for some reason the first API request always times out
+        userLogin({ userName: "fake", password: "fake" }, function(err, response){        
 
-        // clear any abandoned keys
-        // let keys = ['userEmail', 'userPassword'];
-        // AsyncStorage.multiRemove(keys, (err) => {
-        //     // do most stuff after removal (if you want)
-        // });
+            if(err) {
+                console.log("componentDidMount Login err: ", err)
+            }
+            else {
+
+            }
+        })
 
         AsyncStorage.getItem('userData').then((data) => {
 
