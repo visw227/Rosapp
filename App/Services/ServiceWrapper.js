@@ -16,11 +16,10 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     console.log("starting request", url, method, jsonBody, subDomain, token)
 
     // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
-    if(config.DOMAIN.indexOf('rosnet') !== -1) {
-      protocol = "https://"
-    }
-    else {
-      protocol = "http://"
+    if (config.DOMAIN.indexOf('rosnet') !== -1) {
+        protocol = "https://"
+    } else {
+        protocol = "http://"
     }
 
     fullUrl = protocol + subDomain + "." + config.DOMAIN + url
@@ -33,64 +32,62 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     // Set up our HTTP request
     var xhr = new XMLHttpRequest();
 
-    xhr.timeout = 5000; // time in milliseconds
+    xhr.timeout = 15000; // time in milliseconds
 
     // Setup our listener to process compeleted requests
-    xhr.onerror = function (err) {
-      console.log("error", err)
+    xhr.onerror = function(err) {
+        console.log("error", err)
     }
-    xhr.onloadstart = function () {
-      console.log("onloadstart")
+    xhr.onloadstart = function() {
+        console.log("onloadstart")
     }
-    xhr.onprogress = function () {
-      console.log("onprogress")
+    xhr.onprogress = function() {
+        console.log("onprogress")
     }
-    xhr.onabort = function () {
-      console.log("abort")
+    xhr.onabort = function() {
+        console.log("abort")
     }
-    xhr.ontimeout = function () {
-      console.log("timeout")
-      
+    xhr.ontimeout = function() {
+        console.log("timeout")
+
     }
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = function() {
 
-      console.log("xhr.onreadstatechange", xhr)
+        console.log("xhr.onreadstatechange", xhr)
 
-      // Only run if the request is complete
-      if (xhr.readyState !== 4) return;
+        // Only run if the request is complete
+        if (xhr.readyState !== 4) return;
 
-      // Process our return data
-      if (xhr.status >= 200 && xhr.status < 300) {
+        // Process our return data
+        if (xhr.status >= 200 && xhr.status < 300) {
 
-        // var isValidJSON = true;
-        // try { 
-        //   JSON.parse(xhr.response) 
-        // }
-        // catch(e) { 
-        //   isValidJSON = false 
-        // }
+            // var isValidJSON = true;
+            // try { 
+            //   JSON.parse(xhr.response) 
+            // }
+            // catch(e) { 
+            //   isValidJSON = false 
+            // }
 
-        let json = JSON.parse(xhr.response)
+            let json = JSON.parse(xhr.response)
 
-        console.log("xhr.response", json)
+            console.log("xhr.response", json)
 
-        callback(null, json)
+            callback(null, json)
 
-      }
-      else if(xhr.status === 401) {
+        } else if (xhr.status === 401) {
 
-        // the user's token has expired
+            // the user's token has expired
 
-      } 
-      else {
+        } else {
 
-        let message = xhr._response
+            let message = xhr._response
 
-        // What to do when the request has failed
-        console.log('something went wrong', xhr);
-        callback( { status: xhr.status, message: message }, null)
+            // What to do when the request has failed
+            console.log('something went wrong', xhr);
+            callback({ status: xhr.status, message: message }, null)
 
-      }
+        }
 
     };
 
@@ -99,20 +96,14 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     // The second argument is the endpoint URL
     xhr.open(method, fullUrl);
     xhr.setRequestHeader("Content-Type", "application/json");
-    if(token) {
-      xhr.setRequestHeader("managerAppToken", token);
+    if (token) {
+        xhr.setRequestHeader("managerAppToken", token);
     }
     // send the request
-    if(jsonBody && (method === 'POST' || method === 'PUT') ) { 
-      xhr.send(JSON.stringify(jsonBody));
-    }
-    else {
-      xhr.send(); // GET
+    if (jsonBody && (method === 'POST' || method === 'PUT')) {
+        xhr.send(JSON.stringify(jsonBody));
+    } else {
+        xhr.send(); // GET
     }
 
 }
-
-
-
-
-
