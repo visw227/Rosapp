@@ -417,7 +417,7 @@ let TabStack = createBottomTabNavigator({
                 paddingRight: 4,
                 right: -20, 
                 top: 1, 
-                backgroundColor: brand.colors.secondary, 
+                backgroundColor: brand.colors.orange, 
                 borderRadius: 10, 
                 height: 20, 
                 //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
@@ -455,7 +455,7 @@ let TabStack = createBottomTabNavigator({
                 paddingRight: 4,
                 right: -17, 
                 top: 1, 
-                backgroundColor: brand.colors.orange, 
+                backgroundColor: brand.colors.secondary, 
                 borderRadius: 10, 
                 height: 20, 
                 //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
