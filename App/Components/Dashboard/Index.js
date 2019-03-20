@@ -15,7 +15,8 @@ import {
   TouchableHighlight,
   Modal,
   Picker,
-  WebView
+  WebView,
+  ActivityIndicator
 } from 'react-native';
 
 import { List, ListItem, Avatar } from 'react-native-elements'
@@ -205,13 +206,21 @@ class DashboardScreen extends React.Component {
 
  
  
-  _renderLoading = () => {
-    return (
-     
-      <Progress.Bar progress={0.4} width={700} />
-  
-    )
-  }
+    _renderLoading = () => {
+    //   return (
+
+    //     <Progress.Bar progress={0.4} width={700} />
+
+    //   )
+        return (
+            <ActivityIndicator
+                color={brand.colors.primary}
+                size='large'
+                style={styles.ActivityIndicatorStyle}
+            />
+        )
+    }
+
 
   render() {
 
@@ -230,8 +239,15 @@ class DashboardScreen extends React.Component {
             {this.state.source &&
               <WebView
                 source={this.state.source}
+
+                //Enable Javascript support
+                //javaScriptEnabled={true}
+                //For the Cache
+                //domStorageEnabled={true}
+
                 startInLoadingState = {true}
-                onLoadProgress={e => console.log(e.nativeEvent.progress)}
+                
+                //onLoadProgress={e => console.log(e.nativeEvent.progress)}
                 renderLoading={this._renderLoading}
                 injectedJavaScript = { hideSiteNav }
                 style={{ flex: 1 }}
@@ -285,6 +301,16 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: '#fff'   
+  },
+  ActivityIndicatorStyle:{
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center'
+  
   }
 });
 

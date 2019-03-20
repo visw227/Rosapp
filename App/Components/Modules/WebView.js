@@ -9,7 +9,8 @@ import {
   ScrollView,
   RefreshControl,
   Platform,
-  WebView
+  WebView,
+  ActivityIndicator
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -173,14 +174,20 @@ class WebViewScreen extends React.Component {
 
   }
 
-  _renderLoading = () => {
-    return (
-     
-      <Progress.Bar progress={0.4} width={700} />
-  
-    )
-  }
+    _renderLoading = () => {
+    //   return (
 
+    //     <Progress.Bar progress={0.4} width={700} />
+
+    //   )
+        return (
+            <ActivityIndicator
+                color={brand.colors.primary}
+                size='large'
+                style={styles.ActivityIndicatorStyle}
+            />
+        )
+    }
 
   render() {
 
@@ -202,7 +209,7 @@ class WebViewScreen extends React.Component {
         <WebView
             source={this.state.source}
             startInLoadingState = {true}
-            onLoadProgress={e => console.log(e.nativeEvent.progress)}
+            //onLoadProgress={e => console.log(e.nativeEvent.progress)}
             renderLoading={this._renderLoading}
             injectedJavaScript={ hideSiteNav }
             style={{ flex: 1 }}
@@ -218,6 +225,19 @@ class WebViewScreen extends React.Component {
   } // end render
 
 }
+
+const styles = StyleSheet.create({
+  ActivityIndicatorStyle:{
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center'
+  
+  }
+});
 
 
 //make this component available to the app
