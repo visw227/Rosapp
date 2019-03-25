@@ -16,6 +16,7 @@ import NavigationService from './App/Helpers/NavigationService';
 
 import { generateRandomNumber, checkForNotifications } from './App/Services/Background';
 
+import { wakeUpServer, refreshToken } from './App/Helpers/Authorization';
 
 import Push from 'appcenter-push'
 
@@ -877,6 +878,10 @@ export default class App extends React.Component {
         //   let userData = JSON.parse(data)
         // })
 
+        // This is a workaround to create a fake API request so that subsequent requests will work
+        // The first API request ALWAYS times out
+        wakeUpServer()
+
         this.state = {
           showLock: false,
           userData: null,
@@ -998,7 +1003,7 @@ export default class App extends React.Component {
 
       }
 
-      let timeout = 2000 // 60000 * 5 = 5 minutes
+      let timeout = 15000 // 60000 * 5 = 5 minutes
       setTimeout(_this.backgroundNotificationsTimer, timeout);
 
 
@@ -1030,6 +1035,8 @@ export default class App extends React.Component {
 
     onAppStateChange = (nextAppState) => {
 
+      let _this = this
+
       //console.log(">>>>>>> handleAppStateChange <<<<<<<<")
 
       const { appState } = this.state
@@ -1048,6 +1055,21 @@ export default class App extends React.Component {
             // console.log("userData", this.state.userData, "appState", nextAppState)
 
             console.log("User is logged in, so showing lock screen.")
+
+
+            refreshToken(function(err, resp){
+              if(err) {
+                console.log("err refreshing token", err)
+              }
+              else {
+                console.log("successfully refreshed token", resp)
+                let userData = _this.state.userData
+                console.log("old token: ", userData.token)
+                console.log("new token: ", resp.userData.token)
+                userData.token = resp.userData.token // ONLY update the token
+                _this._globalStateChange( { action: "token-refresh", userData: userData })
+              }
+            })
 
             // Feb 13, 2019 - Commenting out this feature until the business rules are more fully baked
             // this is needed since props.navigation isn't present for unmounted screen components

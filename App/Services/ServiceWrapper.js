@@ -48,12 +48,12 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
         console.log("abort")
     }
     xhr.ontimeout = function() {
-        console.log("timeout")
+        console.log("the request timed out")
 
     }
     xhr.onreadystatechange = function() {
 
-        console.log("xhr.onreadstatechange", xhr)
+        //console.log("xhr.onreadstatechange", xhr)
 
         // Only run if the request is complete
         if (xhr.readyState !== 4) return;
@@ -78,6 +78,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
         } else if (xhr.status === 401) {
 
             // the user's token has expired
+            console.log(">>> the user request was unauthorized")
 
         } else {
 

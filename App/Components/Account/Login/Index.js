@@ -21,8 +21,7 @@ import {
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
-import { userLogin } from '../../../Services/Account';
-import { getMobileMenuItems } from '../../../Services/Menu';
+import { login } from '../../../Helpers/Authorization';
 
 import brand from '../../../Styles/brand'
 import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
@@ -31,7 +30,7 @@ let fakedMenu = require('../../../Fixtures/Modules')
 
 import logo from '../../../Images/logo-lg-white-square.png';
 
-import { parseUser } from '../../../Helpers/UserDataParser';
+
 
 // create a component
 class Login extends Component {
@@ -67,6 +66,7 @@ class Login extends Component {
 
         let _this = this
 
+
         AsyncStorage.getItem('loginData').then((data) => {
 
             console.log("LoginForm loginData", data)
@@ -83,16 +83,6 @@ class Login extends Component {
 
         })
 
-        // this was added as a timeout buster - for some reason the first API request always times out
-        userLogin({ userName: "fake", password: "fake" }, function(err, response){        
-
-            if(err) {
-                console.log("componentDidMount Login err: ", err)
-            }
-            else {
-
-            }
-        })
 
         AsyncStorage.getItem('userData').then((data) => {
 
@@ -267,79 +257,27 @@ class Login extends Component {
         }
         else {
 
-            // real login request
-            userLogin(request, function(err, response){        
+
+            login(this.state.userName, this.state.password, function(err, resp){
 
                 if(err) {
+                    _this.showAlert(err.message)
+                }
+                else if(resp.userData){
+                    if(resp.userData) {
 
-                    console.log("userLogin error", err)
-                    // show the real error message when can - otherwise show the default message
-                    _this.showAlert("Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'")
+                        let redirect = null
+                        if(resp.userData.mustChangePassword) {
+                            redirect = "PasswordChangeRequiredStack"
+                        }
+                        
+                        _this.onLoginResponse(resp.userData, redirect)
 
+                    }
                 }
                 else {
-
-                    console.log("userLogin success:", response)
-
-                    if(response && response.SecurityToken) {
-
-                        // this repackages the response a bit...
-                        let userData = parseUser(response)
-                        // we are including password in the userData for the change password screen to have access the current password for validation
-                        userData.password = _this.state.password 
-                        userData.email = (_this.state.userName).indexOf('@') !== -1 ? _this.state.userName : _this.state.userName+'@rosnet.com'
-
-                        getMobileMenuItems(userData.selectedSite, userData.token, function(err, menuItems){
-                            
-
-                            if(err) {
-                                console.log("err - getMobileMenuItems", err)
-                                 // show the real error message when can - otherwise show the default message
-                                _this.showAlert("Your login was successful, but we were unable to access your Rosnet menu options for " + userData.selectedSite + ". The exact error was: '" + err.message + "'")
-                            }
-                            else {
-
-                                // rename the FontAwesome icons by removing the fa- preface
-                                menuItems.forEach(function(item){
-                                    item.icon = item.icon.replace('fa-', '')
-                                })
-
-                                userData.menuItems = menuItems
-
-
-                                _this.setState({
-                                    sending: false
-                                })
-
-                                let redirect = null
-                                if(userData.mustChangePassword) {
-                                    redirect = "PasswordChangeRequiredStack"
-                                }
-                                
-                                _this.onLoginResponse(userData, redirect)
-
-                                // stringify the object before storing
-                                AsyncStorage.setItem('userData', JSON.stringify(userData))
-
-                            }
-
-
-                            _this.setState({
-                                sending: false
-                            })
-
-                        })
-
-
-                    }
-                    else {
-                        _this.showAlert("Invalid login request. Please check your email address and password and try again.")
-
-                    }
-                        
-
+                    _this.showAlert("Unhandled Error")
                 }
-
 
             })
 
@@ -425,7 +363,7 @@ class Login extends Component {
                                     autoCorrect={false} 
                                     keyboardType='email-address' 
                                     returnKeyType="next" 
-                                    placeholder='Email Address'
+                                    placeholder='User Name or Email Address'
                                     placeholderTextColor={brand.colors.silver}
                                     value={this.state.userName}
                                     onChangeText={(text) => this.setState({userName: text})}
