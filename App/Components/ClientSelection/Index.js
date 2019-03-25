@@ -14,7 +14,8 @@ import {
   Modal,
   Picker,
   WebView,
-  Keyboard
+  Keyboard,
+  ActivityIndicator
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -93,7 +94,7 @@ export class About extends React.Component {
 
       this.state = {
           sending: false,
-          receiving: true,
+          receiving: false,
           requestStatus: {
               hasError: false,
               message: ""
@@ -155,10 +156,15 @@ export class About extends React.Component {
 
     this.setState({
       userData: userData,
-      changed: true
+      changed: true,
+      receiving: true
     }, () => 
   
-      this.doClientChange()
+      // just to prove to QA that something has happened when the user selects a site
+      setTimeout(() => {
+        this.doClientChange()
+      }, 1000)
+
    );
 
 
@@ -211,7 +217,31 @@ export class About extends React.Component {
 
   render() {
 
+    getResultsMessage = () => {
 
+      if(this.state.query === '') {
+        return (
+          <Text style={{color: brand.colors.primary }}>{'Please enter a user name'}</Text>
+        )
+      }
+      else if(this.state.query != '' && this.state.items.length === 1) {
+        return (
+          <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' user found'}</Text>
+        )
+      }
+      else if(this.state.query != '' && this.state.items.length > 1) {
+        return (
+          <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' users found'}</Text>
+        )
+      }
+      else if(this.state.query != '' && this.state.items.length === 0) {
+        return (
+          <Text style={{color: brand.colors.primary }}>{'Sorry, no users found.'}</Text>
+        )
+      }
+
+    }
+    
         return (
 
 
@@ -223,8 +253,32 @@ export class About extends React.Component {
                       value={this.state.text}
                       placeholder='Search Sites'
                       onChangeText = {(text)=> { this.matchSites(text) }}/>
-            
 
+
+                    {/* This will allow the alert message to flex correctly for tablets too */}
+                                
+                    {this.state.receiving &&
+                      <View style={{ 
+                          justifyContent: 'center', 
+                          alignItems: 'center',
+                          marginBottom: 15,
+                          marginTop: 10
+                      }}>
+                          <Text style={{color: brand.colors.primary }}>Changing site to {this.state.userData.selectedSite}...</Text>
+                      </View>
+                    }
+
+                    {this.state.receiving &&
+                      <View style={{ 
+                          justifyContent: 'center', 
+                          alignItems: 'center',
+                          marginBottom: 15,
+                          marginTop: 10
+                      }}>
+                          <ActivityIndicator size="large" color={brand.colors.primary} />
+                      </View>
+                    }
+                    
                   
                     <ScrollView style={{ marginTop: -20 }}>
 
