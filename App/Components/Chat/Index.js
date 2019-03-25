@@ -14,7 +14,9 @@ import {
     Modal,
     Picker,
     WebView,
-    ActivityIndicator
+    ActivityIndicator,
+    Keyboard,
+    TextInput
 } from 'react-native';
 
 import { List, ListItem, Avatar } from 'react-native-elements'
@@ -48,16 +50,14 @@ class DashboardScreen extends React.Component {
         headerStyle: { backgroundColor: typeof(navigate.navigation.state.params) === 'undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
         headerTintColor: 'white',
         headerLeft: < Ionicon
-        name = "md-menu"
-        size = { 35 }
-        color = { brand.colors.white }
-        style = {
-            { paddingLeft: 10 }
-        }
-        onPress = {
-            () => navigate.navigation.toggleDrawer()
-        }
-        />,
+                name = "md-menu"
+                size = { 35 }
+                color = { brand.colors.white }
+                style = {
+                    { paddingLeft: 10 }
+                }
+                onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
+            />,
 
         // headerRight : 
         //   <View style={{
@@ -79,6 +79,20 @@ class DashboardScreen extends React.Component {
         //   </View>,
 
     })
+
+
+    // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
+    // this is passed in to navigationOptions as menuIconClickHandler
+    onMenuIconClick = (navigate) => {
+
+        navigate.navigation.toggleDrawer()
+
+        // 3/25/2019 - NOTE: Keyboard.dismiss() is NOT currently working in react native since a webview
+        // supposedly fixed in a later react native release
+        this.fakedInput.focus();
+        Keyboard.dismiss()
+
+    }
 
 
     constructor(props) {
@@ -174,11 +188,13 @@ class DashboardScreen extends React.Component {
 
         let userData = this.props.screenProps.state.userData
 
-        this.props.navigation.setParams({ title: userData.selectedSite, backgroundColor: this.props.screenProps.state.backgroundColor })
+        this.props.navigation.setParams({ 
+            menuIconClickHandler: this.onMenuIconClick,
+            title: userData.selectedSite, 
+            backgroundColor: this.props.screenProps.state.backgroundColor
+        })
 
         let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-
 
         let source = {
             uri: chatUrl,
@@ -198,8 +214,6 @@ class DashboardScreen extends React.Component {
         })
 
 
-        // associate the handler
-        this.props.navigation.setParams({ toggleClientModal: this.toggleClientModal })
 
     }
 
@@ -230,6 +244,8 @@ class DashboardScreen extends React.Component {
                     View style = {
                         { backgroundColor: brand.colors.primary, height: '100%' }
                     } >
+
+                        <TextInput ref={x => this.fakedInput = x} style={{ height: 0, backgroundColor: '#ffffff' }}  />
 
                     {
                         this.state.source &&

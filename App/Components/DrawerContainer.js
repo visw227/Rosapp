@@ -28,21 +28,24 @@ export default class DrawerContainer extends React.Component {
 
         AsyncStorage.removeItem('userData', function(err){
 
-          // this API request will delete the user's token from the database
+          // this API request will delete the user's token from the database and other stuff
           userLogout(_this.props.screenProps.state.userData.selectedSite, _this.props.screenProps.state.userData.token, function(err,resp){
 
-            // this shows a back arrow, so don't use this
-            //this.props.navigation.navigate('LoginStack')
-
-            // instead, reset the navigation
-            const resetAction = StackActions.reset({
-                index: 0,
-                key: null, // this is the trick that allows this to work
-                actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
-            });
-            _this.props.navigation.dispatch(resetAction);
+            // dont wait on this to happen. Slow in QA a lot.
 
           })
+
+            
+          // this shows a back arrow, so don't use this
+          //this.props.navigation.navigate('LoginStack')
+
+          // instead, reset the navigation
+          const resetAction = StackActions.reset({
+              index: 0,
+              key: null, // this is the trick that allows this to work
+              actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
+          });
+          _this.props.navigation.dispatch(resetAction);
 
 
           

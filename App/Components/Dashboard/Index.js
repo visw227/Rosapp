@@ -200,7 +200,7 @@ class DashboardScreen extends React.Component {
 
 
     // associate the handler
-    this.props.navigation.setParams({ toggleClientModal: this.toggleClientModal })
+    //this.props.navigation.setParams({ toggleClientModal: this.toggleClientModal })
     
   }
 

@@ -73,7 +73,10 @@ class SearchItems extends React.Component {
     // const parent = navigation.getParam('item', { id: 0, name: null} );
     // this.props.navigation.setParams({ title: parent.Name })
 
-    this.props.navigation.setParams({ menuIconClickHandler: this.onMenuIconClick,backgroundColor:this.props.screenProps.state.backgroundColor })
+    this.props.navigation.setParams({ 
+      menuIconClickHandler: this.onMenuIconClick, 
+      backgroundColor:this.props.screenProps.state.backgroundColor 
+    })
 
   }
 
