@@ -132,7 +132,8 @@ class SearchUsers extends React.Component {
     let _this = this
 
     _this.setState({
-      receiving: true
+      receiving: true,
+      selectedUser: item
     })
 
     console.log("selected user: ", item)
@@ -266,25 +267,32 @@ class SearchUsers extends React.Component {
 
     getResultsMessage = () => {
 
-      if(this.state.query === '') {
-        return (
-          <Text style={{color: brand.colors.primary }}>{'Please enter a user name'}</Text>
-        )
+      if(this.state.selectedUser && this.state.receiving) {
+          return (
+            <Text style={{color: brand.colors.primary }}>Impersonating {this.state.selectedUser.name}...</Text>
+          )
       }
-      else if(this.state.query != '' && this.state.items.length === 1) {
-        return (
-          <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' user found'}</Text>
-        )
-      }
-      else if(this.state.query != '' && this.state.items.length > 1) {
-        return (
-          <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' users found'}</Text>
-        )
-      }
-      else if(this.state.query != '' && this.state.items.length === 0) {
-        return (
-          <Text style={{color: brand.colors.primary }}>{'Sorry, no users found.'}</Text>
-        )
+      else {
+        if(this.state.query === '') {
+          return (
+            <Text style={{color: brand.colors.primary }}>{'Please enter a user name'}</Text>
+          )
+        }
+        else if(this.state.query != '' && this.state.items.length === 1) {
+          return (
+            <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' user found'}</Text>
+          )
+        }
+        else if(this.state.query != '' && this.state.items.length > 1) {
+          return (
+            <Text style={{color: brand.colors.primary }}>{this.state.items.length + ' users found'}</Text>
+          )
+        }
+        else if(this.state.query != '' && this.state.items.length === 0) {
+          return (
+            <Text style={{color: brand.colors.primary }}>{'Sorry, no users found.'}</Text>
+          )
+        }
       }
 
     }

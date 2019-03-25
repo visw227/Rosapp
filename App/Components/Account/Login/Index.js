@@ -15,7 +15,8 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     Animated,
-    Platform
+    Platform,
+    ScrollView
  } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -64,6 +65,24 @@ class Login extends Component {
     
     componentDidMount() {
 
+        let _this = this
+
+        AsyncStorage.getItem('loginData').then((data) => {
+
+            console.log("LoginForm loginData", data)
+
+            if(data) {
+
+                let loginData = JSON.parse(data)
+
+                _this.setState({
+                    userName: loginData.userName,
+                    password: loginData.password
+                })
+            }
+
+        })
+
         // this was added as a timeout buster - for some reason the first API request always times out
         userLogin({ userName: "fake", password: "fake" }, function(err, response){        
 
@@ -86,8 +105,8 @@ class Login extends Component {
                 //console.log("userData", JSON.stringify(userData, null, 2))
 
                 this.setState({
-                    userName: userData.userName,
-                    password: userData.password,
+                    // userName: userData.userName,
+                    // password: userData.password,
                     userData: userData
                 })
             }
@@ -205,6 +224,9 @@ class Login extends Component {
 			password: this.state.password, 
         }
         
+        // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
+        AsyncStorage.setItem('loginData', JSON.stringify( { userName: this.state.userName, password: this.state.password }))
+
 
         if(this.state.userName === 'demo') {
 
@@ -433,7 +455,9 @@ class Login extends Component {
                                 marginBottom: 15,
                                 marginTop: 10
                             }}>
+                            <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
                                 <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
+                                </ScrollView>
                             </View>
                         }
 
