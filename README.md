@@ -44,3 +44,10 @@ https://oblador.github.io/react-native-vector-icons/
 Chat UI Ripoff
 
 https://medium.com/@keith.kurak/a-simple-chat-ui-example-in-react-native-6aeec001d51b
+
+
+Handy image editor:
+
+Used to place QA over logo
+http://www.online-image-editor.com/
+

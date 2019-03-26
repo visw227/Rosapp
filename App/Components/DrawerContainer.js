@@ -7,6 +7,8 @@ import Entypo from 'react-native-vector-icons/Entypo'
 
 import { userLogout } from '../Services/Account';
 
+import config from '../app-config.json'
+
 import brand from '../Styles/brand'
 
 export default class DrawerContainer extends React.Component {
@@ -15,10 +17,29 @@ export default class DrawerContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      backgroundColor : brand.colors.primary
+      backgroundColor : brand.colors.primary,
+      isQA: false
     }
   }
 
+  componentDidMount () {
+
+    console.log("DrawerContainer config", config)
+
+    // show QA indicator in drawer
+    if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
+      this.setState({ isQA: true })
+    }
+
+
+
+    if (this.props.screenProps.state.superUser) {
+      this.setState({backgroundColor : brand.colors.danger})
+    }else {
+      this.setState({backgroundColor:brand.colors.primary})
+    }
+
+  }
 
   logout = () => {
 
@@ -88,17 +109,9 @@ export default class DrawerContainer extends React.Component {
     this.props.navigation.dispatch(resetAction);
   
   
-    }
-
-  componentDidMount () {
-
-    if (this.props.screenProps.state.superUser) {
-      this.setState({backgroundColor : brand.colors.danger})
-    }else {
-      this.setState({backgroundColor:brand.colors.primary})
-    }
-
   }
+
+
 
   render() {
 
@@ -106,6 +119,22 @@ export default class DrawerContainer extends React.Component {
 
     //console.log(">>>>>>>>>   DrawerContainer screenProps", this.props.screenProps)
 
+    chooseLogo = () => {
+      if(this.state.isQA) {
+        return (
+          <Image
+            resizeMode="contain" 
+            source={require('../Images/logo-xs-white-QA.png')} />
+        )
+      }
+      else {
+        return (
+          <Image
+            resizeMode="contain" 
+            source={require('../Images/logo-xs-white.png')} />
+        )
+      }
+    }
 
     // using routeKey allows us to reuse the same ModulesSubMenu route but with different menu data being passed to it
     DrawerLabel = ({ label, icon, routeName, routeParam, routeKey, iconSize, iconType, logout }) => (
@@ -147,9 +176,7 @@ export default class DrawerContainer extends React.Component {
       <View style={[styles.container,{backgroundColor:this.state.backgroundColor}]}>
 
         <View style={{ alignItems: 'center' }}>
-          <Image
-            resizeMode="contain" 
-            source={require('../Images/logo-xs-white.png')} />
+          {chooseLogo()}
         </View>
 
         <View style={{  flexDirection: 'row',
