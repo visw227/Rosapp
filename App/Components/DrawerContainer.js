@@ -179,11 +179,17 @@ export default class DrawerContainer extends React.Component {
           {chooseLogo()}
         </View>
 
+        {/* {this.state.isQA &&
+        <View style={{ marginTop: 10, alignItems: 'center' }}>
+          <Text style={{ color: brand.colors.orange }}>WARNING!!! YOU ARE IN QA!!!</Text>
+        </View>
+        } */}
+
         <View style={{  flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'flex-start',
                         alignContent: 'space-between', 
-                        marginTop: 10 }}>
+                        marginTop: 5 }}>
           <Text style={{ margin: 5, color: 'white', fontSize: 16 }}>
            {this.props.screenProps.state.userData.commonName}
            </Text>
