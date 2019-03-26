@@ -280,28 +280,33 @@ export class About extends React.Component {
                     }
                     
                   
-                    <ScrollView style={{ marginTop: -20 }}>
+                    <ScrollView style={{ marginTop: 0 }}>
 
-                      <List style={styles.list}>
+                      <View style ={{marginTop : -20}}>
 
-                        {this.state.filtered.map((item, index) => (
-                            <ListItem
 
-                                hideChevron={true}
-                                key={index}
-                                style={styles.listItem}
-                                title={item}
-                                    titleStyle={{ color: brand.colors.gray }}
-                                    
-                                avatar={this.getAvatar(item)}
-                                
-                                onPress={() => { this.onSelectedSite(item) }}
-                            
-                            />
-                          ))
-                        }
+                        <List style={styles.list}>
 
-                      </List>
+                          {this.state.filtered.map((item, index) => (
+                              <ListItem
+
+                                  hideChevron={true}
+                                  key={index}
+                                  style={styles.listItem}
+                                  title={item}
+                                      titleStyle={{ color: brand.colors.gray }}
+                                      
+                                  avatar={this.getAvatar(item)}
+                                  
+                                  onPress={() => { this.onSelectedSite(item) }}
+                              
+                              />
+                            ))
+                          }
+
+                        </List>
+
+                      </View>
 
                     </ScrollView>
 
@@ -322,6 +327,11 @@ const styles = StyleSheet.create({
     backgroundColor: brand.colors.white,
     paddingLeft: 40,
     paddingRight: 40
+  },
+  list: {
+    marginTop: -20,
+    paddingTop: 0,
+    paddingBottom: 0
   },
     logoContainer:{
         alignItems: 'center',

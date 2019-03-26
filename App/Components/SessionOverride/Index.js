@@ -340,41 +340,45 @@ class SearchUsers extends React.Component {
         
         {this.state.items.length > 0 &&
 
-          <View style ={{marginTop : -20}}>
+
           
             <ScrollView>
 
-              <List style={styles.list}>
+              <View style ={{marginTop : -20}}>
 
-                {this.state.items.map((item, index) => (
-                    <ListItem
+                <List style={styles.list}>
 
-                        key={index}
-                        style={styles.listItem}
-                        title={item.name}
-                            titleStyle={{ color: brand.colors.gray }}
-                            
-                        subtitle={
-                        <View style={styles.subtitleView}>
-                            <Text style={styles.ratingText}>{item.group}</Text>
-                        </View>
-                        }
-                        avatar={<Avatar rounded medium
-                            overlayContainerStyle={{backgroundColor: '#31B0D5'}}
-                            icon={{name: 'user-o', type: 'font-awesome'}}/>}
-                        
-                        onPress={() => { this.onSelect(item) }}
-                    
-                    />
-                  ))
-                }
+                  {this.state.items.map((item, index) => (
+                      <ListItem
 
-              </List>
+                          key={index}
+                          style={styles.listItem}
+                          title={item.name}
+                              titleStyle={{ color: brand.colors.gray }}
+                              
+                          subtitle={
+                          <View style={styles.subtitleView}>
+                              <Text style={styles.ratingText}>{item.group}</Text>
+                          </View>
+                          }
+                          avatar={<Avatar rounded medium
+                              overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                              icon={{name: 'user-o', type: 'font-awesome'}}/>}
+                          
+                          onPress={() => { this.onSelect(item) }}
+                      
+                      />
+                    ))
+                  }
+
+                </List>
+
+              </View>
+        
 
             </ScrollView>
 
-          </View>
-        
+    
         }
 
 
