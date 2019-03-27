@@ -77,12 +77,22 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
         } else if (xhr.status === 401) {
 
+            let message = xhr._response
+
             // the user's token has expired
             console.log(">>> the user request was unauthorized")
+            callback({ status: xhr.status, message: message }, null)
 
         } else {
 
             let message = xhr._response
+
+            if(message.indexOf('{') !== -1) {
+                let json = JSON.parse(message)
+                console.log("error is JSON", JSON.stringify(json, null, 2))
+
+                message = (json.Message || "") + " " + (json.ExceptionMessage || "")
+            }
 
             // What to do when the request has failed
             console.log('something went wrong', xhr);

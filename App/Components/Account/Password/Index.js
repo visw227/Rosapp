@@ -332,6 +332,10 @@ class Password extends React.Component {
 
             AsyncStorage.setItem('userData', JSON.stringify(userData))
 
+            // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
+            AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))
+
+
             _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })
 
             _this.setState({
@@ -462,11 +466,32 @@ class Password extends React.Component {
       label: 'Too short',
       labelColor: 'red'
     };
-    
-if (this.state.secSetting.Pswd_Change_By_User){
+
+    /*
+
+
+      NOTE: For now, allowing this page to be used EVEN if the API says they cant
+      That way, if the user's login says they need to change their password, we don't have to worry about 
+      the other API having a conflicting message
+      Plus, the user cant access this page anyway when it's hidden in the menu
+
+    */
+
+
+//if (this.state.secSetting.Pswd_Change_By_User){
   return (
       
-    <ScrollView>
+
+<View style={styles.container}>
+
+  <Text style={{ textAlign: 'center', paddingTop: 20, paddingLeft: 30, paddingRight: 30 }} >
+    Rosnet has adopted Dropbox's password strength evaluation system. 
+    This encourages users towards stronger passwords by asking them to type a bit more instead of demanding awkward character types. 
+  </Text>
+
+
+
+
 
         <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
 
@@ -589,39 +614,44 @@ if (this.state.secSetting.Pswd_Change_By_User){
           <Animated.Text style={{color : brand.colors.success}}> Password changed successfully!</Animated.Text>
         </Animated.View>}
 
-    </ScrollView>           
-      
+    
+    
+    </View>
+
       
     );
-} 
-else {
-  return (
+// } 
+// else {
+//   return (
     
 
 
-                           <View style={{flex: 1,
-                              backgroundColor: '#fff',
-                              alignItems: 'center',
-                              justifyContent: 'center'}}>
-                             <AlerMessage title = 'You are not authorized to change your password. Please contact your administrator'/>
+//                            <View style={{flex: 1,
+//                               backgroundColor: '#fff',
+//                               alignItems: 'center',
+//                               justifyContent: 'center'}}>
+//                              <AlerMessage title = 'You are not authorized to change your password. Please contact your administrator'/>
 
-                            <Text 
-                                style={{ color: brand.colors.primary }} 
-                                onPress={this.onTestContinue}>
-                                Continue to Dashboard
-                            </Text>
-                        </View>
+//                             <Text 
+//                                 style={{ color: brand.colors.primary }} 
+//                                 onPress={this.onTestContinue}>
+//                                 Continue to Dashboard
+//                             </Text>
+//                         </View>
 
-  )
-}
+//   )
+// }
    
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-   padding: 20
-  },
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   input:{
       height: 40,
       backgroundColor: '#ffffff',
@@ -654,26 +684,10 @@ const styles = StyleSheet.create({
       borderColor: brand.colors.white, 
       borderWidth: 2,
   },
-  buttonDisabledContainer:{
-      backgroundColor: brand.colors.primary,
-      opacity: .5,
-      paddingVertical: 15,
-      borderRadius: 30
-  },
   buttonText:{
       color: '#fff',
       textAlign: 'center',
       fontWeight: '700'
-  }, 
-  loginButton:{
-      backgroundColor:  brand.colors.secondary,
-      color: '#fff'
-  },
-  forgotPassword:{
-      color: brand.colors.white,
-      fontSize: 14,
-      textAlign: 'center',
-      marginTop: 20
   }
  
 });

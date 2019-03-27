@@ -21,7 +21,7 @@ import {
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
-import { login } from '../../../Helpers/Authorization';
+import { Authorization } from '../../../Helpers/Authorization';
 
 import brand from '../../../Styles/brand'
 import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
@@ -259,7 +259,7 @@ class Login extends Component {
         else {
 
 
-            login(this.state.userName, this.state.password, function(err, resp){
+            Authorization.UserLogin(this.state.userName, this.state.password, function(err, resp){
 
                 if(err) {
                     _this.showAlert(err.message)
@@ -411,8 +411,8 @@ class Login extends Component {
                                 marginBottom: 15,
                                 marginTop: 10
                             }}>
-                            <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
-                                <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
+                                <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
+                                    <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
                                 </ScrollView>
                             </View>
                         }

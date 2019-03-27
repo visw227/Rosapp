@@ -16,7 +16,7 @@ import NavigationService from './App/Helpers/NavigationService';
 
 import { generateRandomNumber, checkForNotifications } from './App/Services/Background';
 
-import { wakeUpServer, refreshToken } from './App/Helpers/Authorization';
+import { Authorization } from './App/Helpers/Authorization';
 
 import Push from 'appcenter-push'
 
@@ -130,6 +130,7 @@ import SettingsScreen from './App/Components/Account/Settings/Index'
 import ProfileScreen from './App/Components/Account/Profile/Index'
 // NOTE: This screen is shared by 2 stacks
 import PasswordScreen from './App/Components/Account/Password/Index'
+let PasswordChangeRequiredStack = createStackNavigator({ PasswordScreen });
 import SecurityScreen from './App/Components/Account/Security/Index'
 
 let AccountStack = createStackNavigator({ 
@@ -836,7 +837,7 @@ const AppStack = createStackNavigator({
   LockStack: { screen: LockScreenStack },
   DrawerStack: { screen: DrawerStack },
   PushNotificationsPermissionStack: { screen: PushNotificationsPermissionStack },
-  PasswordChangeRequiredStack: { screen: PasswordScreen }
+  PasswordChangeRequiredStack: { screen: PasswordChangeRequiredStack }
 
 }, {
     initialRouteName: 'LaunchStack',
@@ -883,7 +884,7 @@ export default class App extends React.Component {
 
         // This is a workaround to create a fake API request so that subsequent requests will work
         // The first API request ALWAYS times out
-        wakeUpServer()
+        Authorization.WakeUpServer()
 
         this.state = {
           showLock: false,
@@ -929,7 +930,7 @@ export default class App extends React.Component {
 
         console.log("DrawerContainer config", config)
 
-        // show QA indicator in drawer
+        // show QA indicator throughout the app
         if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
           this.setState({ isQA: true })
         }
@@ -1073,7 +1074,7 @@ export default class App extends React.Component {
             console.log("User is logged in, so showing lock screen.")
 
 
-            refreshToken(function(err, resp){
+            Authorization.RefreshToken(function(err, resp){
               if(err) {
                 console.log("err refreshing token", err)
               }
@@ -1082,8 +1083,8 @@ export default class App extends React.Component {
                 let userData = _this.state.userData
                 console.log("old token: ", userData.token)
                 console.log("new token: ", resp.userData.token)
-                userData.token = resp.userData.token // ONLY update the token
-                _this._globalStateChange( { action: "token-refresh", userData: userData })
+                //userData.token = resp.userData.token // ONLY update the token
+                _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
               }
             })
 

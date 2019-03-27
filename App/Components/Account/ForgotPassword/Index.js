@@ -14,7 +14,8 @@ import {
     Keyboard,
     KeyboardAvoidingView,
     Animated,
-    Platform
+    Platform,
+    ScrollView
  } from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -283,7 +284,9 @@ export class ForgotPassword extends React.Component {
                                 marginBottom: 15,
                                 marginTop: 10
                             }}>
-                                <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
+                                <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
+                                    <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
+                                </ScrollView>
                             </View>
                         }
 
