@@ -22,6 +22,7 @@ import brand from '../../../Styles/brand'
 
 import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
 import logo from '../../../Images/logo-lg-white-square.png';
+import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
 
 import { forgotPassword } from '../../../Services/Account';
 
@@ -47,7 +48,8 @@ export class ForgotPassword extends React.Component {
             },
             email: '',
             password: '',
-            userData: null
+            userData: null,
+            isQA: this.props.screenProps.state.isQA
         }
 
     }
@@ -212,11 +214,29 @@ export class ForgotPassword extends React.Component {
     }
 
   render() {
+
+    chooseLogo = () => {
+        if(this.state.isQA) {
+            return (
+                <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+            )
+        }
+        else {
+            return (
+                <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+            )
+        }
+    }
+
+
     return (
             <KeyboardAvoidingView behavior="padding" style={Styles.container}>
 
                 <View style={Styles.loginContainer}>
-                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+                    {/* <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} /> */}
+                    {chooseLogo()}
                 </View>
 
 

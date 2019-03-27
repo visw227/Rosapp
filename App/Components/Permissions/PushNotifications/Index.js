@@ -9,6 +9,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import brand from '../../../Styles/brand'
 
 import logo from '../../../Images/logo-lg-white-square.png';
+import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
 
 import Push from 'appcenter-push'
 
@@ -27,7 +28,7 @@ class PushNotifications extends React.Component {
       super(props);
 
       this.state = {
-        //hasHardwareAsync: false,
+        isQA: this.props.screenProps.state.isQA
       }
 
   }
@@ -69,11 +70,28 @@ class PushNotifications extends React.Component {
 
 
 render() {
+
+    chooseLogo = () => {
+        if(this.state.isQA) {
+            return (
+                <Image source={logo_QA} style={styles.logo} />
+
+            )
+        }
+        else {
+            return (
+                <Image source={logo} style={styles.logo} />
+
+            )
+        }
+    }
+
+
     return (
       <View style={styles.container}>
 
 
-        <Image source={logo} style={styles.logo} />
+        {chooseLogo()}
 
 
 

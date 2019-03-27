@@ -7,7 +7,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 
 import { userLogout } from '../Services/Account';
 
-import config from '../app-config.json'
+//import config from '../app-config.json'
 
 import brand from '../Styles/brand'
 
@@ -18,19 +18,11 @@ export default class DrawerContainer extends React.Component {
     super(props);
     this.state = {
       backgroundColor : brand.colors.primary,
-      isQA: false
+      isQA: this.props.screenProps.state.isQA
     }
   }
 
   componentDidMount () {
-
-    console.log("DrawerContainer config", config)
-
-    // show QA indicator in drawer
-    if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
-      this.setState({ isQA: true })
-    }
-
 
 
     if (this.props.screenProps.state.superUser) {

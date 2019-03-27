@@ -29,7 +29,7 @@ import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
 let fakedMenu = require('../../../Fixtures/Modules')
 
 import logo from '../../../Images/logo-lg-white-square.png';
-
+import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
 
 
 // create a component
@@ -57,7 +57,8 @@ class Login extends Component {
             },
             userName: '',
             password: '',
-            userData: null
+            userData: null,
+            isQA: this.props.screenProps.state.isQA
         }
 
     }
@@ -347,12 +348,29 @@ class Login extends Component {
     }
 
     render() {
+
+        chooseLogo = () => {
+            if(this.state.isQA) {
+                return (
+                    <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+                )
+            }
+            else {
+                return (
+                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+                )
+            }
+        }
+
         return (
             
             <KeyboardAvoidingView behavior="padding" style={Styles.container}>
 
                 <View style={Styles.loginContainer}>
-                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+                    {/* <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} /> */}
+                    {chooseLogo()}
                 </View>
                 <View style={Styles.formContainer}>
                     <View style={styles.container}>

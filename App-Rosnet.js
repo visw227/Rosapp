@@ -20,6 +20,9 @@ import { wakeUpServer, refreshToken } from './App/Helpers/Authorization';
 
 import Push from 'appcenter-push'
 
+import config from './App/app-config.json'
+
+
 
 // hide warnings for now...
 console.disableYellowBox = true;
@@ -889,7 +892,8 @@ export default class App extends React.Component {
           appState: AppState.currentState,
           alertCount: 0,
           messageCount: 0,
-          backgroundColor :brand.colors.primary
+          backgroundColor :brand.colors.primary,
+          isQA: false
 
           // these state objects are shared across the entire app through screenProps
           // userData: null,
@@ -904,6 +908,40 @@ export default class App extends React.Component {
         this.backgroundNotificationsTimer()
 
     }
+
+
+    componentDidMount() {
+
+        // check if userData has been persisted in local storage
+        // NOTE: this seems to not fire soon enough, so moving this to LaunchScreen.js, which will
+        // share globally through _globalStateChange
+
+        // AsyncStorage.getItem('userData').then((data) => {
+        //   console.log("...root set userData from ROOT!!!!")
+        //   this.setState({
+        //     userData: JSON.parse(data)
+        //   })
+        // })
+
+        //console.log("...root componentDidMount")
+        AppState.addEventListener('change', this.onAppStateChange);
+
+
+        console.log("DrawerContainer config", config)
+
+        // show QA indicator in drawer
+        if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
+          this.setState({ isQA: true })
+        }
+
+
+    }
+
+    componentWillUnmount() {
+        console.log("...root componentWillUnmount")
+        AppState.removeEventListener('change', this.onAppStateChange);
+    }
+
 
     //**********************************************************************************
     // globally share any state changes - just pass the object to update in the global state
@@ -1009,28 +1047,6 @@ export default class App extends React.Component {
 
     }
 
-
-    componentDidMount() {
-
-        // check if userData has been persisted in local storage
-        // NOTE: this seems to not fire soon enough, so moving this to LaunchScreen.js, which will
-        // share globally through _globalStateChange
-
-        // AsyncStorage.getItem('userData').then((data) => {
-        //   console.log("...root set userData from ROOT!!!!")
-        //   this.setState({
-        //     userData: JSON.parse(data)
-        //   })
-        // })
-
-        //console.log("...root componentDidMount")
-        AppState.addEventListener('change', this.onAppStateChange);
-    }
-
-    componentWillUnmount() {
-        console.log("...root componentWillUnmount")
-        AppState.removeEventListener('change', this.onAppStateChange);
-    }
 
 
     onAppStateChange = (nextAppState) => {
