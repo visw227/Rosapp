@@ -59,7 +59,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
         if (xhr.readyState !== 4) return;
 
         // Process our return data
-        if (xhr.status >= 200 && xhr.status < 300) {
+        if (xhr.status === 200) {
 
             // var isValidJSON = true;
             // try { 
@@ -71,9 +71,19 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             let json = JSON.parse(xhr.response)
 
-            console.log("xhr.response", json)
+            console.log("xhr.response", JSON.stringify(json, null, 2))
 
-            callback(null, json)
+            // 200 successes can return errors - e.g. { Success: false, ErrorMsg: "Login attempt failed 5 times. Account is now locked." }
+            if(json.ErrorMsg) {
+                callback( { status: xhr.status, message: json.ErrorMsg }, null)
+            }
+            else {
+                callback(null, json)
+            }
+
+
+
+
 
         } else if (xhr.status === 401) {
 

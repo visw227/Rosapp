@@ -93,7 +93,11 @@ export var Authorization = {
                 // show the real error message when can - otherwise show the default message
                 //_this.showAlert("Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'")
 
-                callback ( { message:  "Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'" })
+                //let message = "Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'" 
+                let message = err.message
+
+
+                callback ( { message:  message})
 
             }
             else {
