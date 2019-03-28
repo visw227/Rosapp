@@ -72,16 +72,16 @@ class Password extends React.Component {
       },
       changePasswordAct : false,
       resonseMessage : '',
-      sending : 'false',
+      sending : false,
       currentPassword : this.props.screenProps.state.userData.password,
       validating:false,
       unValidated:false,
       validated:false,
-      passwordConfirmed : 'false',
-      error : 'false',
-      confirmError:'false',
-      currentPassError:'false',
-      levelError : 'false',
+      passwordConfirmed : false,
+      error : false,
+      confirmError:false,
+      currentPassError:false,
+      levelError : false,
       changeSuccess : false,
       fadeAnim: new Animated.Value(0),
       secSetting : {}
@@ -93,7 +93,7 @@ class Password extends React.Component {
     this.setState({
       validated : false,
       unValidated : true,
-      passwordConfirmed : 'false'
+      passwordConfirmed : false
 
     })
 
@@ -140,7 +140,7 @@ class Password extends React.Component {
       validating:true,
       unValidated :false,
       validated:false,
-      currentPassError : 'false'
+      currentPassError : false
     })
 
     if (_this.state.currentPassword === text){
@@ -165,23 +165,20 @@ class Password extends React.Component {
   }
 
   confirmPassword = (text) => {
-
-    _this = this
     
-
-    _this.setState({
-      passwordConfirmed : 'false',
+    this.setState({
+      passwordConfirmed : false,
       confirmPressed : true,
-      confirmError : 'false'
+      confirmError : false
     })
 
-    if (_this.state.password.value === text) {
-      _this.setState({passwordConfirmed : 'true'})
+    if (this.state.password.value === text) {
+      this.setState({passwordConfirmed : true})
       
     }
-    else if(_this.state.changePassword !== text){
-      _this.setState({
-        passwordConfirmed : 'false'
+    else if(this.state.changePassword !== text){
+      this.setState({
+        passwordConfirmed : false
       })
     }
 
@@ -291,124 +288,133 @@ class Password extends React.Component {
         clientCode : this.props.screenProps.state.userData.selectedSite
     }
 
-    var Confirm = this.state.passwordConfirmed
+
+    console.log("Confirm", this.state.passwordConfirmed)
     _this.setState({
       error : false,
-      sending : 'true',
+      sending : true,
     },()=> {
-      console.log('sendingSetT',_this.state.sending,this.state.error)
+      console.log('sendingSetT', _this.state.sending, this.state.error)
     })
      
-     if (Confirm === 'true' && this.state.validated && level >= this.state.secSetting.Pswd_Complexity) {
+     if (this.state.passwordConfirmed && this.state.validated && level >= this.state.secSetting.Pswd_Complexity) {
 
-      changePassword(request, token, function (err,response){
+        changePassword(request, token, function (err,response){
 
-        if (err){
-          Keyboard.dismiss()
-          console.log("userLogin error", err)
-        }
-
-        else {
-
-          if(response){
-            _this.setState({
-              resonseMessage: response.message,
-              changePasswordAct : true,
-              error:false,
-              confirmError :'false',
-              currentPassError:false,
-              confirmPassword:false,
-              sending : 'false'
-            } , ()=> {
-              console.log('sendingSetF',_this.state.sending)
-            })
-          }
-          
-           if (_this.state.changePasswordAct && _this.state.resonseMessage !== '') {
-
-            userData = _this.props.screenProps.state.userData
-
-            userData.password = _this.state.password.value
-
-            AsyncStorage.setItem('userData', JSON.stringify(userData))
-
-            // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
-            AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))
-
-
-            _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })
-
-            _this.setState({
-              currentPassword : _this.state.password.value,
-              changeSuccess : true
-            })
-
-            Animated.timing(                  // Animate over time
-              _this.state.fadeAnim,            // The animated value to drive
-              {
-                toValue: 1,                   // Animate to opacity: 1 (opaque)
-                duration: 1000,              // Make it take a while
-              }
-            ).start();  
-
-            let stackName = 'DrawerStack'
-
-            const resetAction = StackActions.reset({
-              index: 0,
-              key: null, // this is the trick that allows this to work
-              actions: [NavigationActions.navigate({ routeName: stackName })],
-          });
-
-          setTimeout(() => {_this.props.navigation.dispatch(resetAction)},4000)
-          
+          if (err){
+            Keyboard.dismiss()
+            console.log("userLogin error", err)
           }
 
-          console.log("changePassword success:", response)
+          else {
 
-          console.log('success')
-         
-        }
-    })
+            if(response){
+              _this.setState({
+                resonseMessage: response.message,
+                changePasswordAct : true,
+                error:false,
+                confirmError :false,
+                currentPassError:false,
+                confirmPassword:false,
+                sending : false
+              } , ()=> {
+                console.log('sendingSetF',_this.state.sending)
+              })
+            }
+            
+              if (_this.state.changePasswordAct && _this.state.resonseMessage !== '') {
+
+              userData = _this.props.screenProps.state.userData
+
+              userData.password = _this.state.password.value
+
+              AsyncStorage.setItem('userData', JSON.stringify(userData))
+
+              // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
+              AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))
+
+
+              _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })
+
+              _this.setState({
+                currentPassword : _this.state.password.value,
+                changeSuccess : true
+              })
+
+              Animated.timing(                  // Animate over time
+                _this.state.fadeAnim,            // The animated value to drive
+                {
+                  toValue: 1,                   // Animate to opacity: 1 (opaque)
+                  duration: 1000,              // Make it take a while
+                }
+              ).start();  
+
+              let stackName = 'DrawerStack'
+
+              const resetAction = StackActions.reset({
+                index: 0,
+                key: null, // this is the trick that allows this to work
+                actions: [NavigationActions.navigate({ routeName: stackName })],
+            });
+
+            setTimeout(() => {_this.props.navigation.dispatch(resetAction)},4000)
+            
+            }
+
+            console.log("changePassword success:", response)
+
+            console.log('success')
+            
+          }
+
+        }) // end changePassword
 
     } 
     //else conditions not executing as expected.. Adding else if for prompt execution
     else if (level < this.state.secSetting.Pswd_Complexity) {
       _this.setState ({
-        error : 'false',
-        levelError : 'true',
-        //error : 'true',
-        confirmError : 'false',
-        currentPassError : 'false',
-        sending:'false'
+        error : false,
+        levelError : true,
+        //error : true,
+        confirmError : false,
+        currentPassError : false,
+        sending:false
       })
     }
-    else if (!this.state.validated && Confirm === 'false'){
+    else if (!this.state.validated && this.state.passwordConfirmed === false){
       _this.setState ({
-        confirmError : 'true',
-        currentPassError : 'true',
-        sending : 'false'
+        confirmError : true,
+        currentPassError : true,
+        sending : false
       })
     }
     else if (!this.state.validated) {
       _this.setState({
-        //error : 'true',
-        //confirmError : !Confirm,
-        currentPassError : 'true' ,
-        sending:'false'
+        currentPassError : true ,
+        sending:false
       }, ()=> console.log('<<currentPass',this.state.currentPassError))
     } 
 
-    else if (Confirm === 'false') {
+    else if (this.state.passwordConfirmed === false) {
 
       _this.setState({
-        //error : 'true',
-        confirmError : 'true',
-        //currentPassError : 'true' ,
-        sending:'false'
+        //error : true,
+        confirmError : true,
+        //currentPassError : true ,
+        sending:false
       }, ()=> console.log('<<confirmPass',this.state.confirmError))
 
     }
+    else {
 
+      _this.setState({
+        //error : true,
+        confirmError : true,
+        //currentPassError : true ,
+        sending: false
+      }, ()=> console.log('<<confirmPass',this.state.confirmError))
+
+    }
 
   }
   
@@ -515,7 +521,7 @@ class Password extends React.Component {
                                 size={30}
                                 color={brand.colors.lightGray}
                                 style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
-                {this.state.currentPassError === 'true'  && <Ionicon name = 'md-close-circle' 
+                {this.state.currentPassError === true  && <Ionicon name = 'md-close-circle' 
                                 size={30}
                                 color={brand.colors.danger}
                                 style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
@@ -539,7 +545,7 @@ class Password extends React.Component {
                     showBarOnEmpty={true}
                     barColor="#CCC"
                     placeholder ={'Text me'}
-                    onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid },levelError : 'false',tempPass:text })} 
+                    onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid },levelError : false,tempPass:text })} 
                     />
             </View>
                 
@@ -559,15 +565,15 @@ class Password extends React.Component {
                          //value={this.state.password}
                          onChangeText= {(text) => this.confirmPassword(text)}
                  />
-                 {this.state.passwordConfirmed === 'true' &&<Ionicon name = 'md-checkmark-circle' 
+                 {this.state.passwordConfirmed === true &&<Ionicon name = 'md-checkmark-circle' 
                                 size={30}
                                 color={brand.colors.success}
                                 style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
-                {this.state.passwordConfirmed === 'false' && <Ionicon name = 'md-checkmark-circle' 
+                {this.state.passwordConfirmed === false && <Ionicon name = 'md-checkmark-circle' 
                                 size={30}
                                 color={brand.colors.lightGray}
                                 style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
-                {this.state.confirmError === 'true' && this.state.confirmPressed && <Ionicon name = 'md-close-circle' 
+                {this.state.confirmError === true && this.state.confirmPressed && <Ionicon name = 'md-close-circle' 
                                 size={30}
                                 color={brand.colors.danger}
                                 style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
@@ -579,7 +585,7 @@ class Password extends React.Component {
                 <Text  style={styles.buttonText} onPress = { ()=> this.onSubmitPress(this.props.screenProps.state.userData.token,strengthLevels) }>Submit</Text>
     </TouchableHighlight> }
 
-            {this.state.sending === 'true' ? <ActivityIndicator size="large" color={brand.colors.primary} style ={{margin:10}} />: null}
+            {this.state.sending === true ? <ActivityIndicator size="large" color={brand.colors.primary} style ={{margin:10}} />: null}
             {this.state.changePasswordAct && this.state.resonseMessage ? <View style={{ 
                                 justifyContent: 'center', 
                                 alignItems: 'center',
@@ -599,9 +605,9 @@ class Password extends React.Component {
                             </View> : null}
 
 
-                            {this.state.currentPassError === 'true'  && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Current Password Error. Try entering again till you get a green checkmark or try forgot password</Text>}
-                            {this.state.confirmError === 'true'   && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Passwords do not match. Try entering again till you get a green checkmark</Text>}
-                            {this.state.levelError === 'true' && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Password too weak. Try using special characters and alphanumerics</Text>}
+                            {this.state.currentPassError === true  && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Current Password Error. Try entering again till you get a green checkmark or try forgot password</Text>}
+                            {this.state.confirmError === true   && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Passwords do not match. Try entering again till you get a green checkmark</Text>}
+                            {this.state.levelError === true && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Password too weak. Try using special characters and alphanumerics</Text>}
 
 
         </View>
