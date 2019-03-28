@@ -77,7 +77,7 @@ export function verifyToken(client, token, callback) {
 export function changePassword (request, token, callback) {
 
 
-  let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password)
+  let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password) + '&app=true'
 
   serviceWrapper(url, 'GET', null, request.clientCode , token, function(err, resp) {
     if (err) {
