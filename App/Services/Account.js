@@ -51,10 +51,28 @@ export function userLogout(client, token, callback) {
       callback(err)
     }
     else {
-            callback(null, resp)
+      callback(null, resp)
     } 
   })
 }
+
+
+export function verifyToken(client, token, callback) {
+    
+  // login method received credentials as query string params
+  let url = '/api/ManagerAppAuth/VerifyToken'
+
+  // IMPORTANT: request IS NULL since params are passed in the url of this POST request
+  serviceWrapper(url, 'GET', null, client, token, function(err, resp) {
+    if(err) {
+      callback(err)
+    }
+    else {
+      callback(null, resp)
+    } 
+  })
+}
+
 
 export function changePassword (request, token, callback) {
 

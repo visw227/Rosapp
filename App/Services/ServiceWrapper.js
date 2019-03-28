@@ -6,6 +6,7 @@
 import config from '../app-config.json'
 import { withCacheBustingTimestamp } from '../Helpers/WithCacheBustingTimestamp';
 
+var lastUrl = "";
 
 export function serviceWrapper(url, method, jsonBody, subDomain, token, callback) {
 
@@ -91,6 +92,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             // the user's token has expired
             console.log(">>> the user request was unauthorized")
+            console.log("xhr.response", xhr._response)
+
             callback({ status: xhr.status, message: message }, null)
 
         } else {

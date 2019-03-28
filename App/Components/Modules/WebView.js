@@ -22,6 +22,10 @@ import { getFavorites, saveFavorite, emptyFavorites } from '../../Helpers/Favori
 
 import appConfig from '../../app-config.json'
 
+import { NavigationActions, StackActions } from 'react-navigation'
+
+import { Authorization } from '../../Helpers/Authorization';
+
 
 class WebViewScreen extends React.Component {
 
@@ -35,24 +39,24 @@ class WebViewScreen extends React.Component {
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
 
-    headerRight : 
-      <View style={{
-        alignItems: 'center',
-        flexDirection: 'row',
-        height: 40,
-        paddingRight: 10,
-        width: '100%'
-      }}>
+    // headerRight : 
+    //   <View style={{
+    //     alignItems: 'center',
+    //     flexDirection: 'row',
+    //     height: 40,
+    //     paddingRight: 10,
+    //     width: '100%'
+    //   }}>
 
-        <FontAwesome
-            name={typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.starIcon) === 'undefined' ? 'star-o': navigate.navigation.state.params.starIcon}
-            size={20}
-            color={brand.colors.white}
-            style={{ marginRight: 10 }}
-            onPress={ navigate.navigation.getParam('toggleFavorite') }
-        />
+    //     <FontAwesome
+    //         name={typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.starIcon) === 'undefined' ? 'star-o': navigate.navigation.state.params.starIcon}
+    //         size={20}
+    //         color={brand.colors.white}
+    //         style={{ marginRight: 10 }}
+    //         onPress={ navigate.navigation.getParam('toggleFavorite') }
+    //     />
 
-      </View>,
+    //   </View>,
 
 
   })
@@ -113,21 +117,53 @@ class WebViewScreen extends React.Component {
     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
 
-    let source = {
-      uri: "https://" + userData.selectedSite + "." + env + item.href,
-      headers: {
-        "Cookie": "rememberme=" + userData.userName + "; clientCode=" + userData.selectedSite + "; rosnetToken=" + userData.token 
+
+    console.log("----------------- Modules WebView ----------------------")
+    console.log("Authorization.VerifyToken", userData.selectedSite, userData.token)
+
+    // this verifies that the token is still valid and redirects to login if not
+    Authorization.VerifyToken(userData.selectedSite, userData.token, function(err, resp){
+
+      if(err) {
+
+        console.log(">>> Modules WebView - Invalid Token", err)
+
+        // reset the navigation
+        const resetAction = StackActions.reset({
+            index: 0,
+            key: null, // this is the trick that allows this to work
+            actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
+        });
+        _this.props.navigation.dispatch(resetAction);
+
+
       }
-    }
+      else {
+
+        console.log(">>> Modules WebView - Token is Valid", resp)
+
+        let source = {
+          uri: "https://" + userData.selectedSite + "." + env + item.href,
+          headers: {
+            "managerAppToken":  userData.token
+          }
+        }
 
 
-    console.log("Modules webview source", JSON.stringify(source, null, 2))
+        console.log("Modules Webview source", JSON.stringify(source, null, 2))
 
 
-    _this.setState({
-      userData: userData,
-      source: source
+        _this.setState({
+          userData: userData,
+          source: source
+        })
+
+      }
+
+
+
     })
+
 
 
 
@@ -211,7 +247,7 @@ class WebViewScreen extends React.Component {
             startInLoadingState = {true}
             //onLoadProgress={e => console.log(e.nativeEvent.progress)}
             renderLoading={this._renderLoading}
-            injectedJavaScript={ hideSiteNav }
+            injectedJavaScript={ hideSiteNav } 
             style={{ flex: 1 }}
           />
         }

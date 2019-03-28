@@ -98,7 +98,7 @@ class SearchUsers extends React.Component {
     // ONLY if something has changed
     if(selectedSite !== this.state.userData.selectedSite){
 
-      console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
+      console.log("Dashboard picked up new selectedSite: ", selectedSite)
 
       this.props.navigation.setParams({ title: 'Search ' + selectedSite + ' Users' })
       

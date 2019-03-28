@@ -928,7 +928,7 @@ export default class App extends React.Component {
         AppState.addEventListener('change', this.onAppStateChange);
 
 
-        console.log("DrawerContainer config", config)
+        console.log("App-Rosnet config", config)
 
         // show QA indicator throughout the app
         if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
@@ -951,13 +951,13 @@ export default class App extends React.Component {
     _globalStateChange = (data) => {
 
 
-        console.log(">> GLOBAL STATE CHANGE:", data)
+        console.log("GLOBAL STATE CHANGE:", data)
 
         if(data.userData) {
 
           this.setState({
             userData: data.userData
-          }, () => console.log(">>> global state change to userData", this.state.userData ) )
+          }, () => console.log("global state change to userData", this.state.userData ) )
 
         }
         
@@ -965,7 +965,7 @@ export default class App extends React.Component {
 
           this.setState({
             superUser: data.superUser
-          }, () => console.log(">>> global state change to superUSer", this.state.superUser ) )
+          }, () => console.log("global state change to superUSer", this.state.superUser ) )
 
           
         }
@@ -973,14 +973,14 @@ export default class App extends React.Component {
         if (data.backgroundColor) {
           this.setState({
             backgroundColor : data.backgroundColor
-          },() => console.log('>>>>>global state change for bgColor',this.state.backgroundColor))
+          },() => console.log('global state change for bgColor',this.state.backgroundColor))
         }
 
         if(data.action && data.action === "undo-session-override") {
 
           this.setState({
             superUser: null
-          }, () => console.log(">>> global state change to superUSer", this.state.superUser ) )
+          }, () => console.log("global state change to superUSer", this.state.superUser ) )
 
 
         }
@@ -1020,13 +1020,13 @@ export default class App extends React.Component {
         //console.log("background checking for notifications...")
 
         // checkForNotifications(this.state.userData.token, function(err, data){
-        //   console.log(">>> found notifications", data)
+        //   console.log(" found notifications", data)
         //   _this.setState({
         //     alertCount: data.length,
         //     notifications: data
         //   })
         // })
-        // console.log(">>> found notifications", data)
+        // console.log(" found notifications", data)
 
         let alertCount = generateRandomNumber(0,15)
         let messageCount = generateRandomNumber(0,3)
@@ -1054,7 +1054,7 @@ export default class App extends React.Component {
 
       let _this = this
 
-      //console.log(">>>>>>> handleAppStateChange <<<<<<<<")
+      //console.log("> handleAppStateChange <<<<<<<<")
 
       const { appState } = this.state
 

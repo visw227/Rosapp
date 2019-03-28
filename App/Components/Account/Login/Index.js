@@ -70,7 +70,7 @@ class Login extends Component {
 
         AsyncStorage.getItem('loginData').then((data) => {
 
-            console.log("LoginForm loginData", data)
+            //console.log("LoginForm loginData", data)
 
             if(data) {
 
@@ -87,7 +87,7 @@ class Login extends Component {
 
         AsyncStorage.getItem('userData').then((data) => {
 
-            console.log("LoginForm userData", data)
+            //console.log("LoginForm userData", data)
 
             if(data) {
                 

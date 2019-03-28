@@ -12,7 +12,7 @@ Using Authorization as a namespace, which includes functions inside of it
 
 import {  AsyncStorage } from 'react-native';
 
-import { userLogin } from '../Services/Account';
+import { userLogin, verifyToken } from '../Services/Account';
 import { getMobileMenuItems } from '../Services/Menu';
 import { parseUser } from '../Helpers/UserDataParser';
 
@@ -20,9 +20,22 @@ import { parseUser } from '../Helpers/UserDataParser';
 export var Authorization = {
 
 
-    ValidateToken: function(token, callback) {
+    VerifyToken: function(client, token, callback) {
 
-        callback({ valid: true })
+        // callback({ valid: true })
+
+        console.log(">>> VerifyToken - client: ", client, " token: ", token)
+        verifyToken(client, token, function(err, resp){
+
+            console.log("VerifyToken - err", err, "resp", resp)
+            if(err) {
+                callback({ valid: false }, null)
+            }
+            else {
+                callback(null, { valid: true })
+            }
+        })
+
 
     },
 
@@ -33,6 +46,8 @@ export var Authorization = {
 
         console.log("waking up the server...")
         Authorization.UserLogin("fake", "fake", function(err, resp){
+
+            console.log("server has been woke up")
             if(callback) {
                 callback(null, { message: "It has been woke up"})
             }
@@ -78,7 +93,7 @@ export var Authorization = {
 
     UserLogin: function(userName, password, callback) {
 
-        console.log(">>>>> login", userName, password)
+        console.log("login", userName, password)
 
         let request = {
             userName: userName, 

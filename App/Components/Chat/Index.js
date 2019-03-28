@@ -127,7 +127,7 @@ class DashboardScreen extends React.Component {
         // ONLY if something has changed
         if (token !== this.state.userData.token) {
 
-            console.log(">>> Dashboard picked up new token: ", token)
+            console.log("Dashboard picked up new token: ", token)
 
             let userData = this.props.screenProps.state.userData
 
@@ -153,7 +153,7 @@ class DashboardScreen extends React.Component {
         // ONLY if something has changed
         if (selectedSite !== this.state.userData.selectedSite) {
 
-            console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
+            console.log("Dashboard picked up new selectedSite: ", selectedSite)
 
             this.props.navigation.setParams({ title: selectedSite })
 

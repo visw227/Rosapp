@@ -19,6 +19,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 
+import { NavigationActions, StackActions } from 'react-navigation'
+
 import { List, ListItem, Avatar } from 'react-native-elements'
 
 import * as Progress from 'react-native-progress'
@@ -40,6 +42,9 @@ import LocationButtons from '../ReusableComponents/LocationButtons'
 
 
 let fakedUserProfile = require('../../Fixtures/UserProfile')
+
+import { Authorization } from '../../Helpers/Authorization';
+
 
 
 
@@ -114,7 +119,7 @@ class DashboardScreen extends React.Component {
         // ONLY if something has changed
     if(token !== this.state.userData.token){
 
-      console.log(">>> Dashboard picked up new token: ", token)
+      console.log("Dashboard picked up new token: ", token)
 
       let userData = this.props.screenProps.state.userData
       
@@ -140,7 +145,7 @@ class DashboardScreen extends React.Component {
     // ONLY if something has changed
     if(selectedSite !== this.state.userData.selectedSite){
 
-      console.log(">>> Dashboard picked up new selectedSite: ", selectedSite)
+      console.log("Dashboard picked up new selectedSite: ", selectedSite)
 
       this.props.navigation.setParams({ title: selectedSite })
 
@@ -179,28 +184,55 @@ class DashboardScreen extends React.Component {
 
     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
+    console.log("----------------- Dashboard ----------------------")
+    console.log("Authorization.VerifyToken", userData.selectedSite, userData.token)
+
+    // this verifies that the token is still valid and redirects to login if not
+    Authorization.VerifyToken(userData.selectedSite, userData.token, function(err, resp){
+
+      if(err) {
+
+        console.log(">>> Dashboard - Invalid Token", err)
+
+        // reset the navigation
+        const resetAction = StackActions.reset({
+            index: 0,
+            key: null, // this is the trick that allows this to work
+            actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
+        });
+        _this.props.navigation.dispatch(resetAction);
 
 
-    let source = {
-      uri: "https://" + userData.selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
-      headers: {
-        "managerAppToken":  userData.token,
-        //"Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
       }
-    }
+      else {
+
+        console.log(">>> Dashboard - Token is Valid", resp)
+
+        let source = {
+          uri: "https://" + userData.selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+          headers: {
+            "managerAppToken":  userData.token
+          }
+        }
 
 
-    console.log("Dashboard source", JSON.stringify(source, null, 2))
+        console.log(">>> Dashboard source", JSON.stringify(source, null, 2))
 
 
-    _this.setState({
-      userData: userData,
-      source: source
+        _this.setState({
+          userData: userData,
+          source: source
+        })
+
+      }
+
+
     })
 
 
-    // associate the handler
-    //this.props.navigation.setParams({ toggleClientModal: this.toggleClientModal })
+
+
+
     
   }
 
@@ -249,7 +281,7 @@ class DashboardScreen extends React.Component {
                 
                 //onLoadProgress={e => console.log(e.nativeEvent.progress)}
                 renderLoading={this._renderLoading}
-                injectedJavaScript = { hideSiteNav }
+                injectedJavaScript = { hideSiteNav } 
                 style={{ flex: 1 }}
               />
             }

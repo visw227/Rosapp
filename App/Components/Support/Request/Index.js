@@ -56,7 +56,7 @@ class SupportRequest extends React.Component {
     let brand = DeviceInfo.getBrand()
     let model = DeviceInfo.getModel()
  
-    console.log(">>>>>> avatarUrl constructor: " + avatarUrl)
+    console.log("avatarUrl constructor: " + avatarUrl)
 
     this.state = {
       // avatarSource: source.uri,
