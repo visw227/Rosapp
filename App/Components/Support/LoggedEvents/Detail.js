@@ -11,10 +11,16 @@ import {
   Platform
 } from 'react-native';
 
+import { List, ListItem, Avatar } from 'react-native-elements'
+
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
 import brand from '../../../Styles/brand'
+
+import Styles from '../Styles'
+
+
 
 class LoggedEventDetails extends React.Component {
 
@@ -31,6 +37,17 @@ class LoggedEventDetails extends React.Component {
 
   })
 
+  constructor(props) {
+    super(props);
+
+  
+
+    this.state = {
+        receiving: false,
+        logData: []
+    }
+
+  }
 
 
 
@@ -40,38 +57,95 @@ class LoggedEventDetails extends React.Component {
     const logEvent = navigation.getParam('logEvent', {} );
 
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
-      <ScrollView style={{ marginLeft: 5, marginRight: 5, paddingTop: 20, paddingBottom: 100 }}>
-
-        <Text>
-
-            Source: {logEvent.source}
-            
-        </Text>
-
-        <Text>
-
-            Title: {logEvent.title}
-            
-        </Text>
-
-        <Text>
-
-            Message:
-            
-        </Text>
-
-        <Text>
-
-            {JSON.stringify(logEvent.message, null, 2)}
-            
-        </Text>
+        <View style={Styles.container}>
 
 
-        </ScrollView>
+              <ScrollView
+                style={{ backgroundColor: '#ffffff' }}
+                refreshControl={
 
-      </View>
+                  <RefreshControl
+                    refreshing={this.state.receiving}
+                    onRefresh={this.loadData}
+                    tintColor={brand.colors.primary}
+                    title="Loading"
+                    titleColor={brand.colors.primary}
+                    //colors={['#ff0000', '#00ff00', '#0000ff']}
+                    progressBackgroundColor="#ffffff"
+                  />
+                }
+                
+              >
+
+
+                <List style={Styles.list}>
+
+
+                    <ListItem
+
+                        hideChevron={true}
+                        style={Styles.listItem}
+                        title='Source'
+                            titleStyle={{ color: brand.colors.gray }}
+                            
+                        subtitle={
+                        <View style={Styles.subtitleView}>
+                            <Text style={Styles.ratingText}>{logEvent.source}</Text>
+                        </View>
+                        }
+              
+                        
+
+                    
+                    />
+                    
+
+                    <ListItem
+
+                        hideChevron={true}
+                        style={Styles.listItem}
+                        title='Title'
+                            titleStyle={{ color: brand.colors.gray }}
+                            
+                        subtitle={
+                        <View style={Styles.subtitleView}>
+                            <Text style={Styles.ratingText}>{logEvent.title}</Text>
+                        </View>
+                        }
+    
+                        
+
+                    
+                    />
+
+
+                    <ListItem
+
+                        hideChevron={true}
+                        style={Styles.listItem}
+                        title='Message'
+                            titleStyle={{ color: brand.colors.gray }}
+                            
+                        subtitle={
+                        <View style={Styles.subtitleView}>
+                            <Text style={Styles.ratingText}>{JSON.stringify(logEvent.message, null, 3)}</Text>
+                        </View>
+                        }
+          
+                        
+
+                    
+                    />
+
+
+
+                </List>
+
+              </ScrollView>
+
+            </View>
+
     );
 
   }

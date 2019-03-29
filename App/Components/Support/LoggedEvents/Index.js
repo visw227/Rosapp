@@ -6,7 +6,8 @@ import {
   Text,
   Button,
   AsyncStorage,
-  ScrollView
+  ScrollView,
+  RefreshControl
 } from 'react-native';
 import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -63,6 +64,7 @@ class LoggedEvents extends React.Component {
     let build = DeviceInfo.getBuildNumber()
 
     this.state = {
+        receiving: true,
         logData: []
     }
 
@@ -81,12 +83,18 @@ class LoggedEvents extends React.Component {
         console.log("logData", JSON.stringify(logData, null, 2))
 
         _this.setState({
+            receiving: false,
             logData: logData
         })
 
     })
 
     this.props.navigation.setParams({ handleSubmit: this.handleSubmit })
+
+
+  }
+
+  loadData = () => {
 
 
   }
@@ -107,7 +115,22 @@ class LoggedEvents extends React.Component {
     return (
             <View style={Styles.container}>
 
-              <ScrollView style={{ backgroundColor: '#ffffff' }}>
+              <ScrollView
+                style={{ backgroundColor: '#ffffff' }}
+                refreshControl={
+
+                  <RefreshControl
+                    refreshing={this.state.receiving}
+                    onRefresh={this.loadData}
+                    tintColor={brand.colors.primary}
+                    title="Loading"
+                    titleColor={brand.colors.primary}
+                    //colors={['#ff0000', '#00ff00', '#0000ff']}
+                    progressBackgroundColor="#ffffff"
+                  />
+                }
+                
+              >
 
 
                 <List style={Styles.list}>
