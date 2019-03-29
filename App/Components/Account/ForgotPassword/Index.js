@@ -192,7 +192,7 @@ export class ForgotPassword extends React.Component {
                 sending: false,
                 requestStatus: {
                     hasError: true,
-                    message: "Sorry, we weren't able to send you an email link to reset your password. The exact error was: '" + err.message + "'"
+                    message: err.message
                 }
             })
 

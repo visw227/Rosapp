@@ -203,6 +203,24 @@ export class About extends React.Component {
                   
                   />
 
+                  <ListItem
+
+                      style={Styles.listItem}
+                      title='Logged Events'
+                          titleStyle={{ color: brand.colors.gray }}
+
+                      subtitle={
+                      <View style={Styles.subtitleView}>
+                          <Text style={Styles.ratingText}>Logged events that we use for debugging</Text>
+                      </View>
+                      }
+                      avatar={<Avatar rounded medium
+                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                          icon={{name: 'list-alt', type: 'font-awesome'}}/>}
+                      
+                      onPress={() => this.props.navigation.navigate('LoggedEvents') }
+                  
+                  />
 
 
               </List>

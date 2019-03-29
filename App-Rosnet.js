@@ -17,6 +17,7 @@ import NavigationService from './App/Helpers/NavigationService';
 import { generateRandomNumber, checkForNotifications } from './App/Services/Background';
 
 import { Authorization } from './App/Helpers/Authorization';
+import { Logger } from './App/Helpers/Logger';
 
 import Push from 'appcenter-push'
 
@@ -569,6 +570,8 @@ import SupportContactScreen from './App/Components/Support/Contact/Index'
 import TermsScreen from './App/Components/Support/Terms/Index'
 import PrivacyScreen from './App/Components/Support/Privacy/Index'
 import DeviceScreen from './App/Components/Support/Device/Index'
+import LoggedEventsScreen from './App/Components/Support/LoggedEvents/Index'
+import LoggedEventDetailsScreen from './App/Components/Support/LoggedEvents/Detail'
 
 
 let SupportStack = createStackNavigator({ 
@@ -596,6 +599,12 @@ let SupportStack = createStackNavigator({
   },
   Device: {
     screen: DeviceScreen
+  },
+  LoggedEvents: {
+    screen: LoggedEventsScreen
+  },
+  LoggedEventDetails: {
+    screen: LoggedEventDetailsScreen
   } 
 });
 
@@ -945,6 +954,15 @@ export default class App extends React.Component {
 
 
     //**********************************************************************************
+    // globally log things
+    //**********************************************************************************
+    _globalLogger = (ok, source, title, message) => {
+
+      Logger.LogEvent(ok, source, title, message)
+
+    }
+
+    //**********************************************************************************
     // globally share any state changes - just pass the object to update in the global state
     // these state values are shared throughout the app as this.props.screenProps.state.userData, etc.
     //**********************************************************************************
@@ -1131,7 +1149,8 @@ export default class App extends React.Component {
             <AppContainer 
               screenProps={{ 
                 state: this.state, 
-                _globalStateChange: this._globalStateChange
+                _globalStateChange: this._globalStateChange,
+                _globalLogger: this._globalLogger
               }} 
 
               // this is necessary for the NavigationService.navigate to LockStack to work

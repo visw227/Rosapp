@@ -259,13 +259,26 @@ class Login extends Component {
         else {
 
 
+            // this provides shared logging via screenProps
+            this.props.screenProps._globalLogger(true, "Login", "Attempt", { userName: this.state.userName, password: "******" })
+
+
             Authorization.UserLogin(this.state.userName, this.state.password, function(err, resp){
 
                 if(err) {
                     _this.showAlert(err.message)
+
+                    // this provides shared logging via screenProps
+                    _this.props.screenProps._globalLogger(false, "Login", "Error", err)
+
+
                 }
                 else if(resp.userData){
                     if(resp.userData) {
+
+                        // this provides shared logging via screenProps
+                        _this.props.screenProps._globalLogger(true, "Login", "Successful", resp)
+
 
                         let redirect = null
                         if(resp.userData.mustChangePassword) {

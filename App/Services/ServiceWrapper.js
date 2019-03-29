@@ -6,6 +6,10 @@
 import config from '../app-config.json'
 import { withCacheBustingTimestamp } from '../Helpers/WithCacheBustingTimestamp';
 
+import { Logger } from '../Helpers/Logger';
+
+
+
 var lastUrl = "";
 
 export function serviceWrapper(url, method, jsonBody, subDomain, token, callback) {
@@ -15,6 +19,14 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     let protocol = ''
 
     console.log("starting request", url, method, jsonBody, subDomain, token)
+
+
+    // clear everything on login
+    // if(url.toLowerCase().indexOf("/login") !== -1) {
+    //     Logger.DeleteAllEvents()
+    // }
+
+ 
 
     // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
     if (config.DOMAIN.indexOf('rosnet') !== -1) {
@@ -29,6 +41,19 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
     console.log("fullUrl", fullUrl)
+
+
+    //Logger.LogEvent(true, "ServiceWrapper", "Starting request", { url: fullUrl, method: method })
+
+    // just for logging
+    let logRequest = {
+        url: fullUrl,
+        headers: { 
+            managerAppToken: token
+        },
+        method: method,
+        body: jsonBody
+    }
 
     // Set up our HTTP request
     var xhr = new XMLHttpRequest();
@@ -50,6 +75,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     }
     xhr.ontimeout = function() {
         console.log("the request timed out")
+
+        Logger.LogEvent(false, "API (TIMED OUT)", url, { request: logRequest })
 
     }
     xhr.onreadystatechange = function() {
@@ -74,8 +101,13 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             console.log("xhr.response", JSON.stringify(json, null, 2))
 
+            Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
+
             // 200 successes can return errors - e.g. { Success: false, ErrorMsg: "Login attempt failed 5 times. Account is now locked." }
             if(json.ErrorMsg) {
+
+                Logger.LogEvent(false, "API (200 with ERROR)", url, { request: logRequest, response: json })
+
                 callback( { status: xhr.status, message: json.ErrorMsg }, null)
             }
             else {
@@ -86,7 +118,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
 
 
-        } else if (xhr.status === 401) {
+        } 
+        else if (xhr.status === 401) {
 
             let message = xhr._response
 
@@ -96,7 +129,11 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             callback({ status: xhr.status, message: message }, null)
 
-        } else {
+
+            Logger.LogEvent(false, "API (401)", url, { request: logRequest, response: xhr._response })
+
+        } 
+        else {
 
             let message = xhr._response
 
@@ -110,6 +147,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             // What to do when the request has failed
             console.log('something went wrong', xhr);
             callback({ status: xhr.status, message: message }, null)
+
+
+            Logger.LogEvent(false, "API (" + xhr.status.toString() + ")", url, { request: logRequest, response: message })
 
         }
 

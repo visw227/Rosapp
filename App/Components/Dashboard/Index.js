@@ -187,12 +187,20 @@ class DashboardScreen extends React.Component {
     console.log("----------------- Dashboard ----------------------")
     console.log("Authorization.VerifyToken", userData.selectedSite, userData.token)
 
+
+    // this provides shared logging via screenProps
+    this.props.screenProps._globalLogger(true, "Dashboard", "Verify Token", { token: userData.token })
+
+
     // this verifies that the token is still valid and redirects to login if not
     Authorization.VerifyToken(userData.selectedSite, userData.token, function(err, resp){
 
       if(err) {
 
         console.log(">>> Dashboard - Invalid Token", err)
+
+        // this provides shared logging via screenProps
+        _this.props.screenProps._globalLogger(false, "Dashboard", "Token is INVALID", { error: err })
 
         // reset the navigation
         const resetAction = StackActions.reset({
@@ -207,6 +215,10 @@ class DashboardScreen extends React.Component {
       else {
 
         console.log(">>> Dashboard - Token is Valid", resp)
+
+        // this provides shared logging via screenProps
+        _this.props.screenProps._globalLogger(true, "Dashboard", "Token is valid", { response: resp })
+
 
         let source = {
           uri: "https://" + userData.selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
