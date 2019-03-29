@@ -7,7 +7,7 @@ import config from '../app-config.json'
 import { withCacheBustingTimestamp } from '../Helpers/WithCacheBustingTimestamp';
 
 import { Logger } from '../Helpers/Logger';
-
+import { Utils } from '../Helpers/Utils';
 
 
 var lastUrl = "";
@@ -143,6 +143,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
                 message = (json.Message || "") + " " + (json.ExceptionMessage || "")
             }
+
+            // strip out any extra quotes from response - e.g. _response: ""The email address is not associated with any sites""
+            message = Utils.ReplaceAll(message, '"', '')
 
             // What to do when the request has failed
             console.log('something went wrong', xhr);
