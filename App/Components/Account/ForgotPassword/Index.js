@@ -235,7 +235,7 @@ export class ForgotPassword extends React.Component {
     return (
             <KeyboardAvoidingView behavior="padding" style={Styles.container}>
 
-                <View style={Styles.loginContainer}>
+                <View style={Styles.logoContainer}>
                     {/* <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} /> */}
                     {chooseLogo()}
                 </View>

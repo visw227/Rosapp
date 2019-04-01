@@ -15,7 +15,7 @@ export default StyleSheet.create({
         flex: 1,
         backgroundColor: brand.colors.primary
     },
-    loginContainer:{
+    logoContainer:{
         alignItems: 'center',
         flexGrow: 1,
         justifyContent: 'center'

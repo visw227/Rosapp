@@ -127,7 +127,7 @@ export class Account extends React.Component {
             <View style={Styles.container}>
               <List style={Styles.list}>
 
-                  {/* <ListItem
+                   <ListItem
 
                       style={Styles.listItem}
                       title='Profile'
@@ -144,7 +144,7 @@ export class Account extends React.Component {
                       
                       onPress={() => this.props.navigation.navigate('Profile') }
                   
-                  /> */}
+                  /> 
                   
                   <ListItem
                       roundAvatar

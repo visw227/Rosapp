@@ -8,7 +8,9 @@ import {
   ScrollView,
   RefreshControl,
   AsyncStorage,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView,
+  ActivityIndicator
 } from 'react-native';
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -16,15 +18,14 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import brand from '../../../Styles/brand'
 
-import Styles from './Styles'
+//import Styles from './Styles'
 
-import { getUserProfile } from '../../../Services/Account'
 
 import AvatarInitials from '../../ReusableComponents/AvatarInitials'
 
 import { List, ListItem, Avatar } from 'react-native-elements'
 
-let fakedUserProfile = require('../../../Fixtures/UserProfile')
+
 
 class Profile extends React.Component {
 
@@ -35,10 +36,10 @@ class Profile extends React.Component {
     title: 'Profile',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
+    headerStyle: { backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
 
-        headerRight : 
+    headerRight : 
       <View style={{
         alignItems: 'center',
         flexDirection: 'row',
@@ -49,7 +50,7 @@ class Profile extends React.Component {
         <Text 
           style={{ color: 'white', fontSize: 16 }}
           onPress={navigate.navigation.getParam('handleSubmit')} >
-          Submit
+          Save
           </Text>
       </View>,
 
@@ -66,127 +67,177 @@ class Profile extends React.Component {
             hasError: false,
             message: ""
         },
-        userToken: '',
-        userProfile: fakedUserProfile,
-        email: '',
-        phone: '',
-        shareEmail: false,
-        sharePhone: false
+        userData: this.props.screenProps.state.userData,
+        jobTitle: ''
+
     }
 
 
   }
 
+  handleSubmit = () => {
+
+    // Alert.alert(
+    //   'Please Confirm',
+    //   'Are you sure that you would like to send this alert?',
+    //   [
+    //     {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+    //     {text: 'Yes', onPress: () => this.sendRequest() },
+    //   ],
+    //   { cancelable: false }
+    // )
+
+    this.setState({
+      sending: true
+    })
+
+    setTimeout(this.confirmChange, 500);
+
+
+  }
+
+  confirmChange = () => {
+
+    this.setState({
+      sending: false,
+      requestStatus: {
+          hasError: false,
+          message: "Your profile has been updated."
+      },
+    })
+
+  }
+
   componentWillMount () {
 
-      let _this = this 
-
-      // no need for shared state here. Just get the token from local storage
-      // AsyncStorage.getItem('userToken', function(err, token){
-
-      //   // make sure state is updated before making API calls
-      //   _this.setState({
-      //     userToken: token
-      //   }, () => _this.loadData() );
-
-
-      // })
-
   }
+
+
   componentDidMount () {
-    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
 
-  }
+    let userData = this.props.screenProps.state.userData
 
-  loadData = () => {
-
-    console.log("getting user profile...")
-
-    // this takes on a different scope inside the callbacks below
-    let _this = this
-    _this.setState({receiving: true});
-
-    getUserProfile(_this.state.userToken, function(err, profile){
-
-      if(err) {
-        console.log("getUserProfile error", err)
-      }
-      else {
-
-        console.log("getUserProfile success", profile)
-
-        //console.log("getting schedules...")
-        
-        _this.setState({ 
-          receiving: false, 
-          userProfile: profile,
-          email: profile.email,
-          phone: profile.phone,
-          shareEmail: profile.shareEmail,
-          sharePhone: profile.sharePhone
-        });
-
-      }
-
+    this.props.navigation.setParams({ 
+      handleSubmit: this.handleSubmit,
+      backgroundColor:this.props.screenProps.state.backgroundColor 
     })
 
   }
 
 
 
-  getAvatar = (item) => {
-
-    // item.photo = 'https://rosqa.stafflinq.com/image-server/profile-pics/13367'
-
-    // console.log("getAvatar: ", item.name, item.userId, item.imagePath)
-
-    // make sure that the imagePath is not null that it matches the userId
-    // several were different in dev and QA and caused the image to get a 404, messing up the UI
-    if(item.photo && item.photo.length > 0) {
-      return (
-
-        <Image 
-          key={new Date()} 
-          style={Styles.avatar} 
-          source={{uri: item.photo }}
-        />
-    
-      )
-    }
-    else {
-      return (
-          <AvatarInitials
-            style={{alignSelf: 'center', marginTop: -55, borderColor: '#ffffff', borderWidth: 1 }}
-            backgroundColor={brand.colors.secondary}
-            color={'white'}
-            size={100}
-            fontSize={30}
-            text={item.name.firstAndLast}
-            length={2}
-          />
-      )
-    }
-  }
 
 
   render() {
 
-    const member = this.state.userProfile
+
 
 
     return (
 
 
-      
-            <View style={Styles.container}>
-              <Text>Profile
-              </Text>
-            </View>
+            <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
+ 
+
+      
+                <View style={styles.formContainer}>
+                    <View style={styles.container}>
+
+                        <Text style={styles.inputLabel} >Job Title</Text>
+
+                        <TextInput style={styles.input} 
+                                    autoCapitalize="none" 
+                                    //onSubmitEditing={() => this.passwordInput.focus()} 
+                                    autoCorrect={false} 
+                                    keyboardType='default' 
+                                    returnKeyType="go" 
+                                    placeholder='Job Title'
+                                    placeholderTextColor={brand.colors.silver}
+                                    value={this.state.jobTitle}
+                                    onChangeText={(text) => this.setState({jobTitle: text})}
+                        />
+
+
+
+                        {this.state.sending &&
+                        <View style={{ marginTop: 20, marginBottom: 10 }} >
+                            <ActivityIndicator size="large" color={brand.colors.primary} />
+                            </View>
+                        }
+
+
+
+                        <Text style={styles.message} >
+                          {this.state.requestStatus.message}
+                        </Text>
+                          
+
+
+
+                      </View>
+
+
+                </View>
+
+
+         
+            </KeyboardAvoidingView>
 
     );
   }
 }
+
+// define your styles
+const styles = StyleSheet.create({
+    container: {
+        //flex: 1,
+        backgroundColor: brand.colors.white
+    },
+    logoContainer:{
+        alignItems: 'center',
+        flexGrow: 1,
+        justifyContent: 'center'
+    },
+    logo: {
+        position: 'absolute',
+        // width: 400,
+        // height: 200
+        maxHeight: 150,
+        maxWidth: 150,
+        marginTop: 150
+    },
+    formContainer: {
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10
+    },
+    input:{
+        height: 40,
+        backgroundColor: '#ffffff',
+        marginTop: 5,
+        marginBottom: 5,
+        padding: 10,
+        color: brand.colors.primary,
+        borderColor: brand.colors.primary, 
+        borderWidth: 1,
+        borderRadius: 10
+    },
+    inputLabel: {
+      color: brand.colors.primary,
+      marginLeft: 5
+    },
+    message: {
+      textAlign: 'center', 
+      paddingTop: 20, 
+      paddingLeft: 30, 
+      paddingRight: 30,
+      color: brand.colors.primary
+    }
+
+   
+});
+
 
 
 //make this component available to the app
