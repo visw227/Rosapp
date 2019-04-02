@@ -11,7 +11,6 @@ import {
   Alert, 
   Platform, 
   Image, 
-  AlertIOS,
   KeyboardAvoidingView,
   Animated,
   ScrollView
@@ -32,9 +31,13 @@ import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
 
 //config is optional to be passed in on Android
 const touchConfig = {
-  title: "Authentication Required", // Android
-  color: "#e00606", // Android,
-  fallbackLabel: "Show Passcode" // iOS (if empty, then label is hidden)
+    title: "Authentication Required", // Android
+    color: "#e00606", // Android,
+    fallbackLabel: "Show Passcode", // iOS (if empty, then label is hidden)
+    // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. 
+    // this does not mean that if touchid/faceid fails the first few times it will revert to passcode, 
+    // rather that if the former are not enrolled, then it will use the passcode.
+    passcodeFallback: true
 }
 
 
@@ -73,6 +76,11 @@ class LockScreen extends React.Component {
 
   componentDidMount() {
 
+
+    // this provides shared logging via screenProps
+    this.props.screenProps._globalLogger(true, "LockScreen", "Opened", {})
+
+
     // this.checkDeviceForHardware();
     // this.checkForFingerprints();
 
@@ -80,72 +88,95 @@ class LockScreen extends React.Component {
     .then(biometryType => {
       this.setState({ biometryType });
     })
-  }
-
-
-  letsContinueForNow = () => {
-
-    const resetAction = StackActions.reset({
-        index: 0,
-        key: null, // this is the trick that allows this to work
-        actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
-    });
-    this.props.navigation.dispatch(resetAction);
 
   }
-  
-  showAlert = () => {
-    Alert.alert(
-      'Face, Fingerprint, or Passcode?',
-      'Place your finger over the touch sensor and press scan. FaceID is not available in Expo Client.',
-      [
-        {text: 'Continue', onPress: () => {
-          this.getTouchFaceOrPasscode();
-        }},
-        {text: 'Cancel', onPress: () => console.log('Cancel'), style: 'cancel'}
-      ]
-    )
-  }
+
   
 
+    // onButtonPress = () => {
+    //     TouchID.isSupported()
+    //     .then(this.authenticate)
+    //     .catch(error => {
+    //         console.log("error", error)
+    //         this.showAlert("TouchID not supported")
+    //     });
+    // }
 
-  clickHandler = () => {
-    TouchID.isSupported()
-      .then(this.authenticate)
-      .catch(error => {
-        console.log("error", error)
-        //AlertIOS.alert('TouchID not supported');
-        this.showAlert("TouchID not supported")
-      });
-  }
+    onButtonPress = () => {
 
-  authenticate = () => {
-    return TouchID.authenticate()
-      .then(success => {
-        //AlertIOS.alert('Authenticated Successfully');
+        TouchID.isSupported()
+        .then(biometryType => {
 
-         this.showAlert("Authenticated Successfully")
-      })
-      .catch(error => {
-        console.log("authenticate.catch(error) = ", error)
-        //AlertIOS.alert(error.message);
-        this.showAlert("Authentication error: " + error)
-      });
-  }
+            // this provides shared logging via screenProps
+            this.props.screenProps._globalLogger(true, "LockScreen", "onButtonPress", { biometryType: biometryType })
+
+            // Success code
+            if (biometryType === 'FaceID') {
+                console.log('FaceID is supported.');
+                this.authenticate()
+            } 
+            else if (biometryType === 'TouchID'){
+                console.log('TouchID is supported.');
+                this.authenticate()
+            } 
+            else if (biometryType === true) {
+                // Touch ID is supported on Android
+                this.authenticate()
+            }
+        })
+        .catch(error => {
+            // Failure code if the user's device does not have touchID or faceID enabled
+            console.log("error", error)
+            this.showAlert("FaceID or TouchID not supported")
+
+            // this provides shared logging via screenProps
+            this.props.screenProps._globalLogger(false, "LockScreen", "onButtonPress", { error: error })
 
 
-  showAlert = (message) => {
+        });
+    }
+
+    authenticate = () => {
+
+        // this provides shared logging via screenProps
+        this.props.screenProps._globalLogger(true, "LockScreen", "authenticate", { message: "starting..." })
 
 
-    this.setState({
-        sending: false, 
-        requestStatus: {
-            hasError: true,
-            message: message
-        }
-    })
+        return TouchID.authenticate('', touchConfig)
+        .then(success => {
 
-}
+            this.showAlert("Authenticated Successfully")
+
+            // this provides shared logging via screenProps
+            this.props.screenProps._globalLogger(true, "LockScreen", "authenticate", { success: true })
+
+
+            this.onContinue()
+
+        })
+        .catch(error => {
+            console.log("authenticate.catch(error) = ", error)
+
+            // this provides shared logging via screenProps
+            this.props.screenProps._globalLogger(false, "LockScreen", "authenticate", { error: error })
+
+
+            this.showAlert("Authentication error: " + error)
+        });
+    }
+
+
+    showAlert = (message) => {
+
+        this.setState({
+            sending: false, 
+            requestStatus: {
+                hasError: true,
+                message: message
+            }
+        })
+
+    }
 
 
     onContinue = () => {
@@ -155,96 +186,98 @@ class LockScreen extends React.Component {
 
     }
 
-  render() {
+
+    render() {
 
 
-    chooseLogo = () => {
-        if(this.state.isQA) {
-            return (
-                <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+        chooseLogo = () => {
+            if(this.state.isQA) {
+                return (
+                    <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
-            )
+                )
+            }
+            else {
+                return (
+                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+                )
+            }
         }
-        else {
-            return (
-                <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
-
-            )
-        }
-    }
 
 
-    return (
-          <KeyboardAvoidingView behavior="padding" style={Styles.container}>
+        return (
 
-                <View style={Styles.logoContainer}>
-                    {/* <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} /> */}
-                    {chooseLogo()}
-                </View>
+            <View style={Styles.container}>
 
-
-                <View style={Styles.formContainer}>
-
-                    <View style={{ 
-                        justifyContent: 'center', 
-                        alignItems: 'center',
-                        margin: 20,
-                        fontSize: 25,
-                        textAlign: 'center'
-                    }}>
-                        <Text style={styles.message}>
-                          As an extra security measure, Rosnet requires authentication using 
-                          Face ID, Touch ID, or your device passcode.
-                        </Text>
+                    <View style={Styles.logoContainer}>
+                        {/* <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} /> */}
+                        {chooseLogo()}
                     </View>
 
-                    <View style={styles.container}>
 
+                    <View style={Styles.formContainer}>
 
-                        {!this.state.sending && this.state.requestStatus.hasError &&
-                            <View style={{ 
-                                justifyContent: 'center', 
-                                alignItems: 'center',
-                                marginBottom: 15,
-                                marginTop: 10
-                            }}>
-                                <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
-                                    <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
-                                </ScrollView>
-                            </View>
-                        }
-
-                        <TouchableOpacity 
-                            style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
-                            onPress={this.clickHandler}>
-                            <Text 
-                              style={ this.state.sending ? styles.buttonDisabledText : styles.buttonText }>
-                              {`Authenticate with ${this.state.biometryType}`}
-                            </Text>
-                        </TouchableOpacity> 
-
-
-                        <View>
-                            <Text 
-                                disabled={this.state.sending} 
-                                style={styles.forgotPassword} 
-                                onPress={this.onContinue}>
-                                Or, just continue for now...
+                        <View style={{ 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            margin: 20,
+                            fontSize: 25,
+                            textAlign: 'center'
+                        }}>
+                            <Text style={styles.message}>
+                            As an extra security measure, Rosnet requires authentication using 
+                            Face ID, Touch ID, or your device passcode.
                             </Text>
                         </View>
 
+                        <View style={styles.container}>
 
 
+                            {this.state.requestStatus.hasError &&
+                                <View style={{ 
+                                    justifyContent: 'center', 
+                                    alignItems: 'center',
+                                    marginBottom: 15,
+                                    marginTop: 10
+                                }}>
+                                    <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
+                                        <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
+                                    </ScrollView>
+                                </View>
+                            }
+
+                            <TouchableOpacity 
+                                style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
+                                onPress={this.onButtonPress}>
+                                <Text 
+                                style={ this.state.sending ? styles.buttonDisabledText : styles.buttonText }>
+                                {`Authenticate with ${this.state.biometryType}`}
+                                </Text>
+                            </TouchableOpacity> 
+
+
+                            <View>
+                                <Text 
+                                    disabled={this.state.sending} 
+                                    style={styles.forgotPassword} 
+                                    onPress={this.onContinue}>
+                                    Or, just continue for now...
+                                </Text>
+                            </View>
+
+
+
+                        </View>
                     </View>
+            
                 </View>
-         
-            </KeyboardAvoidingView>
 
-    )
+        ) // end return
 
-  }
+    } // end render
 
-}
+} // end class
 
 
 const styles = StyleSheet.create({
