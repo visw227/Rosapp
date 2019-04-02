@@ -9,6 +9,8 @@ import { withCacheBustingTimestamp } from '../Helpers/WithCacheBustingTimestamp'
 import { Logger } from '../Helpers/Logger';
 import { Utils } from '../Helpers/Utils';
 
+import NavigationService from '../Helpers/NavigationService';
+
 
 var lastUrl = "";
 
@@ -89,14 +91,6 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
         // Process our return data
         if (xhr.status === 200) {
 
-            // var isValidJSON = true;
-            // try { 
-            //   JSON.parse(xhr.response) 
-            // }
-            // catch(e) { 
-            //   isValidJSON = false 
-            // }
-
             let json = JSON.parse(xhr.response)
 
             console.log("xhr.response", JSON.stringify(json, null, 2))
@@ -115,9 +109,6 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             }
 
 
-
-
-
         } 
         else if (xhr.status === 401) {
 
@@ -131,6 +122,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
 
             Logger.LogEvent(false, "API (401)", url, { request: logRequest, response: xhr._response })
+
+            // force the user to the login screen
+            NavigationService.navigate('LoginStack');
 
         } 
         else {

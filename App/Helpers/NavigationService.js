@@ -1,4 +1,6 @@
-// Used only by App-Rosnet.js
+// Used by 
+//  - App-Rosnet.js
+//  - /Helpers/ServiceWrapper.js
 // this is needed since props.navigation isn't present for unmounted screen components
 
 import { NavigationActions } from 'react-navigation';
