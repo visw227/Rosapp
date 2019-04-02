@@ -42,6 +42,41 @@ const regex = {
 };
 
 
+const strengthLevels = [
+  {
+    label: 'Weak',
+    labelColor: brand.colors.gray,
+    widthPercent: 25,
+    innerBarColor: brand.colors.gray
+  },
+  {
+    label: 'Fair',
+    labelColor: brand.colors.orange,
+    widthPercent: 50,
+    innerBarColor: brand.colors.orange
+  },
+  {
+    label: 'Good',
+    labelColor: brand.colors.secondary,
+    widthPercent: 75,
+    innerBarColor: brand.colors.seondary
+  },
+  {
+    label: 'Strong',
+    labelColor: brand.colors.success,
+    widthPercent: 100,
+    innerBarColor: brand.colors.success
+  }
+];
+
+// Enable too short
+const tooShort = {
+  enabled: false,
+  label: 'Too short',
+  labelColor: brand.colors.orange
+};
+
+
 
 class Password extends React.Component {
 
@@ -55,6 +90,21 @@ class Password extends React.Component {
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     
+    headerRight : 
+        <View style={{
+          alignItems: 'center',
+          flexDirection: 'row',
+          height: 40,
+          paddingRight: 10,
+          width: '100%'
+        }}>
+          <Text 
+            style={{ color: 'white', fontSize: 16 }}
+            onPress={navigate.navigation.getParam('handleSubmit')} >
+            Save
+            </Text>
+  </View>,
+
 
   })
 
@@ -84,35 +134,43 @@ class Password extends React.Component {
       levelError : false,
       changeSuccess : false,
       fadeAnim: new Animated.Value(0),
-      secSetting : {}
+      secSetting : {},
+      isCurrentPasswordSecureTextEntry: false
     };
   }
   
-  componentWillMount () {
+
+  handleSubmit = () => {
 
     this.setState({
-      validated : false,
-      unValidated : true,
-      passwordConfirmed : false
-
+      sending: true,
+      requestStatus: {
+          hasError: false,
+          message: ""
+      },
     })
 
-    console.log('userDate',this.props.screenProps.state.userData)
+    this.onSubmitPress()
+
 
   }
+
 
   componentDidMount () {
 
     let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+    this.props.navigation.setParams({ 
+      handleSubmit: this.handleSubmit,
+      backgroundColor:this.props.screenProps.state.backgroundColor 
+    })
 
 
     _this = this
 
     var request = this.props.screenProps.state.userData.selectedSite
 
-     getSiteSecuritySettings (request, function(err,resp) {
+    getSiteSecuritySettings (request, function(err,resp) {
       if (err){
         console.log ('Error siteSettings',err)
       }
@@ -123,11 +181,9 @@ class Password extends React.Component {
         },()=> console.log('<<resp',_this.state.secSetting))
         
       }
-         
-      })
-  }
-  _onChangePassword = (password, isValid) => {
-    this.setState({ password: { value: password, isValid: isValid } })
+        
+    })
+  
   }
   
    
@@ -263,17 +319,11 @@ class Password extends React.Component {
     return this.calculateScore(password);
   }
 
-  newPassword = (text,isValid) => {
-
-    _this = this
-
-    _this.setState ({
-      password: { value: text, isValid: isValid }
-    })
-  }
 
 
-  onSubmitPress = (token,strengthLevels) => {
+  onSubmitPress = () => {
+
+    
 
     console.log('passval',this.state.password.value)
     
@@ -299,7 +349,7 @@ class Password extends React.Component {
      
      if (this.state.passwordConfirmed && this.state.validated && level >= this.state.secSetting.Pswd_Complexity) {
 
-        changePassword(request, token, function (err,response){
+        changePassword(request, this.props.screenProps.state.userData.token, function (err,response){
 
           if (err){
             Keyboard.dismiss()
@@ -419,59 +469,56 @@ class Password extends React.Component {
   }
   
 
-  onTestContinue = () => {
+  onBlurShowAsterisks = () => {
 
-    const resetAction = StackActions.reset({
-        index: 0,
-        key: null, // this is the trick that allows this to work
-        actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
-    });
-    this.props.navigation.dispatch(resetAction);
+    this.setState({
+      isCurrentPasswordSecureTextEntry: true
+    })
+    
   }
-
 
 
   render() {
 
-    const strengthLevels = [
-      {
-        label: 'Weak',
-        labelColor: brand.colors.gray,
-        widthPercent: 25,
-        innerBarColor: '#fe6c6c'
-      },
-      {
-        label: 'Weak',
-        labelColor: brand.colors.gray,
-        widthPercent: 25,
-        innerBarColor: '#fe6c6c'
-      },
-      {
-        label: 'Fair',
-        labelColor: brand.colors.info,
-        widthPercent: 50,
-        innerBarColor: '#feb466'
-      },
-      {
-        label: 'Good',
-        labelColor: brand.colors.secondary,
-        widthPercent: 75,
-        innerBarColor: '#81fe2c'
-      },
-      {
-        label: 'Strong',
-        labelColor: brand.colors.success,
-        widthPercent: 100,
-        innerBarColor: '#6cfeb5'
-      }
-    ];
+    // const strengthLevels = [
+    //   {
+    //     label: 'Weak',
+    //     labelColor: brand.colors.gray,
+    //     widthPercent: 25,
+    //     innerBarColor: '#fe6c6c'
+    //   },
+    //   {
+    //     label: 'Weak',
+    //     labelColor: brand.colors.gray,
+    //     widthPercent: 25,
+    //     innerBarColor: '#fe6c6c'
+    //   },
+    //   {
+    //     label: 'Fair',
+    //     labelColor: brand.colors.info,
+    //     widthPercent: 50,
+    //     innerBarColor: '#feb466'
+    //   },
+    //   {
+    //     label: 'Good',
+    //     labelColor: brand.colors.secondary,
+    //     widthPercent: 75,
+    //     innerBarColor: '#81fe2c'
+    //   },
+    //   {
+    //     label: 'Strong',
+    //     labelColor: brand.colors.success,
+    //     widthPercent: 100,
+    //     innerBarColor: '#6cfeb5'
+    //   }
+    // ];
     
-    // Enable too short
-    const tooShort = {
-      enabled: true,
-      label: 'Too short',
-      labelColor: 'red'
-    };
+    // // Enable too short
+    // const tooShort = {
+    //   enabled: true,
+    //   label: 'Too short',
+    //   labelColor: 'red'
+    // };
 
     /*
 
@@ -484,98 +531,118 @@ class Password extends React.Component {
     */
 
 
-//if (this.state.secSetting.Pswd_Change_By_User){
   return (
       
 
-<View style={styles.container}>
+            <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
 
-        <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
+                <View style={styles.formContainer}>
 
-            <Text style={{margin:10,marginTop:30}}>Current Password</Text> 
-                <View style={{flexDirection :'row'}}>
-                <TextInput style={styles.input}   
-                        ref={input => { this.textInput = input }}
-                         //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
-                         placeholder='Current Password' 
-                         placeholderTextColor={brand.colors.silver}
-                         secureTextEntry
-                         //value={this.state.password}
-                         onChangeText={(text) => this.validateCurrentPass(text)}
-                 />
-              {this.state.validating &&  <ActivityIndicator size="small" color={brand.colors.primary} style ={{margin:10,position:'absolute',marginLeft:'55%'}} />}
-              {this.state.validated && <Ionicon name = 'md-checkmark-circle' 
-                                size={30}
+
+                <View style={{
+
+                  flexDirection: 'row',
+                  alignItems: 'flex-start',
+                  alignContent: 'flex-start',
+                  margin: 0,
+                  padding: 0
+
+                }}>
+
+                  <Text style={styles.inputLabel}>Current Password</Text>
+
+                  {this.state.validated &&  
+                  <Ionicon name = 'md-checkmark-circle' 
+                                size={20}
                                 color={brand.colors.success}
-                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
-                {this.state.unValidated && <Ionicon name = 'md-checkmark-circle' 
-                                size={30}
-                                color={brand.colors.lightGray}
-                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
-                {this.state.currentPassError === true  && <Ionicon name = 'md-close-circle' 
-                                size={30}
-                                color={brand.colors.danger}
-                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
+                                style={{ marginBottom: -10, paddingBottom: 0, paddingTop: 0, paddingLeft: 10 }}/>
+                                     
+                  }  
+
 
                 </View>
+
+
+                <TextInput style={styles.input}     
+                        ref={input => { this.textInput = input }}
+                        //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
+                        placeholder='Current Password' 
+                        placeholderTextColor={brand.colors.silver}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={(text) => this.validateCurrentPass(text)}
+                        secureTextEntry={true}
+                        // these settings will allow the text to be seen until the input looses focus
+                        //secureTextEntry = { this.state.isCurrentPasswordSecureTextEntry }
+                        //onFocus={() => this.setState({ isCurrentPasswordSecureTextEntry: false })}
+                        //onBlur={() => this.setState({ isCurrentPasswordSecureTextEntry: true })}
+                />
+
+   
                 
                  
-            <Text style={{margin:10}}>New Password</Text>
+                <Text style={styles.inputLabel} >New Password</Text>
 
-            <View>
-            <PasswordStrengthCheck
-                    secureTextEntry
+                <PasswordStrengthCheck
+                    //secureTextEntry
                     minLength={this.state.secSetting.Min_Pswd_Length}
                     value = {this.state.tempPass}
                     ref={input => { this.newPassInput = input }}
                     ruleNames="symbols|words"
                     strengthLevels={strengthLevels}
-                    tooShort={tooShort}
+                    tooShort={tooShort} 
                     minLevel={0}
-                    barWidthPercent={65}
-                    showBarOnEmpty={true}
-                    barColor="#CCC"
-                    placeholder ={'Text me'}
+                    barWidthPercent={90}
+                    showBarOnEmpty={false}
+                    barColor={ brand.colors.lightGray }
+                    placeholder={'Text me'}
                     onChangeText={(text, isValid) => this.setState({ password: { value: text, isValid: isValid },levelError : false,tempPass:text })} 
-                    />
-            </View>
-                
-                 
+                />
+  
+                {/* // only show Confirm Password once the new password passes all of the validations... */}
+                {/* {this.state.password.isValid && */}
+                <View>
+                  <View style={{
+
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    alignContent: 'flex-start',
+                    margin: 0,
+                    padding: 0
+
+                  }}>
+
+                    <Text style={styles.inputLabel}>Confirm Password</Text>
 
 
-            <Text style={{margin:10}}>Confirm Password</Text>
-                 
-                 <View style={{flexDirection:'row'}}>
-                 <TextInput style={styles.input}   
-                         returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
-                         placeholder='Confirm Password' 
-                         ref={input => { this.confirmPassInput = input }}
-                         //editable = {this.state.validated}
-                         placeholderTextColor={brand.colors.silver}
-                         secureTextEntry
-                         //value={this.state.password}
-                         onChangeText= {(text) => this.confirmPassword(text)}
-                 />
-                 {this.state.passwordConfirmed === true &&<Ionicon name = 'md-checkmark-circle' 
-                                size={30}
-                                color={brand.colors.success}
-                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
-                {this.state.passwordConfirmed === false && <Ionicon name = 'md-checkmark-circle' 
-                                size={30}
-                                color={brand.colors.lightGray}
-                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
-                {this.state.confirmError === true && this.state.confirmPressed && <Ionicon name = 'md-close-circle' 
-                                size={30}
-                                color={brand.colors.danger}
-                                style={{ marginTop:2,position:'absolute',marginLeft:'65%' }}/>}
+                    {this.state.passwordConfirmed &&  
+                    <Ionicon name = 'md-checkmark-circle' 
+                                  size={20}
+                                  color={brand.colors.success}
+                                  style={{ marginBottom: -10, paddingBottom: 0, paddingTop: 0, paddingLeft: 10 }}/>
+                                      
+                    }  
+
+                  </View>
+
+                  <TextInput style={styles.input}   
+                          returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
+                          placeholder='Confirm Password' 
+                          ref={input => { this.confirmPassInput = input }}
+                          placeholderTextColor={brand.colors.silver}
+                          secureTextEntry
+                          autoCapitalize="none"
+                          onChangeText= {(text) => this.confirmPassword(text)}
+                  />
                  </View>
+                {/* } */}
                 
                 
-                
+{/*                 
            {<TouchableHighlight style={styles.buttonContainer } >
                 <Text  style={styles.buttonText} onPress = { ()=> this.onSubmitPress(this.props.screenProps.state.userData.token,strengthLevels) }>Submit</Text>
-    </TouchableHighlight> }
+            </TouchableHighlight> } */}
 
             {this.state.sending === true ? <ActivityIndicator size="large" color={brand.colors.primary} style ={{margin:10}} />: null}
             {this.state.changePasswordAct && this.state.resonseMessage ? <View style={{ 
@@ -602,7 +669,7 @@ class Password extends React.Component {
                             {this.state.levelError === true && <Text style={{color:brand.colors.danger,marginTop:20,margin:10}}>Password too weak. Try using special characters and alphanumerics</Text>}
 
 
-        </View>
+ 
 
         {this.state.changeSuccess &&<Animated.View style = {{flexDirection : 'column',justifyContent:'flex-end',alignItems:'center',marginTop:20,opacity:this.state.fadeAnim}}>
          <Ionicon name = 'md-thumbs-up' 
@@ -616,78 +683,118 @@ class Password extends React.Component {
     
     </View>
 
+    </KeyboardAvoidingView>
+
       
     );
-// } 
-// else {
-//   return (
-    
 
-
-//                            <View style={{flex: 1,
-//                               backgroundColor: '#fff',
-//                               alignItems: 'center',
-//                               justifyContent: 'center'}}>
-//                              <AlerMessage title = 'You are not authorized to change your password. Please contact your administrator'/>
-
-//                             <Text 
-//                                 style={{ color: brand.colors.primary }} 
-//                                 onPress={this.onTestContinue}>
-//                                 Continue to Dashboard
-//                             </Text>
-//                         </View>
-
-//   )
-// }
    
   }
 }
 
+// const styles = StyleSheet.create({
+//     container: {
+//       flex: 1,
+//       backgroundColor: '#fff',
+//       alignItems: 'center',
+//       justifyContent: 'center',
+//     },
+//   input:{
+//       height: 40,
+//       backgroundColor: '#ffffff',
+//       marginBottom: 10,
+//       width:'64%',
+//       padding: 10,
+//       color: brand.colors.primary,
+//       borderColor: brand.colors.primary, 
+//       borderWidth: 1,
+//       borderRadius: 10
+//   },
+//   passwordInput :{
+//       height: 40,
+//     backgroundColor: '#fff',
+//     marginBottom: 10,
+//     width:'100%',
+//     padding: 10,
+//     marginRight:'40%',
+//     marginLeft:'15%',
+//     color: brand.colors.primary,
+//     borderColor: brand.colors.primary, 
+//     borderWidth: 1,
+//     borderRadius: 10},
+//   buttonContainer:{
+//       marginTop: 20,
+//       backgroundColor: brand.colors.primary,
+//       paddingVertical: 10,
+//       borderRadius: 10,
+//       width:100,
+//       borderColor: brand.colors.white, 
+//       borderWidth: 2,
+//   },
+//   buttonText:{
+//       color: '#fff',
+//       textAlign: 'center',
+//       fontWeight: '700'
+//   }
+ 
+// });
+
+
+// define your styles
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+        //flex: 1,
+        backgroundColor: brand.colors.white
     },
-  input:{
-      height: 40,
-      backgroundColor: '#ffffff',
-      marginBottom: 10,
-      width:'64%',
-      padding: 10,
+    logoContainer:{
+        alignItems: 'center',
+        flexGrow: 1,
+        justifyContent: 'center'
+    },
+    logo: {
+        position: 'absolute',
+        // width: 400,
+        // height: 200
+        maxHeight: 150,
+        maxWidth: 150,
+        marginTop: 150
+    },
+    formContainer: {
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10
+    },
+    input:{
+        height: 40,
+        backgroundColor: '#ffffff',
+        marginTop: 5,
+        marginBottom: 10,
+        padding: 10,
+        color: brand.colors.primary,
+        borderColor: brand.colors.primary, 
+        borderWidth: 1,
+        borderRadius: 10
+    },
+    inputFlex: {
+      flexGrow: 1
+    },
+    inputLabel: {
       color: brand.colors.primary,
-      borderColor: brand.colors.primary, 
-      borderWidth: 1,
-      borderRadius: 10
-  },
-  passwordInput :{
-      height: 40,
-    backgroundColor: '#fff',
-    marginBottom: 10,
-    width:'100%',
-    padding: 10,
-    marginRight:'40%',
-    marginLeft:'15%',
-    color: brand.colors.primary,
-    borderColor: brand.colors.primary, 
-    borderWidth: 1,
-    borderRadius: 10},
-  buttonContainer:{
-      marginTop: 20,
-      backgroundColor: brand.colors.primary,
-      paddingVertical: 10,
-      borderRadius: 10,
-      width:100,
-      borderColor: brand.colors.white, 
-      borderWidth: 2,
-  },
-  buttonText:{
-      color: '#fff',
-      textAlign: 'center',
-      fontWeight: '700'
-  }
- 
+      marginLeft: 5
+    },
+    message: {
+      textAlign: 'center', 
+      paddingTop: 20, 
+      paddingLeft: 30, 
+      paddingRight: 30,
+      color: brand.colors.primary
+    },
+    statusIcon: {
+      marginLeft: 10
+    }
+
+   
 });
+
 //make this component available to the app
 export default Password;

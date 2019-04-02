@@ -16,12 +16,12 @@ import {
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
-import brand from '../../../Styles/brand'
+import brand from '../App/Styles/brand'
 
 //import Styles from './Styles'
 
 
-import AvatarInitials from '../../ReusableComponents/AvatarInitials'
+
 
 import { List, ListItem, Avatar } from 'react-native-elements'
 
@@ -67,7 +67,7 @@ class Profile extends React.Component {
             hasError: false,
             message: ""
         },
-        userData: this.props.screenProps.state.userData,
+        userData: null,
         jobTitle: ''
 
     }
@@ -119,12 +119,12 @@ class Profile extends React.Component {
 
   componentDidMount () {
 
-    let userData = this.props.screenProps.state.userData
+    // let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ 
-      handleSubmit: this.handleSubmit,
-      backgroundColor:this.props.screenProps.state.backgroundColor 
-    })
+    // this.props.navigation.setParams({ 
+    //   handleSubmit: this.handleSubmit,
+    //   backgroundColor:this.props.screenProps.state.backgroundColor 
+    // })
 
   }
 
@@ -146,7 +146,7 @@ class Profile extends React.Component {
                 <View style={styles.formContainer}>
        
 
-                    <Text style={styles.inputLabel} >Job Title</Text>
+                    <Text style={styles.inputLabel} >New Password</Text>
 
                     <TextInput style={styles.input} 
                                 autoCapitalize="none" 
@@ -157,7 +157,7 @@ class Profile extends React.Component {
                                 placeholder='Job Title'
                                 placeholderTextColor={brand.colors.silver}
                                 value={this.state.jobTitle}
-                                onChangeText={(text) => this.setState({jobTitle: text})}
+                                //onChangeText={(text) => this.setState({jobTitle: text})}
                     />
 
 
