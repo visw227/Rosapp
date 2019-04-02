@@ -24,10 +24,10 @@ let options = [
   {
     group: "Messages",
     data: [
-      {
-        type: "Email Notification",
-        selected: true
-      },
+      // {
+      //   type: "Email Notification",
+      //   selected: true
+      // },
       {
         type: "Push Notification",
         selected: true
@@ -37,10 +37,10 @@ let options = [
   {
     group: "Available Shifts",
     data: [
-      {
-        type: "Email Notification",
-        selected: true
-      },
+      // {
+      //   type: "Email Notification",
+      //   selected: true
+      // },
       {
         type: "Push Notification",
         selected: true
@@ -50,10 +50,10 @@ let options = [
   {
     group: "Shift Wanted",
     data: [
-      {
-        type: "Email Notification",
-        selected: true
-      },
+      // {
+      //   type: "Email Notification",
+      //   selected: true
+      // },
       {
         type: "Push Notification",
         selected: true
@@ -63,10 +63,10 @@ let options = [
   {
     group: "Work Calendar",
     data: [
-      {
-        type: "Email Notification",
-        selected: true
-      },
+      // {
+      //   type: "Email Notification",
+      //   selected: true
+      // },
       {
         type: "Push Notification",
         selected: true
@@ -106,29 +106,13 @@ class Settings extends React.Component {
 
   }
 
-  getDetails = (item, index, section) => {
-
-    return (
-
-      <ListItem
-
-          key={item.type + index}
-          style={{ padding:0, marginTop:-10 }}
-          switchButton
-          switched={this.state.showAvailableShifts}
-          hideChevron
-          title={item.type}
-          onSwitch={this.toggleShowAvailableShifts}
-
-      />
-
-    )
-  }
 
   componentDidMount () {
     let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+    this.props.navigation.setParams({ 
+      backgroundColor:this.props.screenProps.state.backgroundColor 
+    })
 
   }
 
@@ -139,10 +123,45 @@ class Settings extends React.Component {
     return (
 
 
-            <View style={Styles.container}>
-              <Text>Settings
-              </Text>
-            </View>
+ <ScrollView
+                style={{ backgroundColor: '#ffffff' }}
+                refreshControl={
+
+                <RefreshControl
+                    refreshing={this.state.receiving}
+                    onRefresh={this.loadData}
+                    tintColor={brand.colors.primary}
+                    title="Loading"
+                    titleColor={brand.colors.primary}
+                    //colors={['#ff0000', '#00ff00', '#0000ff']}
+                    progressBackgroundColor="#ffffff"
+                />
+                }
+                
+              >
+
+                <SectionList
+                    renderItem={({item, index, section}) => 
+                        <ListItem
+
+                            key={item.type + index}
+                            style={{ padding:0, marginTop:-10 }}
+                            switchButton
+                            switched={this.state.showAvailableShifts}
+                            hideChevron
+                            title={item.type}
+                            onSwitch={this.toggleShowAvailableShifts}
+
+                        />
+                    }
+                    renderSectionHeader={({section: {group}}) => (
+                        <Text style={Styles.sectionHeader}>{group}</Text>
+                    )}
+                    sections={options}
+                    keyExtractor={(item, index) => item.type + index}
+                />
+
+            </ScrollView>
 
 
     );

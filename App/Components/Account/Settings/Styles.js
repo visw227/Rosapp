@@ -5,13 +5,13 @@ import brand from '../../../Styles/brand'
 export default StyleSheet.create({
 
   sectionHeader: {
-    fontSize: 15,
+    fontSize: 16,
     paddingTop: 5,
     paddingBottom: 5,
-    paddingLeft: 5,
-    backgroundColor: brand.colors.secondary,
+    paddingLeft: 15,
+    backgroundColor: brand.colors.primary,
     color: brand.colors.white,
-    fontStyle: 'italic'
+    //fontStyle: 'italic'
   },
   // container: {
   //   flex: 1,
