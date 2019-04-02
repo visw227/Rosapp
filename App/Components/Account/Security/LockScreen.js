@@ -229,7 +229,7 @@ class LockScreen extends React.Component {
                                 disabled={this.state.sending} 
                                 style={styles.forgotPassword} 
                                 onPress={this.onContinue}>
-                                Continue (just during testing)
+                                Or, just continue for now...
                             </Text>
                         </View>
 

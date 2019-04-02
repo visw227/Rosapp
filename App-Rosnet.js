@@ -1161,7 +1161,7 @@ export default class App extends React.Component {
         if(this.state.userData) {
 
           let statusData = {
-            userLimit: 5000, // milliseconds
+            userLimit: 3000, // milliseconds
             ts: new Date().getTime() // add a timestamp to it for sorting
           }
 
