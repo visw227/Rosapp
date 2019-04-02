@@ -2,7 +2,20 @@
 // FaceID is not available in Expo Client. You can us…Expo app by providing `NSFaceIDUsageDescription
 
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Alert, Platform, Image } from 'react-native';
+import { 
+  Text, 
+  View, 
+  StyleSheet, 
+  TouchableOpacity, 
+  TouchableHighlight,
+  Alert, 
+  Platform, 
+  Image, 
+  AlertIOS,
+  KeyboardAvoidingView,
+  Animated,
+  ScrollView
+} from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
@@ -10,7 +23,19 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
 import brand from '../../../Styles/brand'
+import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
 
+import TouchID from 'react-native-touch-id'
+
+import logo from '../../../Images/logo-lg-white-square.png';
+import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
+
+//config is optional to be passed in on Android
+const touchConfig = {
+  title: "Authentication Required", // Android
+  color: "#e00606", // Android,
+  fallbackLabel: "Show Passcode" // iOS (if empty, then label is hidden)
+}
 
 
 class LockScreen extends React.Component {
@@ -25,13 +50,22 @@ class LockScreen extends React.Component {
   constructor(props) {
       super(props);
 
+      this.imageHeight = new Animated.Value(MAX_HEIGHT);
+
       this.state = {
+
+        requestStatus: {
+            hasError: false,
+            message: ""
+        },
         hasHardwareAsync: false,
         isEnrolledAsync: false, 
         authenticateAsync: false,
         compatible: false,
         fingerprints: false,
-        result: ''
+        result: '',
+        biometryType: null,
+        isQA: this.props.screenProps.state.isQA
       }
 
   }
@@ -41,30 +75,13 @@ class LockScreen extends React.Component {
 
     // this.checkDeviceForHardware();
     // this.checkForFingerprints();
+
+    TouchID.isSupported()
+    .then(biometryType => {
+      this.setState({ biometryType });
+    })
   }
-  
-  // checkDeviceForHardware = async () => {
-  //   let hasHardwareAsync = await Expo.LocalAuthentication.hasHardwareAsync();
-  //   this.setState({hasHardwareAsync})
 
-  //   console.log("hasHardwareAsync", hasHardwareAsync)
-  // }
-  
-  // checkForFingerprints = async () => {
-  //   let isEnrolledAsync = await Expo.LocalAuthentication.isEnrolledAsync();
-  //   this.setState({isEnrolledAsync})
-
-  //   console.log("isEnrolledAsync", isEnrolledAsync)
-  // }
-  
-  // getTouchFaceOrPasscode = async () => {
-  //   let result = await Expo.LocalAuthentication.authenticateAsync('Scan your finger.');
-  //   console.log('Authentication Result:', result)
-
-  //   if(result.success) {
-  //     this.letsContinue()
-  //   }
-  // }
 
   letsContinueForNow = () => {
 
@@ -90,72 +107,208 @@ class LockScreen extends React.Component {
     )
   }
   
+
+
+  clickHandler = () => {
+    TouchID.isSupported()
+      .then(this.authenticate)
+      .catch(error => {
+        console.log("error", error)
+        //AlertIOS.alert('TouchID not supported');
+        this.showAlert("TouchID not supported")
+      });
+  }
+
+  authenticate = () => {
+    return TouchID.authenticate()
+      .then(success => {
+        //AlertIOS.alert('Authenticated Successfully');
+
+         this.showAlert("Authenticated Successfully")
+      })
+      .catch(error => {
+        console.log("authenticate.catch(error) = ", error)
+        //AlertIOS.alert(error.message);
+        this.showAlert("Authentication error: " + error)
+      });
+  }
+
+
+  showAlert = (message) => {
+
+
+    this.setState({
+        sending: false, 
+        requestStatus: {
+            hasError: true,
+            message: message
+        }
+    })
+
+}
+
+
+    onContinue = () => {
+
+        // this should allow for the back button to appear in the header
+        this.props.navigation.navigate('Dashboard')
+
+    }
+
   render() {
+
+
+    chooseLogo = () => {
+        if(this.state.isQA) {
+            return (
+                <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+            )
+        }
+        else {
+            return (
+                <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+            )
+        }
+    }
+
+
     return (
-      <View style={styles.container}>
+          <KeyboardAvoidingView behavior="padding" style={Styles.container}>
+
+                <View style={Styles.logoContainer}>
+                    {/* <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} /> */}
+                    {chooseLogo()}
+                </View>
 
 
-        <Image resizeMode="contain" style={styles.logo} source={require('../../../Images/logo-sm.png')} />
-  
-        <Text style={styles.text}>
-          As an extra security measure, please press 'Continue' to access Rosnet using Face ID, Touch ID or your device passcode.
-        </Text>
+                <View style={Styles.formContainer}>
 
-        <TouchableOpacity onPress={this.letsContinueForNow} style={styles.button}>
-          <Text style={styles.buttonText}>
-            Continue
-          </Text>
-        </TouchableOpacity>
+                    <View style={{ 
+                        justifyContent: 'center', 
+                        alignItems: 'center',
+                        margin: 20,
+                        fontSize: 25,
+                        textAlign: 'center'
+                    }}>
+                        <Text style={styles.message}>
+                          As an extra security measure, Rosnet requires authentication using 
+                          Face ID, Touch ID, or your device passcode.
+                        </Text>
+                    </View>
 
-        <Text style={{ fontSize: 12, textAlign: 'center' }}>
-          hasHardwareAsync: {this.state.hasHardwareAsync === true ? 'True' : 'False' }, 
-          isEnrolledAsync: {this.state.isEnrolledAsync === true ? 'True' : 'False'}
-        </Text>
+                    <View style={styles.container}>
 
-      </View>
-    );
+
+                        {!this.state.sending && this.state.requestStatus.hasError &&
+                            <View style={{ 
+                                justifyContent: 'center', 
+                                alignItems: 'center',
+                                marginBottom: 15,
+                                marginTop: 10
+                            }}>
+                                <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
+                                    <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
+                                </ScrollView>
+                            </View>
+                        }
+
+                        <TouchableOpacity 
+                            style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
+                            onPress={this.clickHandler}>
+                            <Text 
+                              style={ this.state.sending ? styles.buttonDisabledText : styles.buttonText }>
+                              {`Authenticate with ${this.state.biometryType}`}
+                            </Text>
+                        </TouchableOpacity> 
+
+
+                        <View>
+                            <Text 
+                                disabled={this.state.sending} 
+                                style={styles.forgotPassword} 
+                                onPress={this.onContinue}>
+                                Continue (just during testing)
+                            </Text>
+                        </View>
+
+
+
+                    </View>
+                </View>
+         
+            </KeyboardAvoidingView>
+
+    )
+
   }
 
 }
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingTop: 20,
-    backgroundColor: brand.colors.white,
-    paddingLeft: 40,
-    paddingRight: 40
-  },
-    logoContainer:{
-        alignItems: 'center',
-        justifyContent: 'center'
+    container: {
+     padding: 20
     },
-    logo: {
-        // position: 'absolute',
-        // width: 400,
-        // height: 200
+    input:{
+        height: 40,
+        backgroundColor: '#ffffff',
+        marginBottom: 10,
+        padding: 10,
+        color: brand.colors.primary,
+        borderColor: brand.colors.primary, 
+        borderWidth: 1,
+        borderRadius: 10
     },
-  text: {
-    fontSize: 18,
-    textAlign: 'center'
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 150,
-    height: 50,
-    backgroundColor: '#056ecf',
-    borderRadius: 5
-  },
-  buttonText: {
-    fontSize: 25,
-    color: '#fff'   
-  }
+    buttonContainer:{
+        marginTop: 20,
+        backgroundColor: brand.colors.primary,
+        paddingVertical: 15,
+        borderRadius: 30,
+        borderColor: brand.colors.white, 
+        borderWidth: 2,
+    },
+    buttonText:{
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: '700'
+    }, 
+    buttonDisabledContainer:{
+        marginTop: 20,
+        backgroundColor: brand.colors.primary,
+        paddingVertical: 15,
+        borderRadius: 30,
+        borderColor: brand.colors.white, 
+        borderWidth: 2,
+        opacity: .1
+    },
+    buttonDisabledText:{
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: '700',
+        opacity: .8
+    }, 
+    loginButton:{
+        backgroundColor:  brand.colors.secondary,
+        color: '#fff'
+    },
+    forgotPassword:{
+        color: brand.colors.white,
+        fontSize: 14,
+        textAlign: 'center',
+        marginTop: 20
+    },
+    message: {
+      textAlign: 'center', 
+      paddingTop: 20, 
+      paddingLeft: 10, 
+      paddingRight: 10,
+      color: brand.colors.white,
+      fontSize: 15
+    }
+   
 });
-
 
 //make this component available to the app
 export default LockScreen;
