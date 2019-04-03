@@ -75,6 +75,13 @@ let LaunchStack = createStackNavigator({
 });
 
 let LockScreenStack = createStackNavigator({ LockScreen });
+// added this to introduce screenProps into the stack
+LockScreenStack.navigationOptions = ({ navigation, screenProps }) => {
+  return {
+    gesturesEnabled: false,
+    swipeEnabled: false
+  };
+};
 
 
 // *******************************************************************************
@@ -1103,12 +1110,42 @@ export default class App extends React.Component {
                 console.log("new token: ", resp.userData.token)
                 //userData.token = resp.userData.token // ONLY update the token
                 _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
+              
+                // see if the user needs to see the lock screen
+                AsyncStorage.getItem('statusData').then((data) => {
+
+                  if(data) {
+
+                    let statusData = JSON.parse(data)
+                    let currentTime = new Date().getTime() // in milliseconds
+
+                    if(currentTime - statusData.ts > statusData.userLimit) {
+                      console.log("+++ userLimit EXCEEEDED")
+
+                      // Feb 13, 2019 - Commenting out this feature until the business rules are more fully baked
+                      // this is needed since props.navigation isn't present for unmounted screen components
+                      NavigationService.navigate('LockStack');
+
+                    }
+                    else {
+                      console.log("+++ userLimit not exceeded")
+                    }
+
+                    console.log("+++++++++ STATUS ACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
+
+
+
+
+                  }
+
+                }) // end AsyncStorage
+
+              
               }
+
             })
 
-            // Feb 13, 2019 - Commenting out this feature until the business rules are more fully baked
-            // this is needed since props.navigation isn't present for unmounted screen components
-            //NavigationService.navigate('LockStack');
+
 
           }
           else {
@@ -1121,7 +1158,24 @@ export default class App extends React.Component {
       }
       else if (appState.match(/active/) && nextAppState === 'inactive') {
 
-          console.log('App has moved to the background')
+        if(this.state.userData) {
+
+          let statusData = {
+            userLimit: 3000, // milliseconds
+            ts: new Date().getTime() // add a timestamp to it for sorting
+          }
+
+          console.log("+++++++++ STATUS INACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
+
+          AsyncStorage.setItem('statusData', JSON.stringify(statusData))
+
+          // AsyncStorage.getItem('statusData').then((data) => {
+          //   let userData = JSON.parse(data)
+          // })
+
+        }
+          
+        console.log('App has moved to the background')
 
       }
 
