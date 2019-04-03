@@ -263,13 +263,17 @@ export default class DrawerContainer extends React.Component {
               iconSize={25}
             /> 
             }  
-            
+          
+          {/* // making sure userLevel exists - wont if user currently logged in */}
+          {this.props.screenProps.state.userData.userLevel && 
+            this.props.screenProps.state.userData.userLevel ===  1 && 
           <DrawerLabel
             icon={'user'}
-            label={'StaffLinQ Employees'}
+            label={'Staff List'}
             routeName={'StaffList'}
             iconSize={25}
           /> 
+          }
 
           <DrawerLabel
             icon={'user-circle-o'}

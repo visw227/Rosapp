@@ -22,7 +22,7 @@ import {
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { NavigationActions, StackActions } from 'react-navigation'
 //import Entypo from 'react-native-vector-icons/Entypo'
-import { parseUser } from '../../../Helpers/UserDataParser'
+
 import _ from 'lodash'
 import zxcvbn from 'zxcvbn'
 import brand from '../../../Styles/brand'

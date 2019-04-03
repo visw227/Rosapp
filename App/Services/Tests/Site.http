@@ -1,5 +1,12 @@
 
 
-GET http://aag.dywaynes-pc.com/api/ManagerAppSite/SecuritySettings
+GET https://aag.rosnetqa.com/api/ManagerAppSite/StaffList?location=2020011
 Content-Type: application/json
-managerAppToken: bf771ed4-8319-4472-bb18-9b10c36f4058
+managerAppToken: 24340d0f-1c25-43c8-8ddb-c68d2476ce52
+
+###
+
+
+GET https://aag.rosnetqa.com/api/ManagerAppSite/SecuritySettings
+Content-Type: application/json
+managerAppToken: 24340d0f-1c25-43c8-8ddb-c68d2476ce52

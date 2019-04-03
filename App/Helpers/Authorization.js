@@ -14,8 +14,7 @@ import {  AsyncStorage } from 'react-native';
 
 import { userLogin, verifyToken } from '../Services/Account';
 import { getMobileMenuItems } from '../Services/Menu';
-import { parseUser } from '../Helpers/UserDataParser';
-
+import { Parsers } from '../Helpers/Parsers';
 
 export var Authorization = {
 
@@ -122,7 +121,9 @@ export var Authorization = {
                 if(response && response.SecurityToken) {
 
                     // this repackages the response a bit...
-                    let userData = parseUser(response)
+                    //let userData = parseUser(response)
+                    let userData = Parsers.UserData(response)
+
                     // we are including password in the userData for the change password screen to have access the current password for validation
                     userData.password = password 
                     userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'

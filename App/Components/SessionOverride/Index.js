@@ -24,7 +24,7 @@ import FontAwesome5Free from 'react-native-vector-icons/FontAwesome5'
 
 import { searchUsers, impersonateUser } from '../../Services/SessionOverride';
 
-import { parseUser } from '../../Helpers/UserDataParser';
+import { Parsers } from '../../Helpers/Parsers';
 import { getMobileMenuItems } from '../../Services/Menu';
 
 class SearchUsers extends React.Component {
@@ -154,7 +154,7 @@ class SearchUsers extends React.Component {
         console.log("response", response)
 
         // get the data for the user we are impersonating
-        let impersonatedUser = parseUser(response)
+        let impersonatedUser = Parsers.UserData(response)
 
 
         getMobileMenuItems(impersonatedUser.selectedSite, impersonatedUser.token, function(err, menuItems){

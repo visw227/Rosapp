@@ -8,7 +8,8 @@ import {
   Text,
   AsyncStorage,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  ActivityIndicator
 } from 'react-native';
 
 import { List, ListItem } from 'react-native-elements'
@@ -24,18 +25,20 @@ import Styles from './Styles'
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
 
-let fakedData = require('../../Fixtures/StaffList')
-let fakedUserProfile = require('../../Fixtures/UserProfile')
 
-import { parseName, parsePhone } from '../../Helpers/Parser';
 import { dynamicSort } from '../../Helpers/DynamicSort';
+
+
+import { getStaffList } from '../../Services/Site';
+
+import SearchBar from '../ReusableComponents/SearchBar'
 
 
 class StaffListScreen extends React.Component {
 
   static navigationOptions = (navigate) => ({
 
-    title: 'StaffLinQ Employees',
+    title: 'Staff List',
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
@@ -61,27 +64,18 @@ class StaffListScreen extends React.Component {
     constructor(props) {
       super(props);
 
-      // faked data repackaging and sorting
-      fakedData.forEach(function(item){
-
-        item.name = parseName(item.name)
-        item.phone = parsePhone(item.phone)
-        item.sortKey = item.name.firstAndLast
-
-      })
-      fakedData.sort(dynamicSort('sortKey', 1)) 
 
 
       this.state = {
           sending: false,
-          receiving: false,
+          receiving: true,
           requestStatus: {
               hasError: false,
               message: ""
           },
           userToken: '',
-          userProfile: fakedUserProfile,
-          data: fakedData,
+          data: [],
+          filtered: [],
           selectedLocation: null
       }
 
@@ -91,9 +85,29 @@ class StaffListScreen extends React.Component {
 
   componentDidMount () {
 
+    let _this = this
+
     let userData = this.props.screenProps.state.userData
 
     this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+
+    getStaffList(userData.selectedSite, userData.token, userData.location || 2102019, function(err, resp){
+
+
+      if(err) {
+        console.log("error", error)
+      }
+      else {
+        console.log("success", resp)
+
+        _this.setState({
+          receiving: false,
+          data: resp,
+          filtered: resp
+        })
+      }
+
+    })
 
 
   }
@@ -139,43 +153,48 @@ class StaffListScreen extends React.Component {
 
   }
 
+  matchUsers = (query) => {
+
+    console.log("query", query)
+
+    let filtered = this.state.data.filter(item => item.name.firstAndLast.toLowerCase().indexOf(query.toLowerCase()) !== -1)
+
+    this.setState({
+      filtered: filtered
+    })
+
+  }
+
 
   render() {
     return (
 
         <View style={{ backgroundColor: '#ffffff', height: '100%' }}>
 
-          {this.state.userProfile && this.state.userProfile.locations && this.state.userProfile.locations.length > 1 &&
-          <View style={{ backgroundColor: '#ffffff' }}>
-              {/* // If there are more than 3 locations, you can reduce the font size below... */}
-              <LocationButtons 
-                  includeAll={false}
-                  fontSize={14}
-                  locations={this.state.userProfile.locations} 
-                  onSelection={this.handleLocationButtonSelection}/>
-          </View>
 
-          }
 
-          <ScrollView
-            style={{ backgroundColor: '#ffffff' }}
-            refreshControl={
 
-              <RefreshControl
-                refreshing={this.state.receiving}
-                onRefresh={this.loadData}
-                tintColor={brand.colors.primary}
-                title="Loading"
-                titleColor={brand.colors.primary}
-                //colors={['#ff0000', '#00ff00', '#0000ff']}
-                progressBackgroundColor="#ffffff"
-              />
+
+            <SearchBar
+              lightTheme={true}
+              color ='blue'
+              value={this.state.text}
+              placeholder='Search Staff List'
+              onChangeText = {(text)=> { this.matchUsers(text) }}/>
+
+
+            {this.state.receiving &&
+              <View style={{ 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  marginBottom: 15,
+                  marginTop: 10
+              }}>
+                  <ActivityIndicator size="large" color={brand.colors.primary} />
+              </View>
             }
-            
-          >
 
-
-
+          <ScrollView style={{ backgroundColor: '#ffffff' }}>
 
             {!this.state.receiving &&
 
@@ -185,11 +204,11 @@ class StaffListScreen extends React.Component {
 
 
                   {
-                    this.state.data.map((l, i) => (
+                    this.state.filtered.map((l, i) => (
 
 
                       <ListItem
-                          key={l.userId}
+                          key={l.employeeId}
                           roundAvatar
                           style={Styles.listItem}
                           title={l.name.firstAndLast}

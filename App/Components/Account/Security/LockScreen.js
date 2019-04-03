@@ -40,7 +40,7 @@ import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
 const touchConfig = {
     title: "Authentication Required", // Android
     color: "#e00606", // Android,
-    fallbackLabel: "Enter Passcode", // use empty string to hide "Show Passcode" when a device is FaceID or TouchID
+    fallbackLabel: "", // use empty string to hide "Show Passcode" when a device is FaceID or TouchID
     // iOS - ONLY allows the device to fall back to using the passcode, if faceid/touch is NOT available. 
     // this does not mean that if touchid/faceid fails the first few times it will revert to passcode, 
     // rather that if the former are not enrolled, then it will use the passcode.

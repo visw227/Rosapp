@@ -93,7 +93,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             let json = JSON.parse(xhr.response)
 
-            console.log("xhr.response", JSON.stringify(json, null, 2))
+            //console.log("xhr.response", JSON.stringify(json, null, 2))
 
             Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
 
