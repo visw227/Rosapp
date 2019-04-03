@@ -14,6 +14,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
 import brand from '../../../Styles/brand'
+import { alertTypes } from '../../../Services/Push';
+
 
 import Styles from './Styles'
 
@@ -101,30 +103,96 @@ class Settings extends React.Component {
               message: ""
           },
           userToken: '',
-          userProfile: null
+          userProfile: null,
+          alertOptions : [],
+          options : []
       }
 
   }
 
 
   componentDidMount () {
+    _this = this
+
+    var list = {}
+    var optionsman = []
+
     let userData = this.props.screenProps.state.userData
 
     this.props.navigation.setParams({ 
       backgroundColor:this.props.screenProps.state.backgroundColor 
     })
 
+    var client = this.props.screenProps.state.userData.selectedSite
+    var token = this.props.screenProps.state.userData.token
+
+
+    alertTypes (client,token ,function(err,resp) {
+      if (err){
+        console.log ('Error siteSettings',err)
+      }
+      else {
+        console.log('response',resp)
+        var alertTypes = []
+
+          resp.forEach(element => {
+            if(element.alert_category.toLowerCase() === 'stafflinq'){
+              alertTypes.push(element.alert_name)
+            }
+          });
+          console.log('modifiedresp',alertTypes)
+
+          _this.setState ({
+            alertOptions : alertTypes
+          }, ()=> console.log('AlertState',_this.state.alertOptions))
+
+        
+      }
+
+      })
+
+      
+
   }
 
 
   render() {
+    var optionsList = []
+     if(this.state.alertOptions.length > 0) {
 
+      for (i=0; i < this.state.alertOptions.length ; i++ ) {
+        
+        opts = Object.assign(
+         {},{  group:this.state.alertOptions[i] ,
+         data: [
+           // {
+           //   type: "Email Notification",
+           //   selected: true
+           // },
+           {
+             type: "Push Notification",
+             selected: true
+           },
+         ]}
+        )
+        optionsList.push(opts)
+       
+     }
+     
+     console.log ('optionsRa',optionsList)
+     
+
+     }
+
+
+    
 
     return (
-
+      
 
  <ScrollView
                 style={{ backgroundColor: '#ffffff' }}
+
                 refreshControl={
 
                 <RefreshControl
@@ -157,7 +225,7 @@ class Settings extends React.Component {
                     renderSectionHeader={({section: {group}}) => (
                         <Text style={Styles.sectionHeader}>{group}</Text>
                     )}
-                    sections={options}
+                    sections={optionsList}
                     keyExtractor={(item, index) => item.type + index}
                 />
 
