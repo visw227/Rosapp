@@ -93,10 +93,11 @@ export class Account extends React.Component {
      clientCode = this.props.screenProps.state
 
      let request = {
-         clientCode : this.props.screenProps.state.userData.selectedSite
+         clientCode : this.props.screenProps.state.userData.selectedSite,
+         token : this.props.screenProps.state.userData.token
      }
 
-    changePasswordAccess(request.clientCode,function(err,resp){
+    changePasswordAccess(request.clientCode,request.token,function(err,resp){
         if (err){
             console.log('error changePassAcc',err)
             _this.setState({

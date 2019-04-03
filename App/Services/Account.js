@@ -106,11 +106,11 @@ export function changePassword (request, token, callback) {
 }
 
 
-export function changePasswordAccess (request,callback) {
+export function changePasswordAccess (client,token,callback) {
 
   let url = '/api/ManagerAppAuth/changePasswordAccess'
 
-  serviceWrapper(url, 'GET', null,request,null,function(err,resp){
+  serviceWrapper(url, 'GET', null,client,token,function(err,resp){
     if (err){
       callback(err)
 
