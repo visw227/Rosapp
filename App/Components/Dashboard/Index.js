@@ -38,11 +38,6 @@ import Styles from './Styles'
 import appConfig from '../../app-config.json'
 
 
-import LocationButtons from '../ReusableComponents/LocationButtons'
-
-
-let fakedUserProfile = require('../../Fixtures/UserProfile')
-
 import { Authorization } from '../../Helpers/Authorization';
 
 
@@ -100,7 +95,6 @@ class DashboardScreen extends React.Component {
               hasError: false,
               message: ""
           },
-          userProfile: fakedUserProfile,
           userData: { sites: ["AAG", "DOHERTY"], selectedSite: "AAG" }
       }
 
@@ -115,6 +109,14 @@ class DashboardScreen extends React.Component {
 
     let selectedSite = nextProps.screenProps.state.userData.selectedSite
     let token = nextProps.screenProps.state.userData.token
+    let backgroundColor = nextProps.screenProps.state.backgroundColor
+
+    if(backgroundColor !== this.props.screenProps.state.backgroundColor){
+
+      this.props.navigation.setParams({ backgroundColor: backgroundColor })
+
+    }
+
 
         // ONLY if something has changed
     if(token !== this.state.userData.token){

@@ -33,6 +33,20 @@ export default class DrawerContainer extends React.Component {
 
   }
 
+  // this will catch any global state updates - via screenProps
+  componentWillReceiveProps(nextProps){
+
+      let backgroundColor = nextProps.screenProps.state.backgroundColor
+
+      if(backgroundColor !== this.props.screenProps.state.backgroundColor){
+
+        this.setState({backgroundColor : backgroundColor})
+
+      }
+
+  }
+
+
   logout = () => {
 
         console.log("logging out...")
@@ -90,12 +104,12 @@ export default class DrawerContainer extends React.Component {
       this.props.navigation.setParams({backgroundColor : brand.colors.primary})
 
       // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
-      this.props.screenProps._globalStateChange( { action: "undo-session-override", userData: userData, superUser: null, backgroundColor :brand.colors.primary })
+      this.props.screenProps._globalStateChange( { action: "undo-session-override", userData: userData })
 
       const resetAction = StackActions.reset({
         index: 0,
         key: null, // this is the trick that allows this to work
-        actions: [NavigationActions.navigate({ routeName: 'DrawerStack',params:{backgroundColor:brand.colors.danger} })],
+        actions: [NavigationActions.navigate({ routeName: 'DrawerStack'})],
     });
     console.log('<<color',this.props.screenProps.state)
     this.props.navigation.dispatch(resetAction);

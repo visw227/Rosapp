@@ -976,7 +976,8 @@ export default class App extends React.Component {
     _globalStateChange = (data) => {
 
 
-        console.log("GLOBAL STATE CHANGE:", data)
+        console.log("----------------------- GLOBAL STATE CHANGE -----------------------")
+        console.log("data", data)
 
         if(data.userData) {
 
@@ -990,7 +991,7 @@ export default class App extends React.Component {
 
           this.setState({
             superUser: data.superUser
-          }, () => console.log("global state change to superUSer", this.state.superUser ) )
+          }, () => console.log("global state change to superUser", this.state.superUser ) )
 
           
         }
@@ -1001,11 +1002,14 @@ export default class App extends React.Component {
           },() => console.log('global state change for bgColor',this.state.backgroundColor))
         }
 
-        if(data.action && data.action === "undo-session-override") {
+        // these actions force the app to reset back to the real user
+        if(data.action && (data.action === "undo-session-override" || data.action === "token-refresh") ) {
 
           this.setState({
-            superUser: null
-          }, () => console.log("global state change to superUSer", this.state.superUser ) )
+            userData: data.userData,
+            superUser: null,
+            backgroundColor: brand.colors.primary
+          }, () => console.log("--- global state change back to real user", data.userData ) )
 
 
         }
@@ -1109,6 +1113,8 @@ export default class App extends React.Component {
                 console.log("old token: ", userData.token)
                 console.log("new token: ", resp.userData.token)
                 //userData.token = resp.userData.token // ONLY update the token
+
+                // if we are refreshing the token, we must reset all global state attributes back to defaults as well
                 _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
               
                 // see if the user needs to see the lock screen
@@ -1161,7 +1167,7 @@ export default class App extends React.Component {
         if(this.state.userData) {
 
           let statusData = {
-            userLimit: 3000, // milliseconds
+            userLimit: 15000, // milliseconds - make long enough to test chat and text without seeing LockScreen
             ts: new Date().getTime() // add a timestamp to it for sorting
           }
 
