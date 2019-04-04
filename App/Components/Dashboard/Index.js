@@ -179,7 +179,7 @@ class DashboardScreen extends React.Component {
   componentDidMount() {
 
     // hijack the route here when developing specific features
-    // this.props.navigation.navigate('StaffList')
+    // this.props.navigation.navigate('Password')
 
 
     let _this = this 

@@ -82,7 +82,7 @@ const strengthLevels = [
 ];
 
 
-class Profile extends React.Component {
+class PasswordChange extends React.Component {
 
   // this is a child/nested screen in the SchedulesStack
   // Look at SchedulesStack for tricks with hiding the tabBar and hiding the back button title
@@ -350,4 +350,4 @@ const styles = StyleSheet.create({
 
 
 //make this component available to the app
-export default Profile;
+export default PasswordChange;

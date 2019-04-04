@@ -1,13 +1,5 @@
 import { serviceWrapper } from './ServiceWrapper'
-import { Parsers } from '../Helpers/Parsers'
 
-/*
-
-  {
-    Timeout_Mins: 180
-  }
-  
-*/
 
 export function getSecuritySettings(client, token, callback) {
 
