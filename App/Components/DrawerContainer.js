@@ -282,7 +282,7 @@ export default class DrawerContainer extends React.Component {
           {this.props.screenProps.state.userData.userLevel && 
             this.props.screenProps.state.userData.userLevel ===  1 && 
           <DrawerLabel
-            icon={'user'}
+            icon={'users'}
             label={'Staff List'}
             routeName={'StaffList'}
             iconSize={25}
