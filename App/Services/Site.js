@@ -1,5 +1,5 @@
 import { serviceWrapper } from './ServiceWrapper'
-
+import { Parsers } from '../Helpers/Parsers'
 
 export function getSecuritySettings(client, token, callback) {
 

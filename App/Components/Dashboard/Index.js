@@ -47,7 +47,7 @@ class DashboardScreen extends React.Component {
 
   static navigationOptions = (navigate) => ({
 
-     title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Dashboard': navigate.navigation.state.params.title,
+    title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Dashboard': navigate.navigation.state.params.title,
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
