@@ -1095,6 +1095,8 @@ export default class App extends React.Component {
       if (appState.match(/background/) && nextAppState === 'active') {
 
           console.log('App has moved to the foreground')
+          console.log("+++++++++ STATUS ACTIVE ++++++++++", this.state.userData)
+
 
           if(this.state.userData) {
 
@@ -1108,14 +1110,31 @@ export default class App extends React.Component {
                 console.log("err refreshing token", err)
               }
               else {
+
+
                 console.log("successfully refreshed token", resp)
+
                 let userData = _this.state.userData
+
                 console.log("old token: ", userData.token)
                 console.log("new token: ", resp.userData.token)
-                //userData.token = resp.userData.token // ONLY update the token
+
+                // ONLY update certain things - KEEP userData.selectedSite
+                userData.token = resp.userData.token // update the token
+                userData.sites = resp.userData.sites // update in clase changed
+                // just in case the user's selected site is no longer in their list of sites
+                var selectedSiteStillValid = userData.sites.includes(userData.selectedSite)
+                if(selectedSiteStillValid === false && userData.selectedSites.length > 0) {
+                  userData.selectedSite = userData.sites[0]
+                }
+
+                console.log("+++++ updated userData token, sites:", userData)
+
+                // save to local storage
+                AsyncStorage.setItem('userData', JSON.stringify(userData))
 
                 // if we are refreshing the token, we must reset all global state attributes back to defaults as well
-                _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
+                _this._globalStateChange( { action: "token-refresh", userData: userData })
               
                 // see if the user needs to see the lock screen
                 AsyncStorage.getItem('statusData').then((data) => {
@@ -1137,7 +1156,7 @@ export default class App extends React.Component {
                       console.log("+++ userLimit not exceeded")
                     }
 
-                    console.log("+++++++++ STATUS ACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
+                    console.log("---------- STATUS ACTIVE ----------", JSON.stringify(statusData, null, 2))
 
 
 
@@ -1167,17 +1186,13 @@ export default class App extends React.Component {
         if(this.state.userData) {
 
           let statusData = {
-            userLimit: 15000, // milliseconds - make long enough to test chat and text without seeing LockScreen
+            userLimit: 5000, // milliseconds - make long enough to test chat and text without seeing LockScreen
             ts: new Date().getTime() // add a timestamp to it for sorting
           }
 
           console.log("+++++++++ STATUS INACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
 
           AsyncStorage.setItem('statusData', JSON.stringify(statusData))
-
-          // AsyncStorage.getItem('statusData').then((data) => {
-          //   let userData = JSON.parse(data)
-          // })
 
         }
           

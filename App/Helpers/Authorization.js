@@ -148,15 +148,9 @@ export var Authorization = {
                             userData.menuItems = menuItems
 
 
-                            // let redirect = null
-                            // if(userData.mustChangePassword) {
-                            //     redirect = "PasswordChangeRequiredStack"
-                            // }
-                            
-                            //_this.onLoginResponse(userData, redirect)
-
+                            // DO NOT UPDATE local storage HERE!!!!!!
                             // stringify the object before storing
-                            AsyncStorage.setItem('userData', JSON.stringify(userData))
+                            //AsyncStorage.setItem('userData', JSON.stringify(userData))
 
                             // return the userData and redirect if required
                             callback(null, { userData: userData })

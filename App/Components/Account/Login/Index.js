@@ -205,8 +205,6 @@ class Login extends Component {
             }
         })
 
-        // AsyncStorage.setItem('userEmail', this.state.email)
-        // AsyncStorage.setItem('userPassword', this.state.password)
 
         console.log("submitting...", this.state.userName, this.state.password)
 
@@ -284,6 +282,9 @@ class Login extends Component {
                         if(resp.userData.mustChangePassword) {
                             redirect = "PasswordChangeRequiredStack"
                         }
+
+                        // save to local storage
+                        AsyncStorage.setItem('userData', JSON.stringify(resp.userData))
                         
                         _this.onLoginResponse(resp.userData, redirect)
 
