@@ -181,7 +181,7 @@ export class Account extends React.Component {
                       }
                       avatar={<Avatar rounded medium
                           overlayContainerStyle={{backgroundColor: '#31B0D5'}}
-                          icon={{name: 'unlock', type: 'font-awesome'}}/>}
+                          icon={{name: 'lock', type: 'font-awesome'}}/>}
                       
                       onPress={() => this.props.navigation.navigate('Password') }
                   
