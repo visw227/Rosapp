@@ -10,7 +10,8 @@ import {
   AsyncStorage,
   TextInput,
   KeyboardAvoidingView,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard
 } from 'react-native';
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -20,6 +21,7 @@ import brand from '../../../Styles/brand'
 
 // import Styles from './Styles'
 
+import { updateProfile } from '../../../Services/User';
 
 
 import AvatarInitials from '../../ReusableComponents/AvatarInitials'
@@ -67,7 +69,7 @@ class Profile extends React.Component {
             message: ""
         },
         userData: this.props.screenProps.state.userData,
-        jobTitle: '',
+        jobTitle: this.props.screenProps.state.userData.jobTitle,
         email: '',
         phone: '',
         shareEmail: false,
@@ -92,15 +94,11 @@ class Profile extends React.Component {
 
   handleSubmit = () => {
 
-    // Alert.alert(
-    //   'Please Confirm',
-    //   'Are you sure that you would like to send this alert?',
-    //   [
-    //     {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    //     {text: 'Yes', onPress: () => this.sendRequest() },
-    //   ],
-    //   { cancelable: false }
-    // )
+    Keyboard.dismiss()
+
+    let _this = this
+
+    let userData = this.props.screenProps.state.userData
 
     this.setState({
       sending: true,
@@ -110,22 +108,49 @@ class Profile extends React.Component {
       },
     })
 
-    setTimeout(this.confirmChange, 500);
+    let request = {
+      jobTitle: this.state.jobTitle
+    }
+
+    updateProfile(this.props.screenProps.state.userData.selectedSite, this.props.screenProps.state.userData.token, request, function(err, resp){
+
+      if(err) {
+
+        _this.setState({
+          sending: false,
+          requestStatus: {
+              hasError: true,
+              message: err
+          },
+        })
+      }
+      else {
+
+        userData.jobTitle = _this.state.jobTitle
+
+        // this shares the persisted userData to the App-Rosnet.js wrapper
+        _this.props.screenProps._globalStateChange( { action: "profile-update", userData: userData })
+
+        // save to local storage
+        AsyncStorage.setItem('userData', JSON.stringify(userData))
 
 
-  }
+        _this.setState({
+          sending: false,
+          requestStatus: {
+              hasError: false,
+              message: "Your profile has been updated."
+          },
+        })
+        
+      }
 
-  confirmChange = () => {
 
-    this.setState({
-      sending: false,
-      requestStatus: {
-          hasError: false,
-          message: "Your profile has been updated."
-      },
     })
 
   }
+
+
 
 
 

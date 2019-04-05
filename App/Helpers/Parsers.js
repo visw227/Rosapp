@@ -16,7 +16,8 @@ export var Parsers = {
             isRosnetEmployee: response.Rosnet_Employee,
             mustChangePassword: response.Must_Change_Password,
             userLevel: response.Browse_User_Level,
-            location: response.Browse_Linkto_Location // usually null except for userLevel 1
+            location: response.Browse_Linkto_Location, // usually null except for userLevel 1
+            jobTitle: response.Job_Title
         }
 
         // sort before persisting
