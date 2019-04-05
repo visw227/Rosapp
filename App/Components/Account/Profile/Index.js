@@ -191,11 +191,16 @@ class Profile extends React.Component {
               {/* {member.photo && member.photo.length > 0 &&
                 <Text style={{ color: brand.colors.secondary, paddingTop: 20, paddingBottom: 10 }}>Change Photo</Text>
               }
-              {!member.photo || member.photo === '' && */}
+              {!member.photo || member.photo === '' && 
                 <Text style={{ color: brand.colors.secondary, paddingTop: 0, paddingBottom: 10 }}>Add Photo</Text>
-              {/* } */}
+              }  */}
 
               <Text style={styles.name}>{this.props.screenProps.state.userData.commonName}</Text>
+
+                <Text style={styles.info}>{this.props.screenProps.state.userData.email}</Text>
+                <Text style={styles.info}>{this.props.screenProps.state.userData.phone}</Text>
+
+    
 
           </View>
 
@@ -203,22 +208,22 @@ class Profile extends React.Component {
           {/* <Text style={styles.inputLabel} >Email</Text> */}
 
 
-          <TextInput style={styles.input} 
+          {/* <TextInput style={styles.input} 
               autoCapitalize="none" 
               autoCorrect={false} 
               keyboardType='email-address' 
               placeholder='Email Address'
               value={this.props.screenProps.state.userData.email}
               onChangeText={(text) => this.setState({email: text})}
-          />
+          /> */}
 
           {/* <Text style={styles.inputLabel} >Phone</Text> */}
 
-          <TextInput style={styles.input} 
+          {/* <TextInput style={styles.input} 
               placeholder='Phone Number'
               value={'555-555-5555'}
               onChangeText={(text) => this.setState({phone: text})}
-          />
+          /> */}
 
 
           {/* <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -245,7 +250,7 @@ class Profile extends React.Component {
           </View>
           */}
 
-            {/* <Text style={styles.inputLabel} >Job Title</Text> */}
+             <Text style={styles.inputLabel} >Job Title</Text> 
 
             <TextInput style={styles.input} 
                         autoCapitalize="none" 
@@ -324,11 +329,18 @@ const styles = StyleSheet.create({
       color: brand.colors.gray,
       fontWeight: "600"
     },
-  bodyContent: {
-    // flex: 1,
-    alignItems: 'center',
-    padding:30,
-  },
+    info:{
+      fontSize:16,
+      color: brand.colors.gray,
+      marginTop:10,
+      marginBottom: 0,
+      textAlign: 'center'
+    },
+    bodyContent: {
+      // flex: 1,
+      alignItems: 'center',
+      padding:30,
+    },
    
 });
 
