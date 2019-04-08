@@ -90,9 +90,9 @@ class SupportRequest extends React.Component {
           message: ""
       },
       wasAlreadySent: false,
-      subject: 'Test by ' + this.props.screenProps.state.userData.userName,
-      location: ts,
-      description: 'Delete this but please email me at ' + this.props.screenProps.state.userData.email + ' so that I know that this was received by ZenDesk',
+      subject: '', //Test by ' + this.props.screenProps.state.userData.userName,
+      location: '', //ts,
+      description: '', //Delete this but please email me at ' + this.props.screenProps.state.userData.email + ' so that I know that this was received by ZenDesk',
       deviceId: deviceId,
       version: appVersion,
       appBuild: appBuild,
