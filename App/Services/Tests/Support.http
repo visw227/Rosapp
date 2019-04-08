@@ -1,4 +1,4 @@
-POST https://aag.rosnetqa.com/zendesk/ReportIssue
+POST https://aag.rosnetqa.com/api/ManagerAppZendesk/ReportIssue
 Content-Type: application/json
 managerAppToken: 683afef6-ae2a-47ad-9a25-ec481d6488dc
 

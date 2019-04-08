@@ -13,6 +13,9 @@ import {
   ActivityIndicator,
   Keyboard
 } from 'react-native';
+
+import moment from 'moment'
+
 import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
@@ -77,6 +80,7 @@ class SupportRequest extends React.Component {
     let deviceBrand = DeviceInfo.getBrand()
     let deviceModel = DeviceInfo.getModel()
  
+    let ts =  moment().format('dddd, MMM Do') + ' @  ' +  moment().format('h:mm:ss A')
 
     this.state = {
       sending: false,
@@ -85,9 +89,10 @@ class SupportRequest extends React.Component {
           hasError: false,
           message: ""
       },
-      subject: '',
-      location: '',
-      description: '',
+      wasAlreadySent: false,
+      subject: 'Test by ' + this.props.screenProps.state.userData.userName,
+      location: ts,
+      description: 'Delete this but please email me at ' + this.props.screenProps.state.userData.email + ' so that I know that this was received by ZenDesk',
       deviceId: deviceId,
       version: appVersion,
       appBuild: appBuild,
@@ -143,6 +148,17 @@ class SupportRequest extends React.Component {
       })
 
     }
+    else if(this.state.wasAlreadySent) {
+
+      this.setState({
+        sending: false,
+        requestStatus: {
+            hasError: true,
+            message: "This support request has already been sent."
+        },
+      })
+
+    }
     else {
       this.onSubmitPress()
     }
@@ -172,7 +188,7 @@ class SupportRequest extends React.Component {
 
     reportIssue (this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
       if(err){
-        console.log('<<errror reporting Issue',err)
+        console.log('errror reporting Issue',err)
 
         _this.setState({
           sending: false,
@@ -180,19 +196,21 @@ class SupportRequest extends React.Component {
               hasError: true,
               message: err.message
           },
+          wasAlreadySent: true
         })
 
 
       }
       else {
-        console.log('<<<Issue reported successfully')
+        console.log('issue reported successfully')
 
         _this.setState({
           sending: false,
           requestStatus: {
               hasError: false,
-              message: resp.message
+              message: "Your support request was sent successfully."
           },
+          wasAlreadySent: true
         })
 
       }
@@ -216,11 +234,11 @@ class SupportRequest extends React.Component {
 
 
             <TextInput style={styles.input}   
-                    ref={input => { this.textInput = input }}
+                    //ref={input => { this.textInput = input }}
                     //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
                     placeholder='What is the issue' 
                     placeholderTextColor={brand.colors.silver}
-                    //value={this.state.password}
+                    value={this.state.subject}
                     onChangeText={(subject) => this.setState({subject})}
             />
 
@@ -229,10 +247,10 @@ class SupportRequest extends React.Component {
             <TextInput style={styles.input}   
                     returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
                     placeholder='Screen where issue exists' 
-                    ref={input => { this.confirmPassInput = input }}
+                    //ref={input => { this.confirmPassInput = input }}
                     //editable = {this.state.validated}
                     placeholderTextColor={brand.colors.silver}
-                    //value={this.state.password}
+                    value={this.state.location}
                     onChangeText= {(location) => this.setState({location})}
             />
    
@@ -241,10 +259,11 @@ class SupportRequest extends React.Component {
                  
             <TextInput  style={[styles.input, styles.textArea]}
               multiline 
-              returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
+              //returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
               placeholder='Explain in brief what the issue is' 
               ref={input => { this.confirmPassInput = input }}
               placeholderTextColor={brand.colors.silver}
+              value={this.state.description}
               onChangeText= {(description) => this.setState({description})}
             />
                 
@@ -294,7 +313,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     textArea: {
-      height: 60
+      height: 100
     },
     inputLabel: {
       color: brand.colors.primary,
