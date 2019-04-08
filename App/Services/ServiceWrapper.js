@@ -129,17 +129,36 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
         } 
         else {
 
+            // BE AWARE - PC4 responses are VERY unpredictable
+            // They can be text strings, HTML, or a JSON object... have fun
+
+            console.log("xhr._response", xhr._response)
             let message = xhr._response
 
             if(message.indexOf('{') !== -1) {
-                let json = JSON.parse(message)
+
                 console.log("error is JSON", JSON.stringify(json, null, 2))
+
+                let json = JSON.parse(message)
+
 
                 message = (json.Message || "") + " " + (json.ExceptionMessage || "")
             }
+            else if(message.indexOf('<') !== -1) {
 
-            // strip out any extra quotes from response - e.g. _response: ""The email address is not associated with any sites""
-            message = Utils.ReplaceAll(message, '"', '')
+                console.log("error is HTML", message)
+                message = "An error occurred, but the response was HTML so unable to parse."
+            }
+            else {
+
+                console.log("error MAY just be a string", message)
+
+                // strip out any extra quotes from response - e.g. _response: ""The email address is not associated with any sites""
+                message = Utils.ReplaceAll(message, '"', '')
+
+            }
+
+
 
             // What to do when the request has failed
             console.log('something went wrong', xhr);

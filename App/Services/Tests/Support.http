@@ -1,7 +1,11 @@
 POST https://aag.rosnetqa.com/zendesk/ReportIssue
 Content-Type: application/json
-managerAppToken: 683f731b-b031-4636-8b03-75d5ab499b75
+managerAppToken: 683afef6-ae2a-47ad-9a25-ec481d6488dc
 
 {
-    "subject" : "hey"
+  "subject": "Test by Dywayne",
+  "description": "Description goes here...",
+  "location": "Location goes here...",
+  "browser": "appVersion: 1.0, appBuild: 1, deviceId: 825108DD-177A-4952-8C5F-82C401619711, deviceBrand: Apple, deviceModel: iPhone X, osVersion: 12.1",
+  "value": null
 }

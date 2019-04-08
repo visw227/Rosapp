@@ -78,7 +78,7 @@ class Login extends Component {
 
                 _this.setState({
                     userName: loginData.userName,
-                    password: loginData.password
+                    password: '' //loginData.password
                 })
             }
 
