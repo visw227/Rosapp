@@ -123,7 +123,7 @@ class Settings extends React.Component {
       backgroundColor:this.props.screenProps.state.backgroundColor 
     })
 
-    var client = this.props.screenProps.state.userData.selectedSite
+    var client = this.props.screenProps.state.selectedClient
     var token = this.props.screenProps.state.userData.token
 
 

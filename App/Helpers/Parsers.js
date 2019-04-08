@@ -28,8 +28,6 @@ export var Parsers = {
             userData.sites = [""] // make sure something is there to assign sites[0] elsewhere
         }
 
-        userData.selectedSite = userData.sites[0]
-
         console.log("Parsers.UserData", userData)
 
         return userData

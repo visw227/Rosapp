@@ -78,7 +78,7 @@ class Login extends Component {
 
                 _this.setState({
                     userName: loginData.userName,
-                    password: "" //loginData.password
+                    password: loginData.password
                 })
             }
 
@@ -232,13 +232,10 @@ class Login extends Component {
                     password: this.state.password,
                     sites: [ "AAG", "DOHERTY" ],
                     isRosnetEmployee: false,
-                    selectedSite: "AAG",
                     menuItems: fakedMenu,
                     isRosnetEmployee: true,
                     mustChangePassword: true
                 }
-
-                AsyncStorage.setItem('userData', JSON.stringify(userData))
 
                 let redirect = null
                 if(userData.mustChangePassword) {
@@ -283,9 +280,7 @@ class Login extends Component {
                             redirect = "PasswordChangeRequiredStack"
                         }
 
-                        // save to local storage
-                        AsyncStorage.setItem('userData', JSON.stringify(resp.userData))
-                        
+
                         _this.onLoginResponse(resp.userData, redirect)
 
                     }
@@ -307,10 +302,34 @@ class Login extends Component {
 
     onLoginResponse = (userData, redirect) => {
 
-        console.log("userData passed back to login screen:", JSON.stringify(userData, null, 2))
+        //console.log("userData passed back to login screen:", JSON.stringify(userData, null, 2))
 
         // this shares the persisted userData to the App-Rosnet.js wrapper
         this.props.screenProps._globalStateChange( { action: "login", userData: userData })
+
+
+        AsyncStorage.getItem('selectedClient').then((selectedClient) => {
+
+            if(selectedClient) {
+
+                // just in case the user's selected site is no longer in their list of sites
+                // reset the selectedClient back to the first in their list
+                if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
+                  selectedClient = userData.sites[0]
+                }
+
+
+            }
+            else {
+                if(userData.sites.length > 0) {
+                  selectedClient = userData.sites[0]
+                }
+            }
+
+            // tell everyone listening about the selectedClient
+            this.props.screenProps._globalStateChange( { action: "login", selectedClient: selectedClient })
+
+        })
 
         if(redirect) {
 

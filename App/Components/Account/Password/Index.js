@@ -168,7 +168,7 @@ class Password extends React.Component {
 
     _this = this
 
-    getSecuritySettings (userData.selectedSite, userData.token, function(err, resp) {
+    getSecuritySettings (this.props.screenProps.state.selectedClient, userData.token, function(err, resp) {
 
       if (err){
         console.log ('error receiving security settings',err)
@@ -296,7 +296,7 @@ class Password extends React.Component {
             userId: this.props.screenProps.state.userData.userId, 
             email: this.props.screenProps.state.userData.email,
             password: this.state.newPassword,
-            clientCode : this.props.screenProps.state.userData.selectedSite
+            clientCode : this.props.screenProps.state.selectedClient
         }
 
         console.log("change password request", JSON.stringify(request, null, 2))
@@ -356,7 +356,6 @@ class Password extends React.Component {
 
               userData.password = _this.state.newPassword
 
-              AsyncStorage.setItem('userData', JSON.stringify(userData))
 
               // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
               AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))

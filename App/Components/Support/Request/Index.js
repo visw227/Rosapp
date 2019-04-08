@@ -129,7 +129,7 @@ class SupportRequest extends React.Component {
       value : this.state.imageData,
       
     }
-      reportIssue (userData.selectedSite, userData.token,request, function(err,rsp){
+      reportIssue (this.props.screenProps.state.selectedClient, userData.token,request, function(err,rsp){
         if(err){
           console.log('<<errror reporting Issue',err)
         }

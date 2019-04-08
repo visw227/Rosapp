@@ -56,7 +56,7 @@ export default class DrawerContainer extends React.Component {
         AsyncStorage.removeItem('userData', function(err){
 
           // this API request will delete the user's token from the database and other stuff
-          userLogout(_this.props.screenProps.state.userData.selectedSite, _this.props.screenProps.state.userData.token, function(err,resp){
+          userLogout(_this.props.screenProps.state.selectedClient, _this.props.screenProps.state.userData.token, function(err,resp){
 
             // dont wait on this to happen. Slow in QA a lot of the time
 

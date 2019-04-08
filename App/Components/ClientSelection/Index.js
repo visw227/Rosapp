@@ -51,31 +51,6 @@ export class About extends React.Component {
         onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
     />,
 
-    // headerRight : 
-    //   <View style={{
-    //     alignItems: 'center',
-    //     flexDirection: 'row',
-    //     height: 40,
-    //     paddingRight: 10,
-    //     width: '100%'
-    //   }}>
-    //     <FontAwesome
-    //         name="pencil-square-o"
-    //         size={30}
-    //         color={brand.colors.white}
-    //         style={{ paddingRight: 10 }}
-    //         onPress={() => navigate.navigation.navigate('EditAvailability') }
-    //     />
-    //   </View>,
-
-    // The drawerLabel is defined in DrawerContainer.js
-    // drawerLabel: 'Availability',
-    // drawerIcon: ({ tintColor }) => (
-    //   <Image
-    //     source={require('../Images/TabBar/calendar-7.png')}
-    //     style={[Styles.icon, {tintColor: tintColor}]}
-    //   />
-    // ),
   })
 
   // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
@@ -99,9 +74,10 @@ export class About extends React.Component {
               hasError: false,
               message: ""
           },
-          userData: { sites: ["AAG", "DOHERTY"], selectedSite: "" },
-          filtered: [ "AAG"],
-          changed: false
+          userData: this.props.screenProps.state.userData,
+          filtered: this.props.screenProps.state.userData.sites,
+          changed: false,
+          selectedClient: this.props.screenProps.state.selectedClient
 
       }
 
@@ -127,42 +103,42 @@ export class About extends React.Component {
 
     let _this = this 
 
-    let userData = this.props.screenProps.state.userData
+    //let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
-
-
-    console.log("ClientSelection", userData)
-
-    this.props.navigation.setParams({ menuIconClickHandler: this.onMenuIconClick })
-    
-    
-    _this.setState({
-      userData: userData,
-      filtered: userData.sites
+    this.props.navigation.setParams({ 
+      title: this.props.screenProps.state.selectedClient,
+      backgroundColor:this.props.screenProps.state.backgroundColor,
+      menuIconClickHandler: this.onMenuIconClick
     })
+
+
+    // console.log("ClientSelection", userData)
+
+    
+    // _this.setState({
+    //   userData: userData,
+    //   filtered: userData.sites
+    // })
 
     
   }
 
  
 
-  onSelectedSite = (value) => {
+  onSelectedClient = (client) => {
 
-    console.log("changed site", value)
+    console.log("changed site", client)
 
-    let userData = this.state.userData
-    userData.selectedSite = value
 
     this.setState({
-      userData: userData,
       changed: true,
-      receiving: true
+      receiving: true,
+      selectedClient: client
     }, () => 
   
-      // just to prove to QA that something has happened when the user selects a site
+      // just to prove to the user that something has happened when the user selects a site
       setTimeout(() => {
-        this.doClientChange()
+        this.doClientChange(client)
       }, 1000)
 
    );
@@ -170,17 +146,17 @@ export class About extends React.Component {
 
   }
 
-  doClientChange = () => {
+  doClientChange = (client) => {
 
-      // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
-      this.props.screenProps._globalStateChange( { action: "change-client", userData: this.state.userData })
+    // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
+    this.props.screenProps._globalStateChange( { action: "change-client", selectedClient:  client })
 
-      const resetAction = StackActions.reset({
-          index: 0,
-          key: null, // this is the trick that allows this to work
-          actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
-      });
-      this.props.navigation.dispatch(resetAction);
+    const resetAction = StackActions.reset({
+        index: 0,
+        key: null, // this is the trick that allows this to work
+        actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+    });
+    this.props.navigation.dispatch(resetAction);
 
   }
 
@@ -198,7 +174,7 @@ export class About extends React.Component {
 
   getAvatar = (item) => {
 
-    if(item === this.state.userData.selectedSite) {
+    if(item === this.state.selectedClient) {
       return (
           <Avatar rounded medium
                   overlayContainerStyle={{backgroundColor: 'green'}}
@@ -264,7 +240,7 @@ export class About extends React.Component {
                           marginBottom: 15,
                           marginTop: 10
                       }}>
-                          <Text style={{color: brand.colors.primary }}>Changing site to {this.state.userData.selectedSite}...</Text>
+                          <Text style={{color: brand.colors.primary }}>Changing site to {this.state.selectedClient}...</Text>
                       </View>
                     }
 
@@ -298,7 +274,7 @@ export class About extends React.Component {
                                       
                                   avatar={this.getAvatar(item)}
                                   
-                                  onPress={() => { this.onSelectedSite(item) }}
+                                  onPress={() => { this.onSelectedClient(item) }}
                               
                               />
                             ))

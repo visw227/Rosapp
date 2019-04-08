@@ -95,7 +95,8 @@ class DashboardScreen extends React.Component {
               hasError: false,
               message: ""
           },
-          userData: { sites: ["AAG", "DOHERTY"], selectedSite: "AAG" }
+          userData: this.props.screenProps.state.userData,
+          selectedClient: this.props.screenProps.state.selectedClient
       }
 
 
@@ -107,7 +108,7 @@ class DashboardScreen extends React.Component {
   // this will catch any global state updates - via screenProps
   componentWillReceiveProps(nextProps){
 
-    let selectedSite = nextProps.screenProps.state.userData.selectedSite
+    let selectedClient = nextProps.screenProps.state.selectedClient
     let token = nextProps.screenProps.state.userData.token
     let backgroundColor = nextProps.screenProps.state.backgroundColor
 
@@ -122,13 +123,11 @@ class DashboardScreen extends React.Component {
     if(token !== this.state.userData.token){
 
       console.log("Dashboard picked up new token: ", token)
-
-      let userData = this.props.screenProps.state.userData
       
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        uri: "https://" + selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
         headers: {
           "managerAppToken":  token
         }
@@ -138,25 +137,24 @@ class DashboardScreen extends React.Component {
 
       
       this.setState({ 
-        userData: userData,
         source: source
       });
 
     }
 
     // ONLY if something has changed
-    if(selectedSite !== this.state.userData.selectedSite){
+    if(selectedClient !== this.state.selectedClient){
 
-      console.log("Dashboard picked up new selectedSite: ", selectedSite)
+      console.log("Dashboard picked up new selectedClient: ", selectedClient)
 
-      this.props.navigation.setParams({ title: selectedSite })
+      this.props.navigation.setParams({ title: selectedClient })
 
       let userData = this.props.screenProps.state.userData
       
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://" + selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        uri: "https://" + selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
         headers: {
           "managerAppToken":  userData.token
         }
@@ -166,7 +164,7 @@ class DashboardScreen extends React.Component {
 
       
       this.setState({ 
-        selectedSite: selectedSite,
+        selectedClient: selectedClient,
         source: source
       });
 
@@ -186,12 +184,15 @@ class DashboardScreen extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+    this.props.navigation.setParams({ 
+      title: this.props.screenProps.state.selectedClient,
+      backgroundColor:this.props.screenProps.state.backgroundColor 
+    })
 
     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
     console.log("----------------- Dashboard ----------------------")
-    console.log("Authorization.VerifyToken", userData.selectedSite, userData.token)
+    console.log("Authorization.VerifyToken",this.props.screenProps.state.selectedClient, userData.token)
 
 
     // this provides shared logging via screenProps
@@ -199,7 +200,7 @@ class DashboardScreen extends React.Component {
 
 
     // this verifies that the token is still valid and redirects to login if not
-    Authorization.VerifyToken(userData.selectedSite, userData.token, function(err, resp){
+    Authorization.VerifyToken(this.props.screenProps.state.selectedClient, userData.token, function(err, resp){
 
       if(err) {
 
@@ -227,7 +228,7 @@ class DashboardScreen extends React.Component {
 
 
         let source = {
-          uri: "https://" + userData.selectedSite + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
           headers: {
             "managerAppToken":  userData.token
           }

@@ -112,7 +112,7 @@ class Profile extends React.Component {
       jobTitle: this.state.jobTitle
     }
 
-    updateProfile(this.props.screenProps.state.userData.selectedSite, this.props.screenProps.state.userData.token, request, function(err, resp){
+    updateProfile(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, request, function(err, resp){
 
       if(err) {
 
@@ -130,9 +130,6 @@ class Profile extends React.Component {
 
         // this shares the persisted userData to the App-Rosnet.js wrapper
         _this.props.screenProps._globalStateChange( { action: "profile-update", userData: userData })
-
-        // save to local storage
-        AsyncStorage.setItem('userData', JSON.stringify(userData))
 
 
         _this.setState({

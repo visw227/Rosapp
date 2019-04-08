@@ -75,7 +75,10 @@ export class About extends React.Component {
   componentDidMount () {
     let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+    this.props.navigation.setParams({ 
+        title: this.props.screenProps.state.selectedClient,
+        backgroundColor:this.props.screenProps.state.backgroundColor 
+    })
 
   }
     

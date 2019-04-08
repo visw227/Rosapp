@@ -23,7 +23,7 @@ import Push from 'appcenter-push'
 
 import config from './App/app-config.json'
 
-
+var TIME_WENT_TO_BACKGROUND = new Date().getTime()
 
 // hide warnings for now...
 console.disableYellowBox = true;
@@ -891,13 +891,6 @@ export default class App extends React.Component {
         super(props);
 
 
-        // check if userData has been persisted in local storage
-        // NOTE: this seems to not fire soon enough, so moving this to LaunchScreen.js, which will
-        // share globally through _globalStateChange
-        // AsyncStorage.getItem('userData').then((data) => {
-        //   let userData = JSON.parse(data)
-        // })
-
         // This is a workaround to create a fake API request so that subsequent requests will work
         // The first API request ALWAYS times out
         Authorization.WakeUpServer()
@@ -905,6 +898,7 @@ export default class App extends React.Component {
         this.state = {
           showLock: false,
           userData: null,
+          selectedClient: null,
           superUser: null, 
           appState: AppState.currentState,
           alertCount: 0,
@@ -912,10 +906,6 @@ export default class App extends React.Component {
           backgroundColor :brand.colors.primary,
           isQA: false
 
-          // these state objects are shared across the entire app through screenProps
-          // userData: null,
-          // menuItems: [],
-          // selectedSite: ""
         }
 
         // this kicks off a background timer loop to check things like forced re-login, etc.
@@ -933,12 +923,6 @@ export default class App extends React.Component {
         // NOTE: this seems to not fire soon enough, so moving this to LaunchScreen.js, which will
         // share globally through _globalStateChange
 
-        // AsyncStorage.getItem('userData').then((data) => {
-        //   console.log("...root set userData from ROOT!!!!")
-        //   this.setState({
-        //     userData: JSON.parse(data)
-        //   })
-        // })
 
         //console.log("...root componentDidMount")
         AppState.addEventListener('change', this.onAppStateChange);
@@ -985,6 +969,9 @@ export default class App extends React.Component {
             userData: data.userData
           }, () => console.log("global state change to userData", this.state.userData ) )
 
+          // always save any changes to local storage
+          AsyncStorage.setItem('userData', JSON.stringify(data.userData))
+
         }
         
         if(data.superUser) {
@@ -996,25 +983,47 @@ export default class App extends React.Component {
           
         }
 
+        if(data.selectedClient) {
+
+          this.setState({
+            selectedClient: data.selectedClient
+          }, () => console.log("global state change to selectedClient", this.state.selectedClient ) )
+
+          // always save any changes to local storage
+          AsyncStorage.setItem('selectedClient', data.selectedClient)
+
+        }
+
         if (data.backgroundColor) {
           this.setState({
             backgroundColor : data.backgroundColor
           },() => console.log('global state change for bgColor',this.state.backgroundColor))
         }
 
-        // these actions force the app to reset back to the real user
-        if(data.action && (data.action === "undo-session-override" || data.action === "token-refresh") ) {
+        // this action will force the app to reset back to the real user
+        if(data.action && data.action === "undo-session-override") {
 
           this.setState({
             userData: data.userData,
             superUser: null,
             backgroundColor: brand.colors.primary
-          }, () => console.log("--- global state change back to real user", data.userData ) )
+          }, () => console.log("global state change back to real user", data.userData ) )
 
 
         }
         
+        // this will refresh the real user's token
+        // this action will force the app to reset back to the real user
+        if(data.action && data.action === "token-refresh") {
 
+          this.setState({
+            userData: data.userData,
+            superUser: null,
+            backgroundColor: brand.colors.primary
+          }, () => console.log("global state change for token refresh", data.userData ) )
+
+
+        }
 
     }
 
@@ -1094,15 +1103,10 @@ export default class App extends React.Component {
       // IMPORTANT: ONLY check for "background" not "inactive" here or the LockScreen will render in a loop
       if (appState.match(/background/) && nextAppState === 'active') {
 
-          console.log('App has moved to the foreground')
-          console.log("+++++++++ STATUS ACTIVE ++++++++++", this.state.userData)
+          console.log("+++++++++ STATUS ACTIVE ++++++++++")
 
 
           if(this.state.userData) {
-
-            // console.log("userData", this.state.userData, "appState", nextAppState)
-
-            console.log("User is logged in, so showing lock screen.")
 
 
             Authorization.RefreshToken(function(err, resp){
@@ -1112,95 +1116,50 @@ export default class App extends React.Component {
               else {
 
 
-                console.log("successfully refreshed token", resp)
-
                 let userData = _this.state.userData
 
-                console.log("old token: ", userData.token)
-                console.log("new token: ", resp.userData.token)
-
-                // ONLY update certain things - KEEP userData.selectedSite
+                // ONLY update certain things
                 userData.token = resp.userData.token // update the token
                 userData.sites = resp.userData.sites // update in clase changed
-                // just in case the user's selected site is no longer in their list of sites
-                var selectedSiteStillValid = userData.sites.includes(userData.selectedSite)
-                if(selectedSiteStillValid === false && userData.selectedSites.length > 0) {
-                  userData.selectedSite = userData.sites[0]
-                }
 
-                console.log("+++++ updated userData token, sites:", userData)
-
-                // save to local storage
-                AsyncStorage.setItem('userData', JSON.stringify(userData))
 
                 // if we are refreshing the token, we must reset all global state attributes back to defaults as well
                 _this._globalStateChange( { action: "token-refresh", userData: userData })
               
-                // see if the user needs to see the lock screen
-                AsyncStorage.getItem('statusData').then((data) => {
 
-                  if(data) {
+                // see if the user should see the lock screen
+                let currentTime = new Date().getTime() // in milliseconds
+                if(currentTime - TIME_WENT_TO_BACKGROUND > 5000) {
+                  // Show lock screen
+                  // this is needed since props.navigation isn't present for unmounted screen components
+                  NavigationService.navigate('LockStack');
 
-                    let statusData = JSON.parse(data)
-                    let currentTime = new Date().getTime() // in milliseconds
-
-                    if(currentTime - statusData.ts > statusData.userLimit) {
-                      console.log("+++ userLimit EXCEEEDED")
-
-                      // Feb 13, 2019 - Commenting out this feature until the business rules are more fully baked
-                      // this is needed since props.navigation isn't present for unmounted screen components
-                      NavigationService.navigate('LockStack');
-
-                    }
-                    else {
-                      console.log("+++ userLimit not exceeded")
-                    }
-
-                    console.log("---------- STATUS ACTIVE ----------", JSON.stringify(statusData, null, 2))
-
-
-
-
-                  }
-
-                }) // end AsyncStorage
+                }
 
               
-              }
+              } // end else
 
-            })
+            }) // end Authorization.RefreshToken
 
 
+          } // end if userData
 
-          }
-          else {
-
-              console.log("User is not logged in")
-
-          }
 
           
       }
       else if (appState.match(/active/) && nextAppState === 'inactive') {
 
-        if(this.state.userData) {
+        console.log("+++++++++ STATUS INACTIVE ++++++++++")
 
-          let statusData = {
-            userLimit: 5000, // milliseconds - make long enough to test chat and text without seeing LockScreen
-            ts: new Date().getTime() // add a timestamp to it for sorting
-          }
+        TIME_WENT_TO_BACKGROUND = new Date().getTime()
 
-          console.log("+++++++++ STATUS INACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
-
-          AsyncStorage.setItem('statusData', JSON.stringify(statusData))
-
-        }
-          
         console.log('App has moved to the background')
 
       }
 
+      // keep track of last state
       this.setState({appState: nextAppState});
+
     }
 
 
