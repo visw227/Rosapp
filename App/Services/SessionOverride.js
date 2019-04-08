@@ -10,6 +10,16 @@ export function searchUsers(query, limit, client, token, callback) {
       callback(err)
     }
     else {
+
+      resp.forEach(function(p){
+
+        // if a level 1 user and their location isn't in their name, then add it 
+        if(p.level === 1 && p.name.indexOf(p.location.toString()) === -1) {
+          p.name += ' ' + p.location
+        }
+
+      })
+
       callback(null, resp)
     }
 
