@@ -910,6 +910,12 @@ export default class App extends React.Component {
           alertCount: 0,
           messageCount: 0,
           backgroundColor :brand.colors.primary,
+          settings : {
+            switch1 : true,
+            switch2 :true,
+            switch3 :null,
+            switch4 : null
+          },
           isQA: false
 
           // these state objects are shared across the entire app through screenProps

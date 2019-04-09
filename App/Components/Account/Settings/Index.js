@@ -14,7 +14,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
 import brand from '../../../Styles/brand'
-import { alertTypes } from '../../../Services/Push';
+import { alertTypes,alertSubscription } from '../../../Services/Account';
 
 
 import Styles from './Styles'
@@ -103,13 +103,55 @@ class Settings extends React.Component {
               message: ""
           },
           userToken: '',
+          value: false,
           userProfile: null,
           alertOptions : [],
-          options : []
+          alerttypeids: [],
+          options : [],
+          switch1 : true,
+          switch2 : false,
+          switch3 : false,
+          switch4 :true,
+          alertTypeID : null,
+          desc:null,
+          push:null,
+          request : {
+            
+            userName: this.props.screenProps.state.userData.userName,
+            client: this.props.screenProps.state.userData.selectedSite ,
+            token :  this.props.screenProps.state.userData.token,
+            alertTypeID : null ,
+            desc : null ,
+            email : 1,
+            push : null
+          }
+         
       }
 
   }
 
+
+    value = (id,array) => {
+
+      console.log('switch vale',array)
+      if (id === 1){
+        return this.state.switch1
+      }
+      else if (id === 2){
+        return this.state.switch2
+      }
+
+      else if (id === 3) {
+        return this.state.switch3
+      }
+
+      else if (id === 4) {
+        return this.state.switch4
+      }
+
+    }
+
+    
 
   componentDidMount () {
     _this = this
@@ -134,22 +176,26 @@ class Settings extends React.Component {
       else {
         console.log('response',resp)
         var alertTypes = []
+        var alertyTypeId = []
 
           resp.forEach(element => {
             if(element.alert_category.toLowerCase() === 'stafflinq'){
               alertTypes.push(element.alert_name)
+              alertyTypeId.push(element.alert_type_id)
             }
           });
           console.log('modifiedresp',alertTypes)
 
           _this.setState ({
-            alertOptions : alertTypes
+            alertOptions : alertTypes,
+            alerttypeids : alertyTypeId
           }, ()=> console.log('AlertState',_this.state.alertOptions))
 
         
       }
 
       })
+      
 
       
 
@@ -158,12 +204,14 @@ class Settings extends React.Component {
 
   render() {
     var optionsList = []
+      
      if(this.state.alertOptions.length > 0) {
 
       for (i=0; i < this.state.alertOptions.length ; i++ ) {
         
         opts = Object.assign(
          {},{  group:this.state.alertOptions[i] ,
+                id : this.state.alerttypeids[i],
          data: [
            // {
            //   type: "Email Notification",
@@ -171,6 +219,7 @@ class Settings extends React.Component {
            // },
            {
              type: "Push Notification",
+             id: this.state.alerttypeids[i],
              selected: true
            },
          ]}
@@ -184,13 +233,13 @@ class Settings extends React.Component {
 
      }
 
+     
 
-    
 
     return (
       
 
- <ScrollView
+              <ScrollView
                 style={{ backgroundColor: '#ffffff' }}
 
                 refreshControl={
@@ -214,15 +263,44 @@ class Settings extends React.Component {
 
                             key={item.type + index}
                             style={{ padding:0, marginTop:-10 }}
-                            switchButton
-                            switched={this.state.showAvailableShifts}
+                            switchButton 
+                            switched={_this.value(item.id,optionsList)}
+                            //onValueChange ={alert('change')}
                             hideChevron
                             title={item.type}
-                            onSwitch={this.toggleShowAvailableShifts}
+                            //onSwitch={(value)=>console.log('switch',value)}
+                            onSwitch={(value) => {
+                              this.setState(previousState => {
+                                if(item.id === 1){
+                                  return {...previousState,switch1: value ,request:{...this.state.request,desc :'time off',push: value ? 1 : 0, alertTypeID:1}}
+                                }
+                                if (item.id === 2){
+                                  return {...previousState,switch2: value,request:{...this.state.request,desc :'Availability change req',push: value ? 1 :0, alertTypeID:2}}
+                                }
+                                if (item.id === 3){
+                                  return {...previousState,switch3: value,request:{...this.state.request,desc :'Pick up shift',push: value ? 1 :0, alertTypeID:3}}
+                                }
+                                if (item.id === 4){
+                                  return {...previousState,switch4: value,request:{...this.state.request,desc :'Shift Swap',push: value ? 1 :0, alertTypeID:4}}
+                                }
+                              },()=>
+                              alertSubscription(this.state.request,function(err,resp){
+                                  if (err){
+                                    console.log('error')
+                                  }
+                                  else {
+                                    console.log(resp)
+                                  }
+                              }
+                              )
+                              )
+                            }
+
+                          }
 
                         />
                     }
-                    renderSectionHeader={({section: {group}}) => (
+                    renderSectionHeader={({section: {group,id}}) => (
                         <Text style={Styles.sectionHeader}>{group}</Text>
                     )}
                     sections={optionsList}

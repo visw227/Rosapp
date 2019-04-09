@@ -141,3 +141,34 @@ export function forgotPassword(request, callback) {
   })
 
 }
+
+export function alertTypes (client,token,callback) {
+
+  let url = '/api/ManagerAppAlertMethods/AlertMethods'
+
+  serviceWrapper(url, 'GET',null,client,token,function(err,resp){
+    if (err){
+      callback(err)
+
+    }
+    else {
+      callback(null,resp)
+    }
+  })
+
+}
+// http: //localhost:8085/api/ManagerAppAlertMethods/storeSubscription?userName=vchikkala&alertTypeID=3&desc=test&email=0&push=1
+export function alertSubscription (request,callback) {
+
+  let url = '/api/ManagerAppAlertMethods/storeSubscription?userName='+encodeURI(request.userName)+'&alertTypeID='+encodeURI(request.alertTypeID)+'&desc='+encodeURI(request.desc)+'&email='+encodeURI(request.email)+'&push='+encodeURI(request.push)
+
+  serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
+    if(err){
+      callback(err)
+    }
+    else {
+      callback(null,resp)
+    }
+  })
+
+}
