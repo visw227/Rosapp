@@ -109,7 +109,8 @@ class DashboardScreen extends React.Component {
                 message: ""
             },
             userProfile: fakedUserProfile,
-            userData: { sites: ["AAG", "DOHERTY"], selectedSite: "AAG" }
+            userData: this.props.screenProps.state.userData,
+            selectedClient: this.props.screenProps.state.selectedClient
         }
 
 
@@ -121,7 +122,7 @@ class DashboardScreen extends React.Component {
     // this will catch any global state updates - via screenProps
     componentWillReceiveProps(nextProps) {
 
-        let selectedSite = nextProps.screenProps.state.userData.selectedSite
+        let selectedClient = nextProps.screenProps.state.selectedClient
         let token = nextProps.screenProps.state.userData.token
 
         // ONLY if something has changed
@@ -151,11 +152,11 @@ class DashboardScreen extends React.Component {
         }
 
         // ONLY if something has changed
-        if (selectedSite !== this.state.userData.selectedSite) {
+        if (selectedClient !== this.state.selectedClient) {
 
-            console.log("Dashboard picked up new selectedSite: ", selectedSite)
+            console.log("Dashboard picked up new selectedClient: ", selectedClient)
 
-            this.props.navigation.setParams({ title: selectedSite })
+            this.props.navigation.setParams({ title: selectedClient })
 
             let userData = this.props.screenProps.state.userData
 
@@ -172,7 +173,7 @@ class DashboardScreen extends React.Component {
 
 
             this.setState({
-                selectedSite: selectedSite,
+                selectedClient: selectedClient,
                 source: source
             });
 
@@ -190,7 +191,7 @@ class DashboardScreen extends React.Component {
 
         this.props.navigation.setParams({ 
             menuIconClickHandler: this.onMenuIconClick,
-            title: userData.selectedSite, 
+            title: this.state.selectedClient, 
             backgroundColor: this.props.screenProps.state.backgroundColor
         })
 
@@ -200,7 +201,6 @@ class DashboardScreen extends React.Component {
             uri: chatUrl,
             headers: {
                 "managerAppToken": userData.token,
-                //"Cookie": "rememberme=" + userData.userName + "; clientCode=" + selectedSite + "; rosnetToken=" + userData.token 
             }
         }
 

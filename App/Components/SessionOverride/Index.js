@@ -80,33 +80,34 @@ class SearchUsers extends React.Component {
       this.state = {
           sending: false,
           receiving: false,
-          userData: { sites: ["AAG", "DOHERTY"], selectedSite: "AAG" },
+          userData: this.props.screenProps.state.userData,
           items: [],
           query: '',
           showModal: false,
           impersonatedUser: {
             commonName: ''
-          }
+          },
+          userData: this.props.screenProps.state.userData,
+          selectedClient: this.props.screenProps.state.selectedClient
       }
   }
 
   // this will catch an global state updates - via screenProps
   componentWillReceiveProps(nextProps){
 
-    let selectedSite = nextProps.screenProps.state.userData.selectedSite
+    let selectedClient = nextProps.screenProps.state.selectedClient
 
     // ONLY if something has changed
-    if(selectedSite !== this.state.userData.selectedSite){
+    if(selectedClient !== this.state.selectedClient){
 
-      console.log("Dashboard picked up new selectedSite: ", selectedSite)
+      console.log("Dashboard picked up new selectedClient: ", selectedClient)
 
-      this.props.navigation.setParams({ title: 'Search ' + selectedSite + ' Users' })
+      this.props.navigation.setParams({ title: 'Search ' + selectedClient + ' Users' })
       
-      let userData = this.state.userData
-      userData.selectedSite = selectedSite
+
 
       this.setState({ 
-        userData: userData
+        selectedClient: selectedClient
       });
 
 
@@ -116,14 +117,10 @@ class SearchUsers extends React.Component {
 
   componentDidMount() {
 
-
-    let userData = this.props.screenProps.state.userData
-
-    this.setState({
-      userData: userData
+    this.props.navigation.setParams({ 
+      title: 'Search ' + this.props.screenProps.state.selectedClient + ' Users', 
+      menuIconClickHandler: this.onMenuIconClick 
     })
-
-    this.props.navigation.setParams({ title: 'Search ' + userData.selectedSite + ' Users', menuIconClickHandler: this.onMenuIconClick })
     
   }
 
@@ -145,7 +142,7 @@ class SearchUsers extends React.Component {
       userName: item.userName
     }
 
-    impersonateUser(userData.selectedSite, userData.token, request, function(err, response){
+    impersonateUser(this.props.screenProps.state.selectedClient, userData.token, request, function(err, response){
 
       if(err) {
         console.log("err", err)
@@ -157,7 +154,7 @@ class SearchUsers extends React.Component {
         let impersonatedUser = Parsers.UserData(response)
 
 
-        getMobileMenuItems(impersonatedUser.selectedSite, impersonatedUser.token, function(err, menuItems){
+        getMobileMenuItems(_this.props.screenProps.state.selectedClient, impersonatedUser.token, function(err, menuItems){
             
             if(err) {
                 console.log("err - getMobileMenuItems", err)
@@ -245,7 +242,7 @@ class SearchUsers extends React.Component {
       receiving: true
     })
 
-    searchUsers(query, 100, this.state.userData.selectedSite, this.state.userData.token, function(err, resp){
+    searchUsers(query, 100, this.state.selectedClient, this.state.userData.token, function(err, resp){
 
       if(err) {
         _this.setState({

@@ -85,7 +85,7 @@ export class Account extends React.Component {
 
      let userData = this.props.screenProps.state.userData
 
-     this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+     this.props.navigation.setParams({ backgroundColor:this.props.screenProps.state.backgroundColor })
  
 
      console.log('componentDID',this.props.screenProps.state.backgroundColor)
@@ -93,7 +93,7 @@ export class Account extends React.Component {
      clientCode = this.props.screenProps.state
 
      let request = {
-         clientCode : this.props.screenProps.state.userData.selectedSite,
+         clientCode : this.props.screenProps.state.selectedClient,
          token : this.props.screenProps.state.userData.token
      }
 
@@ -181,7 +181,7 @@ export class Account extends React.Component {
                       }
                       avatar={<Avatar rounded medium
                           overlayContainerStyle={{backgroundColor: '#31B0D5'}}
-                          icon={{name: 'unlock', type: 'font-awesome'}}/>}
+                          icon={{name: 'lock', type: 'font-awesome'}}/>}
                       
                       onPress={() => this.props.navigation.navigate('Password') }
                   

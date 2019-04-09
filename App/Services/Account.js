@@ -91,11 +91,14 @@ export function changePassword (request, token, callback) {
        
        serviceWrapper(emailUrl, 'GET', null, request.clientCode , token, function(err, resp) {
         if (err) {
-          //callback(err)
+          
+          callback(err)
           console.log('email Error')
     
         }
          else { 
+           callback(null, resp)
+           
            console.log('email sent to user')      
          }
       } )

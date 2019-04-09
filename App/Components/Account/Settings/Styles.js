@@ -9,9 +9,10 @@ export default StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 15,
-    backgroundColor: brand.colors.primary,
+    backgroundColor: brand.colors.secondary,
     color: brand.colors.white,
-    //fontStyle: 'italic'
+    //fontStyle: 'italic',
+    //fontWeight: 'bold'
   },
   // container: {
   //   flex: 1,

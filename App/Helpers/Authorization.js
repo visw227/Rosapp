@@ -128,15 +128,13 @@ export var Authorization = {
                     userData.password = password 
                     userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
 
-                    getMobileMenuItems(userData.selectedSite, userData.token, function(err, menuItems){
+                    getMobileMenuItems(userData.sites[0], userData.token, function(err, menuItems){
                         
 
                         if(err) {
                             console.log("err - getMobileMenuItems", err)
-                                // show the real error message when can - otherwise show the default message
-                            //_this.showAlert("Your login was successful, but we were unable to access your Rosnet menu options for " + userData.selectedSite + ". The exact error was: '" + err.message + "'")
-                        
-                            callback( { message: "Your login was successful, but we were unable to access your Rosnet menu options for " + userData.selectedSite + ". The exact error was: '" + err.message + "'" } )
+
+                            callback( { message: "Your login was successful, but we were unable to access your Rosnet menu options for " + userData.sites[0] + ". The exact error was: '" + err.message + "'" } )
                         }
                         else {
 
@@ -146,17 +144,6 @@ export var Authorization = {
                             })
 
                             userData.menuItems = menuItems
-
-
-                            // let redirect = null
-                            // if(userData.mustChangePassword) {
-                            //     redirect = "PasswordChangeRequiredStack"
-                            // }
-                            
-                            //_this.onLoginResponse(userData, redirect)
-
-                            // stringify the object before storing
-                            AsyncStorage.setItem('userData', JSON.stringify(userData))
 
                             // return the userData and redirect if required
                             callback(null, { userData: userData })

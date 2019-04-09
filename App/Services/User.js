@@ -1,9 +1,9 @@
 import { serviceWrapper } from './ServiceWrapper'
 
-export function reportIssue(client, token, request, callback) {
+export function updateProfile(client, token, request, callback) {
   
     // login method received credentials as query string params
-    let url = '/api/ManagerAppZendesk/ReportIssue/'
+    let url = '/api/ManagerAppUser/UpdateProfile'
   
     // IMPORTANT: request IS NULL since params are passed in the url of this POST request
     serviceWrapper(url, 'POST', request, client, token, function(err, resp) {
@@ -17,4 +17,4 @@ export function reportIssue(client, token, request, callback) {
   
     })
   
-  }
+}

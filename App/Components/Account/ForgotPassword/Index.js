@@ -58,9 +58,6 @@ export class ForgotPassword extends React.Component {
   componentDidMount () {
 
 
-    //this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
-
-
     if (Platform.OS=='ios'){
         this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
         this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);

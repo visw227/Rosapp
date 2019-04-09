@@ -9,7 +9,8 @@ import {
   AsyncStorage,
   ScrollView,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard
 } from 'react-native';
 
 import { List, ListItem } from 'react-native-elements'
@@ -38,7 +39,7 @@ class StaffListScreen extends React.Component {
 
   static navigationOptions = (navigate) => ({
 
-    title: 'Staff List',
+    title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Staff List': navigate.navigation.state.params.title,
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
@@ -48,7 +49,7 @@ class StaffListScreen extends React.Component {
         size={35}
         color={brand.colors.white}
         style={{ paddingLeft: 10 }}
-        onPress={() => navigate.navigation.toggleDrawer() }
+        onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
     />,
 
     // The drawerLabel is defined in DrawerContainer.js
@@ -60,6 +61,18 @@ class StaffListScreen extends React.Component {
     //   />
     // ),
   })
+
+
+  // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
+  // this is passed in to navigationOptions as menuIconClickHandler
+  onMenuIconClick = (navigate) => {
+
+    navigate.navigation.toggleDrawer()
+    Keyboard.dismiss()
+
+  }
+
+
 
     constructor(props) {
       super(props);
@@ -89,9 +102,12 @@ class StaffListScreen extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
-    this.props.navigation.setParams({ title: userData.selectedSite,backgroundColor:this.props.screenProps.state.backgroundColor })
+    this.props.navigation.setParams({ 
+      menuIconClickHandler: this.onMenuIconClick, 
+      backgroundColor:this.props.screenProps.state.backgroundColor 
+    })
 
-    getStaffList(userData.selectedSite, userData.token, userData.location || 2102019, function(err, resp){
+    getStaffList(this.props.screenProps.state.selectedClient, userData.token, userData.location || 2102019, function(err, resp){
 
 
       if(err) {
@@ -99,6 +115,11 @@ class StaffListScreen extends React.Component {
       }
       else {
         console.log("success", resp)
+
+        _this.props.navigation.setParams({ 
+          title: "Staff List (" + resp.length + ")"
+        })
+
 
         _this.setState({
           receiving: false,

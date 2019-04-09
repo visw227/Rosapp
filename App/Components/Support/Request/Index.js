@@ -4,16 +4,25 @@ import {
   View,
   Image,
   Text,
-  Button,TouchableHighlight,ScrollView,
-  TextInput,AsyncStorage
+  Button,
+  TouchableHighlight,
+  ScrollView,
+  TextInput,
+  AsyncStorage,
+  KeyboardAvoidingView,
+  ActivityIndicator,
+  Keyboard
 } from 'react-native';
+
+import moment from 'moment'
+
 import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
 import brand from '../../../Styles/brand'
 
-import Styles from './Styles'
+// import Styles from './Styles'
 
 import ImagePicker from 'react-native-image-picker'
 import {reportIssue } from '../../../Services/Support'
@@ -41,83 +50,127 @@ class SupportRequest extends React.Component {
     headerTintColor: 'white',
 
 
+    headerRight : 
+      <View style={{
+        alignItems: 'center',
+        flexDirection: 'row',
+        height: 40,
+        paddingRight: 10,
+        width: '100%'
+      }}>
+        <Text 
+          style={{ color: 'white', fontSize: 16 }}
+          onPress={navigate.navigation.getParam('handleSubmit')} >
+          Submit
+          </Text>
+      </View>
+
+
   })
 
   constructor(props) {
     super(props)
 
-    let avatarUrl = null
 
        
     let deviceId = DeviceInfo.getUniqueID()
-    let version = DeviceInfo.getVersion()
-    let build = DeviceInfo.getBuildNumber()
+    let appVersion = DeviceInfo.getVersion()
+    let appBuild = DeviceInfo.getBuildNumber()
     let osVersion = DeviceInfo.getSystemVersion()
-    let brand = DeviceInfo.getBrand()
-    let model = DeviceInfo.getModel()
+    let deviceBrand = DeviceInfo.getBrand()
+    let deviceModel = DeviceInfo.getModel()
  
-    console.log("avatarUrl constructor: " + avatarUrl)
+    let ts =  moment().format('dddd, MMM Do') + ' @  ' +  moment().format('h:mm:ss A')
 
     this.state = {
-      // avatarSource: source.uri,
-      avatarSource : null,
-      uri : null,
-      avatarUrl: avatarUrl,
-      imageName :null,
-      imageData : null,
+      sending: false,
+      receiving: false,
+      requestStatus: {
+          hasError: false,
+          message: ""
+      },
+      wasAlreadySent: false,
+      subject: '', //Test by ' + this.props.screenProps.state.userData.userName,
+      location: '', //ts,
+      description: '', //Delete this but please email me at ' + this.props.screenProps.state.userData.email + ' so that I know that this was received by ZenDesk',
       deviceId: deviceId,
-      version: version,
-      build: build,
+      version: appVersion,
+      appBuild: appBuild,
       appCenterInstallId: '',
-      brand : brand,
+      deviceBrand : deviceBrand,
       osVersion,
-      model,
+      deviceModel: deviceModel,
       options,
-      deviceInfo : 'deviceId: '+ deviceId +  ', App Version : ' + version + ', brand : '+ brand + ', Model : ' + model + ', OS version :' + osVersion
+      deviceInfo : 'appVersion: ' + appVersion + ', appBuild: ' + appBuild + ', deviceId: '+ deviceId +  ', deviceBrand: '+ deviceBrand + ', deviceModel: ' + deviceModel + ', osVersion: ' + osVersion
     }
   }
 
   componentDidMount() {
 
+    let _this = this
+
+    this.props.navigation.setParams({ 
+      handleSubmit: this.handleSubmit,
+      backgroundColor:this.props.screenProps.state.backgroundColor 
+    })
 
     AsyncStorage.getItem('AppCenterInstallId').then((data) => {
-        this.setState({
+        _this.setState({
             appCenterInstallId: data
         })
     })
-      console.log('<<<deviceInfo',this.state.deviceInfo)
+
+    console.log('<<<deviceInfo',this.state.deviceInfo)
+
   }
 
-  handleImage = () => {
-    ImagePicker.showImagePicker(this.state.options, (response) => {
-      console.log('Response = ', response);
-     
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      }
-      else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      }
-      else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      }
-      else {
-        let source = { uri: response.uri };
-     
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-     
-        this.setState({
-          avatarSource: source,
-          imageData : response.data,
-          imageName : response.fileName,
-          uri : response.uri
-        },()=>console.log('<<avatar',this.state.imageData),()=>console.log('<<<ImageData',this.state.imageData));
-      }
+
+  handleSubmit = () => {
+
+    Keyboard.dismiss()
+
+    this.setState({
+      sending: true,
+      requestStatus: {
+          hasError: false,
+          message: ""
+      },
     })
+
+    if(this.state.subject === '' || this.state.location === '' || this.state.description === '') {
+
+      this.setState({
+        sending: false,
+        requestStatus: {
+            hasError: true,
+            message: "Please include a subject, a location where the issue occurred, and a description."
+        },
+      })
+
+    }
+    else if(this.state.wasAlreadySent) {
+
+      this.setState({
+        sending: false,
+        requestStatus: {
+            hasError: true,
+            message: "This support request has already been sent."
+        },
+      })
+
+    }
+    else {
+      this.onSubmitPress()
+    }
+
+
+
   }
+
 
   onSubmitPress = () => {
+
+    let _this = this
     
     var userData = this.props.screenProps.state.userData
 
@@ -126,17 +179,43 @@ class SupportRequest extends React.Component {
       description : this.state.description,
       location : this.state.location,
       browser : this.state.deviceInfo,
-      value : this.state.imageData,
+      value : null, // no images provided by app
       
     }
-      reportIssue (userData.selectedSite, userData.token,request, function(err,rsp){
-        if(err){
-          console.log('<<errror reporting Issue',err)
-        }
-        else {
-          console.log('<<<Issue reported successfully')
-        }
-      })
+
+    console.log("submitting request", JSON.stringify(request, null, 2))
+
+
+    reportIssue (this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
+      if(err){
+        console.log('errror reporting Issue',err)
+
+        _this.setState({
+          sending: false,
+          requestStatus: {
+              hasError: true,
+              message: err.message
+          },
+          wasAlreadySent: true
+        })
+
+
+      }
+      else {
+        console.log('issue reported successfully')
+
+        _this.setState({
+          sending: false,
+          requestStatus: {
+              hasError: false,
+              message: "Your support request was sent successfully."
+          },
+          wasAlreadySent: true
+        })
+
+      }
+    })
+
   }
 
 
@@ -144,155 +223,113 @@ class SupportRequest extends React.Component {
 
     return (
 
-            <ScrollView>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
-<View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
 
-    <Text style={{margin:10,marginTop:30}}>Subject</Text> 
-        <TextInput style={styles.input}   
-                ref={input => { this.textInput = input }}
-                 //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
-                 placeholder='What is the issue' 
-                 placeholderTextColor={brand.colors.silver}
-                 //value={this.state.password}
-                 onChangeText={(subject) => this.setState({subject})}
-         />
+        <View style={styles.formContainer}>
 
-      <Text style={{margin:10}}>Location</Text>
+
+            <Text style={styles.inputLabel}>Subject</Text>
+
+
+
+            <TextInput style={styles.input}   
+                    //ref={input => { this.textInput = input }}
+                    //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
+                    placeholder='What is the issue' 
+                    placeholderTextColor={brand.colors.silver}
+                    value={this.state.subject}
+                    onChangeText={(subject) => this.setState({subject})}
+            />
+
+            <Text style={styles.inputLabel}>Location</Text>
                  
-                 <TextInput style={styles.input}   
-                         returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
-                         placeholder='Screen where issue exists' 
-                         ref={input => { this.confirmPassInput = input }}
-                         //editable = {this.state.validated}
-                         placeholderTextColor={brand.colors.silver}
-                         //value={this.state.password}
-                         onChangeText= {(location) => this.setState({location})}
-                 />
+            <TextInput style={styles.input}   
+                    returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
+                    placeholder='Screen where issue exists' 
+                    //ref={input => { this.confirmPassInput = input }}
+                    //editable = {this.state.validated}
+                    placeholderTextColor={brand.colors.silver}
+                    value={this.state.location}
+                    onChangeText= {(location) => this.setState({location})}
+            />
    
 
-        <Text style={{margin:10}}>Description</Text>
+            <Text style={styles.inputLabel}>Description</Text>
                  
-                 <TextInput style={{height: 70,
-                    backgroundColor: '#ffffff',
-                    marginBottom: 10,
-                    width:'64%',
-                    padding: 10,
-                    color: brand.colors.primary,
-                    borderColor: brand.colors.primary, 
-                    borderWidth: 1,
-                    borderRadius: 10}}   
-                    multiline 
-                    returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
-                    placeholder='Explain in brief what the issue is' 
-                    ref={input => { this.confirmPassInput = input }}
-                    placeholderTextColor={brand.colors.silver}
-                    onChangeText= {(description) => this.setState({description})}
-                  />
-                  <View style = {{flexDirection : 'column'}}>
+            <TextInput  style={[styles.input, styles.textArea]}
+              multiline 
+              //returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
+              placeholder='Explain in brief what the issue is' 
+              ref={input => { this.confirmPassInput = input }}
+              placeholderTextColor={brand.colors.silver}
+              value={this.state.description}
+              onChangeText= {(description) => this.setState({description})}
+            />
+                
 
-                   {/* <View style ={{flexDirection : 'row',justifyContent:'space-around',alignItems:'center',margin:10}}>
-
-                      <Text style={{margin:10}}>upload supporting image</Text>
-
-                      <TouchableHighlight onPress = {()=>this.handleImage()}>
-<Text style={styles.imagebuttonText}> Choose file </Text>
-</TouchableHighlight>
+            {this.state.sending &&
+            <View style={{ marginTop: 20, marginBottom: 10 }} >
+                <ActivityIndicator size="large" color={brand.colors.primary} />
+                </View>
+            }
 
 
-                    </View> */}
+            <Text style={styles.message} >
+              {this.state.requestStatus.message}
+            </Text>
 
 
-                  {this.state.imageName !== null ? <TouchableHighlight onPress = {()=>this.handleImage()}>
-                  <View  style={{flexDirection:'row',justifyContent:'center'}}>
-                  <Image style={{width: 66, height: 58,flexDirection:'row',justifyContent:'center'}} 
-                  source ={{ uri : this.state.uri}}/>
-                  </View>
-                  </TouchableHighlight> : null }
-                  
-                  
-                  </View>
-           
+        </View>
 
-            <TouchableHighlight style={styles.buttonContainer } >
-                <Text style={styles.buttonText} 
-                onPress = { ()=> this.onSubmitPress(console.log('description',this.state.description)) }>
-                Submit
-                </Text>
-              </TouchableHighlight>
-                 
-                 </View>
 
-           
-            </ScrollView>
+      </KeyboardAvoidingView>
 
     )}
   
 }
 
+// define your styles
 const styles = StyleSheet.create({
-  container: {
-   padding: 20
-  },
-  input:{
-      height: 40,
-      backgroundColor: '#ffffff',
-      marginBottom: 10,
-      width:'64%',
-      padding: 10,
+    container: {
+        flex: 1,
+        backgroundColor: brand.colors.white,
+
+    },
+    formContainer: {
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10
+    },
+    input:{
+        height: 40,
+        backgroundColor: '#ffffff',
+        marginTop: 5,
+        marginBottom: 5,
+        padding: 10,
+        color: brand.colors.primary,
+        borderColor: brand.colors.primary, 
+        borderWidth: 1,
+        borderRadius: 10
+    },
+    textArea: {
+      height: 100
+    },
+    inputLabel: {
       color: brand.colors.primary,
-      borderColor: brand.colors.primary, 
-      borderWidth: 1,
-      borderRadius: 10
-  },
-  passwordInput :{
-      height: 40,
-    backgroundColor: '#fff',
-    marginBottom: 10,
-    width:'100%',
-    padding: 10,
-    marginRight:'40%',
-    marginLeft:'15%',
-    color: brand.colors.primary,
-    borderColor: brand.colors.primary, 
-    borderWidth: 1,
-    borderRadius: 10},
-  buttonContainer:{
-      marginTop: 20,
-      backgroundColor: brand.colors.primary,
-      paddingVertical: 10,
-      borderRadius: 10,
-      width:100,
-      borderColor: brand.colors.white, 
-      borderWidth: 2,
-  },
-  buttonDisabledContainer:{
-      backgroundColor: brand.colors.primary,
-      opacity: .5,
-      paddingVertical: 15,
-      borderRadius: 30
-  },
-  imagebuttonText:{
-      color: brand.colors.primary,
-      textAlign: 'center',
-      fontWeight: '700'
-  }, 
-  buttonText:{
-    color: brand.colors.white,
-    textAlign: 'center',
-    fontWeight: '700'
-},
-  loginButton:{
-      backgroundColor:  brand.colors.secondary,
-      color: '#fff'
-  },
-  forgotPassword:{
-      color: brand.colors.white,
-      fontSize: 14,
-      textAlign: 'center',
-      marginTop: 20
-  }
- 
+      marginTop: 15, 
+      marginLeft: 5
+    },
+    message: {
+      textAlign: 'center', 
+      paddingTop: 20, 
+      paddingLeft: 30, 
+      paddingRight: 30,
+      color: brand.colors.primary
+    }
+   
 });
+
+
 //make this component available to the app
 export default SupportRequest;
