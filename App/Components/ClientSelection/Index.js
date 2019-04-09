@@ -31,7 +31,7 @@ import Styles from './Styles'
 import SearchBar from '../ReusableComponents/SearchBar'
 
 
-export class About extends React.Component {
+export class ClientSelection extends React.Component {
 
 
 
@@ -81,44 +81,17 @@ export class About extends React.Component {
 
       }
 
-      props.navigation.addListener('willFocus', () => this.willFocus())
-      props.navigation.addListener('willBlur', () => this.willBlur())
-
-
   }
 
-  willFocus = () => {
-
-    console.log("willFocus...")
-    this.setState({changed: false})
-
-  }
-  willBlur = () => {
-    console.log("willBlur...")
-    this.setState({changed: false})
-  }
 
 
   componentDidMount() {
-
-    let _this = this 
-
-    //let userData = this.props.screenProps.state.userData
 
     this.props.navigation.setParams({ 
       title: this.props.screenProps.state.selectedClient,
       backgroundColor:this.props.screenProps.state.backgroundColor,
       menuIconClickHandler: this.onMenuIconClick
     })
-
-
-    // console.log("ClientSelection", userData)
-
-    
-    // _this.setState({
-    //   userData: userData,
-    //   filtered: userData.sites
-    // })
 
     
   }
@@ -136,7 +109,7 @@ export class About extends React.Component {
       selectedClient: client
     }, () => 
   
-      // just to prove to the user that something has happened when the user selects a site
+      // add a slight spinner delay just to prove to the user that something has happened when the user selects a site
       setTimeout(() => {
         this.doClientChange(client)
       }, 1000)
@@ -338,4 +311,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default About;
+export default ClientSelection;
