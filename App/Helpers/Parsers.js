@@ -151,21 +151,25 @@ export var Parsers = {
     // Phone number parser
     Phone: function(phone) {
 
+
+        //(347)488-6404
+        //7152451954
+        
         // only keep 0-9
         let parsed = phone
 
         if(phone && phone.length > 0) {
         
-            parsed = phone.replace(/[^0-9]+/, '');
+            parsed = phone.replace(/[^0-9]+/g, '');
 
-            //console.log("parsing phone: ", phone)
+            console.log("parsing phone: ", phone, parsed)
             
             if(phone && phone.length > 0) {
 
                 // 6108107021
-                let area = phone.substring(0,3)
-                let pfx = phone.substring(3,6)
-                let sfx = phone.substring(6)
+                let area = parsed.substring(0,3)
+                let pfx = parsed.substring(3,6)
+                let sfx = parsed.substring(6)
 
                 parsed = area + '-' + pfx + '-' + sfx
 

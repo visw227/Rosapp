@@ -132,7 +132,7 @@ export class About extends React.Component {
                   <ListItem
                       roundAvatar
                       style={Styles.listItem}
-                      title='Contact Information'
+                      title='Contact Rosnet'
                           titleStyle={{ color: brand.colors.gray }}
                           
                       subtitle={
