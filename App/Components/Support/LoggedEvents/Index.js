@@ -73,7 +73,20 @@ class LoggedEvents extends React.Component {
 
   componentDidMount() {
 
+    this.loadData()
+
+    this.props.navigation.setParams({ handleSubmit: this.handleSubmit })
+
+
+  }
+
+  loadData = () => {
+
     let _this = this
+
+    this.setState({
+      receiving: true
+    })
 
     Logger.GetEvents(function(logData){
 
@@ -88,14 +101,6 @@ class LoggedEvents extends React.Component {
         })
 
     })
-
-    this.props.navigation.setParams({ handleSubmit: this.handleSubmit })
-
-
-  }
-
-  loadData = () => {
-
 
   }
 
@@ -132,7 +137,7 @@ class LoggedEvents extends React.Component {
                 
               >
 
-
+                {this.state.receiving === false &&
                 <List style={Styles.list}>
 
 
@@ -175,6 +180,7 @@ class LoggedEvents extends React.Component {
 
 
                 </List>
+                }
 
               </ScrollView>
 

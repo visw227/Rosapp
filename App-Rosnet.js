@@ -1122,15 +1122,15 @@ export default class App extends React.Component {
               else {
 
 
-                let userData = _this.state.userData
+                //let userData = _this.state.userData
 
                 // ONLY update certain things
-                userData.token = resp.userData.token // update the token
-                userData.sites = resp.userData.sites // update in clase changed
+                //userData.token = resp.userData.token // update the token
+                //userData.sites = resp.userData.sites // update in clase changed
 
 
                 // if we are refreshing the token, we must reset all global state attributes back to defaults as well
-                _this._globalStateChange( { action: "token-refresh", userData: userData })
+                _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
               
 
                 // see if the user should see the lock screen

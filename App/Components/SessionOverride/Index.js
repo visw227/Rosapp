@@ -277,7 +277,7 @@ class SearchUsers extends React.Component {
       else {
         if(this.state.query === '') {
           return (
-            <Text style={{color: brand.colors.primary }}>{'Please enter a user name'}</Text>
+            <Text style={{color: brand.colors.primary }}>{'Please enter a user name or user group'}</Text>
           )
         }
         else if(this.state.query != '' && this.state.items.length === 1) {
@@ -311,7 +311,7 @@ class SearchUsers extends React.Component {
             lightTheme={true}
             color ='blue'
             value={this.state.text}
-            placeholder='Search Users'
+            placeholder='Please enter a user name or user group'
             onChangeText = {(text)=> { this.getUsers(text) }}/>
             
         </View>
