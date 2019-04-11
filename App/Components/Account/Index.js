@@ -166,8 +166,7 @@ export class Account extends React.Component {
 
                   />
 
-                {/* Commenting this out for now while testing... */}
-                  {/* {this.state.changePassAcess &&  */}
+                {this.state.changePassAcess &&  
                   
                   <ListItem
                       style={Styles.listItem}
@@ -186,7 +185,7 @@ export class Account extends React.Component {
                       onPress={() => this.props.navigation.navigate('Password') }
                   
                   />
-                  {/* } */}
+                } 
 
                   {/* <ListItem
 

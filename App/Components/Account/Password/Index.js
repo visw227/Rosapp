@@ -34,56 +34,44 @@ import AlerMessage from '../../Modules/AlertMessage'
 
 const strengthLevels = [
   {
-    level: 0,
+    score: -1,
     label: 'Strength',
     labelColor: brand.colors.gray,
-    min: 0,
-    max: 0,
     backgroundColor: brand.colors.lightGray,
     borderColor: brand.colors.gray
   },
   {
-    level: 1,
+    score: 0,
     label: 'Dangerous',
     labelColor: brand.colors.white,
-    min: 0,
-    max: 25,
     backgroundColor: brand.colors.danger,
     borderColor: brand.colors.danger
   },
   {
-    level: 2,
+    score: 1,
     label: 'Weak',
     labelColor: brand.colors.white,
-    min: 26,
-    max: 49,
     backgroundColor: brand.colors.orange,
     borderColor: brand.colors.orange
   },
   {
-    level: 3,
+    score: 2,
     label: 'Good',
     labelColor: brand.colors.white,
-    min: 50,
-    max: 74,
     backgroundColor: brand.colors.success,
     borderColor: brand.colors.success
   },
   {
-    level: 4,
+    score: 3,
     label: 'Strong',
     labelColor: brand.colors.white,
-    min: 75,
-    max: 89,
     backgroundColor: brand.colors.success,
     borderColor: brand.colors.success
   },
   {
-    level: 5,
+    score: 4,
     label: 'Very Strong',
     labelColor: brand.colors.white,
-    min: 90,
-    max: 100,
     backgroundColor: brand.colors.success,
     borderColor: brand.colors.success
   }
@@ -136,10 +124,9 @@ class Password extends React.Component {
         securitySettings: null, 
         isNewPasswordSecureText: false,
         newPassword: '',
-        newPasswordStrength: 0,
         newPasswordLevel: strengthLevels[0],
         newPasswordConfirmed: "",
-        newPasswordScore: 0,
+        newPasswordScore: -1,
         isConfirmPasswordSecureText: false,
     };
   }
@@ -205,33 +192,20 @@ class Password extends React.Component {
   validateNewPassword = (pwd) => {
 
 
-
-    console.log('*** PASSWORD: ' + pwd)
-    
-    var analysis = zxcvbn(pwd);
-
-    var strengthPercentage = Math.floor(Number((analysis.guesses_log10 / 12.0).toFixed(2).replace(/0+$/, '')) * 100.0);
-    if (strengthPercentage > 100) {
-      strengthPercentage = 100;
-    };
-
-    console.log('*** STRENGTH PERCENTAGE: ' + strengthPercentage)
-
     // this is the score we need to match with this.state.securitySettings.Pswd_Complexity
-    let score = zxcvbn(this.state.newPassword).score;
+    let score = zxcvbn(pwd).score
 
-    console.log("++++ compare score:", score, " to  Pwd_Complexity: ", this.state.securitySettings.Pswd_Complexity)
+    //console.log("password: ", pwd, "score: ", score)
 
 
     let level = strengthLevels.find(function(item){
-        return strengthPercentage >= item.min && strengthPercentage <= item.max
+        return item.score === score
     })
 
-    console.log('level: ', level)
+    //console.log('level: ', level.label)
 
     this.setState({
       newPassword: pwd,
-      newPasswordStrength: strengthPercentage,
       newPasswordLevel: level,
       newPasswordConfirmed: "",
       newPasswordScore: score
