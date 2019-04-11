@@ -10,18 +10,18 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import brand from './App/Styles/brand'
+import brand from './Styles/brand'
 
-import NavigationService from './App/Helpers/NavigationService';
+import NavigationService from './Helpers/NavigationService';
 
-import { generateRandomNumber, checkForNotifications } from './App/Services/Background';
+import { generateRandomNumber, checkForNotifications } from './Services/Background';
 
-import { Authorization } from './App/Helpers/Authorization';
-import { Logger } from './App/Helpers/Logger';
+import { Authorization } from './Helpers/Authorization';
+import { Logger } from './Helpers/Logger';
 
 import Push from 'appcenter-push'
 
-import config from './App/app-config.json'
+import config from './app-config.json'
 
 var TIME_WENT_TO_BACKGROUND = new Date().getTime()
 
@@ -63,8 +63,8 @@ Push.setListener({
 // Launch and Lock screen
 // *******************************************************************************
 
-import LaunchScreen from './App/Components/LaunchScreen'
-import LockScreen from './App/Components/Account/Security/LockScreen'
+import LaunchScreen from './Components/LaunchScreen'
+import LockScreen from './Components/Account/Security/LockScreen'
 
 
 let LaunchStack = createStackNavigator({ 
@@ -88,8 +88,8 @@ LockScreenStack.navigationOptions = ({ navigation, screenProps }) => {
 // Login stack
 // *******************************************************************************
 
-import LoginScreen from './App/Components/Account/Login/Index'
-import ForgotPasswordScreen from './App/Components/Account/ForgotPassword/Index'
+import LoginScreen from './Components/Account/Login/Index'
+import ForgotPasswordScreen from './Components/Account/ForgotPassword/Index'
 
 
 let LoginStack = createStackNavigator({
@@ -133,13 +133,13 @@ let LoginStack = createStackNavigator({
 // Account
 // *******************************************************************************
 
-import AccountScreen from './App/Components/Account/Index'
-import SettingsScreen from './App/Components/Account/Settings/Index'
-import ProfileScreen from './App/Components/Account/Profile/Index'
+import AccountScreen from './Components/Account/Index'
+import SettingsScreen from './Components/Account/Settings/Index'
+import ProfileScreen from './Components/Account/Profile/Index'
 // NOTE: This screen is shared by 2 stacks
-import PasswordScreen from './App/Components/Account/Password/Index'
+import PasswordScreen from './Components/Account/Password/Index'
 let PasswordChangeRequiredStack = createStackNavigator({ PasswordScreen });
-import SecurityScreen from './App/Components/Account/Security/Index'
+import SecurityScreen from './Components/Account/Security/Index'
 
 let AccountStack = createStackNavigator({ 
   Account: {
@@ -168,7 +168,7 @@ let AccountStack = createStackNavigator({
 // *******************************************************************************
 // Dashboard 
 // *******************************************************************************
-import DashboardScreen from './App/Components/Dashboard/Index'
+import DashboardScreen from './Components/Dashboard/Index'
 
 let DashboardStack = createStackNavigator({ 
   Dashboard: {
@@ -191,7 +191,7 @@ DashboardStack.navigationOptions = ({ navigation }) => {
 // *******************************************************************************
 // My Dashboard 
 // *******************************************************************************
-import MyDashboardScreen from './App/Components/MyDashboard/Index'
+import MyDashboardScreen from './Components/MyDashboard/Index'
 
 let MyDashboardStack = createStackNavigator({ 
   MyDashboard: {
@@ -215,10 +215,10 @@ MyDashboardStack.navigationOptions = ({ navigation }) => {
 // Modules 
 // *******************************************************************************
 
-// import ModulesSubMenuScreen from './App/Components/Modules/SubMenu'
-import ModulesItemsScreen from './App/Components/Modules/Items'
-import ModulesWebViewScreen from './App/Components/Modules/WebView'
-import ModulesSearchItemsScreen from './App/Components/Modules/SearchItems'
+// import ModulesSubMenuScreen from './Components/Modules/SubMenu'
+import ModulesItemsScreen from './Components/Modules/Items'
+import ModulesWebViewScreen from './Components/Modules/WebView'
+import ModulesSearchItemsScreen from './Components/Modules/SearchItems'
 
 let ModulesStack = createStackNavigator({ 
   // Modules: {
@@ -255,9 +255,9 @@ ModulesStack.navigationOptions = ({ navigation }) => {
 // *******************************************************************************
 // Alerts 
 // *******************************************************************************
-import AlertScreen from './App/Components/Alerts/Index'
-import AlertCreateScreen from './App/Components/Alerts/Create/Index'
-import AlertDetailScreen from './App/Components/Alerts/Detail/Index'
+import AlertScreen from './Components/Alerts/Index'
+import AlertCreateScreen from './Components/Alerts/Create/Index'
+import AlertDetailScreen from './Components/Alerts/Detail/Index'
 
 let AlertStack = createStackNavigator({ 
   Alerts: {
@@ -287,7 +287,7 @@ AlertStack.navigationOptions = ({ navigation }) => {
 // Workflow 
 // *******************************************************************************
 
-import WorkflowScreen from './App/Components/Workflow/Index'
+import WorkflowScreen from './Components/Workflow/Index'
 
 let WorkflowStack = createStackNavigator({ 
   Workflow: {
@@ -313,9 +313,9 @@ WorkflowStack.navigationOptions = ({ navigation }) => {
 // Conversations 
 // *******************************************************************************
 
-import ConversationListScreen from './App/Components/Conversations/Index'
-import CreateConversationScreen from './App/Components/Conversations/Create'
-import ConversationScreen from './App/Components/Conversations/Conversation'
+import ConversationListScreen from './Components/Conversations/Index'
+import CreateConversationScreen from './Components/Conversations/Create'
+import ConversationScreen from './Components/Conversations/Conversation'
 
 let ConversationStack = createStackNavigator({ 
   ConversationList: {
@@ -347,7 +347,7 @@ ConversationStack.navigationOptions = ({ navigation }) => {
 // Chat - Replaces Conversastions 
 // *******************************************************************************
 
-import ChatScreen from './App/Components/Chat/Index'
+import ChatScreen from './Components/Chat/Index'
 let ChatStack = createStackNavigator({ ChatScreen });
 
 
@@ -383,7 +383,7 @@ let TabStack = createBottomTabNavigator({
   //       tabBarIcon: () => <FontAwesome name="cubes" size={20} color={brand.colors.primary} />
   //       // tabBarIcon: ({ tintColor }) =>
   //       //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-  //       //     <Image source={require('./App/Images/TabBar/clock-7.png')} />
+  //       //     <Image source={require('./Images/TabBar/clock-7.png')} />
   //       //   </View>
 
   //   })
@@ -402,7 +402,7 @@ let TabStack = createBottomTabNavigator({
         // tabBarIcon: () => <MaterialCommunityIcon name="clipboard-flow" size={20} color={brand.colors.primary} />
         // tabBarIcon: ({ tintColor }) =>
         //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        //     <Image source={require('./App/Images/TabBar/list-simple-star-7.png')} />
+        //     <Image source={require('./Images/TabBar/list-simple-star-7.png')} />
         //   </View>
 
     })
@@ -515,10 +515,10 @@ TabStack.navigationOptions = ({ navigation, screenProps }) => {
 // About
 // *******************************************************************************
 
-// import AboutScreen from './App/Components/About/Index'
-// import TermsScreen from './App/Components/About/Terms/Index'
-// import PrivacyScreen from './App/Components/About/Privacy/Index'
-// import DeviceScreen from './App/Components/About/Device/Index'
+// import AboutScreen from './Components/About/Index'
+// import TermsScreen from './Components/About/Terms/Index'
+// import PrivacyScreen from './Components/About/Privacy/Index'
+// import DeviceScreen from './Components/About/Device/Index'
 
 // let AboutStack = createStackNavigator({ 
 //   About: {
@@ -545,8 +545,8 @@ TabStack.navigationOptions = ({ navigation, screenProps }) => {
 // *******************************************************************************
 // Staff List
 // *******************************************************************************
-import StaffListScreen from './App/Components/StaffList/Index'
-import StaffListMemberScreen from './App/Components/StaffList/Member/Index'
+import StaffListScreen from './Components/StaffList/Index'
+import StaffListMemberScreen from './Components/StaffList/Member/Index'
 
 let StaffListStack = createStackNavigator({ 
   StaffList: {
@@ -568,17 +568,17 @@ let StaffListStack = createStackNavigator({
 // Support
 // *******************************************************************************
 
-import SupportScreen from './App/Components/Support/Index'
+import SupportScreen from './Components/Support/Index'
 
-import SupportViewScreen from './App/Components/Support/View/Index'
-import SupportRequestScreen from './App/Components/Support/Request/Index'
-import SupportContactScreen from './App/Components/Support/Contact/Index'
+import SupportViewScreen from './Components/Support/View/Index'
+import SupportRequestScreen from './Components/Support/Request/Index'
+import SupportContactScreen from './Components/Support/Contact/Index'
 
-import TermsScreen from './App/Components/Support/Terms/Index'
-import PrivacyScreen from './App/Components/Support/Privacy/Index'
-import DeviceScreen from './App/Components/Support/Device/Index'
-import LoggedEventsScreen from './App/Components/Support/LoggedEvents/Index'
-import LoggedEventDetailsScreen from './App/Components/Support/LoggedEvents/Detail'
+import TermsScreen from './Components/Support/Terms/Index'
+import PrivacyScreen from './Components/Support/Privacy/Index'
+import DeviceScreen from './Components/Support/Device/Index'
+import LoggedEventsScreen from './Components/Support/LoggedEvents/Index'
+import LoggedEventDetailsScreen from './Components/Support/LoggedEvents/Detail'
 
 
 let SupportStack = createStackNavigator({ 
@@ -620,7 +620,7 @@ let SupportStack = createStackNavigator({
 // Permissions
 // *******************************************************************************
 
-import PushNotificationsScreen from './App/Components/Permissions/PushNotifications/Index'
+import PushNotificationsScreen from './Components/Permissions/PushNotifications/Index'
 
 let PushNotificationsPermissionStack = createStackNavigator({ PushNotificationsScreen });
 
@@ -641,7 +641,7 @@ let PushNotificationsPermissionStack = createStackNavigator({ PushNotificationsS
 // Client Selection
 // *******************************************************************************
 
-import ClientSelectionScreen from './App/Components/ClientSelection/Index'
+import ClientSelectionScreen from './Components/ClientSelection/Index'
 
 let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
 
@@ -662,7 +662,7 @@ let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
 // Session Override
 // *******************************************************************************
 
-import SessionOverrideScreen from './App/Components/SessionOverride/Index'
+import SessionOverrideScreen from './Components/SessionOverride/Index'
 
 let SessionOverrideStack = createStackNavigator({ SessionOverrideScreen });
 
@@ -684,7 +684,7 @@ let SessionOverrideStack = createStackNavigator({ SessionOverrideScreen });
 // Drawer Items
 // *******************************************************************************
 
-import DrawerContainer from './App/Components/DrawerContainer'
+import DrawerContainer from './Components/DrawerContainer'
 
 const DrawerStack = createDrawerNavigator({
 
@@ -697,7 +697,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'My Home',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/clock-alarm-7.png')}
+      //     source={require('./Images/TabBar/clock-alarm-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -716,7 +716,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -734,7 +734,7 @@ const DrawerStack = createDrawerNavigator({
   //     // drawerLabel: 'Availability',
   //     // drawerIcon: ({ tintColor }) => (
   //     //   <Image
-  //     //     source={require('./App/Images/TabBar/calendar-7.png')}
+  //     //     source={require('./Images/TabBar/calendar-7.png')}
   //     //     style={[styles.icon, {tintColor: tintColor}]}
   //     //   />
   //     // ),
@@ -751,7 +751,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -770,7 +770,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -789,7 +789,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -808,7 +808,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -825,7 +825,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -1112,6 +1112,9 @@ export default class App extends React.Component {
           console.log("+++++++++ STATUS ACTIVE ++++++++++")
 
 
+          this._globalLogger(true, "App", "Activated", { state: this.state })
+
+
           if(this.state.userData) {
 
 
@@ -1133,14 +1136,28 @@ export default class App extends React.Component {
                 _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
               
 
-                // see if the user should see the lock screen
-                let currentTime = new Date().getTime() // in milliseconds
-                if(currentTime - TIME_WENT_TO_BACKGROUND > 5000) {
-                  // Show lock screen
-                  // this is needed since props.navigation isn't present for unmounted screen components
-                  NavigationService.navigate('LockStack');
+                // see if the user needs to see the lock screen
+                AsyncStorage.getItem('statusData').then((data) => {
 
-                }
+                  if(data) {
+
+                    let statusData = JSON.parse(data)
+                    let currentTime = new Date().getTime() // in milliseconds
+
+                    if(currentTime - statusData.ts > statusData.userLimit) {
+
+                      // this is needed since props.navigation isn't present for unmounted screen components
+                      NavigationService.navigate('LockStack');
+
+                    }
+
+
+                    console.log("+++++++++ STATUS ACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
+
+
+                  }
+
+                }) // end AsyncStorage
 
               
               } // end else
@@ -1155,10 +1172,20 @@ export default class App extends React.Component {
       }
       else if (appState.match(/active/) && nextAppState === 'inactive') {
 
-        console.log("+++++++++ STATUS INACTIVE ++++++++++")
+        if(this.state.userData) {
 
-        TIME_WENT_TO_BACKGROUND = new Date().getTime()
+          let statusData = {
+            userLimit: 15000, // 15 seconds in milliseconds
+            ts: new Date().getTime() // add a timestamp to it for sorting
+          }
 
+          console.log("+++++++++ STATUS INACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
+
+          AsyncStorage.setItem('statusData', JSON.stringify(statusData))
+
+
+        }
+          
         console.log('App has moved to the background')
 
       }

@@ -253,7 +253,7 @@ class LockScreen extends React.Component {
                         <View style={styles.container}>
 
 
-                            {this.state.requestStatus.hasError &&
+                            {/* {this.state.requestStatus.hasError &&
                                 <View style={{ 
                                     justifyContent: 'center', 
                                     alignItems: 'center',
@@ -264,7 +264,7 @@ class LockScreen extends React.Component {
                                         <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
                                     </ScrollView>
                                 </View>
-                            }
+                            } */}
 
                             <TouchableOpacity 
                                 style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
@@ -276,14 +276,14 @@ class LockScreen extends React.Component {
                             </TouchableOpacity> 
 
 
-                            <View>
+                            {/* <View>
                                 <Text 
                                     disabled={this.state.sending} 
                                     style={styles.forgotPassword} 
                                     onPress={this.onContinue}>
                                     Or, just continue for now...
                                 </Text>
-                            </View>
+                            </View> */}
 
 
 
