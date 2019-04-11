@@ -23,7 +23,6 @@ import Push from 'appcenter-push'
 
 import config from './app-config.json'
 
-var TIME_WENT_TO_BACKGROUND = new Date().getTime()
 
 // hide warnings for now...
 console.disableYellowBox = true;
@@ -1098,6 +1097,8 @@ export default class App extends React.Component {
 
       let _this = this
 
+      let log = []
+
       //console.log("> handleAppStateChange <<<<<<<<")
 
       const { appState } = this.state
@@ -1112,28 +1113,44 @@ export default class App extends React.Component {
           console.log("+++++++++ STATUS ACTIVE ++++++++++")
 
 
-          this._globalLogger(true, "App", "Activated", { state: this.state })
+          // this._globalLogger(true, "App", "Activated", { state: this.state })
+
+          log.push({
+            action: "Activated",
+            details: null
+          })
 
 
           if(this.state.userData) {
 
 
+            log.push({
+              action: "User is logged in",
+              details: null
+            })
+
             Authorization.RefreshToken(function(err, resp){
               if(err) {
                 console.log("err refreshing token", err)
+
+                log.push({
+                  action: "Error Refreshing Token",
+                  details: err
+                })
+
+                _this._globalLogger(false, "App", "Activated", { log: log })
+
               }
               else {
 
-
-                //let userData = _this.state.userData
-
-                // ONLY update certain things
-                //userData.token = resp.userData.token // update the token
-                //userData.sites = resp.userData.sites // update in clase changed
-
-
                 // if we are refreshing the token, we must reset all global state attributes back to defaults as well
                 _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
+
+
+                log.push({
+                  action: "Token Refreshed Successfully",
+                  details: resp.userData.token
+                })
               
 
                 // see if the user needs to see the lock screen
@@ -1144,15 +1161,40 @@ export default class App extends React.Component {
                     let statusData = JSON.parse(data)
                     let currentTime = new Date().getTime() // in milliseconds
 
-                    if(currentTime - statusData.ts > statusData.userLimit) {
+                    let diff = currentTime - statusData.ts
+
+                    log.push({
+                      action: "Checking statusData",
+                      details: { 
+                        currentTime: currentTime, 
+                        statusData: statusData,
+                        diff: diff
+                      }
+                    })
+
+
+                    if(diff >= statusData.limit) {
+
+                      log.push({
+                        action: "Showing Lock Screen",
+                        details: null
+                      })
 
                       // this is needed since props.navigation isn't present for unmounted screen components
                       NavigationService.navigate('LockStack');
 
                     }
+                    else {
 
+                      log.push({
+                        action: "NOT Showing Lock Screen",
+                        details: null
+                      })
 
-                    console.log("+++++++++ STATUS ACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
+                    }
+
+                    _this._globalLogger(true, "App", "Activated", { log: log })
+
 
 
                   }
@@ -1175,7 +1217,7 @@ export default class App extends React.Component {
         if(this.state.userData) {
 
           let statusData = {
-            userLimit: 15000, // 15 seconds in milliseconds
+            limit: 15000, // 15 seconds in milliseconds
             ts: new Date().getTime() // add a timestamp to it for sorting
           }
 
@@ -1183,6 +1225,7 @@ export default class App extends React.Component {
 
           AsyncStorage.setItem('statusData', JSON.stringify(statusData))
 
+          _this._globalLogger(true, "App", "Inactivated", { statusData: statusData })
 
         }
           
