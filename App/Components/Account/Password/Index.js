@@ -32,6 +32,7 @@ import { getSecuritySettings} from '../../../Services/Site';
 import AlerMessage from '../../Modules/AlertMessage'
 
 
+// NOTE: the backgroundColor and borderColor may be overridden when validating the new password
 const strengthLevels = [
   {
     score: -1,
@@ -51,8 +52,8 @@ const strengthLevels = [
     score: 1,
     label: 'Weak',
     labelColor: brand.colors.white,
-    backgroundColor: brand.colors.orange,
-    borderColor: brand.colors.orange
+    backgroundColor: brand.colors.danger,
+    borderColor: brand.colors.danger
   },
   {
     score: 2,
@@ -88,7 +89,7 @@ class Password extends React.Component {
     title: 'Change Password',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
+    headerStyle: { backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     
 
@@ -128,6 +129,7 @@ class Password extends React.Component {
         newPasswordConfirmed: "",
         newPasswordScore: -1,
         isConfirmPasswordSecureText: false,
+        isAcceptable: false
     };
   }
   
@@ -197,10 +199,29 @@ class Password extends React.Component {
 
     //console.log("password: ", pwd, "score: ", score)
 
-
     let level = strengthLevels.find(function(item){
         return item.score === score
     })
+
+
+    let isAcceptable = false
+    if(score >= this.state.securitySettings.Pswd_Complexity) {
+
+      isAcceptable = true
+
+      // just swap red and green to match the site colors
+      level.borderColor = brand.colors.success
+      level.backgroundColor = brand.colors.success
+
+    }
+    else {
+
+      // just swap red and green to match the site colors
+      level.borderColor = brand.colors.danger
+      level.backgroundColor = brand.colors.danger
+
+    }
+
 
     //console.log('level: ', level.label)
 
@@ -208,7 +229,8 @@ class Password extends React.Component {
       newPassword: pwd,
       newPasswordLevel: level,
       newPasswordConfirmed: "",
-      newPasswordScore: score
+      newPasswordScore: score,
+      isAcceptable: isAcceptable
     })
 
 
