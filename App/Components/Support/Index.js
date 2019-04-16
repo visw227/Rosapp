@@ -206,24 +206,28 @@ export class About extends React.Component {
                   
                   />
 
-                  <ListItem
+                {/* // making sure userLevel exists - wont if user currently logged in */}
+                {this.props.screenProps.state.userData.userLevel && 
+                    this.props.screenProps.state.userData.userLevel ===  99 && 
+                    <ListItem
 
-                      style={Styles.listItem}
-                      title='Logged Events'
-                          titleStyle={{ color: brand.colors.gray }}
+                        style={Styles.listItem}
+                        title='Logged Events'
+                            titleStyle={{ color: brand.colors.gray }}
 
-                      subtitle={
-                      <View style={Styles.subtitleView}>
-                          <Text style={Styles.ratingText}>Logged events that we use for debugging</Text>
-                      </View>
-                      }
-                      avatar={<Avatar rounded medium
-                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
-                          icon={{name: 'list-alt', type: 'font-awesome'}}/>}
-                      
-                      onPress={() => this.props.navigation.navigate('LoggedEvents') }
-                  
-                  />
+                        subtitle={
+                        <View style={Styles.subtitleView}>
+                            <Text style={Styles.ratingText}>Logged events that we use for debugging</Text>
+                        </View>
+                        }
+                        avatar={<Avatar rounded medium
+                            overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                            icon={{name: 'list-alt', type: 'font-awesome'}}/>}
+                        
+                        onPress={() => this.props.navigation.navigate('LoggedEvents') }
+                    
+                    />
+                    }
 
 
               </List>
