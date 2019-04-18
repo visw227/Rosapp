@@ -1104,8 +1104,8 @@ export default class App extends React.Component {
       const { appState } = this.state
 
       // active, inactive, background
-      //console.log('current appState', appState)
-      //console.log('next appState   ', nextAppState)
+      console.log('current appState', appState)
+      console.log('next appState   ', nextAppState)
 
       // IMPORTANT: ONLY check for "background" not "inactive" here or the LockScreen will render in a loop
       if (appState.match(/background/) && nextAppState === 'active') {
@@ -1215,6 +1215,15 @@ export default class App extends React.Component {
       else if (appState.match(/active/) && nextAppState === 'inactive') {
 
         if(this.state.userData) {
+
+
+          // revert back to the real user if impersonating
+          if(this.state.superUser) {
+            console.log("reverting superUser back to ", this.state.superUser)
+            let userData = this.state.superUser
+            _this._globalStateChange( { action: "undo-session-override", userData: userData })
+          }
+
 
           let statusData = {
             limit: 15000, // 15 seconds in milliseconds

@@ -85,7 +85,7 @@ class DashboardScreen extends React.Component {
   constructor(props) {
       super(props);
 
-      // console.log("Dashboard props.screenProps", JSON.stringify(props.screenProps, null, 2))
+      // //console.log("Dashboard props.screenProps", JSON.stringify(props.screenProps, null, 2))
 
 
       this.state = {
@@ -122,7 +122,7 @@ class DashboardScreen extends React.Component {
         // ONLY if something has changed
     if(token !== this.state.userData.token){
 
-      console.log("Dashboard picked up new token: ", token)
+      //console.log("Dashboard picked up new token: ", token)
       
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
@@ -133,7 +133,7 @@ class DashboardScreen extends React.Component {
         }
       }
       
-      console.log("source updated: ", JSON.stringify(source, null, 2))
+      //console.log("source updated: ", JSON.stringify(source, null, 2))
 
       
       this.setState({ 
@@ -145,7 +145,7 @@ class DashboardScreen extends React.Component {
     // ONLY if something has changed
     if(selectedClient !== this.state.selectedClient){
 
-      console.log("Dashboard picked up new selectedClient: ", selectedClient)
+      //console.log("Dashboard picked up new selectedClient: ", selectedClient)
 
       this.props.navigation.setParams({ title: selectedClient })
 
@@ -160,7 +160,7 @@ class DashboardScreen extends React.Component {
         }
       }
       
-      console.log("source updated: ", JSON.stringify(source, null, 2))
+      //console.log("source updated: ", JSON.stringify(source, null, 2))
 
       
       this.setState({ 
@@ -191,8 +191,8 @@ class DashboardScreen extends React.Component {
 
     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
-    console.log("----------------- Dashboard ----------------------")
-    console.log("Authorization.VerifyToken",this.props.screenProps.state.selectedClient, userData.token)
+    //console.log("----------------- Dashboard ----------------------")
+    //console.log("Authorization.VerifyToken",this.props.screenProps.state.selectedClient, userData.token)
 
 
     // this provides shared logging via screenProps
@@ -204,7 +204,7 @@ class DashboardScreen extends React.Component {
 
       if(err) {
 
-        console.log(">>> Dashboard - Invalid Token", err)
+        //console.log(">>> Dashboard - Invalid Token", err)
 
         // this provides shared logging via screenProps
         _this.props.screenProps._globalLogger(false, "Dashboard", "Token is INVALID", { error: err })
@@ -221,7 +221,7 @@ class DashboardScreen extends React.Component {
       }
       else {
 
-        console.log(">>> Dashboard - Token is Valid", resp)
+        //console.log(">>> Dashboard - Token is Valid", resp)
 
         // this provides shared logging via screenProps
         _this.props.screenProps._globalLogger(true, "Dashboard", "Token is valid", { response: resp })
@@ -235,7 +235,7 @@ class DashboardScreen extends React.Component {
         }
 
 
-        console.log(">>> Dashboard source", JSON.stringify(source, null, 2))
+        //console.log(">>> Dashboard source", JSON.stringify(source, null, 2))
 
 
         _this.setState({
@@ -298,7 +298,7 @@ class DashboardScreen extends React.Component {
 
                 startInLoadingState = {true}
                 
-                //onLoadProgress={e => console.log(e.nativeEvent.progress)}
+                //onLoadProgress={e => //console.log(e.nativeEvent.progress)}
                 renderLoading={this._renderLoading}
                 injectedJavaScript = { hideSiteNav } 
                 style={{ flex: 1 }}

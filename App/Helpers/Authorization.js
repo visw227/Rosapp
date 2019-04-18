@@ -23,10 +23,10 @@ export var Authorization = {
 
         // callback({ valid: true })
 
-        console.log(">>> VerifyToken - client: ", client, " token: ", token)
+        //console.log(">>> VerifyToken - client: ", client, " token: ", token)
         verifyToken(client, token, function(err, resp){
 
-            console.log("VerifyToken - err", err, "resp", resp)
+            //console.log("VerifyToken - err", err, "resp", resp)
             if(err) {
                 callback({ valid: false }, null)
             }
@@ -43,10 +43,10 @@ export var Authorization = {
     // The first API request ALWAYS times out
     WakeUpServer: function(callback) {
 
-        console.log("waking up the server...")
+        //console.log("waking up the server...")
         Authorization.UserLogin("fake", "fake", function(err, resp){
 
-            console.log("server has been woke up")
+            //console.log("server has been woke up")
             if(callback) {
                 callback(null, { message: "It has been woke up"})
             }
@@ -59,7 +59,7 @@ export var Authorization = {
 
         AsyncStorage.getItem('loginData').then((data) => {
 
-            console.log("refreshToken loginData", data)
+            //console.log("refreshToken loginData", data)
 
             if(data) {
 
@@ -92,7 +92,7 @@ export var Authorization = {
 
     UserLogin: function(userName, password, callback) {
 
-        console.log("login", userName, password)
+        //console.log("login", userName, password)
 
         let request = {
             userName: userName, 
@@ -103,7 +103,7 @@ export var Authorization = {
 
             if(err) {
 
-                console.log("userLogin error", err)
+                //console.log("userLogin error", err)
                 // show the real error message when can - otherwise show the default message
                 //_this.showAlert("Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'")
 
@@ -116,7 +116,7 @@ export var Authorization = {
             }
             else {
 
-                console.log("userLogin success:", response)
+                //console.log("userLogin success:", response)
 
                 if(response && response.SecurityToken) {
 
@@ -132,7 +132,7 @@ export var Authorization = {
                         
 
                         if(err) {
-                            console.log("err - getMobileMenuItems", err)
+                            //console.log("err - getMobileMenuItems", err)
 
                             callback( { message: "Your login was successful, but we were unable to access your Rosnet menu options for " + userData.sites[0] + ". The exact error was: '" + err.message + "'" } )
                         }
