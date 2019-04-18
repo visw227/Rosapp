@@ -24,6 +24,7 @@ import Push from 'appcenter-push'
 import config from './app-config.json'
 
 import { Biometrics } from './Helpers/Biometrics';
+import { Remember } from './Helpers/Remember';
 
 
 // hide warnings for now...
@@ -1277,9 +1278,13 @@ export default class App extends React.Component {
                 //console.log("currentScreen", currentScreen)
                 //console.log("prevScreen", prevScreen)
 
-                //if (prevScreen !== currentScreen) {
-                //  console.log('navigating to this screen', currentScreen);
-                //} 
+                if (prevScreen !== currentScreen) {
+                  console.log('navigating to this screen', currentScreen);
+                  // DONT GET STUCK ON THIS SCREEN
+                  if(currentScreen !== 'LockScreen') {
+                    AsyncStorage.setItem('lastScreen', currentScreen)
+                  }
+                } 
                 
               }}
 

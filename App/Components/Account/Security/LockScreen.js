@@ -20,7 +20,8 @@ import {
   Image, 
   KeyboardAvoidingView,
   Animated,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -199,8 +200,22 @@ class LockScreen extends React.Component {
 
     onContinue = () => {
 
-        // this should allow for the back button to appear in the header
-        this.props.navigation.navigate('Dashboard')
+        let screen = 'Dashboard'
+        AsyncStorage.getItem('lastScreen').then((data) => {
+
+            console.log('lastScreen', data)
+
+            if(data && data !== 'LockScreen') {
+                screen = data
+            }
+
+            // this should allow for the back button to appear in the header
+            this.props.navigation.navigate(screen)
+        
+
+        })
+
+
 
     }
 
