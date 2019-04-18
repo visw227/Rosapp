@@ -84,12 +84,21 @@ class LockScreen extends React.Component {
   componentDidMount() {
 
 
+    console.log("componentDidMount...")
+
+    // this will cause the biometrics challenge to display anytime this screen is displayed
+    this.props.navigation.addListener('willFocus', this.load)
+
+
+  }
+
+  
+  load = () => {
+
+    console.log(">>> LOAD")
+    
     // this provides shared logging via screenProps
     this.props.screenProps._globalLogger(true, "LockScreen", "Opened", {})
-
-
-    // this.checkDeviceForHardware();
-    // this.checkForFingerprints();
 
     TouchID.isSupported()
     .then(biometryType => {
@@ -106,20 +115,10 @@ class LockScreen extends React.Component {
 
     })
 
-
-
   }
 
-  
 
-    // onButtonPress = () => {
-    //     TouchID.isSupported()
-    //     .then(this.authenticate)
-    //     .catch(error => {
-    //         console.log("error", error)
-    //         this.showAlert("TouchID not supported")
-    //     });
-    // }
+
 
     onButtonPress = () => {
 

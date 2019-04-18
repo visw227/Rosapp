@@ -15,6 +15,9 @@ import brand from '../Styles/brand'
 
 import AppCenter from 'appcenter'
 
+import { Biometrics } from '../Helpers/Biometrics';
+
+
 class LaunchScreen extends React.Component {
 
     // MUST BE PRESENT or NO title will appear
@@ -52,8 +55,6 @@ class LaunchScreen extends React.Component {
 
           let userData = JSON.parse(data)
 
-
-
           AsyncStorage.getItem('selectedClient').then((selectedClient) => {
 
             if(selectedClient) {
@@ -77,17 +78,37 @@ class LaunchScreen extends React.Component {
             _this.props.screenProps._globalStateChange( { action: "launch", userData: userData, selectedClient: selectedClient } )
 
 
-            // This will switch to the App screen or Auth screen and this loading
-            // screen will be unmounted and thrown away.
-            //this.props.navigation.navigate(userToken ? 'DrawerStack' : 'LoginStack');
-            routeName = 'DrawerStack'
-            // instead, reset the navigation
-            const resetAction = StackActions.reset({
-                index: 0,
-                key: null, // this is the trick that allows this to work
-                actions: [NavigationActions.navigate({ routeName: routeName })],
-            });
-            this.props.navigation.dispatch(resetAction);
+
+            // see if the user needs to see the lock screen
+            Biometrics.CheckIfShouldShowLockScreen(function(result){
+
+              //log = log.concat(result.log)
+
+              if(result.showLock) {
+                routeName = 'LockStack'
+              }
+              else {
+
+                routeName = 'DrawerStack'
+              }
+
+              _this.props.screenProps._globalLogger(true, "App", "Activated", { log: result.log })
+
+
+              // This will switch to the App screen or Auth screen and this loading
+              // screen will be unmounted and thrown away.
+              //this.props.navigation.navigate(userToken ? 'DrawerStack' : 'LoginStack');
+              // instead, reset the navigation
+              const resetAction = StackActions.reset({
+                  index: 0,
+                  key: null, // this is the trick that allows this to work
+                  actions: [NavigationActions.navigate({ routeName: routeName })],
+              });
+              _this.props.navigation.dispatch(resetAction);
+
+
+            })
+
 
 
           })

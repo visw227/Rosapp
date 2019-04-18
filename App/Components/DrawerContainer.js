@@ -53,7 +53,26 @@ export default class DrawerContainer extends React.Component {
 
         let _this = this
 
+        AsyncStorage.getItem('loginData').then((data) => {
+
+            if(data) {
+
+              let loginData = JSON.parse(data)
+              loginData.password = ''
+
+              AsyncStorage.setItem('loginData', JSON.stringify(loginData))
+
+            }
+
+        })
+
+
         AsyncStorage.removeItem('userData', function(err){
+
+          //let userData = _this.props.screenProps.state.userData
+
+          // make sure userData is globally nulled
+          //_this.props.screenProps._globalStateChange( { action: "logout", userData: null })
 
           // this API request will delete the user's token from the database and other stuff
           userLogout(_this.props.screenProps.state.selectedClient, _this.props.screenProps.state.userData.token, function(err,resp){

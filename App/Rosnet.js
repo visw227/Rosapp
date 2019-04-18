@@ -23,6 +23,8 @@ import Push from 'appcenter-push'
 
 import config from './app-config.json'
 
+import { Biometrics } from './Helpers/Biometrics';
+
 
 // hide warnings for now...
 console.disableYellowBox = true;
@@ -933,7 +935,7 @@ export default class App extends React.Component {
         AppState.addEventListener('change', this.onAppStateChange);
 
 
-        console.log("App-Rosnet config", config)
+        //console.log("App-Rosnet config", config)
 
         // show QA indicator throughout the app
         if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
@@ -944,7 +946,7 @@ export default class App extends React.Component {
     }
 
     componentWillUnmount() {
-        console.log("...root componentWillUnmount")
+        //console.log("...root componentWillUnmount")
         AppState.removeEventListener('change', this.onAppStateChange);
     }
 
@@ -953,6 +955,10 @@ export default class App extends React.Component {
     // globally log things
     //**********************************************************************************
     _globalLogger = (ok, source, title, message) => {
+
+      // console.log("------- GLOBAL LOG EVENT -----------")
+      // console.log(ok, source, title, message)
+      // console.log("------- END GLOBAL LOG EVENT -----------")
 
       Logger.LogEvent(ok, source, title, message)
 
@@ -972,7 +978,8 @@ export default class App extends React.Component {
 
           this.setState({
             userData: data.userData
-          }, () => console.log("global state change to userData", this.state.userData ) )
+          })
+          // }, () => console.log("global state change to userData", this.state.userData ) )
 
           // always save any changes to local storage
           AsyncStorage.setItem('userData', JSON.stringify(data.userData))
@@ -983,7 +990,8 @@ export default class App extends React.Component {
 
           this.setState({
             superUser: data.superUser
-          }, () => console.log("global state change to superUser", this.state.superUser ) )
+          })
+          // }, () => console.log("global state change to superUser", this.state.superUser ) )
 
           
         }
@@ -992,7 +1000,8 @@ export default class App extends React.Component {
 
           this.setState({
             selectedClient: data.selectedClient
-          }, () => console.log("global state change to selectedClient", this.state.selectedClient ) )
+          })
+          // }, () => console.log("global state change to selectedClient", this.state.selectedClient ) )
 
           // always save any changes to local storage
           AsyncStorage.setItem('selectedClient', data.selectedClient)
@@ -1002,7 +1011,8 @@ export default class App extends React.Component {
         if (data.backgroundColor) {
           this.setState({
             backgroundColor : data.backgroundColor
-          },() => console.log('global state change for bgColor',this.state.backgroundColor))
+          })
+          // },() => console.log('global state change for bgColor',this.state.backgroundColor))
         }
 
         // this action will force the app to reset back to the real user
@@ -1012,7 +1022,8 @@ export default class App extends React.Component {
             userData: data.userData,
             superUser: null,
             backgroundColor: brand.colors.primary
-          }, () => console.log("global state change back to real user", data.userData ) )
+          })
+          // }, () => console.log("global state change back to real user", data.userData ) )
 
 
         }
@@ -1025,10 +1036,21 @@ export default class App extends React.Component {
             userData: data.userData,
             superUser: null,
             backgroundColor: brand.colors.primary
-          }, () => console.log("global state change for token refresh", data.userData ) )
-
-
+          })
+          // }, () => console.log("global state change for token refresh", data.userData ) )
         }
+
+
+        // this will refresh the real user's token
+        // this action will force the app to reset back to the real user
+        // if(data.action && data.action === "logout") {
+
+        //   this.setState({
+        //     userData: null
+        //   })
+        //   // }, () => console.log("global state change for token refresh", data.userData ) )
+        // }
+
 
     }
 
@@ -1060,16 +1082,6 @@ export default class App extends React.Component {
       let _this = this
 
       if(this.state.userData) {
-        //console.log("background checking for notifications...")
-
-        // checkForNotifications(this.state.userData.token, function(err, data){
-        //   console.log(" found notifications", data)
-        //   _this.setState({
-        //     alertCount: data.length,
-        //     notifications: data
-        //   })
-        // })
-        // console.log(" found notifications", data)
 
         let alertCount = generateRandomNumber(0,15)
         let messageCount = generateRandomNumber(0,3)
@@ -1104,8 +1116,8 @@ export default class App extends React.Component {
       const { appState } = this.state
 
       // active, inactive, background
-      console.log('current appState', appState)
-      console.log('next appState   ', nextAppState)
+      // console.log('current appState', appState)
+      // console.log('next appState   ', nextAppState)
 
       // IMPORTANT: ONLY check for "background" not "inactive" here or the LockScreen will render in a loop
       if (appState.match(/background/) && nextAppState === 'active') {
@@ -1122,6 +1134,8 @@ export default class App extends React.Component {
 
 
           if(this.state.userData) {
+
+            console.log("userData", this.state.userData)
 
 
             log.push({
@@ -1143,6 +1157,8 @@ export default class App extends React.Component {
               }
               else {
 
+                console.log("token refreshed")
+
                 // if we are refreshing the token, we must reset all global state attributes back to defaults as well
                 _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
 
@@ -1154,52 +1170,18 @@ export default class App extends React.Component {
               
 
                 // see if the user needs to see the lock screen
-                AsyncStorage.getItem('statusData').then((data) => {
+                Biometrics.CheckIfShouldShowLockScreen(function(result){
 
-                  if(data) {
+                  log = log.concat(result.log)
 
-                    let statusData = JSON.parse(data)
-                    let currentTime = new Date().getTime() // in milliseconds
-
-                    let diff = currentTime - statusData.ts
-
-                    log.push({
-                      action: "Checking statusData",
-                      details: { 
-                        currentTime: currentTime, 
-                        statusData: statusData,
-                        diff: diff
-                      }
-                    })
-
-
-                    if(diff >= statusData.limit) {
-
-                      log.push({
-                        action: "Showing Lock Screen",
-                        details: null
-                      })
-
+                  if(result.showLock) {
                       // this is needed since props.navigation isn't present for unmounted screen components
                       NavigationService.navigate('LockStack');
-
-                    }
-                    else {
-
-                      log.push({
-                        action: "NOT Showing Lock Screen",
-                        details: null
-                      })
-
-                    }
-
-                    _this._globalLogger(true, "App", "Activated", { log: log })
-
-
-
                   }
 
-                }) // end AsyncStorage
+                  _this._globalLogger(true, "App", "Activated", { log: log })
+
+                })
 
               
               } // end else
@@ -1217,7 +1199,10 @@ export default class App extends React.Component {
         if(this.state.userData) {
 
 
-          // revert back to the real user if impersonating
+          // IMPORTANT:
+          // revert back to the real user if impersonating - 
+          // THIS IS ESPECIALLY important if the user then exits/closes/terminates the app entirely.
+          // Otherwise, when the user re-launches the app, they will still be logged in as an impersonator
           if(this.state.superUser) {
             console.log("reverting superUser back to ", this.state.superUser)
             let userData = this.state.superUser
@@ -1226,7 +1211,7 @@ export default class App extends React.Component {
 
 
           let statusData = {
-            limit: 15000, // 15 seconds in milliseconds
+            limit: 5000, // 15 seconds in milliseconds
             ts: new Date().getTime() // add a timestamp to it for sorting
           }
 
