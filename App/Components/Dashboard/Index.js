@@ -127,13 +127,13 @@ class DashboardScreen extends React.Component {
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://" + selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        uri: "https://" + selectedClient + "." + env + "/home/appdash",
         headers: {
           "managerAppToken":  token
         }
       }
       
-      //console.log("source updated: ", JSON.stringify(source, null, 2))
+      console.log("source updated: ", JSON.stringify(source, null, 2))
 
       
       this.setState({ 
@@ -154,13 +154,13 @@ class DashboardScreen extends React.Component {
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://" + selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        uri: "https://" + selectedClient + "." + env + "/home/appdash",
         headers: {
           "managerAppToken":  userData.token
         }
       }
       
-      //console.log("source updated: ", JSON.stringify(source, null, 2))
+      console.log("source updated: ", JSON.stringify(source, null, 2))
 
       
       this.setState({ 
@@ -228,14 +228,14 @@ class DashboardScreen extends React.Component {
 
 
         let source = {
-          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/home/appdash",
           headers: {
             "managerAppToken":  userData.token
           }
         }
 
 
-        //console.log(">>> Dashboard source", JSON.stringify(source, null, 2))
+        console.log(">>> Dashboard source", JSON.stringify(source, null, 2))
 
 
         _this.setState({
