@@ -20,7 +20,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     let fullUrl = ''
     let protocol = ''
 
-    //console.log("starting request", url, method, jsonBody, subDomain, token)
+    console.log("starting request", url, method, jsonBody, subDomain, token)
 
 
     // clear everything on login
@@ -42,7 +42,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     // tack on timestamp as a cache buster
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
-    //console.log("fullUrl", fullUrl)
+    console.log("fullUrl", fullUrl)
 
 
     //Logger.LogEvent(true, "ServiceWrapper", "Starting request", { url: fullUrl, method: method })
@@ -64,26 +64,26 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
     // Setup our listener to process compeleted requests
     xhr.onerror = function(err) {
-        //console.log("error", err)
+        console.log("error", err)
     }
     xhr.onloadstart = function() {
-        //console.log("onloadstart")
+        console.log("onloadstart")
     }
     xhr.onprogress = function() {
-        //console.log("onprogress")
+        console.log("onprogress")
     }
     xhr.onabort = function() {
-        //console.log("abort")
+        console.log("abort")
     }
     xhr.ontimeout = function() {
-        //console.log("the request timed out")
+        console.log("the request timed out")
 
         Logger.LogEvent(false, "API (TIMED OUT)", url, { request: logRequest })
 
     }
     xhr.onreadystatechange = function() {
 
-        ////console.log("xhr.onreadstatechange", xhr)
+        //console.log("xhr.onreadstatechange", xhr)
 
         // Only run if the request is complete
         if (xhr.readyState !== 4) return;
@@ -93,7 +93,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             let json = JSON.parse(xhr.response)
 
-            //console.log("xhr.response", json)
+            console.log("xhr.response", json)
 
             Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
 
@@ -115,8 +115,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             let message = xhr._response
 
             // the user's token has expired
-            //console.log(">>> the user request was unauthorized")
-            //console.log("xhr.response", xhr._response)
+            console.log(">>> the user request was unauthorized")
+            console.log("xhr.response", xhr._response)
 
             callback({ status: xhr.status, message: message }, null)
 
@@ -132,12 +132,12 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             // BE AWARE - PC4 responses are VERY unpredictable
             // They can be text strings, HTML, or a JSON object... have fun
 
-            //console.log("xhr._response", xhr._response)
+            console.log("xhr._response", xhr._response)
             let message = xhr._response
 
             if(message.indexOf('{') !== -1) {
 
-                //console.log("error is JSON", JSON.stringify(json, null, 2))
+                console.log("error is JSON", JSON.stringify(json, null, 2))
 
                 let json = JSON.parse(message)
 
@@ -146,12 +146,12 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             }
             else if(message.indexOf('<') !== -1) {
 
-                //console.log("error is HTML", message)
+                console.log("error is HTML", message)
                 message = "An error occurred, but the response was HTML so unable to parse."
             }
             else {
 
-                //console.log("error MAY just be a string", message)
+                console.log("error MAY just be a string", message)
 
                 // strip out any extra quotes from response - e.g. _response: ""The email address is not associated with any sites""
                 message = Utils.ReplaceAll(message, '"', '')
@@ -161,7 +161,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
 
             // What to do when the request has failed
-            //console.log('something went wrong', xhr);
+            console.log('something went wrong', xhr);
             callback({ status: xhr.status, message: message }, null)
 
 

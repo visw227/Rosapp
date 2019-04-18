@@ -234,7 +234,8 @@ class Login extends Component {
                     isRosnetEmployee: false,
                     menuItems: fakedMenu,
                     isRosnetEmployee: true,
-                    mustChangePassword: true
+                    mustChangePassword: true,
+                    canChangePassword: true
                 }
 
                 let redirect = null
