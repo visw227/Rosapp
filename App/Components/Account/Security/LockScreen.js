@@ -75,7 +75,7 @@ class LockScreen extends React.Component {
         compatible: false,
         fingerprints: false,
         result: '',
-        biometryType: null,
+        bioType: null,
         isQA: this.props.screenProps.state.isQA
       }
 
@@ -86,6 +86,7 @@ class LockScreen extends React.Component {
 
 
     console.log("componentDidMount...")
+    
 
     // this will cause the biometrics challenge to display anytime this screen is displayed
     this.props.navigation.addListener('willFocus', this.load)
@@ -102,19 +103,48 @@ class LockScreen extends React.Component {
     this.props.screenProps._globalLogger(true, "LockScreen", "Opened", {})
 
     TouchID.isSupported()
-    .then(biometryType => {
+    .then(bioType => {
       
         // this provides shared logging via screenProps
-        this.props.screenProps._globalLogger(true, "LockScreen", "TouchId.isSupported", { biometryType: biometryType })
+        this.props.screenProps._globalLogger(true, "LockScreen", "Biometrics Supported", { bioType: bioType })
+
+        this.setState({ bioType });
 
 
-        this.setState({ biometryType });
 
-        // make FaceID or TouchID appear immediately
-        this.onButtonPress()
+        // iOS: Known values: 'FaceID', T'ouchID' (finger print OR passcode), 'Null', 'None'
+        if(bioType === 'FaceID' || bioType === 'TouchID') {
+
+            this.onButtonPress()
+
+        }
+        // Android only
+        else if(bioType === true) {
+
+            this.onButtonPress()
+        }
+        // 'Null', 'None', etc. - if biometrics not available or disabled, just continue 
+        else {
+
+            this.onContinue()
+        }
 
 
     })
+    .catch(error => {
+
+        // if there aren't any biometrics available, just take user where they were
+
+        // this provides shared logging via screenProps
+        this.props.screenProps._globalLogger(false, "LockScreen", "Biometrics Error", { error: error })
+
+        console.log(">>> Biometrics error: ", error)
+
+        this.onContinue()
+
+
+    })
+
 
   }
 
@@ -123,52 +153,24 @@ class LockScreen extends React.Component {
 
     onButtonPress = () => {
 
-        TouchID.isSupported()
-        .then(biometryType => {
+        let bioType = this.state.bioType
 
-            // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(true, "LockScreen", "onButtonPress success", { biometryType: biometryType })
+        this.authenticate(bioType)
 
-            // Success code
-            if (biometryType === 'FaceID') {
-                console.log('FaceID is supported.');
-                this.authenticate(biometryType)
-            } 
-            else if (biometryType === 'TouchID'){
-                console.log('TouchID is supported.');
-                this.authenticate(biometryType)
-            } 
-            else if (biometryType === true) {
-                // Touch ID is supported on Android
-                this.authenticate(biometryType)
-            }
-        })
-        .catch(error => {
-            // Failure code if the user's device does not have touchID or faceID enabled
-            console.log("error", error)
-            this.showAlert("FaceID or TouchID not supported")
-
-            // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(false, "LockScreen", "onButtonPress error", { error: error })
-
-
-        });
     }
 
-    authenticate = (biometryType) => {
+
+    authenticate = (bioType) => {
 
         // this provides shared logging via screenProps
-        this.props.screenProps._globalLogger(true, "LockScreen", "authenticate - " + biometryType, { biometryType: biometryType })
+        this.props.screenProps._globalLogger(true, "LockScreen", "authenticate - " + bioType, { bioType: bioType })
 
 
         return TouchID.authenticate('', touchConfig)
         .then(success => {
 
-            this.showAlert("Authenticated Successfully")
-
             // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(true, "LockScreen", biometryType, { success: true })
-
+            this.props.screenProps._globalLogger(true, "LockScreen", bioType, { success: true })
 
             this.onContinue()
 
@@ -177,25 +179,15 @@ class LockScreen extends React.Component {
             console.log("authenticate.catch(error) = ", error)
 
             // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(false, "LockScreen", biometryType, { error: error })
+            this.props.screenProps._globalLogger(false, "LockScreen", bioType, { error: error })
 
 
-            this.showAlert("Authentication error: " + error)
+
         });
     }
 
 
-    showAlert = (message) => {
 
-        this.setState({
-            sending: false, 
-            requestStatus: {
-                hasError: true,
-                message: message
-            }
-        })
-
-    }
 
 
     onContinue = () => {
@@ -214,8 +206,6 @@ class LockScreen extends React.Component {
         
 
         })
-
-
 
     }
 
@@ -285,7 +275,7 @@ class LockScreen extends React.Component {
                                 onPress={this.onButtonPress}>
                                 <Text 
                                 style={ this.state.sending ? styles.buttonDisabledText : styles.buttonText }>
-                                {`Authenticate with ${this.state.biometryType}`}
+                                {`Authenticate with ${this.state.bioType}`}
                                 </Text>
                             </TouchableOpacity> 
 
