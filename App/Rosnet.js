@@ -1134,7 +1134,7 @@ export default class App extends React.Component {
           })
 
 
-          if(this.state.userData) {
+          if(this.state.userData && this.state.userData.password) {
 
             console.log("userData", this.state.userData)
 
@@ -1173,6 +1173,7 @@ export default class App extends React.Component {
                 // see if the user needs to see the lock screen
                 Biometrics.CheckIfShouldShowLockScreen(function(result){
 
+                  // combine the log above with the log this function returns
                   log = log.concat(result.log)
 
                   if(result.showLock) {
@@ -1197,8 +1198,10 @@ export default class App extends React.Component {
       }
       else if (appState.match(/active/) && nextAppState === 'inactive') {
 
-        if(this.state.userData) {
+        console.log("+++++++++ STATUS INACTIVE ++++++++++")
 
+
+        if(this.state.userData && this.state.userData.password) {
 
           // IMPORTANT:
           // revert back to the real user if impersonating - 
@@ -1211,20 +1214,19 @@ export default class App extends React.Component {
           }
 
 
-          let statusData = {
-            limit: 5000, // 15 seconds in milliseconds
-            ts: new Date().getTime() // add a timestamp to it for sorting
-          }
-
-          console.log("+++++++++ STATUS INACTIVE ++++++++++", JSON.stringify(statusData, null, 2))
-
-          AsyncStorage.setItem('statusData', JSON.stringify(statusData))
-
-          _this._globalLogger(true, "App", "Inactivated", { statusData: statusData })
-
         }
-          
-        console.log('App has moved to the background')
+        
+
+        let statusData = {
+          limit: 5000, // 15 seconds in milliseconds
+          ts: new Date().getTime() // add a timestamp to it for sorting
+        }
+
+        AsyncStorage.setItem('statusData', JSON.stringify(statusData))
+
+        _this._globalLogger(true, "App", "Inactivated", { statusData: statusData })
+
+
 
       }
 
@@ -1280,7 +1282,7 @@ export default class App extends React.Component {
 
                 if (prevScreen !== currentScreen) {
                   console.log('navigating to this screen', currentScreen);
-                  // DONT GET STUCK ON THIS SCREEN
+                  // DONT GET STUCK ON THE LOCK SCREEN
                   if(currentScreen !== 'LockScreen') {
                     AsyncStorage.setItem('lastScreen', currentScreen)
                   }

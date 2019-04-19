@@ -69,10 +69,13 @@ export default class DrawerContainer extends React.Component {
 
         AsyncStorage.removeItem('userData', function(err){
 
-          //let userData = _this.props.screenProps.state.userData
+          // DONT null state.userData - causes the app to crash since there are screens listening for userData.token changes
+          // clear out the password from state
+          let userData = _this.props.screenProps.state.userData
+          userData.password = null
 
-          // make sure userData is globally nulled
-          //_this.props.screenProps._globalStateChange( { action: "logout", userData: null })
+          // update global state
+          _this.props.screenProps._globalStateChange( { action: "logout", userData: userData })
 
           // this API request will delete the user's token from the database and other stuff
           userLogout(_this.props.screenProps.state.selectedClient, _this.props.screenProps.state.userData.token, function(err,resp){
