@@ -1282,10 +1282,7 @@ export default class App extends React.Component {
 
                 if (prevScreen !== currentScreen) {
                   console.log('navigating to this screen', currentScreen);
-                  // DONT GET STUCK ON THE LOCK SCREEN
-                  if(currentScreen !== 'LockScreen') {
-                    AsyncStorage.setItem('lastScreen', currentScreen)
-                  }
+                  AsyncStorage.setItem('lastScreen', currentScreen)
                 } 
                 
               }}

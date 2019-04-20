@@ -64,17 +64,10 @@ class LockScreen extends React.Component {
       this.imageHeight = new Animated.Value(MAX_HEIGHT);
 
       this.state = {
-
         requestStatus: {
             hasError: false,
             message: ""
         },
-        hasHardwareAsync: false,
-        isEnrolledAsync: false, 
-        authenticateAsync: false,
-        compatible: false,
-        fingerprints: false,
-        result: '',
         bioType: null,
         isQA: this.props.screenProps.state.isQA
       }
@@ -84,13 +77,12 @@ class LockScreen extends React.Component {
 
   componentDidMount() {
 
-
     console.log("componentDidMount...")
     
-
-    // this will cause the biometrics challenge to display anytime this screen is displayed
+    // componentDidMount only fires once
+    // willFocus will cause the biometrics challenge to display anytime this screen is displayed
+    // this will happen many times during the use of the app
     this.props.navigation.addListener('willFocus', this.load)
-
 
   }
 
@@ -193,12 +185,13 @@ class LockScreen extends React.Component {
     onContinue = () => {
 
         let screen = 'Dashboard'
-        AsyncStorage.getItem('lastScreen').then((data) => {
+        AsyncStorage.getItem('lastScreen').then((lastScreen) => {
 
-            console.log('lastScreen', data)
+            console.log('lastScreen', lastScreen)
 
-            if(data && data !== 'LockScreen') {
-                screen = data
+            // dont get stuck on one of these screens
+            if(lastScreen && lastScreen !== 'LockScreen' && lastScreen != 'Login' && lastScreen != 'ForgotPassword') {
+                screen = lastScreen
             }
 
             // this should allow for the back button to appear in the header
