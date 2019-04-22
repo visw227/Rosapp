@@ -17,7 +17,7 @@ import NavigationService from './Helpers/NavigationService';
 import { generateRandomNumber, checkForNotifications } from './Services/Background';
 
 import { Authorization } from './Helpers/Authorization';
-import { Logger } from './Helpers/Logger';
+// import { Logger } from './Helpers/Logger';
 
 import Push from 'appcenter-push'
 
@@ -912,7 +912,8 @@ export default class App extends React.Component {
             switch3 :null,
             switch4 : null
           },
-          isQA: false
+          isQA: false,
+          logData: []
 
         }
 
@@ -961,7 +962,29 @@ export default class App extends React.Component {
       // console.log(ok, source, title, message)
       // console.log("------- END GLOBAL LOG EVENT -----------")
 
-      Logger.LogEvent(ok, source, title, message)
+      //Logger.LogEvent(ok, source, title, message)
+
+      let MAX_LOG_ENTRIES = 50
+
+      let logData = this.state.logData
+      if(logData.length >= MAX_LOG_ENTRIES) {
+        logData.splice(0, logData.length - MAX_LOG_ENTRIES)
+      }
+
+      let event = { 
+          ok: ok, 
+          source: source, 
+          title: title, 
+          message: message,
+          ts: new Date().getTime() // add a timestamp to it for sorting
+      }
+
+
+      logData.push(event)
+
+      this.setState({
+        logData: logData
+      })
 
     }
 
@@ -1133,7 +1156,8 @@ export default class App extends React.Component {
             details: null
           })
 
-
+          // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
+          // only pasword is set to null
           if(this.state.userData && this.state.userData.password) {
 
             console.log("userData", this.state.userData)
@@ -1218,7 +1242,7 @@ export default class App extends React.Component {
         
 
         let statusData = {
-          limit: 5000, // 15 seconds in milliseconds
+          limit: 15000, // 15 seconds in milliseconds
           ts: new Date().getTime() // add a timestamp to it for sorting
         }
 
@@ -1282,7 +1306,11 @@ export default class App extends React.Component {
 
                 if (prevScreen !== currentScreen) {
                   console.log('navigating to this screen', currentScreen);
-                  AsyncStorage.setItem('lastScreen', currentScreen)
+
+                  // dont ever include LockScreen as the last screen since we always need to know where the user really left off
+                  if(currentScreen !== 'LockScreen') {
+                    AsyncStorage.setItem('lastScreen', currentScreen)
+                  }
                 } 
                 
               }}

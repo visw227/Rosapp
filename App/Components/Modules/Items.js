@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native'
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
@@ -47,40 +47,83 @@ class ModuleItems extends React.Component {
 
   }
 
+
+  loadMenu = (callback) => {
+
+    const { navigation } = this.props;
+
+    const item = navigation.getParam('item', null );
+
+    // save a copy to local storage in case the user resumes using the app here - after biometrics
+    if(item) {
+
+      console.log("saving selectedMenu", item)
+      AsyncStorage.setItem('selectedMenu', JSON.stringify(item))
+
+      callback(item)
+    }
+    else {
+      
+        console.log("loading selectedMenu..")
+
+        AsyncStorage.getItem('selectedMenu').then((data) => {
+
+            if(data) {
+
+              let selectedMenu = JSON.parse(data)
+
+              console.log("loaded selectedMenu", selectedMenu)
+
+              callback(selectedMenu)
+
+
+            }
+
+        })
+    }
+
+
+  }
+
   componentDidMount () {
 
     let _this = this
 
-    const { navigation } = this.props;
 
-    const item = navigation.getParam('item', { } );
-
-
-    this.props.navigation.setParams({ title: item.name,backgroundColor:this.props.screenProps.state.backgroundColor })
+    this.loadMenu(function(item){
 
 
-    console.log("item", item)
-
-    let items = []
-
-    if(item.subs && item.subs.length > 0) {
-
-      item.subs.forEach(function(child){
-
-        child.items.forEach(function(c){
-          items.push(c)
-        })
-
-
+      _this.props.navigation.setParams({ 
+        title: item.name,
+        backgroundColor: _this.props.screenProps.state.backgroundColor 
       })
-    }
 
-    console.log("items", JSON.stringify(items, null, 2))
 
-    this.setState({
-      item: item, 
-      data: items
+      console.log("item", item)
+
+      let items = []
+
+      if(item.subs && item.subs.length > 0) {
+
+        item.subs.forEach(function(child){
+
+          child.items.forEach(function(c){
+            items.push(c)
+          })
+
+
+        })
+      }
+
+      console.log("items", JSON.stringify(items, null, 2))
+
+      _this.setState({
+        item: item, 
+        data: items
+      })
+
     })
+
 
 
   }
@@ -88,7 +131,7 @@ class ModuleItems extends React.Component {
   
   onSelect = (item) => {
 
-    console.log("opening web view", item)
+    console.log("opening ModulesWebView", item)
     this.props.navigation.navigate('ModulesWebView', { item: item })
 
   }

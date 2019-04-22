@@ -21,7 +21,7 @@ import Styles from '../Styles'
 
 import DeviceInfo from 'react-native-device-info'
 
-import { Logger } from '../../../Helpers/Logger';
+//import { Logger } from '../../../Helpers/Logger';
 import { dynamicSort } from '../../../Helpers/DynamicSort';
 
 class LoggedEvents extends React.Component {
@@ -58,13 +58,8 @@ class LoggedEvents extends React.Component {
   constructor(props) {
     super(props);
 
-    
-    let deviceId = DeviceInfo.getUniqueID()
-    let version = DeviceInfo.getVersion()
-    let build = DeviceInfo.getBuildNumber()
-
     this.state = {
-        receiving: true,
+        receiving: false,
         logData: []
     }
 
@@ -82,32 +77,42 @@ class LoggedEvents extends React.Component {
 
   loadData = () => {
 
-    let _this = this
+    // let _this = this
+
+    // this.setState({
+    //   receiving: true
+    // })
+
+    // Logger.GetEvents(function(logData){
+
+    //     // sort list in decending order (newest first)
+    //     logData.sort(dynamicSort('ts', -1)) 
+
+    //     //console.log("logData", JSON.stringify(logData, null, 2))
+
+    //     _this.setState({
+    //         receiving: false,
+    //         logData: logData
+    //     })
+
+    // })
+
+    let logData = this.props.screenProps.state.logData
+    logData.sort(dynamicSort('ts', -1)) 
+
 
     this.setState({
-      receiving: true
-    })
-
-    Logger.GetEvents(function(logData){
-
-        // sort list in decending order (newest first)
-        logData.sort(dynamicSort('ts', -1)) 
-
-        console.log("logData", JSON.stringify(logData, null, 2))
-
-        _this.setState({
-            receiving: false,
-            logData: logData
-        })
-
+        receiving: false,
+        logData: logData
     })
 
   }
 
   handleSubmit = () => {
 
-    console.log("handleSubmit...")
-    Logger.DeleteAllEvents()
+    //console.log("handleSubmit...")
+    //Logger.DeleteAllEvents()
+
     this.setState({
       logData: []
     })
@@ -155,7 +160,7 @@ class LoggedEvents extends React.Component {
                           subtitle={
                           <View style={{ alignItems: 'flex-start', marginLeft: 10 }}>
                               <Text style={Styles.subtitleText}>{item.title}</Text>
-                              <Text style={Styles.subtitleText}>{moment(item.ts).format('dddd, MMM Do')} @ {moment(item.ts).format('h:mm:ss A')}</Text>
+                              <Text style={Styles.subtitleText}>{moment(item.ts).format('dddd, MMM Do')} @ {moment(item.ts).format('h:mm:ss:ms A')}</Text>
                           </View>
                           }
                           avatar={
