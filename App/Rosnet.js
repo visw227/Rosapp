@@ -1149,35 +1149,33 @@ export default class App extends React.Component {
           console.log("+++++++++ STATUS ACTIVE ++++++++++")
 
 
-          // this._globalLogger(true, "App", "Activated", { state: this.state })
+          this._globalLogger(true, "App", "Activated", { state: this.state })
 
-          log.push({
-            action: "Activated",
-            details: null
-          })
 
           // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
           // only pasword is set to null
           if(this.state.userData && this.state.userData.password) {
 
-            console.log("userData", this.state.userData)
+
+            // see if the user needs to see the lock screen - based on elapsed time
+            Biometrics.CheckIfShouldShowLockScreen(function(result){
+
+              if(result.showLock) {
+                  // this is needed since props.navigation isn't present for unmounted screen components
+                  NavigationService.navigate('LockStack');
+              }
 
 
-            log.push({
-              action: "User is logged in",
-              details: null
             })
+
+            //console.log("userData", this.state.userData)
+
 
             Authorization.RefreshToken(function(err, resp){
               if(err) {
                 console.log("err refreshing token", err)
 
-                log.push({
-                  action: "Error Refreshing Token",
-                  details: err
-                })
-
-                _this._globalLogger(false, "App", "Activated", { log: log })
+                _this._globalLogger(false, "App", "Error Refreshing Token", { error: err})
 
               }
               else {
@@ -1188,26 +1186,23 @@ export default class App extends React.Component {
                 _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
 
 
-                log.push({
-                  action: "Token Refreshed Successfully",
-                  details: resp.userData.token
-                })
+                _this._globalLogger(false, "App", "Token Refreshed Successfully", { userData: resp.userData })
               
 
-                // see if the user needs to see the lock screen
-                Biometrics.CheckIfShouldShowLockScreen(function(result){
+                // // see if the user needs to see the lock screen
+                // Biometrics.CheckIfShouldShowLockScreen(function(result){
 
-                  // combine the log above with the log this function returns
-                  log = log.concat(result.log)
+                //   // combine the log above with the log this function returns
+                //   log = log.concat(result.log)
 
-                  if(result.showLock) {
-                      // this is needed since props.navigation isn't present for unmounted screen components
-                      NavigationService.navigate('LockStack');
-                  }
+                //   if(result.showLock) {
+                //       // this is needed since props.navigation isn't present for unmounted screen components
+                //       NavigationService.navigate('LockStack');
+                //   }
 
-                  _this._globalLogger(true, "App", "Activated", { log: log })
+                //   _this._globalLogger(true, "App", "Activated", { log: log })
 
-                })
+                // })
 
               
               } // end else
