@@ -152,6 +152,8 @@ class SearchUsers extends React.Component {
 
         // get the data for the user we are impersonating
         let impersonatedUser = Parsers.UserData(response)
+        // we are including password in the userData for the change password screen to have access the current password for validation
+        impersonatedUser.password = "****" // just something so that in Rosnet.js inactive->active state change will consider the user logged in 
 
 
         getMobileMenuItems(_this.props.screenProps.state.selectedClient, impersonatedUser.token, function(err, menuItems){

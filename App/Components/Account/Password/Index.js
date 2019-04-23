@@ -354,7 +354,7 @@ class Password extends React.Component {
 
 
               // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
-              AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))
+              //AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))
 
 
               _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })

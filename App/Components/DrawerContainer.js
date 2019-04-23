@@ -49,56 +49,53 @@ export default class DrawerContainer extends React.Component {
 
   logout = () => {
 
-        console.log("logging out...")
+      console.log("logging out...")
 
-        let _this = this
+      let _this = this
 
-        AsyncStorage.getItem('loginData').then((data) => {
+      // AsyncStorage.getItem('loginData').then((data) => {
 
-            if(data) {
+      //     if(data) {
 
-              let loginData = JSON.parse(data)
-              loginData.password = ''
+      //       let loginData = JSON.parse(data)
+      //       loginData.password = ''
 
-              AsyncStorage.setItem('loginData', JSON.stringify(loginData))
+      //       AsyncStorage.setItem('loginData', JSON.stringify(loginData))
 
-            }
+      //     }
 
-        })
-
-
-        AsyncStorage.removeItem('userData', function(err){
-
-          // DONT null state.userData - causes the app to crash since there are screens listening for userData.token changes
-          // clear out the password from state
-          let userData = _this.props.screenProps.state.userData
-          userData.password = null
-
-          // update global state
-          _this.props.screenProps._globalStateChange( { action: "logout", userData: userData })
-
-          // this API request will delete the user's token from the database and other stuff
-          userLogout(_this.props.screenProps.state.selectedClient, _this.props.screenProps.state.userData.token, function(err,resp){
-
-            // dont wait on this to happen. Slow in QA a lot of the time
-
-          })
-
-            
-          // this shows a back arrow, so don't use this
-          //this.props.navigation.navigate('LoginStack')
-
-          // instead, reset the navigation
-          const resetAction = StackActions.reset({
-              index: 0,
-              key: null, // this is the trick that allows this to work
-              actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
-          });
-          _this.props.navigation.dispatch(resetAction);
+      // })
 
 
-          
-        })
+      // DONT null state.userData - causes the app to crash since there are screens listening for userData.token changes
+      // just set the token to null
+      let userData = _this.props.screenProps.state.userData
+      userData.token = null
+
+      // update global state
+      _this.props.screenProps._globalStateChange( { action: "logout", userData: userData })
+
+      // this API request will delete the user's token from the database and other stuff
+      userLogout(_this.props.screenProps.state.selectedClient, _this.props.screenProps.state.userData.token, function(err,resp){
+
+        // dont wait on this to happen. Slow in QA a lot of the time
+
+      })
+
+        
+      // this shows a back arrow, so don't use this
+      //this.props.navigation.navigate('LoginStack')
+
+      // instead, reset the navigation
+      const resetAction = StackActions.reset({
+          index: 0,
+          key: null, // this is the trick that allows this to work
+          actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
+      });
+      _this.props.navigation.dispatch(resetAction);
+
+
+ 
 
   }
 

@@ -68,21 +68,21 @@ class Login extends Component {
         let _this = this
 
 
-        AsyncStorage.getItem('loginData').then((data) => {
+        // AsyncStorage.getItem('loginData').then((data) => {
 
-            //console.log("LoginForm loginData", data)
+        //     //console.log("LoginForm loginData", data)
 
-            if(data) {
+        //     if(data) {
 
-                let loginData = JSON.parse(data)
+        //         let loginData = JSON.parse(data)
 
-                _this.setState({
-                    userName: loginData.userName,
-                    password: '' //loginData.password
-                })
-            }
+        //         _this.setState({
+        //             userName: loginData.userName,
+        //             password: '' //loginData.password
+        //         })
+        //     }
 
-        })
+        // })
 
 
         AsyncStorage.getItem('userData').then((data) => {
@@ -96,7 +96,7 @@ class Login extends Component {
                 //console.log("userData", JSON.stringify(userData, null, 2))
 
                 this.setState({
-                    // userName: userData.userName,
+                    userName: userData.userName,
                     // password: userData.password,
                     userData: userData
                 })
@@ -214,7 +214,7 @@ class Login extends Component {
         }
         
         // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
-        AsyncStorage.setItem('loginData', JSON.stringify( { userName: this.state.userName, password: this.state.password }))
+        //AsyncStorage.setItem('loginData', JSON.stringify( { userName: this.state.userName, password: this.state.password }))
 
 
         if(this.state.userName === 'demo') {

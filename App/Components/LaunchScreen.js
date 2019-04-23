@@ -32,6 +32,21 @@ class LaunchScreen extends React.Component {
 
   }
 
+  doRedirect = (routeName) => {
+
+      // This will switch to the App screen or Auth screen and this loading
+      // screen will be unmounted and thrown away.
+      //this.props.navigation.navigate(userToken ? 'DrawerStack' : 'LoginStack');
+      // instead, reset the navigation
+      const resetAction = StackActions.reset({
+          index: 0,
+          key: null, // this is the trick that allows this to work
+          actions: [NavigationActions.navigate({ routeName: routeName })],
+      });
+      
+      this.props.navigation.dispatch(resetAction);
+
+  }
 
   componentDidMount() {
 
@@ -49,11 +64,18 @@ class LaunchScreen extends React.Component {
 
       AsyncStorage.getItem('userData').then((data) => {
 
+        let userData = null
         let routeName = ''
+
+        console.log("LaunchScreen - userData: ", data)
 
         if(data) {
 
-          let userData = JSON.parse(data)
+          userData = JSON.parse(data)
+
+        }
+
+        if(userData && userData.token) {
 
           AsyncStorage.getItem('selectedClient').then((selectedClient) => {
 
@@ -88,23 +110,16 @@ class LaunchScreen extends React.Component {
                 routeName = 'LockStack'
               }
               else {
-
-                routeName = 'DrawerStack'
+                // NOTE: if the user closed the app, we start back at the Dashboard
+                // only when the app is minimized and re-opened do we worry about what screen to resume at
+                // after biometric auth
+                routeName = 'DrawerStack' 
               }
 
               _this.props.screenProps._globalLogger(true, "App", "Activated", { log: result.log })
 
-
-              // This will switch to the App screen or Auth screen and this loading
-              // screen will be unmounted and thrown away.
-              //this.props.navigation.navigate(userToken ? 'DrawerStack' : 'LoginStack');
-              // instead, reset the navigation
-              const resetAction = StackActions.reset({
-                  index: 0,
-                  key: null, // this is the trick that allows this to work
-                  actions: [NavigationActions.navigate({ routeName: routeName })],
-              });
-              _this.props.navigation.dispatch(resetAction);
+              // redirect to the route
+              _this.doRedirect(routeName)
 
 
             })
@@ -117,14 +132,8 @@ class LaunchScreen extends React.Component {
         }
         else {
 
-          routeName = 'LoginStack'
-          // instead, reset the navigation
-          const resetAction = StackActions.reset({
-              index: 0,
-              key: null, // this is the trick that allows this to work
-              actions: [NavigationActions.navigate({ routeName: routeName })],
-          });
-          this.props.navigation.dispatch(resetAction);
+          // redirect to login
+          _this.doRedirect('LoginStack')
 
         }
 

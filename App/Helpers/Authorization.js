@@ -57,15 +57,15 @@ export var Authorization = {
 
     RefreshToken: function(callback) {
 
-        AsyncStorage.getItem('loginData').then((data) => {
+        AsyncStorage.getItem('userData').then((data) => {
 
             //console.log("refreshToken loginData", data)
 
             if(data) {
 
-                let loginData = JSON.parse(data)
+                let userData = JSON.parse(data)
 
-                Authorization.UserLogin(loginData.userName, loginData.password, function(err, resp){
+                Authorization.UserLogin(userData.userName, userData.password, function(err, resp){
 
                     if(err) {
                         //_this.showAlert(err.message)
