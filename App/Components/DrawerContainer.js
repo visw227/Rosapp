@@ -53,25 +53,20 @@ export default class DrawerContainer extends React.Component {
 
       let _this = this
 
-      // AsyncStorage.getItem('loginData').then((data) => {
-
-      //     if(data) {
-
-      //       let loginData = JSON.parse(data)
-      //       loginData.password = ''
-
-      //       AsyncStorage.setItem('loginData', JSON.stringify(loginData))
-
-      //     }
-
-      // })
-
-
       // DONT null state.userData - causes the app to crash since there are screens listening for userData.token changes
       // just set the token to null
       let userData = _this.props.screenProps.state.userData
       userData.token = null
 
+
+      // if a super user, make sure and set the real user's userData back again
+      if(this.props.screenProps.state.superUser) {
+        userData = _this.props.screenProps.state.superUser
+        userData.token = null
+      }
+
+
+      
       // update global state
       _this.props.screenProps._globalStateChange( { action: "logout", userData: userData })
 

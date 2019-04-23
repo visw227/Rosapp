@@ -1045,7 +1045,7 @@ export default class App extends React.Component {
         }
 
         // this action will force the app to reset back to the real user
-        if(data.action && data.action === "undo-session-override") {
+        if(data.action && (data.action === "undo-session-override" || data.action === "logout")) {
 
           this.setState({
             userData: data.userData,
