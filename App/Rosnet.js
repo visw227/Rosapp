@@ -574,6 +574,8 @@ import SupportScreen from './Components/Support/Index'
 
 import SupportViewScreen from './Components/Support/View/Index'
 import SupportRequestScreen from './Components/Support/Request/Index'
+import SupportRequestDetailScreen from './Components/Support/View/Detail'
+
 import SupportContactScreen from './Components/Support/Contact/Index'
 
 import TermsScreen from './Components/Support/Terms/Index'
@@ -596,6 +598,9 @@ let SupportStack = createStackNavigator({
   },
   SupportRequest: {
     screen: SupportRequestScreen
+  },
+  SupportRequestDetail: {
+    screen: SupportRequestDetailScreen
   },
   Contact: {
     screen: SupportContactScreen

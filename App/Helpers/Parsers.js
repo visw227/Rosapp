@@ -11,6 +11,7 @@ export var Parsers = {
             token: response.SecurityToken,
             userId: response.Rosnet_User_ID,
             userName: response.Browse_User_Name,
+            email: response.Email_Address,
             commonName: response.Common_Name,
             sites: response.Sites || [], // just in case null
             isRosnetEmployee: response.Rosnet_Employee,

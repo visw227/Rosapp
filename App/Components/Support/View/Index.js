@@ -1,41 +1,79 @@
+
 import React from 'react';
 import {
   StyleSheet,
   View,
   Image,
   Text,
-  Button,
-    WebView,
-  ActivityIndicator
+  AsyncStorage,
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity
 } from 'react-native';
+
+import moment from 'moment'
+
 import { List, ListItem, Avatar } from 'react-native-elements'
+
+import Entypo from 'react-native-vector-icons/Entypo'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-//import Entypo from 'react-native-vector-icons/Entypo'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import brand from '../../../Styles/brand'
-
 import Styles from './Styles'
 
-import { NavigationActions, StackActions } from 'react-navigation'
 
-import { Authorization } from '../../../Helpers/Authorization';
+import AvatarInitials from '../../ReusableComponents/AvatarInitials'
 
-import appConfig from '../../../app-config.json'
 
+import { getRequests } from '../../../Services/Support'
 
 class SupportView extends React.Component {
 
-  // this is a child/nested screen in the SchedulesStack
-  // Look at SchedulesStack for tricks with hiding the tabBar and hiding the back button title
   static navigationOptions = (navigate) => ({
 
-    title: 'My Requests',
+    title: 'Support Requests',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: brand.colors.primary },
+    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
+    headerLeft : <Ionicon
+        name="md-menu"
+        size={35}
+        color={brand.colors.white}
+        style={{ paddingLeft: 10 }}
+        onPress={() => navigate.navigation.toggleDrawer() }
+    />,
 
 
+    headerRight : 
+      <View style={{
+        alignItems: 'center',
+        flexDirection: 'row',
+        height: 40,
+        paddingRight: 10,
+        width: '100%'
+      }}>
+
+        <Entypo
+            name="plus"
+            size={30}
+            color={brand.colors.white}
+            style={{ marginRight: 10 }}
+            onPress={() => navigate.navigation.navigate('SupportRequest') }
+        />
+
+      </View>,
+
+
+    // The drawerLabel is defined in DrawerContainer.js
+    // drawerLabel: 'Staff List',
+    // drawerIcon: ({ tintColor }) => (
+    //   <Image
+    //     source={require('../Images/TabBar/list-simple-star-7.png')}
+    //     style={[Styles.icon, {tintColor: tintColor}]}
+    //   />
+    // ),
   })
 
     constructor(props) {
@@ -43,207 +81,197 @@ class SupportView extends React.Component {
 
       this.state = {
           sending: false,
-          receiving: false,
-          data: [],
-          isFavorite: false,
-          href: "",
-          item: { Menu_Function_ID: "" },
-          userData: this.props.screenProps.state.userData,
-          selectedClient: this.props.screenProps.state.selectedClient
+          receiving: true,
+          requestStatus: {
+              hasError: false,
+              message: ""
+          },
+          data: []
       }
+
 
   }
 
 
-    componentDidMount () {
+  componentDidMount () {
+    let userData = this.props.screenProps.state.userData
+
+    this.props.navigation.setParams({ 
+        title: this.props.screenProps.state.selectedClient,
+        backgroundColor:this.props.screenProps.state.backgroundColor 
+    })
+
+    this.loadData()
+
+  }
+
+
+  loadData = () => {
 
     let _this = this
 
-    const { navigation } = this.props;
+    console.log("getting requests for ", this.props.screenProps.state.userData.email)
 
-    const item = navigation.getParam('item', { } );
+    getRequests(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, this.props.screenProps.state.userData.email, function(err, resp){
 
-    this.props.navigation.setParams({ 
-      title: item.name ,
-      backgroundColor: this.props.screenProps.state.backgroundColor,
-      starIcon: 'star-o',
-      toggleFavorite: this.toggleFavorite 
-    });
+        if(err) {
 
-    // let isFavorite = false
-    // getFavorites(function(items){
+            let message = "Sorry, we weren't able to retrieve your support requests."
 
-    //   // console.log("item.id", item.Menu_Function_ID, "items", items)
+            if(err.message.indexOf("401") !== -1) {
+                message = "Sorry, we need to add you to our support system."
+            }
 
-    //   if(items.includes(item.id)) {
-    //     isFavorite = true
-    //     _this.props.navigation.setParams({ starIcon: 'star' })
-    //   }
-
-
-    //   _this.setState({
-    //     item: item,
-    //     href: item.href,
-    //     isFavorite: isFavorite
-    //   })
-
-
-    // })
-
-
-    let userData = this.props.screenProps.state.userData
-
-    let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-
-    console.log("----------------- Modules WebView ----------------------")
-    console.log("Authorization.VerifyToken", this.props.screenProps.state.selectedClient, userData.token)
-
-    // this verifies that the token is still valid and redirects to login if not
-    Authorization.VerifyToken(this.props.screenProps.state.selectedClient, userData.token, function(err, resp){
-
-      if(err) {
-
-        console.log(">>> Modules WebView - Invalid Token", err)
-
-        // reset the navigation
-        const resetAction = StackActions.reset({
-            index: 0,
-            key: null, // this is the trick that allows this to work
-            actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
-        });
-        _this.props.navigation.dispatch(resetAction);
-
-
-      }
-      else {
-
-        console.log(">>> Modules WebView - Token is Valid", resp)
-
-        let source = {
-          uri: "https://rosnet.zendesk.com/hc/en-us/requests",
-          headers: {
-            "managerAppToken":  userData.token
-          }
+            _this.setState({
+                receiving: false,
+                requestStatus: {
+                    hasError: true,
+                    message: message
+                },
+                data: []
+            })
         }
-
-        console.log("Modules Webview source", JSON.stringify(source, null, 2))
-
-        _this.setState({
-          source: source
-        })
-
-      }
-
+        else {
+            _this.setState({
+                receiving: false,
+                data: resp
+            })
+        }
 
 
     })
 
   }
 
+  getAvatar = (item) => {
 
-  // this will catch any global state updates - via screenProps
-  componentWillReceiveProps(nextProps){
-
-
-    const { navigation } = this.props;
-
-    const item = navigation.getParam('item', { } );
-
-
-    let selectedClient = nextProps.screenProps.state.selectedClient
-    let token = nextProps.screenProps.state.userData.token
-    let backgroundColor = nextProps.screenProps.state.backgroundColor
-
-    console.log(">>>> selectedClient", selectedClient, "token", token)
-
-    if(backgroundColor !== this.props.screenProps.state.backgroundColor){
-
-      this.props.navigation.setParams({ backgroundColor: backgroundColor })
-
-    }
-
-
-        // ONLY if something has changed
-    if(token !== this.state.userData.token){
-
-      console.log("Modules WebView picked up new token: ", token)
-      
-      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-      let source = {
-        uri: "https://rosnet.zendesk.com/hc/en-us/requests",
-        headers: {
-          "managerAppToken":  token
-        }
+      if(item.status === "closed")
+        return (
+          <View
+              style={{
+                  borderWidth:1,
+                  borderColor: brand.colors.secondary,
+                  alignItems:'center',
+                  justifyContent:'center',
+                  width:40,
+                  height:40,
+                  backgroundColor: brand.colors.secondary,
+                  borderRadius:100,
+                  marginRight: 0
+                }}
+            >
+              <FontAwesome name={'support'} size={25} color={brand.colors.white} />
+            </View>
+        )
+      else {
+        return (
+          <View
+              style={{
+                  borderWidth:1,
+                  borderColor: brand.colors.secondary,
+                  alignItems:'center',
+                  justifyContent:'center',
+                  width:40,
+                  height:40,
+                  backgroundColor: brand.colors.success,
+                  borderRadius:100,
+                  marginRight: 0
+                }}
+            >
+              <Entypo name={'support'} size={22} color={brand.colors.white} />
+            </View>
+        )
       }
-      
-      console.log("source updated: ", JSON.stringify(source, null, 2))
 
-      
-      this.setState({ 
-        source: source
-      });
-
-    }
-
-    // ONLY if something has changed
-    if(selectedClient !== this.state.selectedClient){
-
-      console.log("Modules WebView picked up new selectedClient: ", selectedClient)
-
-      this.props.navigation.setParams({ title: selectedClient })
-
-      let userData = this.props.screenProps.state.userData
-      
-      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-      let source = {
-        uri: "https://" + selectedClient + "." + env + item.href,
-        headers: {
-          "managerAppToken":  token
-        }
-      }
-            
-      console.log("source updated: ", JSON.stringify(source, null, 2))
-
-      this.setState({ 
-        selectedClient: selectedClient,
-        source: source
-      });
-
-
-    }
 
   }
-
 
 
   render() {
-
     return (
 
-      <View style={{ backgroundColor: '#ffffff', height: '100%' }}>
 
-        {this.state.source &&
-        <WebView
-            source={this.state.source}
-            startInLoadingState = {true}
-            //onLoadProgress={e => console.log(e.nativeEvent.progress)}
-            renderLoading={this._renderLoading}
-            //injectedJavaScript={ hideSiteNav } 
-            style={{ flex: 1 }}
-          />
-        }
+          <ScrollView
+            style={{ backgroundColor: '#ffffff' }}
+            refreshControl={
 
-      </View>
+              <RefreshControl
+                refreshing={this.state.receiving}
+                onRefresh={this.loadData}
+                tintColor={brand.colors.primary}
+                title="Loading"
+                titleColor={brand.colors.primary}
+                //colors={['#ff0000', '#00ff00', '#0000ff']}
+                progressBackgroundColor="#ffffff"
+              />
+            }
+            
+          >
+
+
+              {this.state.requestStatus.hasError &&
+                <View style={{ 
+                    justifyContent: 'center', 
+                    alignItems: 'center',
+                    marginBottom: 15,
+                    marginTop: 10,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    padding: 10
+                }}>
+                    <Text>{this.state.requestStatus.message}</Text>
+                </View>
+              }
+
+            <View style={{ marginTop: -20 }} >
+
+
+              {!this.state.receiving && !this.state.requestStatus.hasError && 
+
+                <List style={Styles.list}>
+
+
+                  {
+                    this.state.data && this.state.data.requests && this.state.data.requests.map((l, i) => (
+
+
+                      <ListItem
+                          key={l.id}
+                          roundAvatar
+                          style={Styles.listItem}
+                          title={
+
+                            <Text style={Styles.title} numberOfLines={1} ellipsizeMode ={'tail'} >
+                              {l.subject}
+                            </Text>
+
+                          }
+
+                          subtitle={
+       
+                            <Text style={Styles.subtitleView} numberOfLines={2} ellipsizeMode ={'tail'} >
+                              {l.description}
+                            </Text>
+
+                          }
+                          avatar={this.getAvatar(l)}
+                          
+                          onPress={() => this.props.navigation.navigate('SupportRequestDetail', { requestItem: l }) }
+                      
+                      />
+
+                    ))
+                  }
+
+                </List>
+              }
+              </View>
+           
+          </ScrollView>
 
     );
-
   }
-  
 }
-
 
 
 //make this component available to the app

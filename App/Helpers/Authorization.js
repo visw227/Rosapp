@@ -126,7 +126,11 @@ export var Authorization = {
 
                     // we are including password in the userData for the change password screen to have access the current password for validation
                     userData.password = password 
-                    userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
+                    // only do if not level 99
+                    // otherwise, it makes mine dywayne.johnson@rosnet.com when it is really djohnson@rosnet.com
+                    if(userData.userLevel !== 99) {
+                        userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
+                    }
 
                     getMobileMenuItems(userData.sites[0], userData.token, function(err, menuItems){
                         
