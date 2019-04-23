@@ -78,7 +78,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     xhr.ontimeout = function() {
         console.log("the request timed out")
 
-        Logger.LogEvent(false, "API (TIMED OUT)", url, { request: logRequest })
+        //Logger.LogEvent(false, "API (TIMED OUT)", url, { request: logRequest })
 
     }
     xhr.onreadystatechange = function() {
@@ -95,12 +95,12 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             console.log("xhr.response", json)
 
-            Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
+            //Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
 
             // 200 successes can return errors - e.g. { Success: false, ErrorMsg: "Login attempt failed 5 times. Account is now locked." }
             if(json.ErrorMsg) {
 
-                Logger.LogEvent(false, "API (200 with ERROR)", url, { request: logRequest, response: json })
+                //Logger.LogEvent(false, "API (200 with ERROR)", url, { request: logRequest, response: json })
 
                 callback( { status: xhr.status, message: json.ErrorMsg }, null)
             }
@@ -121,7 +121,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             callback({ status: xhr.status, message: message }, null)
 
 
-            Logger.LogEvent(false, "API (401)", url, { request: logRequest, response: xhr._response })
+            //Logger.LogEvent(false, "API (401)", url, { request: logRequest, response: xhr._response })
 
             // force the user to the login screen
             NavigationService.navigate('LoginStack');
@@ -165,7 +165,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             callback({ status: xhr.status, message: message }, null)
 
 
-            Logger.LogEvent(false, "API (" + xhr.status.toString() + ")", url, { request: logRequest, response: message })
+            //Logger.LogEvent(false, "API (" + xhr.status.toString() + ")", url, { request: logRequest, response: message })
 
         }
 

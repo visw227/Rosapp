@@ -193,25 +193,25 @@ DashboardStack.navigationOptions = ({ navigation }) => {
 // *******************************************************************************
 // My Dashboard 
 // *******************************************************************************
-import MyDashboardScreen from './Components/MyDashboard/Index'
+// import MyDashboardScreen from './Components/MyDashboard/Index'
 
-let MyDashboardStack = createStackNavigator({ 
-  MyDashboard: {
-    screen: MyDashboardScreen,
-    // to hide the back title for any child screens, it must be set to null here
-    navigationOptions: ({ navigation }) => ({
-      headerBackTitle: null
-    }),
-  }
+// let MyDashboardStack = createStackNavigator({ 
+//   MyDashboard: {
+//     screen: MyDashboardScreen,
+//     // to hide the back title for any child screens, it must be set to null here
+//     navigationOptions: ({ navigation }) => ({
+//       headerBackTitle: null
+//     }),
+//   }
 
-});
+// });
 
-// to hide the tabBar on nested screens, you must do it this way
-MyDashboardStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: navigation.state.index === 0,
-  };
-};
+// // to hide the tabBar on nested screens, you must do it this way
+// MyDashboardStack.navigationOptions = ({ navigation }) => {
+//   return {
+//     tabBarVisible: navigation.state.index === 0,
+//   };
+// };
 
 // *******************************************************************************
 // Modules 
@@ -1065,17 +1065,6 @@ export default class App extends React.Component {
         }
 
 
-        // this will refresh the real user's token
-        // this action will force the app to reset back to the real user
-        // if(data.action && data.action === "logout") {
-
-        //   this.setState({
-        //     userData: null
-        //   })
-        //   // }, () => console.log("global state change for token refresh", data.userData ) )
-        // }
-
-
     }
 
 
@@ -1225,7 +1214,7 @@ export default class App extends React.Component {
         
 
         let statusData = {
-          limit: 3000, // 15 seconds in milliseconds
+          limit: 15000, // 15 seconds in milliseconds
           ts: new Date().getTime() // add a timestamp to it for sorting
         }
 
