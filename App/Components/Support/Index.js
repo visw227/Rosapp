@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
 
-export class About extends React.Component {
+export class Support extends React.Component {
 
 
 
@@ -94,12 +94,12 @@ export class About extends React.Component {
                   <ListItem
 
                       style={Styles.listItem}
-                      title='My Requests'
+                      title='Support Requests'
                           titleStyle={{ color: brand.colors.gray }}
                           
                       subtitle={
                       <View style={Styles.subtitleView}>
-                          <Text style={Styles.ratingText}>View Support Requests and Statuses</Text>
+                          <Text style={Styles.ratingText}>Create & View Support Requests and Statuses</Text>
                       </View>
                       }
                       avatar={<Avatar rounded medium
@@ -110,7 +110,7 @@ export class About extends React.Component {
                   
                   />
                   
-                  <ListItem
+                  {/* <ListItem
                       roundAvatar
                       style={Styles.listItem}
                       title='Report an Issue'
@@ -127,7 +127,7 @@ export class About extends React.Component {
 
                       onPress={() => this.props.navigation.navigate('SupportRequest') }
 
-                  />
+                  /> */}
 
                   <ListItem
                       roundAvatar
@@ -238,4 +238,4 @@ export class About extends React.Component {
 }
 
 //make this component available to the app
-export default About;
+export default Support;

@@ -1,19 +1,54 @@
-POST https://aag.rosnetqa.com/api/ManagerAppZendesk/ReportIssue
+POST http://aag.rosnetqa.com/api/ManagerAppZendesk/ReportIssue
 Content-Type: application/json
-managerAppToken: 683afef6-ae2a-47ad-9a25-ec481d6488dc
+managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
 
 {
-  "subject": "Test by Dywayne",
-  "description": "Description goes here...",
-  "location": "Location goes here...",
-  "browser": "appVersion: 1.0, appBuild: 1, deviceId: 825108DD-177A-4952-8C5F-82C401619711, deviceBrand: Apple, deviceModel: iPhone X, osVersion: 12.1",
-  "value": null
+    "subject" : "Test by Dywayne",
+    "description": "Test by Dywayne. Please disregard.",
+    "location": "Location in the Rosnet App", 
+    "browser": "Browser is the Rosnet App",
+    "value": null
 }
 
 
-###
+### GET USER REQUESTS ### 
 
 
-GET https://aag.rosnetqa.com/api/ManagerAppZendesk/Requests?email=djohnson@rosnet.com&count=null&page=null
+
+GET http://aag.rosnetqa.com/api/ManagerAppZendesk/Requests?email=djohnson@rosnet.com&count=1
+content-type: application/json
+managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
+
+
+### CREATE USER ### 
+
+POST http://aag.rosnetqa.com/api/ManagerAppZendesk/AddUser
 Content-Type: application/json
-managerAppToken: 683afef6-ae2a-47ad-9a25-ec481d6488dc
+managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
+
+{
+    "rosnet_user_id" : 1234, // this is the ExternalID for Zendesk
+    "email": "testuser2@rosnet.com", 
+    "name": "Test User2",
+    "location": 0
+}
+
+
+### DELETE USER ###
+
+DELETE http://aag.rosnetqa.com/api/ManagerAppZendesk/DeleteUser?zendesk_id=380554794751
+content-type: application/json
+managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
+
+
+### SEARCH USERS BY EMAIL ###
+
+GET http://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByEmail?email=djohnson@rosnet.com
+content-type: application/json
+managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
+
+### SEARCH USERS BY External ID ###
+
+GET http://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByRosnetExternalID?rosnet_user_id=26472
+content-type: application/json
+managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40

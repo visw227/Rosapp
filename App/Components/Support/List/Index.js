@@ -26,7 +26,7 @@ import Styles from './Styles'
 import AvatarInitials from '../../ReusableComponents/AvatarInitials'
 
 
-import { getRequests } from '../../../Services/Support'
+import { getRequests, searchUsersByRosnetExternalID } from '../../../Services/Support'
 
 import { Utils } from '../../../Helpers/Utils'
 
@@ -39,14 +39,6 @@ class SupportView extends React.Component {
     // these seem to ONLY work here
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
-    headerLeft : <Ionicon
-        name="md-menu"
-        size={35}
-        color={brand.colors.white}
-        style={{ paddingLeft: 10 }}
-        onPress={() => navigate.navigation.toggleDrawer() }
-    />,
-
 
     headerRight : 
       <View style={{
@@ -62,20 +54,14 @@ class SupportView extends React.Component {
             size={30}
             color={brand.colors.white}
             style={{ marginRight: 10 }}
-            onPress={() => navigate.navigation.navigate('SupportRequest') }
+            //onPress={() => navigate.navigation.navigate('SupportRequest') }
+            onPress={navigate.navigation.getParam('handleSubmit')} 
         />
 
       </View>,
 
 
-    // The drawerLabel is defined in DrawerContainer.js
-    // drawerLabel: 'Staff List',
-    // drawerIcon: ({ tintColor }) => (
-    //   <Image
-    //     source={require('../Images/TabBar/list-simple-star-7.png')}
-    //     style={[Styles.icon, {tintColor: tintColor}]}
-    //   />
-    // ),
+
   })
 
     constructor(props) {
@@ -88,22 +74,82 @@ class SupportView extends React.Component {
               hasError: false,
               message: ""
           },
+          registered: false,
           data: []
       }
 
 
   }
 
+  handleSubmit = () => {
+
+    // don't allow a request to be submitted if not a registered user
+    if(this.state.registered) {
+      _this.props.navigation.navigate('SupportRequest')
+    }
+
+  }
 
   componentDidMount () {
+
+    let _this = this
+
     let userData = this.props.screenProps.state.userData
 
     this.props.navigation.setParams({ 
         title: this.props.screenProps.state.selectedClient,
-        backgroundColor:this.props.screenProps.state.backgroundColor 
+        backgroundColor:this.props.screenProps.state.backgroundColor,
+        handleSubmit: this.handleSubmit,
     })
 
-    this.loadData()
+    let userId = 1234 //this.props.screenProps.state.userData.userId
+
+    searchUsersByRosnetExternalID(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, userId, function(err, resp){
+
+      if(err) {
+            _this.setState({
+                receiving: false,
+                requestStatus: {
+                  hasError: true,
+                  message: err
+                }
+            })
+      }
+      else {
+
+        // if the search results found a user by the Rosnet User ID, then we know the user is registered
+        // Note: we can search by email address instead if needed
+        if(resp && resp.users && resp.users.length > 0) {
+      
+            _this.setState({
+                receiving: false,
+                registered: true
+            })
+
+            _this.loadData()
+
+        }
+        else {
+
+            _this.setState({
+                receiving: false,
+                requestStatus: {
+                  hasError: true,
+                  message: "Sorry, you currently don't have an email address registered with our support system."
+                },
+                data: [],
+                registered: false
+            })
+
+            //_this.props.navigation.navigate('SupportRegisterUser')
+
+        }
+
+      }
+
+
+    })
+
 
   }
 
@@ -225,24 +271,25 @@ class SupportView extends React.Component {
           >
 
 
-              {this.state.requestStatus.hasError &&
-                <View style={{ 
-                    justifyContent: 'center', 
-                    alignItems: 'center',
-                    marginBottom: 15,
-                    marginTop: 10,
-                    marginLeft: 10,
-                    marginRight: 10,
-                    padding: 10
-                }}>
-                    <Text>{this.state.requestStatus.message}</Text>
-                </View>
-              }
+            {this.state.requestStatus.hasError &&
+              <View style={styles.formContainer}>
+                  <Text style={styles.message} >
+                    {this.state.requestStatus.message}
+                  </Text>
 
+
+                  <TouchableOpacity 
+                      style={ styles.buttonContainer }
+                      onPress={() => this.props.navigation.navigate('SupportRegisterUser') }>
+                      <Text  style={ styles.buttonText }>Register Now</Text>
+                  </TouchableOpacity> 
+
+              </View>
+            }
+
+            {!this.state.receiving && !this.state.requestStatus.hasError && 
             <View style={{ marginTop: -20 }} >
 
-
-              {!this.state.receiving && !this.state.requestStatus.hasError && 
 
                 <List style={Styles.list}>
 
@@ -280,15 +327,70 @@ class SupportView extends React.Component {
                   }
 
                 </List>
-              }
+   
               </View>
-           
+              }
           </ScrollView>
 
     );
   }
 }
 
+// define your styles
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: brand.colors.white,
+
+    },
+    formContainer: {
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10
+    },
+    input:{
+        height: 40,
+        backgroundColor: '#ffffff',
+        marginTop: 5,
+        marginBottom: 5,
+        padding: 10,
+        color: brand.colors.primary,
+        borderColor: brand.colors.primary, 
+        borderWidth: 1,
+        borderRadius: 10
+    },
+    textArea: {
+      height: 100
+    },
+    inputLabel: {
+      color: brand.colors.primary,
+      marginTop: 15, 
+      marginLeft: 5
+    },
+    message: {
+      textAlign: 'center', 
+      paddingTop: 20, 
+      paddingLeft: 30, 
+      paddingRight: 30,
+      color: brand.colors.primary
+    },
+    buttonContainer:{
+        marginTop: 20,
+        marginLeft: 50,
+        marginRight: 50,
+        backgroundColor: brand.colors.white,
+        paddingVertical: 15,
+        borderRadius: 30,
+        borderColor: brand.colors.primary, 
+        borderWidth: 0,
+    },
+    buttonText:{
+        color: brand.colors.primary,
+        textAlign: 'center',
+        fontWeight: '500'
+    }, 
+   
+});
 
 //make this component available to the app
 export default SupportView;
