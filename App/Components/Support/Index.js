@@ -106,7 +106,7 @@ export class About extends React.Component {
                           overlayContainerStyle={{backgroundColor: '#31B0D5'}}
                           icon={{name: 'support', type: 'font-awesome'}}/>}
                       
-                      onPress={() => this.props.navigation.navigate('SupportView') }
+                      onPress={() => this.props.navigation.navigate('SupportList') }
                   
                   />
                   

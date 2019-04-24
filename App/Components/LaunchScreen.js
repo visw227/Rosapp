@@ -14,6 +14,8 @@ import { NavigationActions, StackActions } from 'react-navigation'
 import brand from '../Styles/brand'
 
 import AppCenter from 'appcenter'
+import { Platform } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 
 import { Biometrics } from '../Helpers/Biometrics';
 
@@ -48,16 +50,40 @@ class LaunchScreen extends React.Component {
 
   }
 
+  getDeviceInfo = (callback) => {
+
+      // the App Center Install ID will change on each installation, so always check on launch
+      // this is async
+      AppCenter.getInstallId().then(async (appInstallId) => {
+
+        let deviceInfo = {
+          appInstallId: appInstallId,
+          deviceUniqueId: DeviceInfo.getUniqueID(),
+          appVersion: DeviceInfo.getVersion(),
+          appBuild: DeviceInfo.getBuildNumber(),
+          systemName: DeviceInfo.getSystemName(),
+          systemVersion: DeviceInfo.getSystemVersion(),
+          userAgent: DeviceInfo.getUserAgent(),
+          deviceType: Platform.OS
+        }
+
+        AsyncStorage.setItem('deviceInfo', JSON.stringify(deviceInfo))
+
+        callback(deviceInfo)
+
+      })
+
+  }
+
   componentDidMount() {
 
 
       let _this = this
 
-      // this will change on each installation, so always check on launch
-      // this is async
-      AppCenter.getInstallId().then(async (response) => {
-        console.log('App Center Install Id: ', response)
-        AsyncStorage.setItem('AppCenterInstallId', response)
+      this.getDeviceInfo(function(deviceInfo){
+
+        console.log("LaunchScreen - deviceInfo: ", JSON.stringify(deviceInfo, null, 2))
+
       })
 
 

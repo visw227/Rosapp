@@ -572,9 +572,9 @@ let StaffListStack = createStackNavigator({
 
 import SupportScreen from './Components/Support/Index'
 
-import SupportViewScreen from './Components/Support/View/Index'
+import SupportListScreen from './Components/Support/List/Index'
 import SupportRequestScreen from './Components/Support/Request/Index'
-import SupportRequestDetailScreen from './Components/Support/View/Detail'
+import SupportRequestDetailScreen from './Components/Support/List/Detail'
 
 import SupportContactScreen from './Components/Support/Contact/Index'
 
@@ -593,8 +593,8 @@ let SupportStack = createStackNavigator({
       headerBackTitle: null
     }),
   },
-  SupportView: {
-    screen: SupportViewScreen
+  SupportList: {
+    screen: SupportListScreen
   },
   SupportRequest: {
     screen: SupportRequestScreen

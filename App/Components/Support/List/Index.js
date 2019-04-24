@@ -28,6 +28,8 @@ import AvatarInitials from '../../ReusableComponents/AvatarInitials'
 
 import { getRequests } from '../../../Services/Support'
 
+import { Utils } from '../../../Helpers/Utils'
+
 class SupportView extends React.Component {
 
   static navigationOptions = (navigate) => ({
@@ -132,6 +134,18 @@ class SupportView extends React.Component {
             })
         }
         else {
+
+
+
+            resp.requests.forEach(function(item){
+
+              //console.log("comparing item:", item.description)
+              item.description = Utils.ReplaceAll(item.description, "\r\n", "~\n")
+
+            })
+
+            console.log("requests AFTER", resp.requests)
+
             _this.setState({
                 receiving: false,
                 data: resp
@@ -145,7 +159,9 @@ class SupportView extends React.Component {
 
   getAvatar = (item) => {
 
-      if(item.status === "closed")
+      // new, solved, closed
+
+      if(item.status === "closed" || item.status === "solved")
         return (
           <View
               style={{
@@ -178,7 +194,7 @@ class SupportView extends React.Component {
                   marginRight: 0
                 }}
             >
-              <Entypo name={'support'} size={22} color={brand.colors.white} />
+              <FontAwesome name={'support'} size={25} color={brand.colors.white} />
             </View>
         )
       }
