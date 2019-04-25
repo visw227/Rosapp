@@ -132,12 +132,14 @@ class RegisterUser extends React.Component {
   onSubmitPress = () => {
 
     let _this = this
+
+    Keyboard.dismiss()
     
     var userData = this.props.screenProps.state.userData
 
     let request = {
       rosnet_user_id : userData.userId,
-      email : userData.email,
+      email : this.state.email,
       name: userData.commonName,
       location : userData.location || 0
       
@@ -172,13 +174,20 @@ class RegisterUser extends React.Component {
         console.log('user added successfully')
 
         _this.setState({
-          sending: false,
+          sending: true, // keep the spinner showing since we will redirect back to the SupportList screen after a brief delay to confirm to the user something happened
           requestStatus: {
               hasError: false,
               message: "Your email address was registered successfully."
           },
           wasAlreadySent: true
         })
+
+        // wait a second and take the user back to the support list screen
+        setTimeout(() => {
+          _this.props.navigation.navigate('SupportList')
+        }, 1000); // 1.5 seconds
+
+       
 
       }
     })

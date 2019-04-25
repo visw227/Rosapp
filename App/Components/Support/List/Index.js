@@ -107,53 +107,7 @@ class SupportView extends React.Component {
         handleSubmit: this.handleSubmit,
     })
 
-    let userId = this.props.screenProps.state.userData.userId
 
-    searchUsersByRosnetExternalID(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, userId, function(err, resp){
-
-      if(err) {
-            _this.setState({
-                receiving: false,
-                requestStatus: {
-                  hasError: true,
-                  message: err
-                }
-            })
-      }
-      else {
-
-        // if the search results found a user by the Rosnet User ID, then we know the user is registered
-        // Note: we can search by email address instead if needed
-        if(resp && resp.users && resp.users.length > 0) {
-      
-            _this.setState({
-                receiving: false,
-                registered: true
-            })
-
-            _this.loadData()
-
-        }
-        else {
-
-            _this.setState({
-                receiving: false,
-                requestStatus: {
-                  hasError: true,
-                  message: "Sorry, you currently don't have an email address registered with our support system."
-                },
-                data: [],
-                registered: false
-            })
-
-            //_this.props.navigation.navigate('SupportRegisterUser')
-
-        }
-
-      }
-
-
-    })
 
 
   }
@@ -174,46 +128,85 @@ class SupportView extends React.Component {
 
     console.log("getting requests for ", this.props.screenProps.state.userData.email)
 
-    getRequests(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, this.props.screenProps.state.userData.email, function(err, resp){
+    let client = this.props.screenProps.state.selectedClient
+    let token = this.props.screenProps.state.userData.token
+    let userId = this.props.screenProps.state.userData.userId
+    let email = this.props.screenProps.state.userData.email
 
-        if(err) {
+    searchUsersByRosnetExternalID(client, token, userId, function(err, resp){
 
-            let message = "Sorry, we weren't able to retrieve your support requests."
+      if(err) {
+            _this.setState({
+                receiving: false, // dont set here so not competing with loadData
+                requestStatus: {
+                  hasError: true,
+                  message: err
+                },
+                registered: false
+            })
+      }
+      else {
 
-            if(err.message.indexOf("401") !== -1) {
-                message = "Sorry, we need to add you to our support system."
-            }
+        // if the search results found a user by the Rosnet User ID, then we know the user is registered
+        // Note: we can search by email address instead if needed
+        if(resp && resp.users && resp.users.length > 0) {
+      
+            getRequests(client, token, email, function(err, resp){
+
+              if(err) {
+
+                  let message = "Sorry, we weren't able to retrieve your support requests."
+
+                  _this.setState({
+                      receiving: false,
+                      requestStatus: {
+                          hasError: true,
+                          message: message
+                      },
+                      data: [],
+                      registered: false
+                  })
+              }
+              else {
+
+                  _this.setState({
+                      receiving: false,
+                      requestStatus: {
+                          hasError: false,
+                          message: null
+                      },
+                      data: resp.requests,
+                      registered: true
+                  })
+              }
+
+
+          })
+
+
+        }
+        else {
 
             _this.setState({
                 receiving: false,
                 requestStatus: {
-                    hasError: true,
-                    message: message
+                  hasError: true,
+                  message: "You currently don't have an email address registered with Rosnet Support. Would you like to register now?"
                 },
-                data: []
+                data: [],
+                registered: false
             })
+
+            //_this.props.navigation.navigate('SupportRegisterUser')
+
         }
-        else {
 
-
-
-            resp.requests.forEach(function(item){
-
-              //console.log("comparing item:", item.description)
-              item.description = Utils.ReplaceAll(item.description, "\r\n", "~\n")
-
-            })
-
-            console.log("requests AFTER", resp.requests)
-
-            _this.setState({
-                receiving: false,
-                data: resp.requests
-            })
-        }
+      }
 
 
     })
+
+
 
   }
 
@@ -262,8 +255,19 @@ class SupportView extends React.Component {
 
   }
 
+  getCountDisplay = (count) => {
+
+    if(count === 1) {
+      return count + ' request found'
+    }
+    else {
+      return count + ' requests found'
+    }
+
+  }
 
   render() {
+
     return (
 
 
@@ -302,21 +306,25 @@ class SupportView extends React.Component {
             }
 
 
-            {!this.state.receiving && this.state.data.length === 0 &&
+            {this.state.registered && !this.state.receiving && this.state.data.length === 0 &&
               <View>
                   <Text style={styles.message} >
-                    No support requests were found.
+                    Press the <Entypo
+                      name="plus"
+                      size={15}
+                      color={brand.colors.primary}
+                  /> icon to start a new support request.
                   </Text>
 
               </View>
             }
 
 
-            {!this.state.receiving && !this.state.requestStatus.hasError && this.state.data.length > 0 && 
+            {this.state.registered && !this.state.receiving && !this.state.requestStatus.hasError && this.state.data.length > 0 && 
             <View>
 
                 <Text style={styles.message} >
-                    {this.state.data.length} Request(s) Found
+                    {this.getCountDisplay(this.state.data.length)}
                 </Text>
 
                 <List style={Styles.list}>

@@ -36,7 +36,7 @@ managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 
 ### DELETE USER ###
 
-DELETE https://aag.rosnetqa.com/api/ManagerAppZendesk/DeleteUser?zendesk_id=380538242612
+DELETE https://aag.rosnetqa.com/api/ManagerAppZendesk/DeleteUser?zendesk_id=380613447991
 content-type: application/json
 managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 
@@ -49,6 +49,6 @@ managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 
 ### SEARCH USERS BY External ID ###
 
-GET https://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByRosnetExternalID?rosnet_user_id=26472
+GET https://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByRosnetExternalID?rosnet_user_id=380609323911
 content-type: application/json
 managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
