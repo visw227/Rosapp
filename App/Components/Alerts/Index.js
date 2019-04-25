@@ -28,9 +28,6 @@ import LocationButtons from '../ReusableComponents/LocationButtons';
 import { GetNotifications } from '../../Services/Account';
 
 
-let fakedData = require('../../Fixtures/Notifications')
-let fakedUserProfile = require('../../Fixtures/UserProfile')
-
 class AlertsScreen extends React.Component {
 
   static navigationOptions = (navigate) => ({
@@ -69,14 +66,7 @@ class AlertsScreen extends React.Component {
       </View>,
 
 
-    // The drawerLabel is defined in DrawerContainer.js
-    // drawerLabel: 'Staff List',
-    // drawerIcon: ({ tintColor }) => (
-    //   <Image
-    //     source={require('../Images/TabBar/list-simple-star-7.png')}
-    //     style={[Styles.icon, {tintColor: tintColor}]}
-    //   />
-    // ),
+
   })
 
     constructor(props) {
@@ -90,8 +80,7 @@ class AlertsScreen extends React.Component {
               message: ""
           },
           userToken: '',
-          data: fakedData,
-          userProfile: fakedUserProfile,
+          data: [],
           title : null,
           text : null
       }
@@ -110,9 +99,9 @@ class AlertsScreen extends React.Component {
 
       let request = {
 
-         token : this.props.screenProps.state.userData.token,
-         client : this.props.screenProps.state.selectedClient,
-         userId : 545,
+         token : userData.token,
+         client : client,
+         userId : userData.userId,
          includeHidden : true
 
       }
@@ -125,27 +114,25 @@ class AlertsScreen extends React.Component {
           console.log('response',resp)
           
   
-            resp.forEach(element => {
-              title = element.Title
-              text = element.PushText
-            });
+            // resp.forEach(element => {
+            //   title = element.Title
+            //   text = element.PushText
+            // });
             //console.log('modifiedresp',alertTypes)
   
             _this.setState ({
-              title : title,
-              text : text,
               data : resp
-            }, ()=> console.log('Push Text',_this.state.text))
+            })
   
           
         }
   
-        })
+      })
 
       
-
-      console.log("notif will mount")
-      this.props.navigation.setParams({ backgroundColor:this.props.screenProps.state.backgroundColor })
+      this.props.navigation.setParams({ 
+        backgroundColor:this.props.screenProps.state.backgroundColor 
+      })
 
 
 
