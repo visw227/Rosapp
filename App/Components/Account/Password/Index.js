@@ -252,20 +252,20 @@ class Password extends React.Component {
       },
     })
 
-    console.log("comparing current:", this.props.screenProps.state.userData.password, " to entered:", this.state.confirmCurrentPassword)
+    // console.log("comparing current:", this.props.screenProps.state.userData.password, " to entered:", this.state.confirmCurrentPassword)
     
-    if(this.props.screenProps.state.userData.password !== this.state.confirmCurrentPassword) {
+    // if(this.props.screenProps.state.userData.password !== this.state.confirmCurrentPassword) {
 
-      this.setState({
-        sending: false,
-        requestStatus: {
-            hasError: true,
-            message: "Your current password was entered incorrectly."
-        },
-      })
+    //   this.setState({
+    //     sending: false,
+    //     requestStatus: {
+    //         hasError: true,
+    //         message: "Your current password was entered incorrectly."
+    //     },
+    //   })
 
-      return
-    }
+    //   return
+    // }
 
     console.log("comparing new:", this.state.newPassword, " to confirmed:", this.state.newPasswordConfirmed)
 
@@ -412,6 +412,12 @@ class Password extends React.Component {
         <View style={styles.formContainer}>
 
 
+            <Text style={[styles.title, { marginBottom: 20 } ]}>
+              Rosnet has adopted Dropbox's password strength evaluation system. 
+              This encourages users towards stronger passwords by asking them to type a bit more instead of demanding awkward character types. 
+            </Text>
+
+            {/* 
             <Text style={styles.inputLabel}>Current Password</Text>
 
 
@@ -427,7 +433,7 @@ class Password extends React.Component {
                     secureTextEntry = { this.state.isCurrentPasswordSecureText }
                     onFocus={() => this.setState({ isCurrentPasswordSecureText: false })}
                     onBlur={() => this.setState({ isCurrentPasswordSecureText: true })}
-            />
+            /> */}
 
 
 
@@ -536,6 +542,13 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10
     },
+    title: {
+      textAlign: 'center', 
+      paddingTop: 5, 
+      paddingLeft: 15, 
+      paddingRight: 15,
+      color: brand.colors.primary
+    },
     input:{
         height: 40,
         backgroundColor: '#ffffff',
@@ -555,8 +568,8 @@ const styles = StyleSheet.create({
     message: {
       textAlign: 'center', 
       paddingTop: 20, 
-      paddingLeft: 30, 
-      paddingRight: 30,
+      paddingLeft: 15, 
+      paddingRight: 15,
       color: brand.colors.primary
     },
     inputNewPassword: {

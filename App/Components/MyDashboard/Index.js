@@ -135,7 +135,7 @@ class MyDashboardScreen extends React.Component {
 
 
       let source = {
-        uri: "https://" + clientCode + "." + env + "/WebFocus/Dashboard/3A077B2C-0A95-449C-B218-16BF9594F655",
+        uri: "https://" + clientCode + "." + env + "/WebFocus/Dashboard/3A077B2C-0A95-449C-B218-16BF9594F655?isApp=true",
         headers: {
           "Cookie": "rememberme=" + userData.userName + "; clientCode=" + clientCode + "; rosnetToken=" + userData.token 
         }

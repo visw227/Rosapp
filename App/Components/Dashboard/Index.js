@@ -127,7 +127,7 @@ class DashboardScreen extends React.Component {
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://" + selectedClient + "." + env + "/home/appdash",
+        uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
         headers: {
           "managerAppToken":  token
         }
@@ -154,7 +154,7 @@ class DashboardScreen extends React.Component {
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://" + selectedClient + "." + env + "/home/appdash",
+        uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
         headers: {
           "managerAppToken":  userData.token
         }
@@ -228,7 +228,7 @@ class DashboardScreen extends React.Component {
 
 
         let source = {
-          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/home/appdash",
+          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/home/appdash?isApp=true",
           headers: {
             "managerAppToken":  userData.token
           }

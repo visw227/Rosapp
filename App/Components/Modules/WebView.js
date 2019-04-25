@@ -145,7 +145,7 @@ class WebViewScreen extends React.Component {
           console.log(">>> Modules WebView - Token is Valid", resp)
 
           let source = {
-            uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href,
+            uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true',
             headers: {
               "managerAppToken":  userData.token
             }
@@ -202,7 +202,7 @@ class WebViewScreen extends React.Component {
         let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
         let source = {
-          uri: "https://" + selectedClient + "." + env + item.href,
+          uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
           headers: {
             "managerAppToken":  token
           }
@@ -229,7 +229,7 @@ class WebViewScreen extends React.Component {
         let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
         let source = {
-          uri: "https://" + selectedClient + "." + env + item.href,
+          uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
           headers: {
             "managerAppToken":  token
           }
