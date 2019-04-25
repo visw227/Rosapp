@@ -23,9 +23,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
 
-
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
+import { GetNotifications } from '../../Services/Account';
 
 
 let fakedData = require('../../Fixtures/Notifications')
@@ -91,7 +91,9 @@ class AlertsScreen extends React.Component {
           },
           userToken: '',
           data: fakedData,
-          userProfile: fakedUserProfile
+          userProfile: fakedUserProfile,
+          title : null,
+          text : null
       }
 
 
@@ -103,6 +105,44 @@ class AlertsScreen extends React.Component {
       let _this = this 
 
       let userData = this.props.screenProps.state.userData
+      let token = this.props.screenProps.state.userData.token
+      let client  = this.props.screenProps.state.selectedClient
+
+      let request = {
+
+         token : this.props.screenProps.state.userData.token,
+         client : this.props.screenProps.state.selectedClient,
+         userId : 545,
+         includeHidden : true
+
+      }
+
+      GetNotifications (request ,function(err,resp) {
+        if (err){
+          console.log ('Error siteSettings',err)
+        }
+        else {
+          console.log('response',resp)
+          
+  
+            resp.forEach(element => {
+              title = element.Title
+              text = element.PushText
+            });
+            //console.log('modifiedresp',alertTypes)
+  
+            _this.setState ({
+              title : title,
+              text : text,
+              data : resp
+            }, ()=> console.log('Push Text',_this.state.text))
+  
+          
+        }
+  
+        })
+
+      
 
       console.log("notif will mount")
       this.props.navigation.setParams({ backgroundColor:this.props.screenProps.state.backgroundColor })
@@ -190,13 +230,13 @@ class AlertsScreen extends React.Component {
 
 
                       <ListItem
-                          key={l.slNotificationID}
+                          key={l.AlertTypeId}
                           roundAvatar
                           style={Styles.listItem}
                           title={
 
                             <Text style={Styles.title} numberOfLines={1} ellipsizeMode ={'tail'} >
-                              {l.title}
+                              {l.Title}
                             </Text>
 
                           }
@@ -204,7 +244,7 @@ class AlertsScreen extends React.Component {
                           subtitle={
        
                             <Text style={Styles.subtitleView} numberOfLines={2} ellipsizeMode ={'tail'} >
-                              {l.pushText || l.emailText}
+                              {l.PushText}
                             </Text>
 
                           }

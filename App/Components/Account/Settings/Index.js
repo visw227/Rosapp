@@ -118,7 +118,7 @@ class Settings extends React.Component {
           request : {
             
             userName: this.props.screenProps.state.userData.userName,
-            client: this.props.screenProps.state.userData.selectedSite ,
+            client: this.props.screenProps.state.selectedClient ,
             token :  this.props.screenProps.state.userData.token,
             alertTypeID : null ,
             desc : null ,
