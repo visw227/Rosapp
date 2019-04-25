@@ -73,6 +73,7 @@ export var Parsers = {
             let item = {
                 employeeId: p.Employee_ID,
                 stafflinqId: p.SL_Emp_User_ID,
+                nameOriginal: p.ROSnet_Emp_Name, 
                 name: Parsers.Name(p.ROSnet_Emp_Name),
                 shareEmail: false,
                 sharePhone: false,
@@ -164,7 +165,7 @@ export var Parsers = {
         
             parsed = phone.replace(/[^0-9]+/g, '');
 
-            console.log("parsing phone: ", phone, parsed)
+            //console.log("parsing phone: ", phone, parsed)
             
             if(phone && phone.length > 0) {
 

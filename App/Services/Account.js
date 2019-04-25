@@ -85,21 +85,24 @@ export function changePassword (request, token, callback) {
 
     }
      else { 
-       callback(null,resp)
+       callback(null, resp)
        
        let emailUrl = '/api/ManagerAppAuth/EmailPasswordChange?email='+encodeURI(request.email)+'&selectedSite='+encodeURI(request.clientCode)+'&userID='+encodeURI(request.userId)
        
        serviceWrapper(emailUrl, 'GET', null, request.clientCode , token, function(err, resp) {
         if (err) {
           
-          callback(err)
-          console.log('email Error')
+          // DONT do callback here. It already happened above
+          //callback(err)
+          //console.log('email Error')
     
         }
          else { 
-           callback(null, resp)
            
-           console.log('email sent to user')      
+          //DONT do callback here. It already happened above
+          //callback(null, resp)
+          
+          //console.log('email sent to user')      
          }
       } )
      }

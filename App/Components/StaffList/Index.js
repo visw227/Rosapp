@@ -107,7 +107,7 @@ class StaffListScreen extends React.Component {
       backgroundColor:this.props.screenProps.state.backgroundColor 
     })
 
-    getStaffList(this.props.screenProps.state.selectedClient, userData.token, userData.location || 2102019, function(err, resp){
+    getStaffList(this.props.screenProps.state.selectedClient, userData.token, userData.location || 0, function(err, resp){
 
 
       if(err) {
