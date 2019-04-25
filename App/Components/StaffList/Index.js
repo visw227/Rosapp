@@ -232,7 +232,7 @@ class StaffListScreen extends React.Component {
                           key={l.employeeId}
                           roundAvatar
                           style={Styles.listItem}
-                          title={l.name.firstAndLast}
+                          title={l.nameOriginal}
                           titleStyle={{ color: brand.colors.gray }}
                           
                           subtitle={

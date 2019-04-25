@@ -63,7 +63,7 @@ constructor(props) {
             color={'white'}
             size={150}
             fontSize={40}
-            text={item.name.firstAndLast}
+            text={item.nameOriginal}
             length={2}
           />
       )
@@ -92,7 +92,7 @@ constructor(props) {
 
             <View style={Styles.bodyContent}>
               
-                <Text style={Styles.name}>{member.name.firstAndLast}</Text>
+                <Text style={Styles.name}>{member.nameOriginal}</Text>
                 {member.sharePhone &&
                 <Text style={Styles.info}>{member.phone}</Text>
                 }
