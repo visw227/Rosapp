@@ -15,16 +15,16 @@ managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
 
 
 
-GET http://aag.rosnetqa.com/api/ManagerAppZendesk/Requests?email=djohnson@rosnet.com&count=1
+GET https://aag.rosnetqa.com/api/ManagerAppZendesk/Requests?email=djohnson@rosnet.com&count=1
 content-type: application/json
 managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
 
 
 ### CREATE USER ### 
 
-POST http://aag.rosnetqa.com/api/ManagerAppZendesk/AddUser
+POST https://aag.rosnetqa.com/api/ManagerAppZendesk/AddUser
 Content-Type: application/json
-managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
+managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 
 {
     "rosnet_user_id" : 1234, // this is the ExternalID for Zendesk
@@ -36,19 +36,19 @@ managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
 
 ### DELETE USER ###
 
-DELETE http://aag.rosnetqa.com/api/ManagerAppZendesk/DeleteUser?zendesk_id=380554794751
+DELETE https://aag.rosnetqa.com/api/ManagerAppZendesk/DeleteUser?zendesk_id=380538242612
 content-type: application/json
-managerAppToken: 63664408-17ec-457e-8af9-eebd7aad4fa1
+managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 
 
 ### SEARCH USERS BY EMAIL ###
 
-GET http://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByEmail?email=djohnson@rosnet.com
+GET https://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByEmail?email=djohnson@rosnet.com
 content-type: application/json
 managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 
 ### SEARCH USERS BY External ID ###
 
-GET http://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByRosnetExternalID?rosnet_user_id=26472
+GET https://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByRosnetExternalID?rosnet_user_id=26472
 content-type: application/json
 managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40

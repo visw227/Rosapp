@@ -85,7 +85,7 @@ class SupportView extends React.Component {
 
     // don't allow a request to be submitted if not a registered user
     if(this.state.registered) {
-      _this.props.navigation.navigate('SupportRequest')
+      this.props.navigation.navigate('SupportRequest')
     }
 
   }
@@ -102,7 +102,7 @@ class SupportView extends React.Component {
         handleSubmit: this.handleSubmit,
     })
 
-    let userId = 1234 //this.props.screenProps.state.userData.userId
+    let userId = this.props.screenProps.state.userData.userId
 
     searchUsersByRosnetExternalID(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, userId, function(err, resp){
 
@@ -158,6 +158,15 @@ class SupportView extends React.Component {
 
     let _this = this
 
+    this.setState({
+        receiving: true,
+        requestStatus: {
+            hasError: false,
+            message: null
+        },
+        data: []
+    })
+
     console.log("getting requests for ", this.props.screenProps.state.userData.email)
 
     getRequests(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, this.props.screenProps.state.userData.email, function(err, resp){
@@ -194,7 +203,7 @@ class SupportView extends React.Component {
 
             _this.setState({
                 receiving: false,
-                data: resp
+                data: resp.requests
             })
         }
 
@@ -287,15 +296,29 @@ class SupportView extends React.Component {
               </View>
             }
 
-            {!this.state.receiving && !this.state.requestStatus.hasError && 
-            <View style={{ marginTop: -20 }} >
 
+            {!this.state.receiving && this.state.data.length === 0 &&
+              <View>
+                  <Text style={styles.message} >
+                    No support requests were found.
+                  </Text>
+
+              </View>
+            }
+
+
+            {!this.state.receiving && !this.state.requestStatus.hasError && this.state.data.length > 0 && 
+            <View>
+
+                <Text style={styles.message} >
+                    {this.state.data.length} Request(s) Found
+                </Text>
 
                 <List style={Styles.list}>
 
 
                   {
-                    this.state.data && this.state.data.requests && this.state.data.requests.map((l, i) => (
+                    this.state.data && this.state.data.map((l, i) => (
 
 
                       <ListItem

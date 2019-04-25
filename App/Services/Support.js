@@ -82,7 +82,7 @@ export function searchUsersByRosnetExternalID(client, token, rosnet_user_id, cal
 }
 
 */
-export function addUser(client, token, request, callback) {
+export function registerUser(client, token, request, callback) {
   
   // login method received credentials as query string params
   let url = '/api/ManagerAppZendesk/AddUser'

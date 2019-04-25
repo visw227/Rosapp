@@ -22,20 +22,10 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import brand from '../../../Styles/brand'
 
-// import Styles from './Styles'
 
-import ImagePicker from 'react-native-image-picker'
-import { reportIssue } from '../../../Services/Support'
+import { registerUser } from '../../../Services/Support'
 
-import DeviceInfo from 'react-native-device-info'
 
-var options = {
-  
-  storageOptions: {
-    skipBackup: true,
-    path: 'images'
-  }
-};
 
 class RegisterUser extends React.Component {
 
@@ -78,7 +68,8 @@ class RegisterUser extends React.Component {
           hasError: false,
           message: ""
       },
-      email: this.props.screenProps.state.userData.email
+      email: this.props.screenProps.state.userData.email,
+      wasAlreadySent: false,
     }
   }
 
@@ -118,6 +109,17 @@ class RegisterUser extends React.Component {
       })
 
     }
+    else if(this.state.wasAlreadySent) {
+
+      this.setState({
+        sending: false,
+        requestStatus: {
+            hasError: true,
+            message: "This email address has already been registered."
+        },
+      })
+
+    }
     else {
       this.onSubmitPress()
     }
@@ -137,42 +139,49 @@ class RegisterUser extends React.Component {
       rosnet_user_id : userData.userId,
       email : userData.email,
       name: userData.commonName,
-      location : this.state.location
+      location : userData.location || 0
       
     }
 
     console.log("submitting request", JSON.stringify(request, null, 2))
 
+    registerUser(this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
 
-    // reportIssue (this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
-    //   if(err){
-    //     console.log('errror reporting Issue',err)
-
-    //     _this.setState({
-    //       sending: false,
-    //       requestStatus: {
-    //           hasError: true,
-    //           message: err.message
-    //       },
-    //       wasAlreadySent: true
-    //     })
+      if(err){
+        console.log('errror creating Zendesk user',err)
 
 
-    //   }
-    //   else {
-    //     console.log('issue reported successfully')
+        let message = "Sorry, we weren't able to register your email address. The exact error was: " + err.message.substring(0, 250)
 
-    //     _this.setState({
-    //       sending: false,
-    //       requestStatus: {
-    //           hasError: false,
-    //           message: "Your support request was sent successfully."
-    //       },
-    //       wasAlreadySent: true
-    //     })
+        if(err.message.indexOf("422") !== -1) {
+            message = "This email address has already been registered."
+        }
 
-    //   }
-    // })
+        _this.setState({
+          sending: false,
+          requestStatus: {
+              hasError: true,
+              message: message
+          },
+          wasAlreadySent: false // keep false in case change email
+        })
+
+
+      }
+      else {
+        console.log('user added successfully')
+
+        _this.setState({
+          sending: false,
+          requestStatus: {
+              hasError: false,
+              message: "Your email address was registered successfully."
+          },
+          wasAlreadySent: true
+        })
+
+      }
+    })
 
   }
 
@@ -187,8 +196,7 @@ class RegisterUser extends React.Component {
         <View style={styles.formContainer}>
 
             <Text style={styles.inputLabel} >
-              Sorry, you currently don't have an email address registered with our support system. 
-              Please enter your email address below.
+              To register, please enter your email address below.
             </Text>
 
             <Text style={styles.inputLabel} >
@@ -205,6 +213,11 @@ class RegisterUser extends React.Component {
                     onChangeText={(email) => this.setState({ email: email})}
             />
 
+            {this.state.sending &&
+            <View style={{ marginTop: 20, marginBottom: 10 }} >
+                <ActivityIndicator size="large" color={brand.colors.primary} />
+                </View>
+            }
 
             <Text style={styles.message} >
               {this.state.requestStatus.message}
