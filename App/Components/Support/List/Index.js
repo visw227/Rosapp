@@ -94,6 +94,11 @@ class SupportView extends React.Component {
 
     let _this = this
 
+    // componentDidMount only fires once
+    // willFocus will cause the list to reload after a user submits a new request and returns
+    this.props.navigation.addListener('willFocus', this.loadData)
+
+
     let userData = this.props.screenProps.state.userData
 
     this.props.navigation.setParams({ 
