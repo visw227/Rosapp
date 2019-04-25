@@ -22,28 +22,18 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import brand from '../../../Styles/brand'
 
-// import Styles from './Styles'
 
-import ImagePicker from 'react-native-image-picker'
-import { reportIssue } from '../../../Services/Support'
+import { registerUser } from '../../../Services/Support'
 
-import DeviceInfo from 'react-native-device-info'
 
-var options = {
-  
-  storageOptions: {
-    skipBackup: true,
-    path: 'images'
-  }
-};
 
-class SupportRequest extends React.Component {
+class RegisterUser extends React.Component {
 
   // this is a child/nested screen in the SchedulesStack
   // Look at SchedulesStack for tricks with hiding the tabBar and hiding the back button title
   static navigationOptions = (navigate) => ({
 
-    title: 'Report an Issue',
+    title: 'Register Email',
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
@@ -71,17 +61,6 @@ class SupportRequest extends React.Component {
   constructor(props) {
     super(props)
 
-
-       
-    let deviceId = DeviceInfo.getUniqueID()
-    let appVersion = DeviceInfo.getVersion()
-    let appBuild = DeviceInfo.getBuildNumber()
-    let osVersion = DeviceInfo.getSystemVersion()
-    let deviceBrand = DeviceInfo.getBrand()
-    let deviceModel = DeviceInfo.getModel()
- 
-    let ts =  moment().format('dddd, MMM Do') + ' @  ' +  moment().format('h:mm:ss A')
-
     this.state = {
       sending: false,
       receiving: false,
@@ -89,19 +68,8 @@ class SupportRequest extends React.Component {
           hasError: false,
           message: ""
       },
+      email: this.props.screenProps.state.userData.email,
       wasAlreadySent: false,
-      subject: '', //Test by ' + this.props.screenProps.state.userData.userName,
-      location: '', //ts,
-      description: '', //Delete this but please email me at ' + this.props.screenProps.state.userData.email + ' so that I know that this was received by ZenDesk',
-      deviceId: deviceId,
-      version: appVersion,
-      appBuild: appBuild,
-      appCenterInstallId: '',
-      deviceBrand : deviceBrand,
-      osVersion,
-      deviceModel: deviceModel,
-      options,
-      deviceInfo : 'appVersion: ' + appVersion + ', appBuild: ' + appBuild + ', deviceId: '+ deviceId +  ', deviceBrand: '+ deviceBrand + ', deviceModel: ' + deviceModel + ', osVersion: ' + osVersion
     }
   }
 
@@ -114,13 +82,6 @@ class SupportRequest extends React.Component {
       backgroundColor:this.props.screenProps.state.backgroundColor 
     })
 
-    AsyncStorage.getItem('AppCenterInstallId').then((data) => {
-        _this.setState({
-            appCenterInstallId: data
-        })
-    })
-
-    console.log('<<<deviceInfo',this.state.deviceInfo)
 
   }
 
@@ -137,13 +98,13 @@ class SupportRequest extends React.Component {
       },
     })
 
-    if(this.state.subject === '' || this.state.location === '' || this.state.description === '') {
+    if(this.state.email === '') {
 
       this.setState({
         sending: false,
         requestStatus: {
             hasError: true,
-            message: "Please include a subject, a location where the issue occurred, and a description."
+            message: "Please enter your email address."
         },
       })
 
@@ -154,7 +115,7 @@ class SupportRequest extends React.Component {
         sending: false,
         requestStatus: {
             hasError: true,
-            message: "This support request has already been sent."
+            message: "This email address has already been registered."
         },
       })
 
@@ -171,47 +132,62 @@ class SupportRequest extends React.Component {
   onSubmitPress = () => {
 
     let _this = this
+
+    Keyboard.dismiss()
     
     var userData = this.props.screenProps.state.userData
 
     let request = {
-      subject : this.state.subject,
-      description : this.state.description,
-      location : this.state.location,
-      browser : this.state.deviceInfo,
-      value : null, // no images provided by app
+      rosnet_user_id : userData.userId,
+      email : this.state.email,
+      name: userData.commonName,
+      location : userData.location || 0
       
     }
 
     console.log("submitting request", JSON.stringify(request, null, 2))
 
+    registerUser(this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
 
-    reportIssue (this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
       if(err){
-        console.log('errror reporting Issue',err)
+        console.log('errror creating Zendesk user',err)
+
+
+        let message = "Sorry, we weren't able to register your email address. The exact error was: " + err.message.substring(0, 250)
+
+        if(err.message.indexOf("422") !== -1) {
+            message = "This email address has already been registered."
+        }
 
         _this.setState({
           sending: false,
           requestStatus: {
               hasError: true,
-              message: err.message
+              message: message
           },
-          wasAlreadySent: true
+          wasAlreadySent: false // keep false in case change email
         })
 
 
       }
       else {
-        console.log('issue reported successfully')
+        console.log('user added successfully')
 
         _this.setState({
-          sending: false,
+          sending: true, // keep the spinner showing since we will redirect back to the SupportList screen after a brief delay to confirm to the user something happened
           requestStatus: {
               hasError: false,
-              message: "Your support request was sent successfully."
+              message: "Your email address was registered successfully."
           },
           wasAlreadySent: true
         })
+
+        // wait a second and take the user back to the support list screen
+        setTimeout(() => {
+          _this.props.navigation.navigate('SupportList')
+        }, 1000); // 1.5 seconds
+
+       
 
       }
     })
@@ -228,52 +204,29 @@ class SupportRequest extends React.Component {
 
         <View style={styles.formContainer}>
 
+            <Text style={styles.inputLabel} >
+              To register, please enter your email address below.
+            </Text>
 
-            <Text style={styles.inputLabel}>Subject</Text>
-
+            <Text style={styles.inputLabel} >
+              Email Address
+            </Text>
 
 
             <TextInput style={styles.input}   
                     //ref={input => { this.textInput = input }}
                     //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
-                    placeholder='What is the issue' 
+                    placeholder='Email address' 
                     placeholderTextColor={brand.colors.silver}
-                    value={this.state.subject}
-                    onChangeText={(subject) => this.setState({subject})}
+                    value={this.state.email}
+                    onChangeText={(email) => this.setState({ email: email})}
             />
-
-            <Text style={styles.inputLabel}>Location</Text>
-                 
-            <TextInput style={styles.input}   
-                    returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
-                    placeholder='Screen where issue exists' 
-                    //ref={input => { this.confirmPassInput = input }}
-                    //editable = {this.state.validated}
-                    placeholderTextColor={brand.colors.silver}
-                    value={this.state.location}
-                    onChangeText= {(location) => this.setState({location})}
-            />
-   
-
-            <Text style={styles.inputLabel}>Description</Text>
-                 
-            <TextInput  style={[styles.input, styles.textArea]}
-              multiline 
-              //returnKeyType="go" //ref={(input)=> this.passwordInput = input} 
-              placeholder='Explain in brief what the issue is' 
-              ref={input => { this.confirmPassInput = input }}
-              placeholderTextColor={brand.colors.silver}
-              value={this.state.description}
-              onChangeText= {(description) => this.setState({description})}
-            />
-                
 
             {this.state.sending &&
             <View style={{ marginTop: 20, marginBottom: 10 }} >
                 <ActivityIndicator size="large" color={brand.colors.primary} />
                 </View>
             }
-
 
             <Text style={styles.message} >
               {this.state.requestStatus.message}
@@ -332,4 +285,4 @@ const styles = StyleSheet.create({
 
 
 //make this component available to the app
-export default SupportRequest;
+export default RegisterUser;

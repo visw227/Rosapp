@@ -5,7 +5,7 @@ Tip: You can point App to experiments in the ./Experiments folder to test things
 
 */
 
-import App from './App-Rosnet'
+import App from './App/Rosnet'
 
 
 // import App from './Experiments/PushPermissions'

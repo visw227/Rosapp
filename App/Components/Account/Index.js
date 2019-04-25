@@ -7,7 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-import { changePasswordAccess } from '../../Services/Account';
+// import { changePasswordAccess } from '../../Services/Account';
 
 
 export class Account extends React.Component {
@@ -68,7 +68,6 @@ export class Account extends React.Component {
               hasError: false,
               message: ""
           },
-          changePassAcess : false,
           color :  this.props.navigation.getParam('backgroundColor')
 
       }
@@ -78,44 +77,10 @@ export class Account extends React.Component {
 
   componentDidMount () {
 
-    _this  = this
-
-     var changePass;
-
-
-     let userData = this.props.screenProps.state.userData
-
-     this.props.navigation.setParams({ backgroundColor:this.props.screenProps.state.backgroundColor })
- 
-
-     console.log('componentDID',this.props.screenProps.state.backgroundColor)
-
-     clientCode = this.props.screenProps.state
-
-     let request = {
-         clientCode : this.props.screenProps.state.selectedClient,
-         token : this.props.screenProps.state.userData.token
-     }
-
-    changePasswordAccess(request.clientCode,request.token,function(err,resp){
-        if (err){
-            console.log('error changePassAcc',err)
-            _this.setState({
-                changePassAcess : false
-            })
-
-        }
-        else {
-            console.log('Success Change Pass Acc :-)')
-            
-            _this.setState({
-                changePassAcess : true
-            })
-
-        }
+    this.props.navigation.setParams({ 
+         backgroundColor:this.props.screenProps.state.backgroundColor 
     })
-
-    console.log('ClientCode',clientCode)
+ 
   }
     
 
@@ -166,8 +131,7 @@ export class Account extends React.Component {
 
                   />
 
-                {/* Commenting this out for now while testing... */}
-                  {/* {this.state.changePassAcess &&  */}
+                {this.props.screenProps.state.userData.canChangePassword &&  
                   
                   <ListItem
                       style={Styles.listItem}
@@ -186,26 +150,8 @@ export class Account extends React.Component {
                       onPress={() => this.props.navigation.navigate('Password') }
                   
                   />
-                  {/* } */}
+                } 
 
-                  {/* <ListItem
-
-                      style={Styles.listItem}
-                      title='Advanced Security Features'
-                      titleStyle={{ color: brand.colors.gray }}
-
-                      subtitle={
-                      <View style={Styles.subtitleView}>
-                          <Text style={Styles.ratingText}>Fingerprint & Facial Recognition</Text>
-                      </View>
-                      }
-                      avatar={<Avatar rounded medium
-                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
-                          icon={{name: 'lock', type: 'font-awesome'}}/>}
-                      
-                      onPress={() => this.props.navigation.navigate('Security') }
-                  
-                  /> */}
 
               </List>
 

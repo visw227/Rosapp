@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
 
-export class About extends React.Component {
+export class Support extends React.Component {
 
 
 
@@ -94,23 +94,23 @@ export class About extends React.Component {
                   <ListItem
 
                       style={Styles.listItem}
-                      title='My Requests'
+                      title='Support Requests'
                           titleStyle={{ color: brand.colors.gray }}
                           
                       subtitle={
                       <View style={Styles.subtitleView}>
-                          <Text style={Styles.ratingText}>View Support Requests and Statuses</Text>
+                          <Text style={Styles.ratingText}>Create & View Support Requests and Statuses</Text>
                       </View>
                       }
                       avatar={<Avatar rounded medium
                           overlayContainerStyle={{backgroundColor: '#31B0D5'}}
                           icon={{name: 'support', type: 'font-awesome'}}/>}
                       
-                      onPress={() => this.props.navigation.navigate('SupportView') }
+                      onPress={() => this.props.navigation.navigate('SupportList') }
                   
                   />
                   
-                  <ListItem
+                  {/* <ListItem
                       roundAvatar
                       style={Styles.listItem}
                       title='Report an Issue'
@@ -127,12 +127,12 @@ export class About extends React.Component {
 
                       onPress={() => this.props.navigation.navigate('SupportRequest') }
 
-                  />
+                  /> */}
 
                   <ListItem
                       roundAvatar
                       style={Styles.listItem}
-                      title='Contact Information'
+                      title='Contact Rosnet'
                           titleStyle={{ color: brand.colors.gray }}
                           
                       subtitle={
@@ -206,24 +206,28 @@ export class About extends React.Component {
                   
                   />
 
-                  <ListItem
+                {/* // making sure userLevel exists - wont if user currently logged in */}
+                {this.props.screenProps.state.userData.userLevel && 
+                    this.props.screenProps.state.userData.userLevel ===  99 && 
+                    <ListItem
 
-                      style={Styles.listItem}
-                      title='Logged Events'
-                          titleStyle={{ color: brand.colors.gray }}
+                        style={Styles.listItem}
+                        title='Logged Events'
+                            titleStyle={{ color: brand.colors.gray }}
 
-                      subtitle={
-                      <View style={Styles.subtitleView}>
-                          <Text style={Styles.ratingText}>Logged events that we use for debugging</Text>
-                      </View>
-                      }
-                      avatar={<Avatar rounded medium
-                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
-                          icon={{name: 'list-alt', type: 'font-awesome'}}/>}
-                      
-                      onPress={() => this.props.navigation.navigate('LoggedEvents') }
-                  
-                  />
+                        subtitle={
+                        <View style={Styles.subtitleView}>
+                            <Text style={Styles.ratingText}>Logged events that we use for debugging</Text>
+                        </View>
+                        }
+                        avatar={<Avatar rounded medium
+                            overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                            icon={{name: 'list-alt', type: 'font-awesome'}}/>}
+                        
+                        onPress={() => this.props.navigation.navigate('LoggedEvents') }
+                    
+                    />
+                    }
 
 
               </List>
@@ -234,4 +238,4 @@ export class About extends React.Component {
 }
 
 //make this component available to the app
-export default About;
+export default Support;

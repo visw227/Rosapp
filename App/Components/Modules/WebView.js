@@ -35,28 +35,8 @@ class WebViewScreen extends React.Component {
 
     title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? '': navigate.navigation.state.params.title,
 
-    // these seem to ONLY work here
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
-
-    // headerRight : 
-    //   <View style={{
-    //     alignItems: 'center',
-    //     flexDirection: 'row',
-    //     height: 40,
-    //     paddingRight: 10,
-    //     width: '100%'
-    //   }}>
-
-    //     <FontAwesome
-    //         name={typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.starIcon) === 'undefined' ? 'star-o': navigate.navigation.state.params.starIcon}
-    //         size={20}
-    //         color={brand.colors.white}
-    //         style={{ marginRight: 10 }}
-    //         onPress={ navigate.navigation.getParam('toggleFavorite') }
-    //     />
-
-    //   </View>,
 
 
   })
@@ -77,89 +57,117 @@ class WebViewScreen extends React.Component {
 
   }
 
-  componentDidMount () {
+  loadMenuItem = (callback) => {
 
     let _this = this
 
     const { navigation } = this.props;
 
-    const item = navigation.getParam('item', { } );
-
-    this.props.navigation.setParams({ 
-      title: item.name ,
-      backgroundColor: this.props.screenProps.state.backgroundColor,
-      starIcon: 'star-o',
-      toggleFavorite: this.toggleFavorite 
-    });
-
-    // let isFavorite = false
-    // getFavorites(function(items){
-
-    //   // console.log("item.id", item.Menu_Function_ID, "items", items)
-
-    //   if(items.includes(item.id)) {
-    //     isFavorite = true
-    //     _this.props.navigation.setParams({ starIcon: 'star' })
-    //   }
+    const item = navigation.getParam('item', null );
 
 
-    //   _this.setState({
-    //     item: item,
-    //     href: item.href,
-    //     isFavorite: isFavorite
-    //   })
+    // save a copy to local storage in case the user resumes using the app here - after biometrics
+    if(item) {
+
+      console.log("saving selectedMenuItem", item)
+      AsyncStorage.setItem('selectedMenuItem', JSON.stringify(item))
+
+      callback(item)
+    }
+    else {
+      
+        console.log("loading selectedMenuItem..")
+
+        AsyncStorage.getItem('selectedMenuItem').then((data) => {
+
+            console.log("loaded selectedMenuItem", data)
+
+            if(data) {
+
+              let selectedMenuItem = JSON.parse(data)
+
+              console.log("loaded selectedMenuItem", selectedMenuItem)
+
+              callback(selectedMenuItem)
 
 
-    // })
+            }
+
+        })
+    }
+
+  }
 
 
-    let userData = this.props.screenProps.state.userData
 
-    let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+  componentDidMount () {
 
+    let _this = this
 
-    console.log("----------------- Modules WebView ----------------------")
-    console.log("Authorization.VerifyToken", this.props.screenProps.state.selectedClient, userData.token)
-
-    // this verifies that the token is still valid and redirects to login if not
-    Authorization.VerifyToken(this.props.screenProps.state.selectedClient, userData.token, function(err, resp){
-
-      if(err) {
-
-        console.log(">>> Modules WebView - Invalid Token", err)
-
-        // reset the navigation
-        const resetAction = StackActions.reset({
-            index: 0,
-            key: null, // this is the trick that allows this to work
-            actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
-        });
-        _this.props.navigation.dispatch(resetAction);
+    this.loadMenuItem(function(item){
 
 
-      }
-      else {
+      _this.props.navigation.setParams({ 
+        title: item.name ,
+        backgroundColor: _this.props.screenProps.state.backgroundColor,
+        starIcon: 'star-o',
+        toggleFavorite: _this.toggleFavorite 
+      });
 
-        console.log(">>> Modules WebView - Token is Valid", resp)
 
-        let source = {
-          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href,
-          headers: {
-            "managerAppToken":  userData.token
+      let userData = _this.props.screenProps.state.userData
+
+      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+
+
+      console.log("----------------- Modules WebView ----------------------")
+      console.log("Authorization.VerifyToken", _this.props.screenProps.state.selectedClient, userData.token)
+
+      // this verifies that the token is still valid and redirects to login if not
+      Authorization.VerifyToken(_this.props.screenProps.state.selectedClient, userData.token, function(err, resp){
+
+        if(err) {
+
+          console.log(">>> Modules WebView - Invalid Token", err)
+
+          // reset the navigation
+          const resetAction = StackActions.reset({
+              index: 0,
+              key: null, // this is the trick that allows this to work
+              actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
+          });
+          _this.props.navigation.dispatch(resetAction);
+
+
+        }
+        else {
+
+          console.log(">>> Modules WebView - Token is Valid", resp)
+
+          let source = {
+            uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true',
+            headers: {
+              "managerAppToken":  userData.token
+            }
           }
+
+          console.log("Modules Webview source", JSON.stringify(source, null, 2))
+
+          _this.setState({
+            source: source
+          })
+
         }
 
-        console.log("Modules Webview source", JSON.stringify(source, null, 2))
 
-        _this.setState({
-          source: source
-        })
 
-      }
+      })
 
 
 
     })
+
+
 
   }
 
@@ -167,134 +175,95 @@ class WebViewScreen extends React.Component {
   // this will catch any global state updates - via screenProps
   componentWillReceiveProps(nextProps){
 
-
-    const { navigation } = this.props;
-
-    const item = navigation.getParam('item', { } );
+    let _this = this
 
 
-    let selectedClient = nextProps.screenProps.state.selectedClient
-    let token = nextProps.screenProps.state.userData.token
-    let backgroundColor = nextProps.screenProps.state.backgroundColor
-
-    console.log(">>>> selectedClient", selectedClient, "token", token)
-
-    if(backgroundColor !== this.props.screenProps.state.backgroundColor){
-
-      this.props.navigation.setParams({ backgroundColor: backgroundColor })
-
-    }
+    this.loadMenuItem(function(item){
 
 
-        // ONLY if something has changed
-    if(token !== this.state.userData.token){
+      let selectedClient = nextProps.screenProps.state.selectedClient
+      let token = nextProps.screenProps.state.userData.token
+      let backgroundColor = nextProps.screenProps.state.backgroundColor
 
-      console.log("Modules WebView picked up new token: ", token)
-      
-      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+      console.log(">>>> selectedClient", selectedClient, "token", token)
 
-      let source = {
-        uri: "https://" + selectedClient + "." + env + item.href,
-        headers: {
-          "managerAppToken":  token
-        }
+      if(backgroundColor !== _this.props.screenProps.state.backgroundColor){
+
+        _this.props.navigation.setParams({ backgroundColor: backgroundColor })
+
       }
-      
-      console.log("source updated: ", JSON.stringify(source, null, 2))
 
-      
-      this.setState({ 
-        source: source
-      });
 
-    }
+          // ONLY if something has changed
+      if(token !== _this.state.userData.token){
 
-    // ONLY if something has changed
-    if(selectedClient !== this.state.selectedClient){
+        console.log("Modules WebView picked up new token: ", token)
+        
+        let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
-      console.log("Modules WebView picked up new selectedClient: ", selectedClient)
-
-      this.props.navigation.setParams({ title: selectedClient })
-
-      let userData = this.props.screenProps.state.userData
-      
-      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-      let source = {
-        uri: "https://" + selectedClient + "." + env + item.href,
-        headers: {
-          "managerAppToken":  token
+        let source = {
+          uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
+          headers: {
+            "managerAppToken":  token
+          }
         }
+        
+        console.log("source updated: ", JSON.stringify(source, null, 2))
+
+        
+        _this.setState({ 
+          source: source
+        });
+
       }
-            
-      console.log("source updated: ", JSON.stringify(source, null, 2))
 
-      this.setState({ 
-        selectedClient: selectedClient,
-        source: source
-      });
+      // ONLY if something has changed
+      if(selectedClient !== _this.state.selectedClient){
+
+        console.log("Modules WebView picked up new selectedClient: ", selectedClient)
+
+        _this.props.navigation.setParams({ title: selectedClient })
+
+        let userData = _this.props.screenProps.state.userData
+        
+        let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+
+        let source = {
+          uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
+          headers: {
+            "managerAppToken":  token
+          }
+        }
+              
+        console.log("source updated: ", JSON.stringify(source, null, 2))
+
+       _this.setState({ 
+          selectedClient: selectedClient,
+          source: source
+        });
 
 
-    }
-
-  }
+      }
 
 
 
-  swapFavoriteIcon = () => {
+    })
 
-    // emptyFavorites(function(data){
 
-    // })
-
-    if(this.state.isFavorite) {
-
-      // save favorite
-      saveFavorite(true, this.state.item.id, function(data){
-
-        console.log("favorites after add:", data)
-
-      })
-
-      console.log("toggle on")
-      this.props.navigation.setParams({ starIcon: 'star' })
-    }
-    else {
-
-      // remove favorite
-      saveFavorite(false, this.state.item.id, function(data){
-
-        console.log("favorites after removing:", data)
-
-      })
-
-      console.log("toggle off")
-      this.props.navigation.setParams({ starIcon: 'star-o' })
-    }
-  }
-  toggleFavorite = () => {
-
-    // swap icon AFTER state has been changed
-    this.setState({
-      isFavorite: !this.state.isFavorite
-    }, () => this.swapFavoriteIcon() );
 
   }
 
-    _renderLoading = () => {
-    //   return (
 
-    //     <Progress.Bar progress={0.4} width={700} />
+  _renderLoading = () => {
+    return (
+        <ActivityIndicator
+            color={brand.colors.primary}
+            size='large'
+            style={styles.ActivityIndicatorStyle}
+        />
+    )
+  }
 
-    //   )
-        return (
-            <ActivityIndicator
-                color={brand.colors.primary}
-                size='large'
-                style={styles.ActivityIndicatorStyle}
-            />
-        )
-    }
 
   render() {
 

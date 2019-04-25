@@ -13,9 +13,9 @@ export function searchUsers(query, limit, client, token, callback) {
 
       resp.forEach(function(p){
 
-        // if a level 1 user and their location isn't in their name, then add it 
+        // if a level 1 user and their location isn't in their name, then add it to the group name
         if(p.level === 1 && p.name.indexOf(p.location.toString()) === -1) {
-          p.name += ' ' + p.location
+          p.group += ' (Location ' + p.location + ')'
         }
 
       })

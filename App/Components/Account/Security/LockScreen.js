@@ -20,7 +20,8 @@ import {
   Image, 
   KeyboardAvoidingView,
   Animated,
-  ScrollView
+  ScrollView,
+  AsyncStorage
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -63,18 +64,11 @@ class LockScreen extends React.Component {
       this.imageHeight = new Animated.Value(MAX_HEIGHT);
 
       this.state = {
-
         requestStatus: {
             hasError: false,
             message: ""
         },
-        hasHardwareAsync: false,
-        isEnrolledAsync: false, 
-        authenticateAsync: false,
-        compatible: false,
-        fingerprints: false,
-        result: '',
-        biometryType: null,
+        bioType: null,
         isQA: this.props.screenProps.state.isQA
       }
 
@@ -83,92 +77,92 @@ class LockScreen extends React.Component {
 
   componentDidMount() {
 
+    console.log("componentDidMount...")
+    
+    // componentDidMount only fires once
+    // willFocus will cause the biometrics challenge to display anytime this screen is displayed
+    // this will happen many times during the use of the app
+    this.props.navigation.addListener('willFocus', this.load)
 
+  }
+
+  
+  load = () => {
+
+    console.log(">>> LOAD")
+    
     // this provides shared logging via screenProps
     this.props.screenProps._globalLogger(true, "LockScreen", "Opened", {})
 
-
-    // this.checkDeviceForHardware();
-    // this.checkForFingerprints();
-
     TouchID.isSupported()
-    .then(biometryType => {
+    .then(bioType => {
       
         // this provides shared logging via screenProps
-        this.props.screenProps._globalLogger(true, "LockScreen", "TouchId.isSupported", { biometryType: biometryType })
+        this.props.screenProps._globalLogger(true, "LockScreen", "Biometrics Supported", { bioType: bioType })
+
+        this.setState({ bioType });
 
 
-        this.setState({ biometryType });
 
-        // make FaceID or TouchID appear immediately
-        this.onButtonPress()
+        // iOS: Known values: 'FaceID', T'ouchID' (finger print OR passcode), 'Null', 'None'
+        if(bioType === 'FaceID' || bioType === 'TouchID') {
+
+            this.onButtonPress()
+
+        }
+        // Android only
+        else if(bioType === true) {
+
+            this.onButtonPress()
+        }
+        // 'Null', 'None', etc. - if biometrics not available or disabled, just continue 
+        else {
+
+            this.onContinue()
+        }
+
+
+    })
+    .catch(error => {
+
+        // if there aren't any biometrics available, just take user where they were
+
+        // this provides shared logging via screenProps
+        this.props.screenProps._globalLogger(false, "LockScreen", "Biometrics Error", { error: error })
+
+        console.log(">>> Biometrics error: ", error)
+
+        this.onContinue()
 
 
     })
 
 
-
   }
 
-  
 
-    // onButtonPress = () => {
-    //     TouchID.isSupported()
-    //     .then(this.authenticate)
-    //     .catch(error => {
-    //         console.log("error", error)
-    //         this.showAlert("TouchID not supported")
-    //     });
-    // }
+
 
     onButtonPress = () => {
 
-        TouchID.isSupported()
-        .then(biometryType => {
+        let bioType = this.state.bioType
 
-            // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(true, "LockScreen", "onButtonPress success", { biometryType: biometryType })
+        this.authenticate(bioType)
 
-            // Success code
-            if (biometryType === 'FaceID') {
-                console.log('FaceID is supported.');
-                this.authenticate(biometryType)
-            } 
-            else if (biometryType === 'TouchID'){
-                console.log('TouchID is supported.');
-                this.authenticate(biometryType)
-            } 
-            else if (biometryType === true) {
-                // Touch ID is supported on Android
-                this.authenticate(biometryType)
-            }
-        })
-        .catch(error => {
-            // Failure code if the user's device does not have touchID or faceID enabled
-            console.log("error", error)
-            this.showAlert("FaceID or TouchID not supported")
-
-            // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(false, "LockScreen", "onButtonPress error", { error: error })
-
-
-        });
     }
 
-    authenticate = (biometryType) => {
+
+    authenticate = (bioType) => {
 
         // this provides shared logging via screenProps
-        this.props.screenProps._globalLogger(true, "LockScreen", "authenticate - " + biometryType, { biometryType: biometryType })
+        this.props.screenProps._globalLogger(true, "LockScreen", "authenticate - " + bioType, { bioType: bioType })
 
 
         return TouchID.authenticate('', touchConfig)
         .then(success => {
 
-            this.showAlert("Authenticated Successfully")
-
             // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(true, "LockScreen", biometryType, { success: true })
-
+            this.props.screenProps._globalLogger(true, "LockScreen", bioType, { success: true })
 
             this.onContinue()
 
@@ -177,31 +171,34 @@ class LockScreen extends React.Component {
             console.log("authenticate.catch(error) = ", error)
 
             // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(false, "LockScreen", biometryType, { error: error })
+            this.props.screenProps._globalLogger(false, "LockScreen", bioType, { error: error })
 
 
-            this.showAlert("Authentication error: " + error)
+
         });
     }
 
 
-    showAlert = (message) => {
 
-        this.setState({
-            sending: false, 
-            requestStatus: {
-                hasError: true,
-                message: message
-            }
-        })
-
-    }
 
 
     onContinue = () => {
 
-        // this should allow for the back button to appear in the header
-        this.props.navigation.navigate('Dashboard')
+        let screen = 'Dashboard'
+        AsyncStorage.getItem('lastScreen').then((lastScreen) => {
+
+            console.log('lastScreen', lastScreen)
+
+            // dont get stuck on one of these screens
+            if(lastScreen && lastScreen !== 'LockScreen' && lastScreen != 'Login' && lastScreen != 'ForgotPassword') {
+                screen = lastScreen
+            }
+
+            // this should allow for the back button to appear in the header
+            this.props.navigation.navigate(screen)
+        
+
+        })
 
     }
 
@@ -253,7 +250,7 @@ class LockScreen extends React.Component {
                         <View style={styles.container}>
 
 
-                            {this.state.requestStatus.hasError &&
+                            {/* {this.state.requestStatus.hasError &&
                                 <View style={{ 
                                     justifyContent: 'center', 
                                     alignItems: 'center',
@@ -264,26 +261,26 @@ class LockScreen extends React.Component {
                                         <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
                                     </ScrollView>
                                 </View>
-                            }
+                            } */}
 
                             <TouchableOpacity 
                                 style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
                                 onPress={this.onButtonPress}>
                                 <Text 
                                 style={ this.state.sending ? styles.buttonDisabledText : styles.buttonText }>
-                                {`Authenticate with ${this.state.biometryType}`}
+                                {`Authenticate with ${this.state.bioType}`}
                                 </Text>
                             </TouchableOpacity> 
 
 
-                            <View>
+                            {/* <View>
                                 <Text 
                                     disabled={this.state.sending} 
                                     style={styles.forgotPassword} 
                                     onPress={this.onContinue}>
                                     Or, just continue for now...
                                 </Text>
-                            </View>
+                            </View> */}
 
 
 

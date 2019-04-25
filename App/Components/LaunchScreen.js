@@ -14,6 +14,11 @@ import { NavigationActions, StackActions } from 'react-navigation'
 import brand from '../Styles/brand'
 
 import AppCenter from 'appcenter'
+import { Platform } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
+
+import { Biometrics } from '../Helpers/Biometrics';
+
 
 class LaunchScreen extends React.Component {
 
@@ -29,30 +34,74 @@ class LaunchScreen extends React.Component {
 
   }
 
+  doRedirect = (routeName) => {
+
+      // This will switch to the App screen or Auth screen and this loading
+      // screen will be unmounted and thrown away.
+      //this.props.navigation.navigate(userToken ? 'DrawerStack' : 'LoginStack');
+      // instead, reset the navigation
+      const resetAction = StackActions.reset({
+          index: 0,
+          key: null, // this is the trick that allows this to work
+          actions: [NavigationActions.navigate({ routeName: routeName })],
+      });
+      
+      this.props.navigation.dispatch(resetAction);
+
+  }
+
+  getDeviceInfo = (callback) => {
+
+      // the App Center Install ID will change on each installation, so always check on launch
+      // this is async
+      AppCenter.getInstallId().then(async (appInstallId) => {
+
+        let deviceInfo = {
+          appInstallId: appInstallId,
+          deviceUniqueId: DeviceInfo.getUniqueID(),
+          appVersion: DeviceInfo.getVersion(),
+          appBuild: DeviceInfo.getBuildNumber(),
+          systemName: DeviceInfo.getSystemName(),
+          systemVersion: DeviceInfo.getSystemVersion(),
+          userAgent: DeviceInfo.getUserAgent(),
+          deviceType: Platform.OS
+        }
+
+        AsyncStorage.setItem('deviceInfo', JSON.stringify(deviceInfo))
+
+        callback(deviceInfo)
+
+      })
+
+  }
 
   componentDidMount() {
 
 
       let _this = this
 
-      // this will change on each installation, so always check on launch
-      // this is async
-      AppCenter.getInstallId().then(async (response) => {
-        console.log('App Center Install Id: ', response)
-        AsyncStorage.setItem('AppCenterInstallId', response)
+      this.getDeviceInfo(function(deviceInfo){
+
+        console.log("LaunchScreen - deviceInfo: ", JSON.stringify(deviceInfo, null, 2))
+
       })
 
 
 
       AsyncStorage.getItem('userData').then((data) => {
 
+        let userData = null
         let routeName = ''
+
+        console.log("LaunchScreen - userData: ", data)
 
         if(data) {
 
-          let userData = JSON.parse(data)
+          userData = JSON.parse(data)
 
+        }
 
+        if(userData && userData.token) {
 
           AsyncStorage.getItem('selectedClient').then((selectedClient) => {
 
@@ -77,17 +126,30 @@ class LaunchScreen extends React.Component {
             _this.props.screenProps._globalStateChange( { action: "launch", userData: userData, selectedClient: selectedClient } )
 
 
-            // This will switch to the App screen or Auth screen and this loading
-            // screen will be unmounted and thrown away.
-            //this.props.navigation.navigate(userToken ? 'DrawerStack' : 'LoginStack');
-            routeName = 'DrawerStack'
-            // instead, reset the navigation
-            const resetAction = StackActions.reset({
-                index: 0,
-                key: null, // this is the trick that allows this to work
-                actions: [NavigationActions.navigate({ routeName: routeName })],
-            });
-            this.props.navigation.dispatch(resetAction);
+
+            // see if the user needs to see the lock screen
+            Biometrics.CheckIfShouldShowLockScreen(function(result){
+
+              //log = log.concat(result.log)
+
+              if(result.showLock) {
+                routeName = 'LockStack'
+              }
+              else {
+                // NOTE: if the user closed the app, we start back at the Dashboard
+                // only when the app is minimized and re-opened do we worry about what screen to resume at
+                // after biometric auth
+                routeName = 'DrawerStack' 
+              }
+
+              _this.props.screenProps._globalLogger(true, "App", "Activated", { log: result.log })
+
+              // redirect to the route
+              _this.doRedirect(routeName)
+
+
+            })
+
 
 
           })
@@ -96,14 +158,8 @@ class LaunchScreen extends React.Component {
         }
         else {
 
-          routeName = 'LoginStack'
-          // instead, reset the navigation
-          const resetAction = StackActions.reset({
-              index: 0,
-              key: null, // this is the trick that allows this to work
-              actions: [NavigationActions.navigate({ routeName: routeName })],
-          });
-          this.props.navigation.dispatch(resetAction);
+          // redirect to login
+          _this.doRedirect('LoginStack')
 
         }
 

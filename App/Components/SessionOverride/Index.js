@@ -152,6 +152,8 @@ class SearchUsers extends React.Component {
 
         // get the data for the user we are impersonating
         let impersonatedUser = Parsers.UserData(response)
+        // we are including password in the userData for the change password screen to have access the current password for validation
+        impersonatedUser.password = "****" // just something so that in Rosnet.js inactive->active state change will consider the user logged in 
 
 
         getMobileMenuItems(_this.props.screenProps.state.selectedClient, impersonatedUser.token, function(err, menuItems){
@@ -277,7 +279,7 @@ class SearchUsers extends React.Component {
       else {
         if(this.state.query === '') {
           return (
-            <Text style={{color: brand.colors.primary }}>{'Please enter a user name'}</Text>
+            <Text style={{color: brand.colors.primary }}>{'Please enter a user name or user group'}</Text>
           )
         }
         else if(this.state.query != '' && this.state.items.length === 1) {
@@ -311,7 +313,7 @@ class SearchUsers extends React.Component {
             lightTheme={true}
             color ='blue'
             value={this.state.text}
-            placeholder='Search Users'
+            placeholder='Please enter a user name or user group'
             onChangeText = {(text)=> { this.getUsers(text) }}/>
             
         </View>
@@ -382,78 +384,6 @@ class SearchUsers extends React.Component {
 
     
         }
-
-
-            <Modal
-              animationType="slide"
-              transparent={false}
-              visible={this.state.showModal}
-              onRequestClose={() => {
-                this.setState({ showModal: false })
-              }}>
-              <View style={{ flex: 1,
-                  marginTop: 40,
-                  paddingLeft: 40,
-                  paddingRight: 40,
-                  justifyContent: 'space-around',
-                  backgroundColor: brand.colors.white
-              }}>
-          
-                  <View style={{ alignItems: 'center'}}>
-
-                    <FontAwesome5Free
-                        name="smile-wink"
-                        size={100}
-                        color={brand.colors.primary}
-                        style={{ marginBottom: 50 }}
-                    />
-
-                    <Text style={{ textAlign: 'center', fontSize: 35, color: brand.colors.primary }}>
-                      Well, hello "{this.state.impersonatedUser.commonName}"!
-                    </Text>
-
-                  </View>
-
-                  <View style={{ paddingLeft: 20, paddingRight: 20 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 18, color: brand.colors.primary }}>
-                      Would like to do a session override as {this.state.impersonatedUser.commonName}?
-                    </Text>
-                  </View>
-
-
-                  <View style={{ paddingLeft: 20, paddingRight: 20 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 16, color: brand.colors.primary }}>
-                      You can undo this action by clicking the swap icon in the left drawer menu.
-                    </Text>
-                  </View>
-
-
-                  <View style={{ alignItems: 'center', marginBottom: 100 }}>
-
-
-
-                    <TouchableOpacity 
-                        style={styles.buttonContainer}
-                        onPress={() => {
-                                this.doImpersonation(true)
-                              }}>
-                        <Text  style={styles.buttonText}>Continue</Text>
-                    </TouchableOpacity> 
-
-                    <TouchableOpacity 
-                        style={styles.buttonContainer}
-                        onPress={() => {
-                                this.doImpersonation(false)
-                              }}>
-                        <Text  style={styles.buttonText}>Cancel</Text>
-                    </TouchableOpacity> 
-
-
-                  </View>
-
-              </View>
-            </Modal>
-
 
 
       </View>

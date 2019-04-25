@@ -32,58 +32,47 @@ import { getSecuritySettings} from '../../../Services/Site';
 import AlerMessage from '../../Modules/AlertMessage'
 
 
+// NOTE: the backgroundColor and borderColor may be overridden when validating the new password
 const strengthLevels = [
   {
-    level: 0,
+    score: -1,
     label: 'Strength',
     labelColor: brand.colors.gray,
-    min: 0,
-    max: 0,
     backgroundColor: brand.colors.lightGray,
     borderColor: brand.colors.gray
   },
   {
-    level: 1,
+    score: 0,
     label: 'Dangerous',
     labelColor: brand.colors.white,
-    min: 0,
-    max: 25,
     backgroundColor: brand.colors.danger,
     borderColor: brand.colors.danger
   },
   {
-    level: 2,
+    score: 1,
     label: 'Weak',
     labelColor: brand.colors.white,
-    min: 26,
-    max: 49,
-    backgroundColor: brand.colors.orange,
-    borderColor: brand.colors.orange
+    backgroundColor: brand.colors.danger,
+    borderColor: brand.colors.danger
   },
   {
-    level: 3,
+    score: 2,
     label: 'Good',
     labelColor: brand.colors.white,
-    min: 50,
-    max: 74,
     backgroundColor: brand.colors.success,
     borderColor: brand.colors.success
   },
   {
-    level: 4,
+    score: 3,
     label: 'Strong',
     labelColor: brand.colors.white,
-    min: 75,
-    max: 89,
     backgroundColor: brand.colors.success,
     borderColor: brand.colors.success
   },
   {
-    level: 5,
+    score: 4,
     label: 'Very Strong',
     labelColor: brand.colors.white,
-    min: 90,
-    max: 100,
     backgroundColor: brand.colors.success,
     borderColor: brand.colors.success
   }
@@ -100,7 +89,7 @@ class Password extends React.Component {
     title: 'Change Password',
 
     // these seem to ONLY work here
-    headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
+    headerStyle: { backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
     
 
@@ -136,11 +125,11 @@ class Password extends React.Component {
         securitySettings: null, 
         isNewPasswordSecureText: false,
         newPassword: '',
-        newPasswordStrength: 0,
         newPasswordLevel: strengthLevels[0],
         newPasswordConfirmed: "",
-        newPasswordScore: 0,
+        newPasswordScore: -1,
         isConfirmPasswordSecureText: false,
+        isAcceptable: false
     };
   }
   
@@ -205,36 +194,43 @@ class Password extends React.Component {
   validateNewPassword = (pwd) => {
 
 
-
-    console.log('*** PASSWORD: ' + pwd)
-    
-    var analysis = zxcvbn(pwd);
-
-    var strengthPercentage = Math.floor(Number((analysis.guesses_log10 / 12.0).toFixed(2).replace(/0+$/, '')) * 100.0);
-    if (strengthPercentage > 100) {
-      strengthPercentage = 100;
-    };
-
-    console.log('*** STRENGTH PERCENTAGE: ' + strengthPercentage)
-
     // this is the score we need to match with this.state.securitySettings.Pswd_Complexity
-    let score = zxcvbn(this.state.newPassword).score;
+    let score = zxcvbn(pwd).score
 
-    console.log("++++ compare score:", score, " to  Pwd_Complexity: ", this.state.securitySettings.Pswd_Complexity)
-
+    //console.log("password: ", pwd, "score: ", score)
 
     let level = strengthLevels.find(function(item){
-        return strengthPercentage >= item.min && strengthPercentage <= item.max
+        return item.score === score
     })
 
-    console.log('level: ', level)
+
+    let isAcceptable = false
+    if(score >= this.state.securitySettings.Pswd_Complexity) {
+
+      isAcceptable = true
+
+      // just swap red and green to match the site colors
+      level.borderColor = brand.colors.success
+      level.backgroundColor = brand.colors.success
+
+    }
+    else {
+
+      // just swap red and green to match the site colors
+      level.borderColor = brand.colors.danger
+      level.backgroundColor = brand.colors.danger
+
+    }
+
+
+    //console.log('level: ', level.label)
 
     this.setState({
       newPassword: pwd,
-      newPasswordStrength: strengthPercentage,
       newPasswordLevel: level,
       newPasswordConfirmed: "",
-      newPasswordScore: score
+      newPasswordScore: score,
+      isAcceptable: isAcceptable
     })
 
 
@@ -256,20 +252,20 @@ class Password extends React.Component {
       },
     })
 
-    console.log("comparing current:", this.props.screenProps.state.userData.password, " to entered:", this.state.confirmCurrentPassword)
+    // console.log("comparing current:", this.props.screenProps.state.userData.password, " to entered:", this.state.confirmCurrentPassword)
     
-    if(this.props.screenProps.state.userData.password !== this.state.confirmCurrentPassword) {
+    // if(this.props.screenProps.state.userData.password !== this.state.confirmCurrentPassword) {
 
-      this.setState({
-        sending: false,
-        requestStatus: {
-            hasError: true,
-            message: "Your current password was entered incorrectly."
-        },
-      })
+    //   this.setState({
+    //     sending: false,
+    //     requestStatus: {
+    //         hasError: true,
+    //         message: "Your current password was entered incorrectly."
+    //     },
+    //   })
 
-      return
-    }
+    //   return
+    // }
 
     console.log("comparing new:", this.state.newPassword, " to confirmed:", this.state.newPasswordConfirmed)
 
@@ -358,7 +354,7 @@ class Password extends React.Component {
 
 
               // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
-              AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))
+              //AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))
 
 
               _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })
@@ -416,6 +412,12 @@ class Password extends React.Component {
         <View style={styles.formContainer}>
 
 
+            <Text style={[styles.title, { marginBottom: 20 } ]}>
+              Rosnet has adopted Dropbox's password strength evaluation system. 
+              This encourages users towards stronger passwords by asking them to type a bit more instead of demanding awkward character types. 
+            </Text>
+
+            {/* 
             <Text style={styles.inputLabel}>Current Password</Text>
 
 
@@ -431,7 +433,7 @@ class Password extends React.Component {
                     secureTextEntry = { this.state.isCurrentPasswordSecureText }
                     onFocus={() => this.setState({ isCurrentPasswordSecureText: false })}
                     onBlur={() => this.setState({ isCurrentPasswordSecureText: true })}
-            />
+            /> */}
 
 
 
@@ -540,6 +542,13 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10
     },
+    title: {
+      textAlign: 'center', 
+      paddingTop: 5, 
+      paddingLeft: 15, 
+      paddingRight: 15,
+      color: brand.colors.primary
+    },
     input:{
         height: 40,
         backgroundColor: '#ffffff',
@@ -559,8 +568,8 @@ const styles = StyleSheet.create({
     message: {
       textAlign: 'center', 
       paddingTop: 20, 
-      paddingLeft: 30, 
-      paddingRight: 30,
+      paddingLeft: 15, 
+      paddingRight: 15,
       color: brand.colors.primary
     },
     inputNewPassword: {

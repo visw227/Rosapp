@@ -85,7 +85,7 @@ class DashboardScreen extends React.Component {
   constructor(props) {
       super(props);
 
-      // console.log("Dashboard props.screenProps", JSON.stringify(props.screenProps, null, 2))
+      // //console.log("Dashboard props.screenProps", JSON.stringify(props.screenProps, null, 2))
 
 
       this.state = {
@@ -122,12 +122,12 @@ class DashboardScreen extends React.Component {
         // ONLY if something has changed
     if(token !== this.state.userData.token){
 
-      console.log("Dashboard picked up new token: ", token)
+      //console.log("Dashboard picked up new token: ", token)
       
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://" + selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
         headers: {
           "managerAppToken":  token
         }
@@ -145,7 +145,7 @@ class DashboardScreen extends React.Component {
     // ONLY if something has changed
     if(selectedClient !== this.state.selectedClient){
 
-      console.log("Dashboard picked up new selectedClient: ", selectedClient)
+      //console.log("Dashboard picked up new selectedClient: ", selectedClient)
 
       this.props.navigation.setParams({ title: selectedClient })
 
@@ -154,7 +154,7 @@ class DashboardScreen extends React.Component {
       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
       let source = {
-        uri: "https://" + selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+        uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
         headers: {
           "managerAppToken":  userData.token
         }
@@ -177,7 +177,7 @@ class DashboardScreen extends React.Component {
   componentDidMount() {
 
     // hijack the route here when developing specific features
-    //this.props.navigation.navigate('SupportRequest')
+    //this.props.navigation.navigate('Password')
 
 
     let _this = this 
@@ -191,8 +191,8 @@ class DashboardScreen extends React.Component {
 
     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
-    console.log("----------------- Dashboard ----------------------")
-    console.log("Authorization.VerifyToken",this.props.screenProps.state.selectedClient, userData.token)
+    //console.log("----------------- Dashboard ----------------------")
+    //console.log("Authorization.VerifyToken",this.props.screenProps.state.selectedClient, userData.token)
 
 
     // this provides shared logging via screenProps
@@ -204,7 +204,7 @@ class DashboardScreen extends React.Component {
 
       if(err) {
 
-        console.log(">>> Dashboard - Invalid Token", err)
+        //console.log(">>> Dashboard - Invalid Token", err)
 
         // this provides shared logging via screenProps
         _this.props.screenProps._globalLogger(false, "Dashboard", "Token is INVALID", { error: err })
@@ -221,14 +221,14 @@ class DashboardScreen extends React.Component {
       }
       else {
 
-        console.log(">>> Dashboard - Token is Valid", resp)
+        //console.log(">>> Dashboard - Token is Valid", resp)
 
         // this provides shared logging via screenProps
         _this.props.screenProps._globalLogger(true, "Dashboard", "Token is valid", { response: resp })
 
 
         let source = {
-          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/WebFocus/Dashboard/847C5BE8-3B46-497D-B819-E8F78738A13B",
+          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/home/appdash?isApp=true",
           headers: {
             "managerAppToken":  userData.token
           }
@@ -298,7 +298,7 @@ class DashboardScreen extends React.Component {
 
                 startInLoadingState = {true}
                 
-                //onLoadProgress={e => console.log(e.nativeEvent.progress)}
+                //onLoadProgress={e => //console.log(e.nativeEvent.progress)}
                 renderLoading={this._renderLoading}
                 injectedJavaScript = { hideSiteNav } 
                 style={{ flex: 1 }}

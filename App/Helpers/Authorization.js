@@ -23,10 +23,10 @@ export var Authorization = {
 
         // callback({ valid: true })
 
-        console.log(">>> VerifyToken - client: ", client, " token: ", token)
+        //console.log(">>> VerifyToken - client: ", client, " token: ", token)
         verifyToken(client, token, function(err, resp){
 
-            console.log("VerifyToken - err", err, "resp", resp)
+            //console.log("VerifyToken - err", err, "resp", resp)
             if(err) {
                 callback({ valid: false }, null)
             }
@@ -43,10 +43,10 @@ export var Authorization = {
     // The first API request ALWAYS times out
     WakeUpServer: function(callback) {
 
-        console.log("waking up the server...")
+        //console.log("waking up the server...")
         Authorization.UserLogin("fake", "fake", function(err, resp){
 
-            console.log("server has been woke up")
+            //console.log("server has been woke up")
             if(callback) {
                 callback(null, { message: "It has been woke up"})
             }
@@ -57,15 +57,15 @@ export var Authorization = {
 
     RefreshToken: function(callback) {
 
-        AsyncStorage.getItem('loginData').then((data) => {
+        AsyncStorage.getItem('userData').then((data) => {
 
-            console.log("refreshToken loginData", data)
+            //console.log("refreshToken loginData", data)
 
             if(data) {
 
-                let loginData = JSON.parse(data)
+                let userData = JSON.parse(data)
 
-                Authorization.UserLogin(loginData.userName, loginData.password, function(err, resp){
+                Authorization.UserLogin(userData.userName, userData.password, function(err, resp){
 
                     if(err) {
                         //_this.showAlert(err.message)
@@ -92,80 +92,110 @@ export var Authorization = {
 
     UserLogin: function(userName, password, callback) {
 
-        console.log("login", userName, password)
-
-        let request = {
-            userName: userName, 
-            password: password, 
-        }
-
-        userLogin(request, function(err, response){        
-
-            if(err) {
-
-                console.log("userLogin error", err)
-                // show the real error message when can - otherwise show the default message
-                //_this.showAlert("Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'")
-
-                //let message = "Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'" 
-                let message = err.message
+        //console.log("login", userName, password)
 
 
-                callback ( { message:  message})
+        let deviceInfo = null
 
-            }
-            else {
+        AsyncStorage.getItem('deviceInfo').then((data) => {
 
-                console.log("userLogin success:", response)
+            //console.log("refreshToken loginData", data)
 
-                if(response && response.SecurityToken) {
+            if(data) {
 
-                    // this repackages the response a bit...
-                    //let userData = parseUser(response)
-                    let userData = Parsers.UserData(response)
+                deviceInfo = JSON.parse(data)
 
-                    // we are including password in the userData for the change password screen to have access the current password for validation
-                    userData.password = password 
-                    userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
+                let request = {
+                    userName: userName, 
+                    password: password, 
+                    deviceUniqueId: deviceInfo.deviceUniqueId,
+                    appInstallId: deviceInfo.appInstallId,
+                    deviceType: deviceInfo.deviceType,
+                    appVersion: deviceInfo.appVersion,
+                    appBuild: deviceInfo.appBuild,
+                    systemName: deviceInfo.systemName,
+                    systemVersion: deviceInfo.systemVersion,
+                    userAgent: deviceInfo.userAgent
+                }
 
-                    getMobileMenuItems(userData.sites[0], userData.token, function(err, menuItems){
-                        
+                userLogin(request, function(err, response){        
 
-                        if(err) {
-                            console.log("err - getMobileMenuItems", err)
+                    if(err) {
 
-                            callback( { message: "Your login was successful, but we were unable to access your Rosnet menu options for " + userData.sites[0] + ". The exact error was: '" + err.message + "'" } )
-                        }
-                        else {
+                        //console.log("userLogin error", err)
+                        // show the real error message when can - otherwise show the default message
+                        //_this.showAlert("Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'")
 
-                            // rename the FontAwesome icons by removing the fa- preface
-                            menuItems.forEach(function(item){
-                                item.icon = item.icon.replace('fa-', '')
+                        //let message = "Sorry, we were unable to complete the login process. The exact error was: '" + err.message +  "'" 
+                        let message = err.message
+
+
+                        callback ( { message:  message})
+
+                    }
+                    else {
+
+                        //console.log("userLogin success:", response)
+
+                        if(response && response.SecurityToken) {
+
+                            // this repackages the response a bit...
+                            //let userData = parseUser(response)
+                            let userData = Parsers.UserData(response)
+
+                            // we are including password in the userData for the change password screen to have access the current password for validation
+                            userData.password = password 
+                            // only do if not level 99
+                            // otherwise, it makes mine dywayne.johnson@rosnet.com when it is really djohnson@rosnet.com
+                            if(userData.userLevel !== 99) {
+                                userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
+                            }
+
+                            getMobileMenuItems(userData.sites[0], userData.token, function(err, menuItems){
+                                
+
+                                if(err) {
+                                    //console.log("err - getMobileMenuItems", err)
+
+                                    callback( { message: "Your login was successful, but we were unable to access your Rosnet menu options for " + userData.sites[0] + ". The exact error was: '" + err.message + "'" } )
+                                }
+                                else {
+
+                                    // rename the FontAwesome icons by removing the fa- preface
+                                    menuItems.forEach(function(item){
+                                        item.icon = item.icon.replace('fa-', '')
+                                    })
+
+                                    userData.menuItems = menuItems
+
+                                    // return the userData and redirect if required
+                                    callback(null, { userData: userData })
+
+                                }
+
+
                             })
 
-                            userData.menuItems = menuItems
-
-                            // return the userData and redirect if required
-                            callback(null, { userData: userData })
 
                         }
+                        else {
+                            //_this.showAlert("Invalid login request. Please check your email address and password and try again.")
+                            callback( { message: "Invalid login request. Please check your email address and password and try again." })
+
+                        }
+                            
+
+                    }
 
 
-                    })
+                })
 
-
-                }
-                else {
-                    //_this.showAlert("Invalid login request. Please check your email address and password and try again.")
-                    callback( { message: "Invalid login request. Please check your email address and password and try again." })
-
-                }
-                    
 
             }
 
-
         })
+
+
 
 
     }

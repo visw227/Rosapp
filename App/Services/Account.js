@@ -109,21 +109,21 @@ export function changePassword (request, token, callback) {
 }
 
 
-export function changePasswordAccess (client,token,callback) {
+// export function changePasswordAccess (client,token,callback) {
 
-  let url = '/api/ManagerAppAuth/changePasswordAccess'
+//   let url = '/api/ManagerAppAuth/changePasswordAccess'
 
-  serviceWrapper(url, 'GET', null,client,token,function(err,resp){
-    if (err){
-      callback(err)
+//   serviceWrapper(url, 'GET', null,client,token,function(err,resp){
+//     if (err){
+//       callback(err)
 
-    }
-    else {
-      callback(null,resp)
-    }
-  })
+//     }
+//     else {
+//       callback(null,resp)
+//     }
+//   })
 
-}
+// }
 
 
 export function forgotPassword(request, callback) {

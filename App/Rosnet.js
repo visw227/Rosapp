@@ -10,20 +10,22 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import brand from './App/Styles/brand'
+import brand from './Styles/brand'
 
-import NavigationService from './App/Helpers/NavigationService';
+import NavigationService from './Helpers/NavigationService';
 
-import { generateRandomNumber, checkForNotifications } from './App/Services/Background';
+import { generateRandomNumber, checkForNotifications } from './Services/Background';
 
-import { Authorization } from './App/Helpers/Authorization';
-import { Logger } from './App/Helpers/Logger';
+import { Authorization } from './Helpers/Authorization';
+// import { Logger } from './Helpers/Logger';
 
 import Push from 'appcenter-push'
 
-import config from './App/app-config.json'
+import config from './app-config.json'
 
-var TIME_WENT_TO_BACKGROUND = new Date().getTime()
+import { Biometrics } from './Helpers/Biometrics';
+import { Remember } from './Helpers/Remember';
+
 
 // hide warnings for now...
 console.disableYellowBox = true;
@@ -63,8 +65,8 @@ Push.setListener({
 // Launch and Lock screen
 // *******************************************************************************
 
-import LaunchScreen from './App/Components/LaunchScreen'
-import LockScreen from './App/Components/Account/Security/LockScreen'
+import LaunchScreen from './Components/LaunchScreen'
+import LockScreen from './Components/Account/Security/LockScreen'
 
 
 let LaunchStack = createStackNavigator({ 
@@ -88,8 +90,8 @@ LockScreenStack.navigationOptions = ({ navigation, screenProps }) => {
 // Login stack
 // *******************************************************************************
 
-import LoginScreen from './App/Components/Account/Login/Index'
-import ForgotPasswordScreen from './App/Components/Account/ForgotPassword/Index'
+import LoginScreen from './Components/Account/Login/Index'
+import ForgotPasswordScreen from './Components/Account/ForgotPassword/Index'
 
 
 let LoginStack = createStackNavigator({
@@ -133,13 +135,13 @@ let LoginStack = createStackNavigator({
 // Account
 // *******************************************************************************
 
-import AccountScreen from './App/Components/Account/Index'
-import SettingsScreen from './App/Components/Account/Settings/Index'
-import ProfileScreen from './App/Components/Account/Profile/Index'
+import AccountScreen from './Components/Account/Index'
+import SettingsScreen from './Components/Account/Settings/Index'
+import ProfileScreen from './Components/Account/Profile/Index'
 // NOTE: This screen is shared by 2 stacks
-import PasswordScreen from './App/Components/Account/Password/Index'
+import PasswordScreen from './Components/Account/Password/Index'
 let PasswordChangeRequiredStack = createStackNavigator({ PasswordScreen });
-import SecurityScreen from './App/Components/Account/Security/Index'
+import SecurityScreen from './Components/Account/Security/Index'
 
 let AccountStack = createStackNavigator({ 
   Account: {
@@ -168,7 +170,7 @@ let AccountStack = createStackNavigator({
 // *******************************************************************************
 // Dashboard 
 // *******************************************************************************
-import DashboardScreen from './App/Components/Dashboard/Index'
+import DashboardScreen from './Components/Dashboard/Index'
 
 let DashboardStack = createStackNavigator({ 
   Dashboard: {
@@ -191,34 +193,34 @@ DashboardStack.navigationOptions = ({ navigation }) => {
 // *******************************************************************************
 // My Dashboard 
 // *******************************************************************************
-import MyDashboardScreen from './App/Components/MyDashboard/Index'
+// import MyDashboardScreen from './Components/MyDashboard/Index'
 
-let MyDashboardStack = createStackNavigator({ 
-  MyDashboard: {
-    screen: MyDashboardScreen,
-    // to hide the back title for any child screens, it must be set to null here
-    navigationOptions: ({ navigation }) => ({
-      headerBackTitle: null
-    }),
-  }
+// let MyDashboardStack = createStackNavigator({ 
+//   MyDashboard: {
+//     screen: MyDashboardScreen,
+//     // to hide the back title for any child screens, it must be set to null here
+//     navigationOptions: ({ navigation }) => ({
+//       headerBackTitle: null
+//     }),
+//   }
 
-});
+// });
 
-// to hide the tabBar on nested screens, you must do it this way
-MyDashboardStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: navigation.state.index === 0,
-  };
-};
+// // to hide the tabBar on nested screens, you must do it this way
+// MyDashboardStack.navigationOptions = ({ navigation }) => {
+//   return {
+//     tabBarVisible: navigation.state.index === 0,
+//   };
+// };
 
 // *******************************************************************************
 // Modules 
 // *******************************************************************************
 
-// import ModulesSubMenuScreen from './App/Components/Modules/SubMenu'
-import ModulesItemsScreen from './App/Components/Modules/Items'
-import ModulesWebViewScreen from './App/Components/Modules/WebView'
-import ModulesSearchItemsScreen from './App/Components/Modules/SearchItems'
+// import ModulesSubMenuScreen from './Components/Modules/SubMenu'
+import ModulesItemsScreen from './Components/Modules/Items'
+import ModulesWebViewScreen from './Components/Modules/WebView'
+import ModulesSearchItemsScreen from './Components/Modules/SearchItems'
 
 let ModulesStack = createStackNavigator({ 
   // Modules: {
@@ -255,9 +257,9 @@ ModulesStack.navigationOptions = ({ navigation }) => {
 // *******************************************************************************
 // Alerts 
 // *******************************************************************************
-import AlertScreen from './App/Components/Alerts/Index'
-import AlertCreateScreen from './App/Components/Alerts/Create/Index'
-import AlertDetailScreen from './App/Components/Alerts/Detail/Index'
+import AlertScreen from './Components/Alerts/Index'
+import AlertCreateScreen from './Components/Alerts/Create/Index'
+import AlertDetailScreen from './Components/Alerts/Detail/Index'
 
 let AlertStack = createStackNavigator({ 
   Alerts: {
@@ -287,7 +289,7 @@ AlertStack.navigationOptions = ({ navigation }) => {
 // Workflow 
 // *******************************************************************************
 
-import WorkflowScreen from './App/Components/Workflow/Index'
+import WorkflowScreen from './Components/Workflow/Index'
 
 let WorkflowStack = createStackNavigator({ 
   Workflow: {
@@ -313,9 +315,9 @@ WorkflowStack.navigationOptions = ({ navigation }) => {
 // Conversations 
 // *******************************************************************************
 
-import ConversationListScreen from './App/Components/Conversations/Index'
-import CreateConversationScreen from './App/Components/Conversations/Create'
-import ConversationScreen from './App/Components/Conversations/Conversation'
+import ConversationListScreen from './Components/Conversations/Index'
+import CreateConversationScreen from './Components/Conversations/Create'
+import ConversationScreen from './Components/Conversations/Conversation'
 
 let ConversationStack = createStackNavigator({ 
   ConversationList: {
@@ -347,7 +349,7 @@ ConversationStack.navigationOptions = ({ navigation }) => {
 // Chat - Replaces Conversastions 
 // *******************************************************************************
 
-import ChatScreen from './App/Components/Chat/Index'
+import ChatScreen from './Components/Chat/Index'
 let ChatStack = createStackNavigator({ ChatScreen });
 
 
@@ -383,7 +385,7 @@ let TabStack = createBottomTabNavigator({
   //       tabBarIcon: () => <FontAwesome name="cubes" size={20} color={brand.colors.primary} />
   //       // tabBarIcon: ({ tintColor }) =>
   //       //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-  //       //     <Image source={require('./App/Images/TabBar/clock-7.png')} />
+  //       //     <Image source={require('./Images/TabBar/clock-7.png')} />
   //       //   </View>
 
   //   })
@@ -402,7 +404,7 @@ let TabStack = createBottomTabNavigator({
         // tabBarIcon: () => <MaterialCommunityIcon name="clipboard-flow" size={20} color={brand.colors.primary} />
         // tabBarIcon: ({ tintColor }) =>
         //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        //     <Image source={require('./App/Images/TabBar/list-simple-star-7.png')} />
+        //     <Image source={require('./Images/TabBar/list-simple-star-7.png')} />
         //   </View>
 
     })
@@ -515,10 +517,10 @@ TabStack.navigationOptions = ({ navigation, screenProps }) => {
 // About
 // *******************************************************************************
 
-// import AboutScreen from './App/Components/About/Index'
-// import TermsScreen from './App/Components/About/Terms/Index'
-// import PrivacyScreen from './App/Components/About/Privacy/Index'
-// import DeviceScreen from './App/Components/About/Device/Index'
+// import AboutScreen from './Components/About/Index'
+// import TermsScreen from './Components/About/Terms/Index'
+// import PrivacyScreen from './Components/About/Privacy/Index'
+// import DeviceScreen from './Components/About/Device/Index'
 
 // let AboutStack = createStackNavigator({ 
 //   About: {
@@ -545,8 +547,8 @@ TabStack.navigationOptions = ({ navigation, screenProps }) => {
 // *******************************************************************************
 // Staff List
 // *******************************************************************************
-import StaffListScreen from './App/Components/StaffList/Index'
-import StaffListMemberScreen from './App/Components/StaffList/Member/Index'
+import StaffListScreen from './Components/StaffList/Index'
+import StaffListMemberScreen from './Components/StaffList/Member/Index'
 
 let StaffListStack = createStackNavigator({ 
   StaffList: {
@@ -568,17 +570,21 @@ let StaffListStack = createStackNavigator({
 // Support
 // *******************************************************************************
 
-import SupportScreen from './App/Components/Support/Index'
+import SupportScreen from './Components/Support/Index'
 
-import SupportViewScreen from './App/Components/Support/View/Index'
-import SupportRequestScreen from './App/Components/Support/Request/Index'
-import SupportContactScreen from './App/Components/Support/Contact/Index'
+import SupportListScreen from './Components/Support/List/Index'
+import SupportRequestScreen from './Components/Support/Request/Index'
+import SupportRequestDetailScreen from './Components/Support/List/Detail'
 
-import TermsScreen from './App/Components/Support/Terms/Index'
-import PrivacyScreen from './App/Components/Support/Privacy/Index'
-import DeviceScreen from './App/Components/Support/Device/Index'
-import LoggedEventsScreen from './App/Components/Support/LoggedEvents/Index'
-import LoggedEventDetailsScreen from './App/Components/Support/LoggedEvents/Detail'
+import SupportRegisterUserScreen from './Components/Support/RegisterUser/Index'
+
+import SupportContactScreen from './Components/Support/Contact/Index'
+
+import TermsScreen from './Components/Support/Terms/Index'
+import PrivacyScreen from './Components/Support/Privacy/Index'
+import DeviceScreen from './Components/Support/Device/Index'
+import LoggedEventsScreen from './Components/Support/LoggedEvents/Index'
+import LoggedEventDetailsScreen from './Components/Support/LoggedEvents/Detail'
 
 
 let SupportStack = createStackNavigator({ 
@@ -589,11 +595,17 @@ let SupportStack = createStackNavigator({
       headerBackTitle: null
     }),
   },
-  SupportView: {
-    screen: SupportViewScreen
+  SupportList: {
+    screen: SupportListScreen
+  },
+  SupportRegisterUser: {
+    screen: SupportRegisterUserScreen
   },
   SupportRequest: {
     screen: SupportRequestScreen
+  },
+  SupportRequestDetail: {
+    screen: SupportRequestDetailScreen
   },
   Contact: {
     screen: SupportContactScreen
@@ -620,7 +632,7 @@ let SupportStack = createStackNavigator({
 // Permissions
 // *******************************************************************************
 
-import PushNotificationsScreen from './App/Components/Permissions/PushNotifications/Index'
+import PushNotificationsScreen from './Components/Permissions/PushNotifications/Index'
 
 let PushNotificationsPermissionStack = createStackNavigator({ PushNotificationsScreen });
 
@@ -641,7 +653,7 @@ let PushNotificationsPermissionStack = createStackNavigator({ PushNotificationsS
 // Client Selection
 // *******************************************************************************
 
-import ClientSelectionScreen from './App/Components/ClientSelection/Index'
+import ClientSelectionScreen from './Components/ClientSelection/Index'
 
 let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
 
@@ -662,7 +674,7 @@ let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
 // Session Override
 // *******************************************************************************
 
-import SessionOverrideScreen from './App/Components/SessionOverride/Index'
+import SessionOverrideScreen from './Components/SessionOverride/Index'
 
 let SessionOverrideStack = createStackNavigator({ SessionOverrideScreen });
 
@@ -684,7 +696,7 @@ let SessionOverrideStack = createStackNavigator({ SessionOverrideScreen });
 // Drawer Items
 // *******************************************************************************
 
-import DrawerContainer from './App/Components/DrawerContainer'
+import DrawerContainer from './Components/DrawerContainer'
 
 const DrawerStack = createDrawerNavigator({
 
@@ -697,7 +709,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'My Home',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/clock-alarm-7.png')}
+      //     source={require('./Images/TabBar/clock-alarm-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -716,7 +728,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -734,7 +746,7 @@ const DrawerStack = createDrawerNavigator({
   //     // drawerLabel: 'Availability',
   //     // drawerIcon: ({ tintColor }) => (
   //     //   <Image
-  //     //     source={require('./App/Images/TabBar/calendar-7.png')}
+  //     //     source={require('./Images/TabBar/calendar-7.png')}
   //     //     style={[styles.icon, {tintColor: tintColor}]}
   //     //   />
   //     // ),
@@ -751,7 +763,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -770,7 +782,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -789,7 +801,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -808,7 +820,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -825,7 +837,7 @@ const DrawerStack = createDrawerNavigator({
       // drawerLabel: 'Availability',
       // drawerIcon: ({ tintColor }) => (
       //   <Image
-      //     source={require('./App/Images/TabBar/calendar-7.png')}
+      //     source={require('./Images/TabBar/calendar-7.png')}
       //     style={[styles.icon, {tintColor: tintColor}]}
       //   />
       // ),
@@ -910,7 +922,8 @@ export default class App extends React.Component {
             switch3 :null,
             switch4 : null
           },
-          isQA: false
+          isQA: false,
+          logData: []
 
         }
 
@@ -934,7 +947,7 @@ export default class App extends React.Component {
         AppState.addEventListener('change', this.onAppStateChange);
 
 
-        console.log("App-Rosnet config", config)
+        //console.log("App-Rosnet config", config)
 
         // show QA indicator throughout the app
         if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
@@ -945,7 +958,7 @@ export default class App extends React.Component {
     }
 
     componentWillUnmount() {
-        console.log("...root componentWillUnmount")
+        //console.log("...root componentWillUnmount")
         AppState.removeEventListener('change', this.onAppStateChange);
     }
 
@@ -955,7 +968,33 @@ export default class App extends React.Component {
     //**********************************************************************************
     _globalLogger = (ok, source, title, message) => {
 
-      Logger.LogEvent(ok, source, title, message)
+      // console.log("------- GLOBAL LOG EVENT -----------")
+      // console.log(ok, source, title, message)
+      // console.log("------- END GLOBAL LOG EVENT -----------")
+
+      //Logger.LogEvent(ok, source, title, message)
+
+      let MAX_LOG_ENTRIES = 50
+
+      let logData = this.state.logData
+      if(logData.length >= MAX_LOG_ENTRIES) {
+        logData.splice(0, logData.length - MAX_LOG_ENTRIES)
+      }
+
+      let event = { 
+          ok: ok, 
+          source: source, 
+          title: title, 
+          message: message,
+          ts: new Date().getTime() // add a timestamp to it for sorting
+      }
+
+
+      logData.push(event)
+
+      this.setState({
+        logData: logData
+      })
 
     }
 
@@ -973,7 +1012,8 @@ export default class App extends React.Component {
 
           this.setState({
             userData: data.userData
-          }, () => console.log("global state change to userData", this.state.userData ) )
+          })
+          // }, () => console.log("global state change to userData", this.state.userData ) )
 
           // always save any changes to local storage
           AsyncStorage.setItem('userData', JSON.stringify(data.userData))
@@ -984,7 +1024,8 @@ export default class App extends React.Component {
 
           this.setState({
             superUser: data.superUser
-          }, () => console.log("global state change to superUser", this.state.superUser ) )
+          })
+          // }, () => console.log("global state change to superUser", this.state.superUser ) )
 
           
         }
@@ -993,7 +1034,8 @@ export default class App extends React.Component {
 
           this.setState({
             selectedClient: data.selectedClient
-          }, () => console.log("global state change to selectedClient", this.state.selectedClient ) )
+          })
+          // }, () => console.log("global state change to selectedClient", this.state.selectedClient ) )
 
           // always save any changes to local storage
           AsyncStorage.setItem('selectedClient', data.selectedClient)
@@ -1003,17 +1045,19 @@ export default class App extends React.Component {
         if (data.backgroundColor) {
           this.setState({
             backgroundColor : data.backgroundColor
-          },() => console.log('global state change for bgColor',this.state.backgroundColor))
+          })
+          // },() => console.log('global state change for bgColor',this.state.backgroundColor))
         }
 
         // this action will force the app to reset back to the real user
-        if(data.action && data.action === "undo-session-override") {
+        if(data.action && (data.action === "undo-session-override" || data.action === "logout")) {
 
           this.setState({
             userData: data.userData,
             superUser: null,
             backgroundColor: brand.colors.primary
-          }, () => console.log("global state change back to real user", data.userData ) )
+          })
+          // }, () => console.log("global state change back to real user", data.userData ) )
 
 
         }
@@ -1026,10 +1070,10 @@ export default class App extends React.Component {
             userData: data.userData,
             superUser: null,
             backgroundColor: brand.colors.primary
-          }, () => console.log("global state change for token refresh", data.userData ) )
-
-
+          })
+          // }, () => console.log("global state change for token refresh", data.userData ) )
         }
+
 
     }
 
@@ -1061,16 +1105,6 @@ export default class App extends React.Component {
       let _this = this
 
       if(this.state.userData) {
-        //console.log("background checking for notifications...")
-
-        // checkForNotifications(this.state.userData.token, function(err, data){
-        //   console.log(" found notifications", data)
-        //   _this.setState({
-        //     alertCount: data.length,
-        //     notifications: data
-        //   })
-        // })
-        // console.log(" found notifications", data)
 
         let alertCount = generateRandomNumber(0,15)
         let messageCount = generateRandomNumber(0,3)
@@ -1098,58 +1132,72 @@ export default class App extends React.Component {
 
       let _this = this
 
+      let log = []
+
       //console.log("> handleAppStateChange <<<<<<<<")
 
       const { appState } = this.state
 
       // active, inactive, background
-      //console.log('current appState', appState)
-      //console.log('next appState   ', nextAppState)
+      // console.log('current appState', appState)
+      // console.log('next appState   ', nextAppState)
 
       // IMPORTANT: ONLY check for "background" not "inactive" here or the LockScreen will render in a loop
       if (appState.match(/background/) && nextAppState === 'active') {
 
-          console.log("+++++++++ STATUS ACTIVE ++++++++++")
+        console.log("+++++++++ STATUS ACTIVE ++++++++++")
 
 
-          if(this.state.userData) {
+        this._globalLogger(true, "App", "Activated", { state: this.state })
 
 
-            Authorization.RefreshToken(function(err, resp){
-              if(err) {
-                console.log("err refreshing token", err)
-              }
-              else {
+        // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
+        // only pasword and token are set to null
+        if(this.state.userData && this.state.userData.token) {
 
 
-                let userData = _this.state.userData
+          // see if the user needs to see the lock screen - based on elapsed time
+          Biometrics.CheckIfShouldShowLockScreen(function(result){
 
-                // ONLY update certain things
-                userData.token = resp.userData.token // update the token
-                userData.sites = resp.userData.sites // update in clase changed
-
-
-                // if we are refreshing the token, we must reset all global state attributes back to defaults as well
-                _this._globalStateChange( { action: "token-refresh", userData: userData })
-              
-
-                // see if the user should see the lock screen
-                let currentTime = new Date().getTime() // in milliseconds
-                if(currentTime - TIME_WENT_TO_BACKGROUND > 5000) {
-                  // Show lock screen
-                  // this is needed since props.navigation isn't present for unmounted screen components
-                  NavigationService.navigate('LockStack');
-
-                }
-
-              
-              } // end else
-
-            }) // end Authorization.RefreshToken
+            if(result.showLock) {
+                // this is needed since props.navigation isn't present for unmounted screen components
+                NavigationService.navigate('LockStack');
+            }
 
 
-          } // end if userData
+          })
 
+          //console.log("userData", this.state.userData)
+
+
+          Authorization.RefreshToken(function(err, resp){
+            
+            if(err) {
+              console.log("err refreshing token", err)
+
+              _this._globalLogger(false, "App", "Error Refreshing Token", { error: err})
+
+            }
+            else {
+
+              console.log("token refreshed")
+
+              // if we are refreshing the token, we must reset all global state attributes back to defaults as well
+              _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
+
+
+              _this._globalLogger(false, "App", "Token Refreshed Successfully", { userData: resp.userData })
+            
+            
+            } // end else
+
+          }) // end Authorization.RefreshToken
+
+
+        } // end if userData
+        else {
+          console.log("user is not logged in, so dont show biometrics")
+        }
 
           
       }
@@ -1157,9 +1205,34 @@ export default class App extends React.Component {
 
         console.log("+++++++++ STATUS INACTIVE ++++++++++")
 
-        TIME_WENT_TO_BACKGROUND = new Date().getTime()
+        // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
+        // only pasword and token are set to null
+        if(this.state.userData && this.state.userData.token) {
 
-        console.log('App has moved to the background')
+          // IMPORTANT:
+          // revert back to the real user if impersonating - 
+          // THIS IS ESPECIALLY important if the user then exits/closes/terminates the app entirely.
+          // Otherwise, when the user re-launches the app, they will still be logged in as an impersonator
+          if(this.state.superUser) {
+            console.log("reverting superUser back to ", this.state.superUser)
+            let userData = this.state.superUser
+            _this._globalStateChange( { action: "undo-session-override", userData: userData })
+          }
+
+
+        }
+        
+
+        let statusData = {
+          limit: 15000, // 15 seconds in milliseconds
+          ts: new Date().getTime() // add a timestamp to it for sorting
+        }
+
+        AsyncStorage.setItem('statusData', JSON.stringify(statusData))
+
+        _this._globalLogger(true, "App", "Inactivated", { statusData: statusData })
+
+
 
       }
 
@@ -1213,9 +1286,14 @@ export default class App extends React.Component {
                 //console.log("currentScreen", currentScreen)
                 //console.log("prevScreen", prevScreen)
 
-                //if (prevScreen !== currentScreen) {
-                //  console.log('navigating to this screen', currentScreen);
-                //} 
+                if (prevScreen !== currentScreen) {
+                  console.log('navigating to this screen', currentScreen);
+
+                  // dont ever include LockScreen as the last screen since we always need to know where the user really left off
+                  if(currentScreen !== 'LockScreen') {
+                    AsyncStorage.setItem('lastScreen', currentScreen)
+                  }
+                } 
                 
               }}
 
