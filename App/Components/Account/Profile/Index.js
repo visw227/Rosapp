@@ -109,7 +109,8 @@ class Profile extends React.Component {
     })
 
     let request = {
-      jobTitle: this.state.jobTitle
+      jobTitle: this.state.jobTitle,
+      //email: null // this field can be updated only in the support section - when registering a new Zendesk profile
     }
 
     updateProfile(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, request, function(err, resp){

@@ -146,7 +146,7 @@ export var Authorization = {
 
                             // used for testing Support-Zendesk intergration
                             // if(userData.email === 'djohnson@rosnet.com') {
-                            //     userData.email = 'djohnson-zendesk@rosnet.com'
+                            //     userData.email = null
                             //     userData.userId = 9999999
                             // }
 

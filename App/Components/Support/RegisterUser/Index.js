@@ -25,6 +25,7 @@ import brand from '../../../Styles/brand'
 
 import { registerUser } from '../../../Services/Support'
 
+import { updateProfile } from '../../../Services/User';
 
 
 class RegisterUser extends React.Component {
@@ -61,6 +62,13 @@ class RegisterUser extends React.Component {
   constructor(props) {
     super(props)
 
+    let userAskedEnterEmailAddress = false
+    let email = this.props.screenProps.state.userData.email
+    // see if we have the user's email address
+    if(!email || (email && email === '')) {
+      userAskedEnterEmailAddress = true
+    }
+
     this.state = {
       sending: false,
       receiving: false,
@@ -68,7 +76,8 @@ class RegisterUser extends React.Component {
           hasError: false,
           message: ""
       },
-      email: this.props.screenProps.state.userData.email,
+      email: this.props.screenProps.state.userData.email || '',
+      userAskedEnterEmailAddress: userAskedEnterEmailAddress,
       wasAlreadySent: false,
     }
   }
@@ -137,6 +146,45 @@ class RegisterUser extends React.Component {
     
     var userData = this.props.screenProps.state.userData
 
+    // if we asked the user to enter an email address, save it in ros_master.rosnet_email
+    if(this.state.userAskedEnterEmailAddress) {
+
+      if(this.state.email === '') {
+
+        this.setState({
+          requestStatus: {
+            hasError: true,
+            message: "Please enter your email address"
+          }
+        })
+
+        return
+      
+      }
+
+      let profileRequest = {
+        //jobTitle: this.state.jobTitle,
+        email: this.state.email
+      }
+
+      updateProfile(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, profileRequest, function(err, resp){
+
+        if(err){
+          console.log('errror updating profile',err)
+
+        }
+        else {
+
+          // save the users email to the global state
+          userData.email = _this.state.email
+          _this.props.screenProps._globalStateChange( { action: "profile-update", userData: userData })
+
+        }
+
+      })
+    }
+
+
     let request = {
       rosnet_user_id : userData.userId,
       email : this.state.email,
@@ -146,6 +194,8 @@ class RegisterUser extends React.Component {
     }
 
     console.log("submitting request", JSON.stringify(request, null, 2))
+
+
 
     registerUser(this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
 
@@ -204,28 +254,42 @@ class RegisterUser extends React.Component {
 
         <View style={styles.formContainer}>
 
-            <Text style={styles.inputLabel} >
-              To register, please enter your email address below.
-            </Text>
 
-            <Text style={styles.inputLabel} >
-              Email Address
-            </Text>
+            {!this.state.userAskedEnterEmailAddress &&
 
+              <Text style={styles.inputLabel} >
+                We will use {this.state.email} to create your Rosenet Support profile.
+              </Text>
 
-            <TextInput style={styles.input}   
-                    //ref={input => { this.textInput = input }}
-                    //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
-                    placeholder='Email address' 
-                    placeholderTextColor={brand.colors.silver}
-                    value={this.state.email}
-                    onChangeText={(email) => this.setState({ email: email})}
-            />
+            }
+
+            {this.state.userAskedEnterEmailAddress &&
+            <View>
+
+              <Text style={styles.inputLabel} >
+                To register, please enter your email address below.
+              </Text>
+
+              <Text style={styles.inputLabel} >
+                Email Address
+              </Text>
+
+              <TextInput style={styles.input}   
+                      //ref={input => { this.textInput = input }}
+                      //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
+                      placeholder='Email address' 
+                      placeholderTextColor={brand.colors.silver}
+                      value={this.state.email}
+                      onChangeText={(email) => this.setState({ email: email.toLowerCase() })}
+              />
+
+            </View>
+            }
 
             {this.state.sending &&
             <View style={{ marginTop: 20, marginBottom: 10 }} >
                 <ActivityIndicator size="large" color={brand.colors.primary} />
-                </View>
+            </View>
             }
 
             <Text style={styles.message} >
