@@ -18,10 +18,12 @@ import {
   Alert, 
   Platform, 
   Image, 
+  Keyboard,
   KeyboardAvoidingView,
   Animated,
   ScrollView,
-  AsyncStorage
+  AsyncStorage,
+  TextInput
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -69,7 +71,9 @@ class LockScreen extends React.Component {
             message: ""
         },
         bioType: null,
-        isQA: this.props.screenProps.state.isQA
+        isQA: this.props.screenProps.state.isQA,
+        password: null,
+        passwordValid: false
       }
 
   }
@@ -84,9 +88,68 @@ class LockScreen extends React.Component {
     // this will happen many times during the use of the app
     this.props.navigation.addListener('willFocus', this.load)
 
+    if (Platform.OS=='ios'){
+        this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+        this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+    }
+    else{
+        this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+        this.keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+    }
+
+
   }
 
-  
+    componentWillUnmount () {
+
+        this.keyboardWillShowSub.remove();
+        this.keyboardWillHideSub.remove();
+    }
+
+    keyboardWillShow = (event) => {
+
+        this.setState({
+            requestStatus: {
+                hasError: false,
+                message: null
+            }
+        })
+
+        Animated.timing(this.imageHeight, {
+            duration: event.duration,
+            toValue: MIN_HEIGHT,
+        }).start();
+    };
+
+    keyboardWillHide = (event) => {
+        Animated.timing(this.imageHeight, {
+            duration: event.duration,
+            toValue: MAX_HEIGHT,
+        }).start();
+    };
+
+
+    keyboardDidShow = (event) => {
+
+        this.setState({
+            requestStatus: {
+                hasError: false,
+                message: null
+            }
+        })
+
+        Animated.timing(this.imageHeight, {
+            toValue: MIN_HEIGHT,
+        }).start();
+    };
+
+    keyboardDidHide = (event) => {
+        Animated.timing(this.imageHeight, {
+            toValue: MAX_HEIGHT,
+        }).start();
+    };
+
+
   load = () => {
 
     console.log(">>> LOAD")
@@ -100,12 +163,10 @@ class LockScreen extends React.Component {
         // this provides shared logging via screenProps
         this.props.screenProps._globalLogger(true, "LockScreen", "Biometrics Supported", { bioType: bioType })
 
-        this.setState({ bioType });
-
-
-
         // iOS: Known values: 'FaceID', T'ouchID' (finger print OR passcode), 'Null', 'None'
         if(bioType === 'FaceID' || bioType === 'TouchID') {
+
+            this.setState({ bioType });
 
             this.onButtonPress()
 
@@ -113,10 +174,14 @@ class LockScreen extends React.Component {
         // Android only
         else if(bioType === true) {
 
+            this.setState({ bioType });
+
             this.onButtonPress()
         }
         // 'Null', 'None', etc. - if biometrics not available or disabled, just continue 
         else {
+
+            this.setState({ bioType: null }); // keep as null
 
             this.onContinue()
         }
@@ -202,6 +267,24 @@ class LockScreen extends React.Component {
 
     }
 
+    onLoginPress = () => {
+
+        Keyboard.dismiss()
+
+        if(this.state.password === this.props.screenProps.state.userData.password) {
+            this.onContinue()
+        }
+        else {
+
+            this.setState({
+                requestStatus: {
+                    hasError: true,
+                    message: "The password is incorrect."
+                }
+            })
+        }
+
+    }
 
     render() {
 
@@ -224,7 +307,7 @@ class LockScreen extends React.Component {
 
         return (
 
-            <View style={Styles.container}>
+            <KeyboardAvoidingView behavior="padding" style={Styles.container}>
 
                     <View style={Styles.logoContainer}>
                         {/* <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} /> */}
@@ -243,51 +326,65 @@ class LockScreen extends React.Component {
                         }}>
                             <Text style={styles.message}>
                             As an extra security measure, Rosnet requires authentication using 
-                            Face ID, Touch ID, or your device passcode.
+                            Face ID, Touch ID, your device passcode, or your Rosnet password.
                             </Text>
                         </View>
 
-                        <View style={styles.container}>
+                        {this.state.bioType &&
+                            <View style={styles.container}>
 
+                                    <TouchableOpacity 
+                                        style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
+                                        onPress={this.onButtonPress}>
+                                        <Text 
+                                        style={ this.state.sending ? styles.buttonDisabledText : styles.buttonText }>
+                                        {`Authenticate with ${this.state.bioType}`}
+                                        </Text>
+                                    </TouchableOpacity> 
 
-                            {/* {this.state.requestStatus.hasError &&
-                                <View style={{ 
-                                    justifyContent: 'center', 
-                                    alignItems: 'center',
-                                    marginBottom: 15,
-                                    marginTop: 10
-                                }}>
-                                    <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
-                                        <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
-                                    </ScrollView>
-                                </View>
-                            } */}
+                            </View>
+                        }
 
-                            <TouchableOpacity 
-                                style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
-                                onPress={this.onButtonPress}>
-                                <Text 
-                                style={ this.state.sending ? styles.buttonDisabledText : styles.buttonText }>
-                                {`Authenticate with ${this.state.bioType}`}
-                                </Text>
-                            </TouchableOpacity> 
+                        {!this.state.bioType &&
+                            <View style={styles.container}>
 
+                                    <TextInput style={styles.input}   
+                                            returnKeyType="go" ref={(input)=> this.passwordInput = input} 
+                                            placeholder='Password' 
+                                            placeholderTextColor={brand.colors.silver}
+                                            secureTextEntry
+                                            value={this.state.password}
+                                            onChangeText={(text) => this.setState({password: text})}
+                                    />
 
-                            {/* <View>
-                                <Text 
-                                    disabled={this.state.sending} 
-                                    style={styles.forgotPassword} 
-                                    onPress={this.onContinue}>
-                                    Or, just continue for now...
-                                </Text>
-                            </View> */}
+                                    {this.state.requestStatus.hasError &&
+                                        <View style={{ 
+                                            justifyContent: 'center', 
+                                            alignItems: 'center',
+                                            marginBottom: 15,
+                                            marginTop: 10
+                                        }}>
+                                            <ScrollView style={{ marginTop: 0, height: 70, paddingLeft: 10, paddingRight: 10 }}>
+                                                <Text style={{color: 'white' }}>{this.state.requestStatus.message}</Text>
+                                            </ScrollView>
+                                        </View>
+                                    }
 
+                                    <TouchableOpacity 
+                                        style={ styles.buttonContainer }
+                                        onPress={this.onLoginPress}>
+                                        <Text 
+                                        style={ styles.buttonText }>
+                                        Login
+                                        </Text>
+                                    </TouchableOpacity> 
 
+                            </View>
+                        }
 
-                        </View>
-                    </View>
-            
                 </View>
+
+            </KeyboardAvoidingView>
 
         ) // end return
 
