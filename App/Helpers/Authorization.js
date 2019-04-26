@@ -118,6 +118,7 @@ export var Authorization = {
                     userAgent: deviceInfo.userAgent
                 }
 
+                console.log("login request", JSON.stringify(request, null, 2))
                 userLogin(request, function(err, response){        
 
                     if(err) {

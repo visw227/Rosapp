@@ -30,6 +30,8 @@ import Styles from './Styles'
 
 import SearchBar from '../ReusableComponents/SearchBar'
 
+import { getUserIdForClient } from '../../Services/Site';
+
 
 export class ClientSelection extends React.Component {
 
@@ -121,15 +123,35 @@ export class ClientSelection extends React.Component {
 
   doClientChange = (client) => {
 
-    // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
-    this.props.screenProps._globalStateChange( { action: "change-client", selectedClient:  client })
+    let _this = this
 
-    const resetAction = StackActions.reset({
-        index: 0,
-        key: null, // this is the trick that allows this to work
-        actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
-    });
-    this.props.navigation.dispatch(resetAction);
+    let token = this.props.screenProps.state.userData.token
+    let userName = this.props.screenProps.state.userData.userName
+
+    getUserIdForClient(client, token, userName, function(err, resp){
+
+      if(err) {
+
+      }
+      else {
+
+        console.log("selectedClientUserId", resp.Browse_user_Id)
+
+            // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
+        _this.props.screenProps._globalStateChange( { action: "change-client", selectedClient:  client, selectedClientUserId: resp.Browse_user_Id })
+
+        const resetAction = StackActions.reset({
+            index: 0,
+            key: null, // this is the trick that allows this to work
+            actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+        });
+        _this.props.navigation.dispatch(resetAction);
+
+      }
+
+    })
+
+
 
   }
 

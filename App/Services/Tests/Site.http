@@ -10,3 +10,11 @@ managerAppToken: 24340d0f-1c25-43c8-8ddb-c68d2476ce52
 GET https://srr.rosnetqa.com/api/ManagerAppSite/SecuritySettings
 Content-Type: application/json
 managerAppToken: 722734c0-4205-4cc1-9113-7f61e8ae3702
+
+
+###
+
+
+GET https://aag.rosnetqa.com/api/ManagerAppSite/getBrowseUserId?userName=dywayne.johnson
+Content-Type: application/json
+managerAppToken: 722734c0-4205-4cc1-9113-7f61e8ae3702

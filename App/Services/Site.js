@@ -35,3 +35,21 @@ export function getStaffList(client, token, location, callback) {
 
 
 }
+
+
+export function getUserIdForClient(client, token, userName, callback) {
+
+  serviceWrapper('/api/ManagerAppSite/getBrowseUserId?userName=' + userName, 'GET', null, client, token, function(err, resp) {
+
+    if(err) {
+      callback(err)
+    }
+    else {
+      callback(null, resp)
+    }
+
+  })
+
+
+}
+
