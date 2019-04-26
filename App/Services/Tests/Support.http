@@ -36,7 +36,7 @@ managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 
 ### DELETE USER ###
 
-DELETE https://aag.rosnetqa.com/api/ManagerAppZendesk/DeleteUser?zendesk_id=380613447991
+DELETE https://aag.rosnetqa.com/api/ManagerAppZendesk/DeleteUser?zendesk_id=380579411772
 content-type: application/json
 managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 

@@ -80,6 +80,8 @@ class LaunchScreen extends React.Component {
 
       let _this = this
 
+      AppCenter.setLogLevel(AppCenter.LogLevel.VERBOSE);
+
       this.getDeviceInfo(function(deviceInfo){
 
         console.log("LaunchScreen - deviceInfo: ", JSON.stringify(deviceInfo, null, 2))

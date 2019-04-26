@@ -144,6 +144,12 @@ export var Authorization = {
                             //let userData = parseUser(response)
                             let userData = Parsers.UserData(response)
 
+                            // used for testing Support-Zendesk intergration
+                            // if(userData.email === 'djohnson@rosnet.com') {
+                            //     userData.email = 'djohnson-zendesk@rosnet.com'
+                            //     userData.userId = 9999999
+                            // }
+
                             // we are including password in the userData for the change password screen to have access the current password for validation
                             userData.password = password 
                             // only do if not level 99
