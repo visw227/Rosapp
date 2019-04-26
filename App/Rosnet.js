@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppState, AsyncStorage, StyleSheet, Text, View, Image } from 'react-native';
+import { AppState, AsyncStorage, StyleSheet, Text, View, Image, Alert } from 'react-native';
 
 import { createAppContainer, createStackNavigator, createDrawerNavigator, NavigationActions, StackActions } from 'react-navigation'
 
