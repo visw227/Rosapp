@@ -14,6 +14,7 @@ import { NavigationActions, StackActions } from 'react-navigation'
 import brand from '../Styles/brand'
 
 import AppCenter from 'appcenter'
+import Push from 'appcenter-push'
 import { Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
@@ -64,6 +65,7 @@ class LaunchScreen extends React.Component {
           systemName: DeviceInfo.getSystemName(),
           systemVersion: DeviceInfo.getSystemVersion(),
           userAgent: DeviceInfo.getUserAgent(),
+          pushEnabled : await Push.isEnabled(),
           deviceType: Platform.OS
         }
 
