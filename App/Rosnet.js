@@ -392,63 +392,63 @@ let TabStack = createBottomTabNavigator({
   // },
 
 
-  Workflow: {
-    screen: WorkflowStack,
-    navigationOptions: ({ navigation, screenProps }) => ({
+  // Workflow: {
+  //   screen: WorkflowStack,
+  //   navigationOptions: ({ navigation, screenProps }) => ({
 
-        // title and headerTitle DO NOT WORK HERE
-        // the title must be set in the screen
-        // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-        tabBarLabel: 'Workflow',
-        tabBarIcon: () => <Entypo name="flow-branch" size={20} color={brand.colors.primary} />
-        // tabBarIcon: () => <MaterialCommunityIcon name="clipboard-flow" size={20} color={brand.colors.primary} />
-        // tabBarIcon: ({ tintColor }) =>
-        //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        //     <Image source={require('./Images/TabBar/list-simple-star-7.png')} />
-        //   </View>
+  //       // title and headerTitle DO NOT WORK HERE
+  //       // the title must be set in the screen
+  //       // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+  //       tabBarLabel: 'Workflow',
+  //       tabBarIcon: () => <Entypo name="flow-branch" size={20} color={brand.colors.primary} />
+  //       // tabBarIcon: () => <MaterialCommunityIcon name="clipboard-flow" size={20} color={brand.colors.primary} />
+  //       // tabBarIcon: ({ tintColor }) =>
+  //       //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+  //       //     <Image source={require('./Images/TabBar/list-simple-star-7.png')} />
+  //       //   </View>
 
-    })
-  },
-
-
-  Conversations: {
-    screen: ChatStack,
-    navigationOptions: ({ navigation, screenProps }) => ({
-
-        // title and headerTitle DO NOT WORK HERE
-        // the title must be set in the screen
-        // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-        tabBarLabel: 'Chat',
-        // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
-        tabBarIcon: () => 
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary} />
+  //   })
+  // },
 
 
-            {screenProps.state.messageCount > 0 &&
-            <View style={{ 
-                position: 'absolute', 
-                paddingLeft: 4, 
-                paddingRight: 4,
-                right: -20, 
-                top: 1, 
-                backgroundColor: brand.colors.orange, 
-                borderRadius: 10, 
-                height: 20, 
-                //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
-                minWidth: 20, // this keeps it round with borderRadius=10
-                justifyContent: 'center', 
-                alignItems: 'center' }}>
-              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.messageCount}</Text>
-            </View>
-            }
+  // Conversations: {
+  //   screen: ChatStack,
+  //   navigationOptions: ({ navigation, screenProps }) => ({
+
+  //       // title and headerTitle DO NOT WORK HERE
+  //       // the title must be set in the screen
+  //       // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+  //       tabBarLabel: 'Chat',
+  //       // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
+  //       tabBarIcon: () => 
+  //         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+  //           <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary} />
+
+
+  //           {screenProps.state.messageCount > 0 &&
+  //           <View style={{ 
+  //               position: 'absolute', 
+  //               paddingLeft: 4, 
+  //               paddingRight: 4,
+  //               right: -20, 
+  //               top: 1, 
+  //               backgroundColor: brand.colors.orange, 
+  //               borderRadius: 10, 
+  //               height: 20, 
+  //               //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+  //               minWidth: 20, // this keeps it round with borderRadius=10
+  //               justifyContent: 'center', 
+  //               alignItems: 'center' }}>
+  //             <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.messageCount}</Text>
+  //           </View>
+  //           }
      
 
-          </View>
+  //         </View>
 
-    })
+  //   })
 
-  },
+  // },
 
   Alerts: {
     screen: AlertStack,

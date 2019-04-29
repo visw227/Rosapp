@@ -10,11 +10,15 @@ import {
   RefreshControl,
   Platform,
   WebView,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard 
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons'
+
+
 import brand from '../../Styles/brand'
 import Styles from './Styles'
 import * as Progress from 'react-native-progress'
@@ -39,8 +43,20 @@ class WebViewScreen extends React.Component {
     headerTintColor: 'white',
 
 
+    headerLeft : <Ionicon
+      name="md-menu"
+      size={35}
+      color={brand.colors.white}
+      style={{ paddingLeft: 10 }}
+      onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
+
+/>,
+
+
   })
 
+
+  
   constructor(props) {
       super(props);
 
@@ -52,10 +68,116 @@ class WebViewScreen extends React.Component {
           href: "",
           item: { Menu_Function_ID: "" },
           userData: this.props.screenProps.state.userData,
-          selectedClient: this.props.screenProps.state.selectedClient
+          selectedClient: this.props.screenProps.state.selectedClient,
+          backArrowEnabled: false,
+          forwardArrowEnabled: false
       }
 
   }
+
+
+  componentDidMount() {
+
+    // componentDidMount only fires once
+    // willFocus instead of componentWillReceiveProps
+    this.props.navigation.addListener('willFocus', this.load)
+
+  }
+
+
+  // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
+  // this is passed in to navigationOptions as menuIconClickHandler
+  onMenuIconClick = (navigate) => {
+
+    navigate.navigation.toggleDrawer()
+    Keyboard.dismiss()
+
+  }
+
+
+  load = () => {
+
+    let _this = this
+
+    this.loadMenuItem(function(item){
+
+
+      _this.props.navigation.setParams({ 
+        title: item.name ,
+        backgroundColor: _this.props.screenProps.state.backgroundColor,
+        starIcon: 'star-o',
+        toggleFavorite: _this.toggleFavorite,
+        menuIconClickHandler: _this.onMenuIconClick,
+      });
+
+
+
+      let userData = _this.props.screenProps.state.userData
+
+      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+
+
+      console.log("----------------- Modules WebView ----------------------")
+      console.log("Authorization.VerifyToken", _this.props.screenProps.state.selectedClient, userData.token)
+
+      // this verifies that the token is still valid and redirects to login if not
+      Authorization.VerifyToken(_this.props.screenProps.state.selectedClient, userData.token, function(err, resp){
+
+        if(err) {
+
+          console.log(">>> Modules WebView - Invalid Token", err)
+
+          // reset the navigation
+          const resetAction = StackActions.reset({
+              index: 0,
+              key: null, // this is the trick that allows this to work
+              actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
+          });
+          _this.props.navigation.dispatch(resetAction);
+
+
+        }
+        else {
+
+          console.log(">>> Modules WebView - Token is Valid", resp)
+
+          // this is a partial (relative) url provided from the modules API
+          let url = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
+
+          // this was a inner-navigation change, with a complete URL, so resume there
+          if(item.deepLink) {
+            url = item.url
+          }
+
+
+          let source = {
+            uri: url,
+            headers: {
+              "managerAppToken":  userData.token
+            }
+          }
+
+          console.log("Modules Webview source", JSON.stringify(source, null, 2))
+
+          _this.setState({
+            source: source,
+            item: item
+          })
+
+        }
+
+
+
+      })
+
+
+
+    })
+
+
+
+  }
+
 
   loadMenuItem = (callback) => {
 
@@ -64,6 +186,8 @@ class WebViewScreen extends React.Component {
     const { navigation } = this.props;
 
     const item = navigation.getParam('item', null );
+
+    console.log(">>>>> loadMenuItem", item)
 
 
     // save a copy to local storage in case the user resumes using the app here - after biometrics
@@ -98,178 +222,54 @@ class WebViewScreen extends React.Component {
 
   }
 
-  componentDidMount() {
+  onNavigationStateChange = (navState) => {
 
-    // componentDidMount only fires once
-    // willFocus instead of componentWillReceiveProps
-    this.props.navigation.addListener('willFocus', this.load)
+    console.log("onNavigatinStateChange", navState)
 
-  }
+    this.setState({
+        backArrowEnabled: navState.canGoBack,
+        forwardArrowEnabled: navState.canGoForward
+    });
 
+    // hijack the current item and save it with a new title and url - just in case app launches from here 
+    let item = {
+      name: navState.title,
+      url: navState.url,
+      deepLink: true // only set when hijacking the url by moving around in the web view
+    }
 
-  load = () => {
-
-    let _this = this
-
-    this.loadMenuItem(function(item){
-
-
-      _this.props.navigation.setParams({ 
-        title: item.name ,
-        backgroundColor: _this.props.screenProps.state.backgroundColor,
-        starIcon: 'star-o',
-        toggleFavorite: _this.toggleFavorite 
-      });
+    AsyncStorage.setItem('selectedMenuItem', JSON.stringify(item))
 
 
-      let userData = _this.props.screenProps.state.userData
-
-      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-
-      console.log("----------------- Modules WebView ----------------------")
-      console.log("Authorization.VerifyToken", _this.props.screenProps.state.selectedClient, userData.token)
-
-      // this verifies that the token is still valid and redirects to login if not
-      Authorization.VerifyToken(_this.props.screenProps.state.selectedClient, userData.token, function(err, resp){
-
-        if(err) {
-
-          console.log(">>> Modules WebView - Invalid Token", err)
-
-          // reset the navigation
-          const resetAction = StackActions.reset({
-              index: 0,
-              key: null, // this is the trick that allows this to work
-              actions: [NavigationActions.navigate({ routeName: 'LoginStack' })],
-          });
-          _this.props.navigation.dispatch(resetAction);
-
-
-        }
-        else {
-
-          console.log(">>> Modules WebView - Token is Valid", resp)
-
-          let source = {
-            uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true',
-            headers: {
-              "managerAppToken":  userData.token
-            }
-          }
-
-          console.log("Modules Webview source", JSON.stringify(source, null, 2))
-
-          _this.setState({
-            source: source
-          })
-
-        }
-
-
-
-      })
-
-
-
-    })
-
+    this.props.navigation.setParams({ 
+      title: navState.title
+    });
 
 
   }
 
 
-  // this will catch any global state updates - via screenProps
-  // componentWillReceiveProps(nextProps){
+  showLoadingIndicator = () => {
 
-  //   let _this = this
-
-
-  //   this.loadMenuItem(function(item){
-
-
-  //     let selectedClient = nextProps.screenProps.state.selectedClient
-  //     let token = nextProps.screenProps.state.userData.token
-  //     let backgroundColor = nextProps.screenProps.state.backgroundColor
-
-  //     console.log(">>>> selectedClient", selectedClient, "token", token)
-
-  //     if(backgroundColor !== _this.props.screenProps.state.backgroundColor){
-
-  //       _this.props.navigation.setParams({ backgroundColor: backgroundColor })
-
-  //     }
-
-
-  //         // ONLY if something has changed
-  //     if(token !== _this.state.userData.token){
-
-  //       console.log("Modules WebView picked up new token: ", token)
-        
-  //       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-  //       let source = {
-  //         uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
-  //         headers: {
-  //           "managerAppToken":  token
-  //         }
-  //       }
-        
-  //       console.log("source updated: ", JSON.stringify(source, null, 2))
-
-        
-  //       _this.setState({ 
-  //         source: source
-  //       });
-
-  //     }
-
-  //     // ONLY if something has changed
-  //     if(selectedClient !== _this.state.selectedClient){
-
-  //       console.log("Modules WebView picked up new selectedClient: ", selectedClient)
-
-  //       _this.props.navigation.setParams({ title: selectedClient })
-
-  //       let userData = _this.props.screenProps.state.userData
-        
-  //       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-  //       let source = {
-  //         uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
-  //         headers: {
-  //           "managerAppToken":  token
-  //         }
-  //       }
-              
-  //       console.log("source updated: ", JSON.stringify(source, null, 2))
-
-  //      _this.setState({ 
-  //         selectedClient: selectedClient,
-  //         source: source
-  //       });
-
-
-  //     }
-
-
-
-  //   })
-
-
-
-  // }
-
-
-  _renderLoading = () => {
-    return (
-        <ActivityIndicator
-            color={brand.colors.primary}
-            size='large'
-            style={styles.ActivityIndicatorStyle}
-        />
-    )
+      return (
+          <ActivityIndicator
+              color={brand.colors.primary}
+              size='large'
+              style={styles.ActivityIndicatorStyle}
+          />
+      )
   }
+
+  onBackArrowPress = () => {
+    console.log("goBack")
+    this.refs['webview'].goBack()
+  }
+
+  onForwardArrowPress = () => {
+    console.log("goForward")
+    this.refs['webview'].goForward()
+  }
+
 
 
   render() {
@@ -289,15 +289,52 @@ class WebViewScreen extends React.Component {
       <View style={{ backgroundColor: '#ffffff', height: '100%' }}>
 
         {this.state.source &&
-        <WebView
-            source={this.state.source}
-            startInLoadingState = {true}
-            //onLoadProgress={e => console.log(e.nativeEvent.progress)}
-            renderLoading={this._renderLoading}
-            injectedJavaScript={ hideSiteNav } 
-            style={{ flex: 1 }}
-          />
+              <WebView
+                ref={'webview'}
+                source={this.state.source}
+
+                //Enable Javascript support
+                //javaScriptEnabled={true}
+                //For the Cache
+                //domStorageEnabled={true}
+
+                startInLoadingState = {true}
+                
+                //onLoadProgress={e => //console.log(e.nativeEvent.progress)}
+                renderLoading={this.showLoadingIndicator}
+                injectedJavaScript = { hideSiteNav } 
+                style={{ flex: 1 }}
+                onNavigationStateChange={this.onNavigationStateChange}
+              />
         }
+
+
+        {this.state.source && (this.state.backArrowEnabled || this.state.forwardArrowEnabled) &&
+          
+          <View style={styles.toolBar}>
+
+
+            <SimpleLineIcon
+                disabled={!this.state.backArrowEnabled}
+                name="arrow-left"
+                size={25}
+                color={brand.colors.gray}
+                style={[styles.toolBarIcon, { paddingLeft: 10 }]}
+                onPress={this.onBackArrowPress}
+            />
+
+            <SimpleLineIcon
+                disabled={!this.state.forwardArrowEnabled}
+                name="arrow-right"
+                size={25}
+                color={brand.colors.gray}
+                style={[styles.toolBarIcon, { paddingRight: 10 }]}
+                onPress={this.onForwardArrowPress}
+            />
+
+          </View>
+        }
+
 
       </View>
 
@@ -319,7 +356,26 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center'
   
-  }
+  },
+
+
+  toolBar: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    alignContent: 'flex-start',
+    borderColor: 'white',
+    backgroundColor: brand.colors.lightGray
+  },
+
+  toolBarIcon: {
+    // width:20,
+    // height:20,
+    // opacity: 0.9
+
+  },
 });
 
 

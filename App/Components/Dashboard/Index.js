@@ -30,6 +30,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons'
 
 import brand from '../../Styles/brand'
 import Styles from './Styles'
@@ -74,7 +75,9 @@ class DashboardScreen extends React.Component {
               message: ""
           },
           userData: this.props.screenProps.state.userData,
-          selectedClient: this.props.screenProps.state.selectedClient
+          selectedClient: this.props.screenProps.state.selectedClient,
+          backArrowEnabled: false,
+          forwardArrowEnabled: false
       }
 
 
@@ -168,94 +171,39 @@ class DashboardScreen extends React.Component {
 
   }
 
-  // NOTE: 4/29/2019 - removed this in lieu of willFocus. This provides the same effect,
-  //  and eliminates the complexity
-  // Catch any global state updates - via screenProps
-  // componentWillReceiveProps(nextProps){
+  onNavigationStateChange = (navState) => {
 
-  //   let selectedClient = nextProps.screenProps.state.selectedClient
-  //   let token = nextProps.screenProps.state.userData.token
-  //   let backgroundColor = nextProps.screenProps.state.backgroundColor
+    console.log("onNavigatinStateChange", navState)
 
-  //   if(backgroundColor !== this.props.screenProps.state.backgroundColor){
+    this.setState({
+        backArrowEnabled: navState.canGoBack,
+        forwardArrowEnabled: navState.canGoForward,
+        source: navState.url,
+    });
 
-  //     this.props.navigation.setParams({ backgroundColor: backgroundColor })
-
-  //   }
-
-
-  //       // ONLY if something has changed
-  //   if(token !== this.state.userData.token){
-
-  //     //console.log("Dashboard picked up new token: ", token)
-      
-  //     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-  //     let source = {
-  //       uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
-  //       headers: {
-  //         "managerAppToken":  token
-  //       }
-  //     }
-      
-  //     console.log("source updated: ", JSON.stringify(source, null, 2))
-
-      
-  //     this.setState({ 
-  //       source: source
-  //     });
-
-  //   }
-
-  //   // ONLY if something has changed
-  //   if(selectedClient !== this.state.selectedClient){
-
-  //     //console.log("Dashboard picked up new selectedClient: ", selectedClient)
-
-  //     this.props.navigation.setParams({ title: selectedClient })
-
-  //     let userData = this.props.screenProps.state.userData
-      
-  //     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-  //     let source = {
-  //       uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
-  //       headers: {
-  //         "managerAppToken":  userData.token
-  //       }
-  //     }
-      
-  //     console.log("source updated: ", JSON.stringify(source, null, 2))
-
-      
-  //     this.setState({ 
-  //       selectedClient: selectedClient,
-  //       source: source
-  //     });
-
-
-  //   }
-
-  // }
+  }
 
 
  
- 
-    _renderLoading = () => {
-    //   return (
+  showLoadingIndicator = () => {
 
-    //     <Progress.Bar progress={0.4} width={700} />
+      return (
+          <ActivityIndicator
+              color={brand.colors.primary}
+              size='large'
+              style={styles.ActivityIndicatorStyle}
+          />
+      )
+  }
 
-    //   )
-        return (
-            <ActivityIndicator
-                color={brand.colors.primary}
-                size='large'
-                style={styles.ActivityIndicatorStyle}
-            />
-        )
-    }
-
+  onBackArrowPress = () => {
+    console.log("goBack")
+    this.refs['webview'].goBack()
+  }
+  onForwardArrowPress = () => {
+    console.log("goForward")
+    this.refs['webview'].goForward()
+  }
 
   render() {
 
@@ -273,6 +221,7 @@ class DashboardScreen extends React.Component {
 
             {this.state.source &&
               <WebView
+                ref={'webview'}
                 source={this.state.source}
 
                 //Enable Javascript support
@@ -283,12 +232,39 @@ class DashboardScreen extends React.Component {
                 startInLoadingState = {true}
                 
                 //onLoadProgress={e => //console.log(e.nativeEvent.progress)}
-                renderLoading={this._renderLoading}
+                renderLoading={this.showLoadingIndicator}
                 injectedJavaScript = { hideSiteNav } 
                 style={{ flex: 1 }}
+                onNavigationStateChange={this.onNavigationStateChange}
               />
+
             }
 
+            {this.state.source && (this.state.backArrowEnabled || this.state.forwardArrowEnabled) &&
+              
+              <View style={styles.toolBar}>
+
+
+                <SimpleLineIcon
+                    disabled={!this.state.backArrowEnabled}
+                    name="arrow-left"
+                    size={25}
+                    color={brand.colors.gray}
+                    style={[styles.toolBarIcon, { paddingLeft: 10 }]}
+                    onPress={this.onBackArrowPress}
+                />
+
+                <SimpleLineIcon
+                    disabled={!this.state.forwardArrowEnabled}
+                    name="arrow-right"
+                    size={25}
+                    color={brand.colors.gray}
+                    style={[styles.toolBarIcon, { paddingRight: 10 }]}
+                    onPress={this.onForwardArrowPress}
+                />
+
+              </View>
+            }
 
           </View>
 
@@ -346,7 +322,26 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center'
   
-  }
+  },
+
+  toolBar: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    alignContent: 'flex-start',
+    borderColor: 'white',
+    backgroundColor: brand.colors.lightGray
+  },
+
+  toolBarIcon: {
+    // width:20,
+    // height:20,
+    // opacity: 0.9
+
+  },
+
 });
 
 //make this component available to the app
