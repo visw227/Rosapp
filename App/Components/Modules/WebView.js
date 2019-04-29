@@ -98,9 +98,16 @@ class WebViewScreen extends React.Component {
 
   }
 
+  componentDidMount() {
+
+    // componentDidMount only fires once
+    // willFocus instead of componentWillReceiveProps
+    this.props.navigation.addListener('willFocus', this.load)
+
+  }
 
 
-  componentDidMount () {
+  load = () => {
 
     let _this = this
 
@@ -173,85 +180,85 @@ class WebViewScreen extends React.Component {
 
 
   // this will catch any global state updates - via screenProps
-  componentWillReceiveProps(nextProps){
+  // componentWillReceiveProps(nextProps){
 
-    let _this = this
-
-
-    this.loadMenuItem(function(item){
+  //   let _this = this
 
 
-      let selectedClient = nextProps.screenProps.state.selectedClient
-      let token = nextProps.screenProps.state.userData.token
-      let backgroundColor = nextProps.screenProps.state.backgroundColor
-
-      console.log(">>>> selectedClient", selectedClient, "token", token)
-
-      if(backgroundColor !== _this.props.screenProps.state.backgroundColor){
-
-        _this.props.navigation.setParams({ backgroundColor: backgroundColor })
-
-      }
+  //   this.loadMenuItem(function(item){
 
 
-          // ONLY if something has changed
-      if(token !== _this.state.userData.token){
+  //     let selectedClient = nextProps.screenProps.state.selectedClient
+  //     let token = nextProps.screenProps.state.userData.token
+  //     let backgroundColor = nextProps.screenProps.state.backgroundColor
 
-        console.log("Modules WebView picked up new token: ", token)
+  //     console.log(">>>> selectedClient", selectedClient, "token", token)
+
+  //     if(backgroundColor !== _this.props.screenProps.state.backgroundColor){
+
+  //       _this.props.navigation.setParams({ backgroundColor: backgroundColor })
+
+  //     }
+
+
+  //         // ONLY if something has changed
+  //     if(token !== _this.state.userData.token){
+
+  //       console.log("Modules WebView picked up new token: ", token)
         
-        let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+  //       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
-        let source = {
-          uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
-          headers: {
-            "managerAppToken":  token
-          }
-        }
+  //       let source = {
+  //         uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
+  //         headers: {
+  //           "managerAppToken":  token
+  //         }
+  //       }
         
-        console.log("source updated: ", JSON.stringify(source, null, 2))
+  //       console.log("source updated: ", JSON.stringify(source, null, 2))
 
         
-        _this.setState({ 
-          source: source
-        });
+  //       _this.setState({ 
+  //         source: source
+  //       });
 
-      }
+  //     }
 
-      // ONLY if something has changed
-      if(selectedClient !== _this.state.selectedClient){
+  //     // ONLY if something has changed
+  //     if(selectedClient !== _this.state.selectedClient){
 
-        console.log("Modules WebView picked up new selectedClient: ", selectedClient)
+  //       console.log("Modules WebView picked up new selectedClient: ", selectedClient)
 
-        _this.props.navigation.setParams({ title: selectedClient })
+  //       _this.props.navigation.setParams({ title: selectedClient })
 
-        let userData = _this.props.screenProps.state.userData
+  //       let userData = _this.props.screenProps.state.userData
         
-        let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+  //       let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
 
-        let source = {
-          uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
-          headers: {
-            "managerAppToken":  token
-          }
-        }
+  //       let source = {
+  //         uri: "https://" + selectedClient + "." + env + item.href + '?isApp=true',
+  //         headers: {
+  //           "managerAppToken":  token
+  //         }
+  //       }
               
-        console.log("source updated: ", JSON.stringify(source, null, 2))
+  //       console.log("source updated: ", JSON.stringify(source, null, 2))
 
-       _this.setState({ 
-          selectedClient: selectedClient,
-          source: source
-        });
-
-
-      }
+  //      _this.setState({ 
+  //         selectedClient: selectedClient,
+  //         source: source
+  //       });
 
 
-
-    })
+  //     }
 
 
 
-  }
+  //   })
+
+
+
+  // }
 
 
   _renderLoading = () => {

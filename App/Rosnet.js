@@ -24,7 +24,7 @@ import Push from 'appcenter-push'
 import config from './app-config.json'
 
 import { Biometrics } from './Helpers/Biometrics';
-import { Remember } from './Helpers/Remember';
+
 
 
 // hide warnings for now...

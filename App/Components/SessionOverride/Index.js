@@ -10,7 +10,8 @@ import {
   Image, 
   ActivityIndicator,
   Modal,
-  Keyboard
+  Keyboard,
+  AsyncStorage
 } from 'react-native'
 import { List, ListItem, Avatar } from 'react-native-elements'
 import brand from '../../Styles/brand'
@@ -50,7 +51,51 @@ class SearchUsers extends React.Component {
 
   })
 
-  // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
+
+  constructor(props) {
+      super(props);
+
+
+      this.state = {
+          sending: false,
+          receiving: false,
+          userData: this.props.screenProps.state.userData,
+          items: [],
+          query: '',
+          showModal: false,
+          impersonatedUser: {
+            commonName: ''
+          },
+          userData: this.props.screenProps.state.userData,
+          selectedClient: this.props.screenProps.state.selectedClient
+      }
+  }
+
+
+  componentDidMount() {
+
+    // componentDidMount only fires once
+    // willFocus instead of componentWillReceiveProps
+    this.props.navigation.addListener('willFocus', this.load)
+
+  }
+
+
+  load = () => {
+
+    this.setState({ 
+      selectedClient: this.props.screenProps.state.selectedClient
+    });
+
+
+    this.props.navigation.setParams({ 
+      title: 'Search ' + this.props.screenProps.state.selectedClient + ' Users', 
+      menuIconClickHandler: this.onMenuIconClick 
+    })
+    
+  }
+
+    // needed a way to perform multiple actions: 1) Dismiss the keyboard, 2) Open the Drawer
   // this is passed in to navigationOptions as menuIconClickHandler
   onMenuIconClick = (navigate) => {
 
@@ -72,63 +117,12 @@ class SearchUsers extends React.Component {
 
 
   }
-
-  constructor(props) {
-      super(props);
-
-
-      this.state = {
-          sending: false,
-          receiving: false,
-          userData: this.props.screenProps.state.userData,
-          items: [],
-          query: '',
-          showModal: false,
-          impersonatedUser: {
-            commonName: ''
-          },
-          userData: this.props.screenProps.state.userData,
-          selectedClient: this.props.screenProps.state.selectedClient
-      }
-  }
-
-  // this will catch an global state updates - via screenProps
-  componentWillReceiveProps(nextProps){
-
-    let selectedClient = nextProps.screenProps.state.selectedClient
-
-    // ONLY if something has changed
-    if(selectedClient !== this.state.selectedClient){
-
-      console.log("Dashboard picked up new selectedClient: ", selectedClient)
-
-      this.props.navigation.setParams({ title: 'Search ' + selectedClient + ' Users' })
-      
-
-
-      this.setState({ 
-        selectedClient: selectedClient
-      });
-
-
-    }
-
-  }
-
-  componentDidMount() {
-
-    this.props.navigation.setParams({ 
-      title: 'Search ' + this.props.screenProps.state.selectedClient + ' Users', 
-      menuIconClickHandler: this.onMenuIconClick 
-    })
-    
-  }
-
+  
   onSelect = (item) => {
 
     let _this = this
 
-    _this.setState({
+    this.setState({
       receiving: true,
       selectedUser: item
     })
@@ -138,68 +132,101 @@ class SearchUsers extends React.Component {
 
     let userData = this.props.screenProps.state.userData
 
-    let request = {
-      userName: item.userName
-    }
 
-    impersonateUser(this.props.screenProps.state.selectedClient, userData.token, request, function(err, response){
+    AsyncStorage.getItem('deviceInfo').then((data) => {
 
-      if(err) {
-        console.log("err", err)
-      }
-      else {
-        console.log("response", response)
+        //console.log("refreshToken loginData", data)
 
-        // get the data for the user we are impersonating
-        let impersonatedUser = Parsers.UserData(response)
-        // we are including password in the userData for the change password screen to have access the current password for validation
-        impersonatedUser.password = "****" // just something so that in Rosnet.js inactive->active state change will consider the user logged in 
+        if(data) {
 
+            deviceInfo = JSON.parse(data)
 
-        getMobileMenuItems(_this.props.screenProps.state.selectedClient, impersonatedUser.token, function(err, menuItems){
-            
-            if(err) {
-                console.log("err - getMobileMenuItems", err)
-                _this.showAlert(err.message)
-
-                _this.setState({
-                  receiving: false
-                })
-
-            }
-            else {
-
-                _this.setState({
-                  //showModal: true,
-                  receiving: false
-                })
-
-                // rename the FontAwesome icons by removing the fa- preface
-                menuItems.forEach(function(item){
-                    item.icon = item.icon.replace('fa-', '')
-                })
-
-                impersonatedUser.menuItems = menuItems
-
-                _this.setState({
-                  impersonatedUser: impersonatedUser
-                }, () => 
-  
-                    // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
-                    _this.doImpersonation(true)
-                )
-
-
+            // the request looks almost like a regular login request because the API demands it for its logic
+            // that reuses LoginFacade.LoginUserApp(req, { true for impersonation})
+            let request = {
+                userName: item.userName, 
+                //password: password,  // not needed here
+                deviceUniqueId: deviceInfo.deviceUniqueId,
+                appInstallId: deviceInfo.appInstallId,
+                deviceType: deviceInfo.deviceType,
+                appVersion: deviceInfo.appVersion,
+                appBuild: deviceInfo.appBuild,
+                systemName: deviceInfo.systemName,
+                systemVersion: deviceInfo.systemVersion,
+                userAgent: deviceInfo.userAgent
             }
 
-        })
+
+            impersonateUser(_this.props.screenProps.state.selectedClient, userData.token, request, function(err, response){
+
+              if(err) {
+                console.log("err", err)
+              }
+              else {
+                console.log("response", response)
+
+                // get the data for the user we are impersonating
+                let impersonatedUser = Parsers.UserData(response)
+                // we are including password in the userData for the change password screen to have access the current password for validation
+                impersonatedUser.password = "****" // just something so that in Rosnet.js inactive->active state change will consider the user logged in 
+
+
+                getMobileMenuItems(_this.props.screenProps.state.selectedClient, impersonatedUser.token, function(err, menuItems){
+                    
+                    if(err) {
+                        console.log("err - getMobileMenuItems", err)
+                        _this.showAlert(err.message)
+
+                        _this.setState({
+                          receiving: false
+                        })
+
+                    }
+                    else {
+
+                        _this.setState({
+                          //showModal: true,
+                          receiving: false
+                        })
+
+                        // rename the FontAwesome icons by removing the fa- preface
+                        menuItems.forEach(function(item){
+                            item.icon = item.icon.replace('fa-', '')
+                        })
+
+                        impersonatedUser.menuItems = menuItems
+
+                        _this.setState({
+                          impersonatedUser: impersonatedUser
+                        }, () => 
+          
+                            // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
+                            _this.doImpersonation(true)
+                        )
+
+
+                    }
+
+                })
 
 
 
-      }
+              }
+
+
+            })
+
+
+
+        }
 
 
     })
+
+
+
+
+
 
 
   }
@@ -217,13 +244,13 @@ class SearchUsers extends React.Component {
             userData: this.state.impersonatedUser, 
             superUser: this.props.screenProps.state.userData, 
             backgroundColor:brand.colors.danger})
-            
+        
+        // reset the stack so that screen header colors turn red
         const resetAction = StackActions.reset({
             index: 0,
             key: null, // this is the trick that allows this to work
-            actions: [NavigationActions.navigate({ routeName: 'DrawerStack',params:{backgroundColor:brand.colors.danger} })],
+            actions: [NavigationActions.navigate({ routeName: 'DrawerStack'})],
         });
-        console.log('<<color',this.props.screenProps.state)
         this.props.navigation.dispatch(resetAction);
 
       }

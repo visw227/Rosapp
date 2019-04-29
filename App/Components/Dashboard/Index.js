@@ -60,33 +60,11 @@ class DashboardScreen extends React.Component {
         onPress={() => navigate.navigation.toggleDrawer() }
     />,
 
-    // headerRight : 
-    //   <View style={{
-    //     alignItems: 'center',
-    //     flexDirection: 'row',
-    //     height: 40,
-    //     paddingRight: 10,
-    //     width: '100%'
-    //   }}>
-
-    //     <FontAwesome
-    //         name="window-restore"
-    //         size={20}
-    //         color={brand.colors.white}
-    //         style={{ marginRight: 10 }}
-    //         onPress={ navigate.navigation.getParam('toggleClientModal') }
-    //     />
-
-    //   </View>,
-
   })
 
 
   constructor(props) {
       super(props);
-
-      // //console.log("Dashboard props.screenProps", JSON.stringify(props.screenProps, null, 2))
-
 
       this.state = {
           sending: false,
@@ -103,82 +81,18 @@ class DashboardScreen extends React.Component {
   }
 
 
+  componentDidMount() {
 
-
-  // this will catch any global state updates - via screenProps
-  componentWillReceiveProps(nextProps){
-
-    let selectedClient = nextProps.screenProps.state.selectedClient
-    let token = nextProps.screenProps.state.userData.token
-    let backgroundColor = nextProps.screenProps.state.backgroundColor
-
-    if(backgroundColor !== this.props.screenProps.state.backgroundColor){
-
-      this.props.navigation.setParams({ backgroundColor: backgroundColor })
-
-    }
-
-
-        // ONLY if something has changed
-    if(token !== this.state.userData.token){
-
-      //console.log("Dashboard picked up new token: ", token)
-      
-      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-      let source = {
-        uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
-        headers: {
-          "managerAppToken":  token
-        }
-      }
-      
-      console.log("source updated: ", JSON.stringify(source, null, 2))
-
-      
-      this.setState({ 
-        source: source
-      });
-
-    }
-
-    // ONLY if something has changed
-    if(selectedClient !== this.state.selectedClient){
-
-      //console.log("Dashboard picked up new selectedClient: ", selectedClient)
-
-      this.props.navigation.setParams({ title: selectedClient })
-
-      let userData = this.props.screenProps.state.userData
-      
-      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-      let source = {
-        uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
-        headers: {
-          "managerAppToken":  userData.token
-        }
-      }
-      
-      console.log("source updated: ", JSON.stringify(source, null, 2))
-
-      
-      this.setState({ 
-        selectedClient: selectedClient,
-        source: source
-      });
-
-
-    }
+    // componentDidMount only fires once
+    // willFocus instead of componentWillReceiveProps
+    this.props.navigation.addListener('willFocus', this.load)
 
   }
 
 
-  componentDidMount() {
+  load = () => {
 
-    // hijack the route here when developing specific features
-    //this.props.navigation.navigate('Password')
-
+    console.log("Dasbboard - load...")
 
     let _this = this 
 
@@ -252,8 +166,78 @@ class DashboardScreen extends React.Component {
 
 
 
-    
   }
+
+  // NOTE: 4/29/2019 - removed this in lieu of willFocus. This provides the same effect,
+  //  and eliminates the complexity
+  // Catch any global state updates - via screenProps
+  // componentWillReceiveProps(nextProps){
+
+  //   let selectedClient = nextProps.screenProps.state.selectedClient
+  //   let token = nextProps.screenProps.state.userData.token
+  //   let backgroundColor = nextProps.screenProps.state.backgroundColor
+
+  //   if(backgroundColor !== this.props.screenProps.state.backgroundColor){
+
+  //     this.props.navigation.setParams({ backgroundColor: backgroundColor })
+
+  //   }
+
+
+  //       // ONLY if something has changed
+  //   if(token !== this.state.userData.token){
+
+  //     //console.log("Dashboard picked up new token: ", token)
+      
+  //     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+
+  //     let source = {
+  //       uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
+  //       headers: {
+  //         "managerAppToken":  token
+  //       }
+  //     }
+      
+  //     console.log("source updated: ", JSON.stringify(source, null, 2))
+
+      
+  //     this.setState({ 
+  //       source: source
+  //     });
+
+  //   }
+
+  //   // ONLY if something has changed
+  //   if(selectedClient !== this.state.selectedClient){
+
+  //     //console.log("Dashboard picked up new selectedClient: ", selectedClient)
+
+  //     this.props.navigation.setParams({ title: selectedClient })
+
+  //     let userData = this.props.screenProps.state.userData
+      
+  //     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+
+  //     let source = {
+  //       uri: "https://" + selectedClient + "." + env + "/home/appdash?isApp=true",
+  //       headers: {
+  //         "managerAppToken":  userData.token
+  //       }
+  //     }
+      
+  //     console.log("source updated: ", JSON.stringify(source, null, 2))
+
+      
+  //     this.setState({ 
+  //       selectedClient: selectedClient,
+  //       source: source
+  //     });
+
+
+  //   }
+
+  // }
+
 
  
  

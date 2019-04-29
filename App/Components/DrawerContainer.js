@@ -22,7 +22,15 @@ export default class DrawerContainer extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
+
+    // componentDidMount only fires once
+    // willFocus instead of componentWillReceiveProps
+    this.props.navigation.addListener('willFocus', this.load)
+
+  }
+
+  load = () => {
 
 
     if (this.props.screenProps.state.superUser) {
@@ -30,19 +38,6 @@ export default class DrawerContainer extends React.Component {
     }else {
       this.setState({backgroundColor:brand.colors.primary})
     }
-
-  }
-
-  // this will catch any global state updates - via screenProps
-  componentWillReceiveProps(nextProps){
-
-      let backgroundColor = nextProps.screenProps.state.backgroundColor
-
-      if(backgroundColor !== this.props.screenProps.state.backgroundColor){
-
-        this.setState({backgroundColor : backgroundColor})
-
-      }
 
   }
 
@@ -111,21 +106,26 @@ export default class DrawerContainer extends React.Component {
 
   undoImpersonation = () => {
 
-      let userData = this.props.screenProps.state.superUser
+    let userData = this.props.screenProps.state.superUser
 
-      this.setState({backgroundColor:brand.colors.primary})
+    this.setState({backgroundColor:brand.colors.primary})
 
-      this.props.navigation.setParams({backgroundColor : brand.colors.primary})
+    this.props.navigation.setParams({backgroundColor : brand.colors.primary})
 
-      // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
-      this.props.screenProps._globalStateChange( { action: "undo-session-override", userData: userData })
+    // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
+    this.props.screenProps._globalStateChange( { 
+      action: "undo-session-override", 
+      userData: userData, 
+      backgroundColor:brand.colors.primary 
+    })
 
-      const resetAction = StackActions.reset({
+    // reset the stack so that screen header colors from red back to blue
+    const resetAction = StackActions.reset({
         index: 0,
         key: null, // this is the trick that allows this to work
         actions: [NavigationActions.navigate({ routeName: 'DrawerStack'})],
     });
-    console.log('<<color',this.props.screenProps.state)
+
     this.props.navigation.dispatch(resetAction);
   
   
