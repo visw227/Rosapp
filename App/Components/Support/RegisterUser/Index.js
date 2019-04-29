@@ -258,7 +258,7 @@ class RegisterUser extends React.Component {
             {!this.state.userAskedEnterEmailAddress &&
 
               <Text style={styles.inputLabel} >
-                We will use {this.state.email} to create your Rosenet Support profile.
+                We will use {this.state.email} to create your Rosnet Support profile.
               </Text>
 
             }
