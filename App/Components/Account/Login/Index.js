@@ -206,98 +206,44 @@ class Login extends Component {
         })
 
 
-        console.log("submitting...", this.state.userName, this.state.password)
-
-        let request = {
-			userName: this.state.userName, 
-            password: this.state.password, 
-            deviceInfo: this.state.deviceInfo
-        }
-        
-        // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
-        //AsyncStorage.setItem('loginData', JSON.stringify( { userName: this.state.userName, password: this.state.password }))
+        // this provides shared logging via screenProps
+        this.props.screenProps._globalLogger(true, "Login", "Attempt", { userName: this.state.userName, password: "******" })
 
 
-        if(this.state.userName === 'demo') {
+        Authorization.UserLogin(this.state.userName, this.state.password, function(err, resp){
 
-            // FAKED for demoing...
-            setTimeout(() => {
-        
-                const FAKE_TOKEN = 'FAKE-TOKEN'
+            if(err) {
+                _this.showAlert(err.message)
 
-                let userData = {
-                    token: FAKE_TOKEN,
-                    userId: 0,
-                    userName: this.state.userName,
-                    commonName: "Demo User",
-                    password: this.state.password,
-                    sites: [ "AAG", "DOHERTY" ],
-                    isRosnetEmployee: false,
-                    menuItems: fakedMenu,
-                    isRosnetEmployee: true,
-                    mustChangePassword: true,
-                    canChangePassword: true
-                }
-
-                let redirect = null
-                if(userData.mustChangePassword) {
-                    redirect = "PasswordChangeRequiredStack"
-                }
-                
-                _this.onLoginResponse(userData, redirect)
-
-                _this.setState({
-                    sending: false
-                })
-
-            }, 1000);
-
-        }
-        else {
+                // this provides shared logging via screenProps
+                _this.props.screenProps._globalLogger(false, "Login", "Error", err)
 
 
-            // this provides shared logging via screenProps
-            this.props.screenProps._globalLogger(true, "Login", "Attempt", { userName: this.state.userName, password: "******" })
-
-
-            Authorization.UserLogin(this.state.userName, this.state.password, function(err, resp){
-
-                if(err) {
-                    _this.showAlert(err.message)
+            }
+            else if(resp.userData){
+                if(resp.userData) {
 
                     // this provides shared logging via screenProps
-                    _this.props.screenProps._globalLogger(false, "Login", "Error", err)
+                    _this.props.screenProps._globalLogger(true, "Login", "Successful", resp)
 
 
-                }
-                else if(resp.userData){
-                    if(resp.userData) {
-
-                        // this provides shared logging via screenProps
-                        _this.props.screenProps._globalLogger(true, "Login", "Successful", resp)
-
-
-                        let redirect = null
-                        if(resp.userData.mustChangePassword) {
-                            redirect = "PasswordChangeRequiredStack"
-                        }
-
-
-                        _this.onLoginResponse(resp.userData, redirect)
-
+                    let redirect = null
+                    if(resp.userData.mustChangePassword) {
+                        redirect = "PasswordChangeRequiredStack"
                     }
+
+
+                    _this.onLoginResponse(resp.userData, redirect)
+
                 }
-                else {
-                    _this.showAlert("Unhandled Error")
-                }
+            }
+            else {
+                _this.showAlert("Unhandled Error")
+            }
 
-            })
+        })
 
-        }
-
-
-
-
+   
     }
 
 
