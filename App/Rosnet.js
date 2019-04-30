@@ -1114,7 +1114,23 @@ export default class App extends React.Component {
 
       let _this = this
 
+
+      
+
       if(this.state.userData) {
+
+        let userData = this.state.userData
+      let token = this.state.userData.token
+      let client  = this.state.selectedClient
+
+      let request = {
+
+         token : userData.token,
+         client : client,
+         userName : userData.userName,
+         includeHidden : true
+
+      }
 
       let alertCount = GetNotifications (request ,function(err,resp) {
           if (err){
