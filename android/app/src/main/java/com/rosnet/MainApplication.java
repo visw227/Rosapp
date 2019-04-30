@@ -3,6 +3,7 @@ package com.rosnet;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.google.firebase.FirebaseApp;
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
 import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
@@ -16,6 +17,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.imagepicker.ImagePickerPackage; 
+import com.microsoft.appcenter.push.Push;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +64,9 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    Push.setSenderId("1016195815770");
+    FirebaseApp.initializeApp(this);
+    Push.enableFirebaseAnalytics(getApplicationContext());
     SoLoader.init(this, /* native exopackage */ false);
   }
 }
