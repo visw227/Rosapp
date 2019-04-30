@@ -263,7 +263,7 @@ export class LoginSelectClient extends React.Component {
                         marginTop: 10
                     }}>
                         <Text style={styles.message}>
-                          {this.state.selectedClient} is currently unavailable. Please select a different site and login again.
+                          {this.state.selectedClient} is currently unavailable. Please select a different site.
                         </Text>
                     </View>
                   
