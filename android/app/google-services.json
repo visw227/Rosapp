@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1016195815770",
+    "firebase_url": "https://rosnet-db2a5.firebaseio.com",
+    "project_id": "rosnet-db2a5",
+    "storage_bucket": "rosnet-db2a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016195815770:android:0bd4eff2df36453a",
+        "android_client_info": {
+          "package_name": "com.rosnet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1016195815770-gh292jsbru5grdho7dtnc97a0oqa2lj8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHVGe4DrSmVqPrMG3g16QT1VdMycBlPKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1016195815770-gh292jsbru5grdho7dtnc97a0oqa2lj8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

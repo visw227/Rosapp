@@ -101,7 +101,7 @@ class AlertsScreen extends React.Component {
 
          token : userData.token,
          client : client,
-         userId : userData.userId,
+         userName : userData.userName,
          includeHidden : true
 
       }
