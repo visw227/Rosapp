@@ -79,6 +79,8 @@ class LaunchScreen extends React.Component {
 
   componentDidMount() {
 
+      //AsyncStorage.setItem('selectedClient', 'MAKEITBREAK')
+
 
       let _this = this
 
@@ -86,18 +88,20 @@ class LaunchScreen extends React.Component {
 
       this.getDeviceInfo(function(deviceInfo){
 
-        console.log("LaunchScreen - deviceInfo: ", JSON.stringify(deviceInfo, null, 2))
+        //console.log("LaunchScreen - deviceInfo: ", JSON.stringify(deviceInfo, null, 2))
 
       })
 
-
-
+      //*********************************************************
+      // load all the data in storage back into the global state
+      //*********************************************************
+      
       AsyncStorage.getItem('userData').then((data) => {
 
         let userData = null
         let routeName = ''
 
-        console.log("LaunchScreen - userData: ", data)
+        //console.log("LaunchScreen - userData: ", data)
 
         if(data) {
 
@@ -113,9 +117,9 @@ class LaunchScreen extends React.Component {
 
                 // just in case the user's selected site is no longer in their list of sites
                 // reset the selectedClient back to the first in their list
-                if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
-                  selectedClient = userData.sites[0]
-                }
+                // if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
+                //   selectedClient = userData.sites[0]
+                // }
 
             }
             else {

@@ -59,31 +59,23 @@ class Login extends Component {
             password: '',
             userData: null,
             isQA: this.props.screenProps.state.isQA,
-            deviceInfo: null
+            //deviceInfo: null
         }
 
     }
     
     componentDidMount() {
 
+        // componentDidMount only fires once
+        // willFocus will cause the biometrics challenge to display anytime this screen is displayed
+        // this will happen many times during the use of the app
+        this.props.navigation.addListener('willFocus', this.load)
+        
+    }
+
+    load = () => {
+
         let _this = this
-
-        // this is set in LaunchScreen.js
-        AsyncStorage.getItem('deviceInfo').then((data) => {
-
-            console.log("LoginForm deviceInfo", data)
-
-            if(data) {
-
-                let deviceInfo = JSON.parse(data)
-
-                _this.setState({
-                    deviceInfo: deviceInfo
-                })
-            }
-
-        })
-
 
         AsyncStorage.getItem('userData').then((data) => {
 
@@ -116,11 +108,11 @@ class Login extends Component {
 
     }
 
-    componentWillUnmount () {
+    // componentWillUnmount () {
 
-        this.keyboardWillShowSub.remove();
-        this.keyboardWillHideSub.remove();
-    }
+    //     this.keyboardWillShowSub.remove();
+    //     this.keyboardWillHideSub.remove();
+    // }
 
 
     keyboardWillShow = (event) => {
@@ -218,6 +210,22 @@ class Login extends Component {
                 // this provides shared logging via screenProps
                 _this.props.screenProps._globalLogger(false, "Login", "Error", err)
 
+                // if the login was successful, but selectedSite is down, allow the user to pick another site
+                if(err.userData) {
+
+                    // this shares the persisted userData to the App-Rosnet.js wrapper
+                    //_this.props.screenProps._globalStateChange( { action: "login", userData: err.userData })
+
+                    // dont login, but share the user's sites with this screen
+                    _this.props.navigation.navigate('LoginSelectClient', { 
+                        userName: _this.state.userName, 
+                        password: _this.state.password, 
+                        sites: err.userData.sites,
+                        selectedClient: err.selectedClient
+                    })
+
+                }
+
 
             }
             else if(resp.userData){
@@ -233,7 +241,7 @@ class Login extends Component {
                     }
 
 
-                    _this.onLoginResponse(resp.userData, redirect)
+                    _this.onLoginResponse(resp, redirect)
 
                 }
             }
@@ -248,36 +256,13 @@ class Login extends Component {
 
 
 
-    onLoginResponse = (userData, redirect) => {
+    onLoginResponse = (resp, redirect) => {
 
         //console.log("userData passed back to login screen:", JSON.stringify(userData, null, 2))
 
         // this shares the persisted userData to the App-Rosnet.js wrapper
-        this.props.screenProps._globalStateChange( { action: "login", userData: userData })
+        this.props.screenProps._globalStateChange( { action: "login", userData: resp.userData, selectedClient: resp.selectedClient })
 
-
-        AsyncStorage.getItem('selectedClient').then((selectedClient) => {
-
-            if(selectedClient) {
-
-                // just in case the user's selected site is no longer in their list of sites
-                // reset the selectedClient back to the first in their list
-                if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
-                  selectedClient = userData.sites[0]
-                }
-
-
-            }
-            else {
-                if(userData.sites.length > 0) {
-                  selectedClient = userData.sites[0]
-                }
-            }
-
-            // tell everyone listening about the selectedClient
-            this.props.screenProps._globalStateChange( { action: "login", selectedClient: selectedClient })
-
-        })
 
         if(redirect) {
 
@@ -292,7 +277,7 @@ class Login extends Component {
             this.props.navigation.dispatch(resetAction);
 
         }
-        else if(userData && userData.token) {
+        else if(resp.userData && resp.userData.token) {
 
             let stackName = 'DrawerStack'
 
@@ -327,6 +312,7 @@ class Login extends Component {
         this.props.navigation.navigate('ForgotPassword', { userName: this.state.userName })
 
     }
+
 
     render() {
 
@@ -399,11 +385,11 @@ class Login extends Component {
                         }
 
 
-                            <TouchableOpacity disabled={this.state.sending} 
-                                style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
-                                onPress={this.onLoginPress}>
-                                <Text  style={ this.state.sending ? styles.buttonDisabledText   : styles.buttonText }>LOGIN</Text>
-                            </TouchableOpacity> 
+                        <TouchableOpacity disabled={this.state.sending} 
+                            style={ this.state.sending ? styles.buttonDisabledContainer   : styles.buttonContainer }
+                            onPress={this.onLoginPress}>
+                            <Text  style={ this.state.sending ? styles.buttonDisabledText   : styles.buttonText }>LOGIN</Text>
+                        </TouchableOpacity> 
 
                         <View>
                             <Text 
@@ -413,6 +399,8 @@ class Login extends Component {
                                 Forgot password?
                             </Text>
                         </View>
+
+
                     </View>
                 </View>
          

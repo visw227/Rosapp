@@ -157,7 +157,7 @@ class DashboardScreen extends React.Component {
 
         _this.setState({
           userData: userData,
-          source: source
+          source: source // DONT change this in onNavigationStateChange
         })
 
       }
@@ -178,8 +178,22 @@ class DashboardScreen extends React.Component {
     this.setState({
         backArrowEnabled: navState.canGoBack,
         forwardArrowEnabled: navState.canGoForward,
-        source: navState.url,
     });
+
+    // hijack the current item and save it with a new title and url - just in case app launches from here 
+    // let item = {
+    //   name: navState.title,
+    //   url: navState.url,
+    //   deepLink: true // only set when hijacking the url by moving around in the web view
+    // }
+
+    // AsyncStorage.setItem('selectedMenuItem', JSON.stringify(item))
+
+
+    // this.props.navigation.setParams({ 
+    //   title: navState.title
+    // });
+
 
   }
 

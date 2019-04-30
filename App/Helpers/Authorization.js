@@ -97,6 +97,7 @@ export var Authorization = {
 
         let deviceInfo = null
 
+
         AsyncStorage.getItem('deviceInfo').then((data) => {
 
             //console.log("refreshToken loginData", data)
@@ -118,7 +119,7 @@ export var Authorization = {
                     userAgent: deviceInfo.userAgent
                 }
 
-                console.log("login request", JSON.stringify(request, null, 2))
+                //console.log("login request", JSON.stringify(request, null, 2))
                 userLogin(request, function(err, response){        
 
                     if(err) {
@@ -136,19 +137,12 @@ export var Authorization = {
                     }
                     else {
 
-                        //console.log("userLogin success:", response)
 
                         if(response && response.SecurityToken) {
 
                             // this repackages the response a bit...
                             //let userData = parseUser(response)
                             let userData = Parsers.UserData(response)
-
-                            // used for testing Support-Zendesk intergration
-                            // if(userData.email === 'djohnson@rosnet.com') {
-                            //     userData.email = null
-                            //     userData.userId = 9999999
-                            // }
 
                             // we are including password in the userData for the change password screen to have access the current password for validation
                             userData.password = password 
@@ -158,30 +152,69 @@ export var Authorization = {
                                 userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
                             }
 
-                            getMobileMenuItems(userData.sites[0], userData.token, function(err, menuItems){
-                                
+                            let selectedClient = ""
 
-                                if(err) {
-                                    //console.log("err - getMobileMenuItems", err)
+                            AsyncStorage.getItem('selectedClient').then((client) => {
 
-                                    callback( { message: "Your login was successful, but we were unable to access your Rosnet menu options for " + userData.sites[0] + ". The exact error was: '" + err.message + "'" } )
+                                // if have a selectedClient in local storage
+                                if(client) {
+
+                                    selectedClient = client
+
+                                    // just in case the user's selected site is no longer in their list of sites
+                                    // reset the selectedClient back to the first in their list
+                                    // if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
+                                    //     selectedClient = userData.sites[0]
+                                    // }
+
+
                                 }
+                                // otherwise, default to the first site in their list
                                 else {
-
-                                    // rename the FontAwesome icons by removing the fa- preface
-                                    menuItems.forEach(function(item){
-                                        item.icon = item.icon.replace('fa-', '')
-                                    })
-
-                                    userData.menuItems = menuItems
-
-                                    // return the userData and redirect if required
-                                    callback(null, { userData: userData })
-
+                                    if(userData.sites.length > 0) {
+                                        selectedClient = userData.sites[0]
+                                    }
                                 }
+
+
+                                console.log("------------------------- MENU -----------------------------")
+                                console.log("getting menu items for site: ", selectedClient)
+
+                                getMobileMenuItems(selectedClient, userData.token, function(err, menuItems){
+                                    
+
+                                    if(err) {
+                                        //console.log("err - getMobileMenuItems", err)
+
+                                        let message = "Your login was successful, but we were unable to access your Rosnet menu options for " + selectedClient + "." //The exact error was: '" + err.message + "'"
+
+                                        // go ahead and return the userData, so that the user can pick another site
+                                        callback( { userData: userData, selectedClient: selectedClient, message: message } )
+                                    
+                                    }
+                                    else {
+
+                                        // rename the FontAwesome icons by removing the fa- preface
+                                        menuItems.forEach(function(item){
+                                            item.icon = item.icon.replace('fa-', '')
+                                        })
+
+                                        userData.menuItems = menuItems
+
+                                        // return the userData and redirect if required
+                                        callback(null, { userData: userData, selectedClient: selectedClient })
+
+                                    }
+
+
+                                })
+                                
 
 
                             })
+
+
+
 
 
                         }

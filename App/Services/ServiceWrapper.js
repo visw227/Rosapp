@@ -116,7 +116,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             // the user's token has expired
             console.log(">>> the user request was unauthorized")
-            console.log("xhr.response", xhr._response)
+            console.log("xhr", xhr)
 
             callback({ status: xhr.status, message: message }, null)
 

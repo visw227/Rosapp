@@ -92,6 +92,8 @@ LockScreenStack.navigationOptions = ({ navigation, screenProps }) => {
 
 import LoginScreen from './Components/Account/Login/Index'
 import ForgotPasswordScreen from './Components/Account/ForgotPassword/Index'
+import LoginSelectClientScreen from './Components/Account/Login/SelectClient'
+
 
 
 let LoginStack = createStackNavigator({
@@ -100,7 +102,7 @@ let LoginStack = createStackNavigator({
         
         screen: LoginScreen,
 
-        navigationOptions: ({ navigation }) => ({
+        navigationOptions: ({ navigation , screenProps}) => ({
             header: null
         })
             
@@ -109,13 +111,23 @@ let LoginStack = createStackNavigator({
         
         screen: ForgotPasswordScreen,
 
-        navigationOptions: ({ navigation }) => ({
+        navigationOptions: ({ navigation, screenProps }) => ({
             title: 'Forgot Password'
         })
             
         
     },
+    // this was added for QA so that we could select another client when our selected one is down
+    LoginSelectClient: { 
+        
+        screen: LoginSelectClientScreen,
 
+        navigationOptions: ({ navigation, screenProps }) => ({
+            title: 'Choose a Site'
+        })
+            
+        
+    },
 
 }, {
     initialRouteName: 'Login',
@@ -649,25 +661,7 @@ let PushNotificationsPermissionStack = createStackNavigator({ PushNotificationsS
 // });
 
 
-// *******************************************************************************
-// Client Selection
-// *******************************************************************************
 
-import ClientSelectionScreen from './Components/ClientSelection/Index'
-
-let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
-
-// let PushNotificationsPermissionStack = createStackNavigator({ 
-//   PushNotifications: {
-//     screen: PushNotificationsScreen,
-//     // to hide the back title for any child screens, it must be set to null here
-//     navigationOptions: ({ navigation }) => ({
-//       headerBackTitle: null
-//     }),
-//   },
-
-
-// });
 
 
 // *******************************************************************************
@@ -678,17 +672,12 @@ import SessionOverrideScreen from './Components/SessionOverride/Index'
 
 let SessionOverrideStack = createStackNavigator({ SessionOverrideScreen });
 
-// let PushNotificationsPermissionStack = createStackNavigator({ 
-//   PushNotifications: {
-//     screen: PushNotificationsScreen,
-//     // to hide the back title for any child screens, it must be set to null here
-//     navigationOptions: ({ navigation }) => ({
-//       headerBackTitle: null
-//     }),
-//   },
 
-
-// });
+// *******************************************************************************
+// Client Selection - USED IN 2 stacks
+// *******************************************************************************
+import ClientSelectionScreen from './Components/ClientSelection/Index'
+let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
 
 
 
@@ -725,48 +714,17 @@ const DrawerStack = createDrawerNavigator({
   
     navigationOptions: ({ navigation }) => ({
 
-      // drawerLabel: 'Availability',
-      // drawerIcon: ({ tintColor }) => (
-      //   <Image
-      //     source={require('./Images/TabBar/calendar-7.png')}
-      //     style={[styles.icon, {tintColor: tintColor}]}
-      //   />
-      // ),
 
     })
 
   },
 
 
-  // About: { 
-  //   screen: AboutStack,
-  
-  //   navigationOptions: ({ navigation }) => ({
-
-  //     // drawerLabel: 'Availability',
-  //     // drawerIcon: ({ tintColor }) => (
-  //     //   <Image
-  //     //     source={require('./Images/TabBar/calendar-7.png')}
-  //     //     style={[styles.icon, {tintColor: tintColor}]}
-  //     //   />
-  //     // ),
-
-  //   })
-
-  // },
 
   Account: { 
     screen: AccountStack,
   
     navigationOptions: ({ navigation }) => ({
-
-      // drawerLabel: 'Availability',
-      // drawerIcon: ({ tintColor }) => (
-      //   <Image
-      //     source={require('./Images/TabBar/calendar-7.png')}
-      //     style={[styles.icon, {tintColor: tintColor}]}
-      //   />
-      // ),
 
     })
 
@@ -779,14 +737,6 @@ const DrawerStack = createDrawerNavigator({
   
     navigationOptions: ({ navigation }) => ({
 
-      // drawerLabel: 'Availability',
-      // drawerIcon: ({ tintColor }) => (
-      //   <Image
-      //     source={require('./Images/TabBar/calendar-7.png')}
-      //     style={[styles.icon, {tintColor: tintColor}]}
-      //   />
-      // ),
-
     })
 
   },
@@ -797,14 +747,6 @@ const DrawerStack = createDrawerNavigator({
     screen: StaffListStack,
   
     navigationOptions: ({ navigation }) => ({
-
-      // drawerLabel: 'Availability',
-      // drawerIcon: ({ tintColor }) => (
-      //   <Image
-      //     source={require('./Images/TabBar/calendar-7.png')}
-      //     style={[styles.icon, {tintColor: tintColor}]}
-      //   />
-      // ),
 
     })
 
@@ -817,14 +759,6 @@ const DrawerStack = createDrawerNavigator({
   
     navigationOptions: ({ navigation }) => ({
 
-      // drawerLabel: 'Availability',
-      // drawerIcon: ({ tintColor }) => (
-      //   <Image
-      //     source={require('./Images/TabBar/calendar-7.png')}
-      //     style={[styles.icon, {tintColor: tintColor}]}
-      //   />
-      // ),
-
     })
 
   },
@@ -833,14 +767,6 @@ const DrawerStack = createDrawerNavigator({
     screen: SessionOverrideStack,
   
     navigationOptions: ({ navigation }) => ({
-
-      // drawerLabel: 'Availability',
-      // drawerIcon: ({ tintColor }) => (
-      //   <Image
-      //     source={require('./Images/TabBar/calendar-7.png')}
-      //     style={[styles.icon, {tintColor: tintColor}]}
-      //   />
-      // ),
 
     })
 

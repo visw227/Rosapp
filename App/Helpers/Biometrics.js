@@ -58,7 +58,7 @@ export var Biometrics = {
 
             }
 
-            console.log("SHOW LOCK", JSON.stringify(result, null, 2))
+            //console.log("SHOW LOCK", JSON.stringify(result, null, 2))
 
             callback(result)
 

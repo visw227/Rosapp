@@ -80,8 +80,6 @@ class LockScreen extends React.Component {
 
 
   componentDidMount() {
-
-    console.log("componentDidMount...")
     
     // componentDidMount only fires once
     // willFocus will cause the biometrics challenge to display anytime this screen is displayed
@@ -152,8 +150,6 @@ class LockScreen extends React.Component {
 
   load = () => {
 
-    console.log(">>> LOAD")
-    
     // this provides shared logging via screenProps
     this.props.screenProps._globalLogger(true, "LockScreen", "Opened", {})
 
@@ -252,10 +248,10 @@ class LockScreen extends React.Component {
         let screen = 'Dashboard'
         AsyncStorage.getItem('lastScreen').then((lastScreen) => {
 
-            console.log('lastScreen', lastScreen)
+            console.log('continuing at lastScreen', lastScreen)
 
             // dont get stuck on one of these screens
-            if(lastScreen && lastScreen !== 'LockScreen' && lastScreen != 'Login' && lastScreen != 'ForgotPassword') {
+            if(lastScreen && lastScreen !== 'LockScreen' && lastScreen !== 'Login' && lastScreen !== 'ForgotPassword' && lastScreen !== 'LoginSelectClient') {
                 screen = lastScreen
             }
 
