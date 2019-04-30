@@ -16,6 +16,9 @@ import NavigationService from './Helpers/NavigationService';
 
 import { generateRandomNumber, checkForNotifications } from './Services/Background';
 
+import { GetNotifications } from './Services/Account';
+
+
 import { Authorization } from './Helpers/Authorization';
 // import { Logger } from './Helpers/Logger';
 
@@ -477,7 +480,7 @@ let TabStack = createBottomTabNavigator({
                 minWidth: 20, // this keeps it round with borderRadius=10
                 justifyContent: 'center', 
                 alignItems: 'center' }}>
-              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.alertCount}</Text>
+              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>screenProps.state.alertCount</Text>
             </View>
             }
      
@@ -923,7 +926,8 @@ export default class App extends React.Component {
             switch4 : null
           },
           isQA: false,
-          logData: []
+          logData: [],
+          notificationCount : 0
 
         }
 
@@ -945,6 +949,12 @@ export default class App extends React.Component {
 
         //console.log("...root componentDidMount")
         AppState.addEventListener('change', this.onAppStateChange);
+
+        // let userData = this.props.screenProps.state.userData
+        // let token = this.props.screenProps.state.userData.token
+        // let client  = this.props.screenProps.state.selectedClient
+  
+  
 
 
         //console.log("App-Rosnet config", config)
@@ -1106,7 +1116,25 @@ export default class App extends React.Component {
 
       if(this.state.userData) {
 
-        let alertCount = generateRandomNumber(0,15)
+      let alertCount = GetNotifications (request ,function(err,resp) {
+          if (err){
+            console.log ('Error siteSettings',err)
+          }
+          else {
+            console.log('response',resp)
+            
+    
+              // resp.forEach(element => {
+              //   title = element.Title
+              //   text = element.PushText
+              // });
+              //console.log('modifiedresp',alertTypes)
+    
+             return resp.length
+            
+          }
+    
+        })
         let messageCount = generateRandomNumber(0,3)
 
 
