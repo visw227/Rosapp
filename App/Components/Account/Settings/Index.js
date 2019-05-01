@@ -15,7 +15,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 
 import brand from '../../../Styles/brand'
-import { alertTypes,alertSubscription } from '../../../Services/Account';
+import { alertTypes,alertSubscription,retrieveSubscription,backfillSubscription} from '../../../Services/Account';
 
 
 import Styles from './Styles'
@@ -109,10 +109,10 @@ class Settings extends React.Component {
           alerttypeids: [],
           Text : 'Stafflinq',
           options : [],
-          switch1 : true,
-          switch2 : false,
-          switch3 : false,
-          switch4 :true,
+          // switch1 : true,
+          // switch2 : false,
+          // switch3 : false,
+          // switch4 :true,
           alertTypeID : null,
           desc:null,
           push:null,
@@ -172,45 +172,111 @@ class Settings extends React.Component {
     var client = this.props.screenProps.state.selectedClient
     var token = this.props.screenProps.state.userData.token
 
+    var request = {
+      client : client,
+      token:token,
+      userName : this.props.screenProps.state.userData.userName
+    }
 
-    // alertTypes (client,token ,function(err,resp) {
-    //   if (err){
-    //     console.log ('Error siteSettings',err)
-    //   }
-    //   else {
-    //     console.log('response',resp)
-    //     var alertTypes = []
-    //     var alertyTypeId = []
 
-    //       resp.forEach(element => {
-    //         if(element.alert_category.toLowerCase() === 'stafflinq'){
-    //           alertTypes.push(element.alert_name)
-    //           alertyTypeId.push(element.alert_type_id)
-    //         }
-    //       });
-    //       console.log('modifiedresp',alertTypes)
+    retrieveSubscription(request,function(err,resp){
+      if (err){
+        console.log(err)
+      }
 
-    //       _this.setState ({
-    //         alertOptions : alertTypes,
-    //         alerttypeids : alertyTypeId
-    //       }, ()=> console.log('AlertState',_this.state.alertOptions))
+      else if (resp.length < 4 ){
+        backfillSubscription(request,function(err,resp){
+          if (err){
+            console.log(err)
+          }
+          else   retrieveSubscription(request,function(err,resp){
+            resp.forEach(element => {
+              if(element.Alert_type_ID === 1 ){
+                _this.setState({
+                  switch1: element.Notify_by_Push ===1 ? true : false
+                })
+              }
+              if(element.Alert_type_ID === 2 ){
+                _this.setState({
+                  switch2: element.Notify_by_Push ===1 ? true : false
+                })
+              }
+              if(element.Alert_type_ID === 3 ){
+                _this.setState({
+                  switch3: element.Notify_by_Push ===1 ? true : false
+                })
+              }
+              if(element.Alert_type_ID === 4 ){
+                _this.setState({
+                  switch4: element.Notify_by_Push ===1 ? true : false
+                })
+              }
+              
+            });
+          })
+        })
+      }
+      else   {
+        resp.forEach(element => {
+          if(element.Alert_type_ID === 1 ){
+            _this.setState({
+              switch1: element.Notify_by_Push ===1 ? true : false
+            })
+          }
+          if(element.Alert_type_ID === 2 ){
+            _this.setState({
+              switch2: element.Notify_by_Push ===1 ? true : false
+            })
+          }
+          if(element.Alert_type_ID === 3 ){
+            _this.setState({
+              switch3: element.Notify_by_Push ===1 ? true : false
+            })
+          }
+          if(element.Alert_type_ID === 4 ){
+            _this.setState({
+              switch4: element.Notify_by_Push ===1 ? true : false
+            })
+          }
+          
+        });
+        console.log(resp)
+      }
+    })
+
+
+    alertTypes (client,token ,function(err,resp) {
+      if (err){
+        console.log ('Error siteSettings',err)
+      }
+      else {
+        console.log('response',resp)
+        var alertTypes = []
+        var alertyTypeId = []
+
+          resp.forEach(element => {
+            if(element.alert_category.toLowerCase() === 'stafflinq'){
+              alertTypes.push(element.alert_name)
+              alertyTypeId.push(element.alert_type_id)
+            }
+          });
+          console.log('modifiedresp',alertTypes)
+
+          _this.setState ({
+            alertOptions : alertTypes,
+            alerttypeids : alertyTypeId
+          }, ()=> console.log('AlertState',_this.state.alertOptions))
 
         
-    //   }
+      }
 
-    //   })
+      })
       
 
 
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const {Text} = this.state;
-    console.log('<<<Component Did Update is called',prevState)
-    if(Text !== prevState.Text){
-        console.log('update scrollTop!');
-    }
-  }
+ 
 
   toggleSwitch = (val) => {
 
@@ -226,8 +292,6 @@ class Settings extends React.Component {
 
 
   render() {
-    //alert('render is called')
-
     console.log('<<state',this.state)
     var optionsList = []
       
@@ -244,7 +308,7 @@ class Settings extends React.Component {
            //   selected: true
            // },
            {
-             type: "Push Notification",
+             type: this.state.alertOptions[i],
              id: this.state.alerttypeids[i],
              selected: true
            },
@@ -286,62 +350,13 @@ class Settings extends React.Component {
                 }
                 
               >
-                <TouchableHighlight onPress= {()=> this.setState({Text:'Rosnet'})}>
-                  <Text style={Styles.sectionHeader}>{this.state.Text}</Text>
-                </TouchableHighlight>
                 
-
-                <View>
-                <View>
-                  <View style={Styles.list}>
-                    <Text style={{fontSize:20,marginLeft:20}}>Time Off Request</Text>
-                    <View style={{alignItems:'flex-end',flex:1}}>
-                    <Switch style={{marginRight:10}} value={this.state.switch1}></Switch>
-                    </View>
-                    
-                  </View>
-                  <View style ={{borderBottomColor:'#DDDDDD',borderBottomWidth:2}}></View>
-                  </View>
-                  <View>
-                  <View style={Styles.list}>
-                    <Text style={{fontSize:20,marginLeft:20}}>Availability change Request</Text>
-                    <View style={{alignItems:'flex-end',flex:1}}>
-                    <Switch style={{marginRight:10}} value={this.state.switch2}></Switch>
-                    </View>
-                    
-                  </View>
-                  <View style ={{borderBottomColor:'#DDDDDD',borderBottomWidth:2}}></View>
-                  </View>
-                  <View>
-                  <View style={Styles.list}>
-                    <Text style={{fontSize:20,marginLeft:20}}>Pickup Shift</Text>
-                    <View style={{alignItems:'flex-end',flex:1}}>
-                    <Switch style={{marginRight:10}} value={this.state.switch3}></Switch>
-                    </View>
-                    
-                  </View>
-                  <View style ={{borderBottomColor:'#DDDDDD',borderBottomWidth:2}}></View>
-                  </View>
-                  <View>
-                  <View style={Styles.list}>
-                    <Text style={{fontSize:20,marginLeft:20}}>Shift Swap</Text>
-                    <View style={{alignItems:'flex-end',flex:1}}>
-                    <Switch style={{marginRight:10}} value={this.state.switch4} onValueChange ={()=>this.setState({switch4 : false},()=>console.log('done'))}></Switch>
-                    </View>
-                    
-                  </View>
-                  <View style ={{borderBottomColor:'#DDDDDD',borderBottomWidth:2}}></View>
-                  </View>
-                  
-                 
-                </View>
-
-                  {/* Section List is being removed for now because the setstate value is setting back to default on navigation */}
+                  <Text style={Styles.sectionHeader}>{'Stafflinq Notifications'}</Text>
+            
                 
-                {/* <SectionList
+                 <SectionList
                     renderItem={({item, index, section}) => 
                         <ListItem
-
                             key={item.type + index}
                             style={{ padding:0, marginTop:-10 }}
                             switchButton 
@@ -386,7 +401,7 @@ class Settings extends React.Component {
                     // )}
                     sections={optionsList}
                     keyExtractor={(item, index) => item.type + index}
-                /> */}
+                /> 
                 
 
             </ScrollView>

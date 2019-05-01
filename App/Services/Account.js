@@ -179,6 +179,36 @@ export function alertSubscription (request,callback) {
 
 }
 
+export function retrieveSubscription (request,callback) {
+
+  let url = '/api/ManagerAppAlertMethods/retrieveSubscription?userName='+encodeURI(request.userName)
+
+  serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
+    if(err){
+      callback(err)
+    }
+    else {
+      callback(null,resp)
+    }
+  })
+
+}
+
+export function backfillSubscription (request,callback) {
+
+  let url = '/api/ManagerAppAlertMethods/backfillSubscription?userName='+encodeURI(request.userName)
+
+  serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
+    if(err){
+      callback(err)
+    }
+    else {
+      callback(null,resp)
+    }
+  })
+
+}
+
  //ManagerAppAlertMethods/GetNotifications?userId=454&includeHidden=1
 export function GetNotifications (request,callback) {
 
