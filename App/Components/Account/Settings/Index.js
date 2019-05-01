@@ -23,62 +23,6 @@ import Styles from './Styles'
 import { List, ListItem, Avatar } from 'react-native-elements'
 import { Switch } from 'react-native-gesture-handler';
 
-
-let options = [
-  {
-    group: "Messages",
-    data: [
-      // {
-      //   type: "Email Notification",
-      //   selected: true
-      // },
-      {
-        type: "Push Notification",
-        selected: true
-      },
-    ]
-  },
-  {
-    group: "Available Shifts",
-    data: [
-      // {
-      //   type: "Email Notification",
-      //   selected: true
-      // },
-      {
-        type: "Push Notification",
-        selected: true
-      },
-    ]
-  },
-  {
-    group: "Shift Wanted",
-    data: [
-      // {
-      //   type: "Email Notification",
-      //   selected: true
-      // },
-      {
-        type: "Push Notification",
-        selected: true
-      },
-    ]
-  },
-  {
-    group: "Work Calendar",
-    data: [
-      // {
-      //   type: "Email Notification",
-      //   selected: true
-      // },
-      {
-        type: "Push Notification",
-        selected: true
-      },
-    ]
-  }
-]
-
 class Settings extends React.Component {
 
   // this is a child/nested screen in the SchedulesStack
@@ -109,10 +53,6 @@ class Settings extends React.Component {
           alerttypeids: [],
           Text : 'Stafflinq',
           options : [],
-          // switch1 : true,
-          // switch2 : false,
-          // switch3 : false,
-          // switch4 :true,
           alertTypeID : null,
           desc:null,
           push:null,
@@ -151,19 +91,10 @@ class Settings extends React.Component {
       }
 
     }
-
-
-    
+ 
 
   componentDidMount () {
     _this = this
-
-    var list = {}
-    var optionsman = []
-
-    
-
-    let userData = this.props.screenProps.state.userData
 
     this.props.navigation.setParams({ 
       backgroundColor:this.props.screenProps.state.backgroundColor 
@@ -178,7 +109,9 @@ class Settings extends React.Component {
       userName : this.props.screenProps.state.userData.userName
     }
 
-
+// This is an api call -- we are retrieving the subscription values of the use and if there is not entry in the subscription table,
+// we will call backfillSubscription api, which will make the Notify_by_push field true for all the alertTypes of the user
+    
     retrieveSubscription(request,function(err,resp){
       if (err){
         console.log(err)
@@ -244,6 +177,7 @@ class Settings extends React.Component {
       }
     })
 
+// Calling api to return the list of alerts
 
     alertTypes (client,token ,function(err,resp) {
       if (err){
@@ -276,19 +210,7 @@ class Settings extends React.Component {
 
   }
 
- 
 
-  toggleSwitch = (val) => {
-
-    _this = this  
-
-    if (val === 4){
-      _this.setState({
-        switch4 : false
-      })
-    }
-    
-  }
 
 
   render() {
@@ -297,16 +219,14 @@ class Settings extends React.Component {
       
      if(this.state.alertOptions.length > 0) {
 
+      // Returing an array object suitable for List / section list
+
       for (i=0; i < this.state.alertOptions.length ; i++ ) {
         
         opts = Object.assign(
          {},{  group:this.state.alertOptions[i] ,
                 id : this.state.alerttypeids[i],
          data: [
-           // {
-           //   type: "Email Notification",
-           //   selected: true
-           // },
            {
              type: this.state.alertOptions[i],
              id: this.state.alerttypeids[i],
@@ -318,8 +238,6 @@ class Settings extends React.Component {
        
      }
      
-     console.log ('optionsRa',optionsList)
-     
 
      }
 
@@ -330,7 +248,9 @@ class Settings extends React.Component {
 
       
       <View>
-        <Text style={{fontSize:18,textAlign: 'center',fontStyle:'italic',color:brand.colors.primary,margin:10}}> You can Subscribe or Unsubscribe the Notification here</Text>
+        <Text style={{fontSize:18,textAlign: 'center',fontStyle:'italic',color:brand.colors.primary,margin:10}}> 
+        You can Subscribe or Unsubscribe the Notification here
+        </Text>
       
 
               <ScrollView
@@ -396,6 +316,7 @@ class Settings extends React.Component {
 
                         />
                     }
+                    // [Note :] Header is not needed for now--
                     // renderSectionHeader={({section: {group,id}}) => (
                     //     <Text style={Styles.sectionHeader}>{group}</Text>
                     // )}
