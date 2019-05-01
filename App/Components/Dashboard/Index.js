@@ -92,6 +92,21 @@ class DashboardScreen extends React.Component {
 
   }
 
+  // willFocus doesn't always fire
+  // this will catch any global state updates - via screenProps
+  // componentWillReceiveProps(nextProps){
+
+  //     let backgroundColor = nextProps.screenProps.state.backgroundColor
+
+  //     if(backgroundColor !== this.props.screenProps.state.backgroundColor){
+
+  //       this.props.navigation.setParams({ 
+  //         backgroundColor: backgroundColor 
+  //       })
+
+  //     }
+
+  // }
 
   load = () => {
 
@@ -103,7 +118,7 @@ class DashboardScreen extends React.Component {
 
     this.props.navigation.setParams({ 
       title: this.props.screenProps.state.selectedClient,
-      backgroundColor:this.props.screenProps.state.backgroundColor 
+      backgroundColor: this.props.screenProps.state.backgroundColor 
     })
 
     let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com

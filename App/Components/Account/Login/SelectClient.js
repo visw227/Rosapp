@@ -107,14 +107,8 @@ export class LoginSelectClient extends React.Component {
 
     console.log("changed site", client)
 
-
+    // IMPORTANT!!
     AsyncStorage.setItem('selectedClient', client)
-
-    // this.props.navigation.navigate('Login', { 
-    //     // userName: this.state.userName, 
-    //     // password: this.state.password, 
-    //     // sites: err.userData.sites 
-    // })
 
 
     Authorization.UserLogin(this.state.userName, this.state.password, function(err, resp){
@@ -128,6 +122,18 @@ export class LoginSelectClient extends React.Component {
             _this.setState({
               selectedClient: err.selectedClient
             })
+
+            Alert.alert(
+              'Site Unavailable',
+              err.selectedClient + ' is currently unavailable',
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              {cancelable: false},
+            );
+
+
+
 
           }
 

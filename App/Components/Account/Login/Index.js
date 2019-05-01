@@ -108,11 +108,11 @@ class Login extends Component {
 
     }
 
-    // componentWillUnmount () {
+    componentWillUnmount () {
 
-    //     this.keyboardWillShowSub.remove();
-    //     this.keyboardWillHideSub.remove();
-    // }
+        this.keyboardWillShowSub.remove();
+        this.keyboardWillHideSub.remove();
+    }
 
 
     keyboardWillShow = (event) => {

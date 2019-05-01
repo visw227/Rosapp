@@ -150,6 +150,11 @@ class LockScreen extends React.Component {
 
   load = () => {
 
+    // clear the password in case they entered it previously when screen locked
+    this.setState({
+        password: null
+    })
+
     // this provides shared logging via screenProps
     this.props.screenProps._globalLogger(true, "LockScreen", "Opened", {})
 
@@ -177,9 +182,9 @@ class LockScreen extends React.Component {
         // 'Null', 'None', etc. - if biometrics not available or disabled, just continue 
         else {
 
-            this.setState({ bioType: null }); // keep as null
+            // set to null so that user is asked to enter thier Rosnet password
+            this.setState({ bioType: null }); 
 
-            this.onContinue()
         }
 
 
@@ -193,7 +198,8 @@ class LockScreen extends React.Component {
 
         console.log(">>> Biometrics error: ", error)
 
-        this.onContinue()
+        // set to null so that user is asked to enter thier Rosnet password
+        this.setState({ bioType: null }); 
 
 
     })
@@ -234,7 +240,8 @@ class LockScreen extends React.Component {
             // this provides shared logging via screenProps
             this.props.screenProps._globalLogger(false, "LockScreen", bioType, { error: error })
 
-
+            // set to null so that user is asked to enter thier Rosnet password
+            this.setState({ bioType: null }); 
 
         });
     }
@@ -371,7 +378,7 @@ class LockScreen extends React.Component {
                                         onPress={this.onLoginPress}>
                                         <Text 
                                         style={ styles.buttonText }>
-                                        Login
+                                        Authenticate with Rosnet Password
                                         </Text>
                                     </TouchableOpacity> 
 
