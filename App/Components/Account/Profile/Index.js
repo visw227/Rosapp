@@ -72,6 +72,7 @@ class Profile extends React.Component {
         jobTitle: this.props.screenProps.state.userData.jobTitle,
         email: '',
         phone: '',
+        Text : 'Viswa',
         shareEmail: false,
         sharePhone: false
     }

@@ -27,10 +27,13 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   list: {
-    // marginTop: 0,
-    // paddingTop: 0,
-    // paddingBottom: 0,
-    // backgroundColor: 'white',
+    marginTop: 5,
+    marginBottom:5,
+    paddingTop: 0,
+    paddingBottom: 0,
+    backgroundColor: 'white',
+    flex: 1,
+    flexDirection : 'row'
   },
 
 })

@@ -4,6 +4,8 @@ import { List, ListItem, Avatar } from 'react-native-elements'
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { NavigationActions, StackActions } from 'react-navigation'
+
 
 import brand from '../../Styles/brand'
 import Styles from './Styles'
@@ -127,7 +129,16 @@ export class Account extends React.Component {
                           overlayContainerStyle={{backgroundColor: '#31B0D5'}}
                           icon={{name: 'gear', type: 'font-awesome' }}/>}
 
-                      onPress={() => this.props.navigation.navigate('Settings') }
+                      onPress={() => {
+                        const navigateAction = NavigationActions.navigate({
+                            routeName: 'Settings',
+                          
+                            params: {},
+                          
+                            action: NavigationActions.navigate({ routeName: 'Settings' }),
+                          });
+                           this.props.navigation.dispatch(navigateAction)
+                      } }
 
                   />
 

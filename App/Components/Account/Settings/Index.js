@@ -7,7 +7,8 @@ import {
   Button,
   ScrollView,
   RefreshControl,
-  SectionList
+  SectionList,
+  TouchableHighlight
 } from 'react-native';
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -20,6 +21,7 @@ import { alertTypes,alertSubscription } from '../../../Services/Account';
 import Styles from './Styles'
 
 import { List, ListItem, Avatar } from 'react-native-elements'
+import { Switch } from 'react-native-gesture-handler';
 
 
 let options = [
@@ -83,13 +85,11 @@ class Settings extends React.Component {
   // Look at SchedulesStack for tricks with hiding the tabBar and hiding the back button title
   static navigationOptions = (navigate) => ({
 
-    title: 'Settings',
+    title: 'Notification Settings',
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
-    headerTintColor: 'white',
-
-
+    headerTintColor: 'white'
   })
 
     constructor(props) {
@@ -107,6 +107,7 @@ class Settings extends React.Component {
           userProfile: null,
           alertOptions : [],
           alerttypeids: [],
+          Text : 'Stafflinq',
           options : [],
           switch1 : true,
           switch2 : false,
@@ -151,6 +152,7 @@ class Settings extends React.Component {
 
     }
 
+
     
 
   componentDidMount () {
@@ -158,6 +160,8 @@ class Settings extends React.Component {
 
     var list = {}
     var optionsman = []
+
+    
 
     let userData = this.props.screenProps.state.userData
 
@@ -169,40 +173,62 @@ class Settings extends React.Component {
     var token = this.props.screenProps.state.userData.token
 
 
-    alertTypes (client,token ,function(err,resp) {
-      if (err){
-        console.log ('Error siteSettings',err)
-      }
-      else {
-        console.log('response',resp)
-        var alertTypes = []
-        var alertyTypeId = []
+    // alertTypes (client,token ,function(err,resp) {
+    //   if (err){
+    //     console.log ('Error siteSettings',err)
+    //   }
+    //   else {
+    //     console.log('response',resp)
+    //     var alertTypes = []
+    //     var alertyTypeId = []
 
-          resp.forEach(element => {
-            if(element.alert_category.toLowerCase() === 'stafflinq'){
-              alertTypes.push(element.alert_name)
-              alertyTypeId.push(element.alert_type_id)
-            }
-          });
-          console.log('modifiedresp',alertTypes)
+    //       resp.forEach(element => {
+    //         if(element.alert_category.toLowerCase() === 'stafflinq'){
+    //           alertTypes.push(element.alert_name)
+    //           alertyTypeId.push(element.alert_type_id)
+    //         }
+    //       });
+    //       console.log('modifiedresp',alertTypes)
 
-          _this.setState ({
-            alertOptions : alertTypes,
-            alerttypeids : alertyTypeId
-          }, ()=> console.log('AlertState',_this.state.alertOptions))
+    //       _this.setState ({
+    //         alertOptions : alertTypes,
+    //         alerttypeids : alertyTypeId
+    //       }, ()=> console.log('AlertState',_this.state.alertOptions))
 
         
-      }
+    //   }
 
+    //   })
+      
+
+
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const {Text} = this.state;
+    console.log('<<<Component Did Update is called',prevState)
+    if(Text !== prevState.Text){
+        console.log('update scrollTop!');
+    }
+  }
+
+  toggleSwitch = (val) => {
+
+    _this = this  
+
+    if (val === 4){
+      _this.setState({
+        switch4 : false
       })
-      
-
-      
-
+    }
+    
   }
 
 
   render() {
+    //alert('render is called')
+
+    console.log('<<state',this.state)
     var optionsList = []
       
      if(this.state.alertOptions.length > 0) {
@@ -237,6 +263,10 @@ class Settings extends React.Component {
 
 
     return (
+
+      
+      <View>
+        <Text style={{fontSize:18,textAlign: 'center',fontStyle:'italic',color:brand.colors.primary,margin:10}}> You can Subscribe or Unsubscribe the Notification here</Text>
       
 
               <ScrollView
@@ -256,8 +286,59 @@ class Settings extends React.Component {
                 }
                 
               >
+                <TouchableHighlight onPress= {()=> this.setState({Text:'Rosnet'})}>
+                  <Text style={Styles.sectionHeader}>{this.state.Text}</Text>
+                </TouchableHighlight>
+                
 
-                <SectionList
+                <View>
+                <View>
+                  <View style={Styles.list}>
+                    <Text style={{fontSize:20,marginLeft:20}}>Time Off Request</Text>
+                    <View style={{alignItems:'flex-end',flex:1}}>
+                    <Switch style={{marginRight:10}} value={this.state.switch1}></Switch>
+                    </View>
+                    
+                  </View>
+                  <View style ={{borderBottomColor:'#DDDDDD',borderBottomWidth:2}}></View>
+                  </View>
+                  <View>
+                  <View style={Styles.list}>
+                    <Text style={{fontSize:20,marginLeft:20}}>Availability change Request</Text>
+                    <View style={{alignItems:'flex-end',flex:1}}>
+                    <Switch style={{marginRight:10}} value={this.state.switch2}></Switch>
+                    </View>
+                    
+                  </View>
+                  <View style ={{borderBottomColor:'#DDDDDD',borderBottomWidth:2}}></View>
+                  </View>
+                  <View>
+                  <View style={Styles.list}>
+                    <Text style={{fontSize:20,marginLeft:20}}>Pickup Shift</Text>
+                    <View style={{alignItems:'flex-end',flex:1}}>
+                    <Switch style={{marginRight:10}} value={this.state.switch3}></Switch>
+                    </View>
+                    
+                  </View>
+                  <View style ={{borderBottomColor:'#DDDDDD',borderBottomWidth:2}}></View>
+                  </View>
+                  <View>
+                  <View style={Styles.list}>
+                    <Text style={{fontSize:20,marginLeft:20}}>Shift Swap</Text>
+                    <View style={{alignItems:'flex-end',flex:1}}>
+                    <Switch style={{marginRight:10}} value={this.state.switch4} onValueChange ={()=>this.setState({switch4 : false},()=>console.log('done'))}></Switch>
+                    </View>
+                    
+                  </View>
+                  <View style ={{borderBottomColor:'#DDDDDD',borderBottomWidth:2}}></View>
+                  </View>
+                  
+                 
+                </View>
+
+                  {/* Section List is being removed for now because the setstate value is setting back to default on navigation */}
+                
+                {/* <SectionList
                     renderItem={({item, index, section}) => 
                         <ListItem
 
@@ -300,14 +381,16 @@ class Settings extends React.Component {
 
                         />
                     }
-                    renderSectionHeader={({section: {group,id}}) => (
-                        <Text style={Styles.sectionHeader}>{group}</Text>
-                    )}
+                    // renderSectionHeader={({section: {group,id}}) => (
+                    //     <Text style={Styles.sectionHeader}>{group}</Text>
+                    // )}
                     sections={optionsList}
                     keyExtractor={(item, index) => item.type + index}
-                />
+                /> */}
+                
 
             </ScrollView>
+            </View>
 
 
     );
