@@ -1046,19 +1046,19 @@ export default class App extends React.Component {
       if(this.state.userData) {
 
         let userData = this.state.userData
-      let token = this.state.userData.token
-      let client  = this.state.selectedClient
+        let token = this.state.userData.token
+        let client  = this.state.selectedClient
 
-      let request = {
+        let request = {
 
-         token : userData.token,
-         client : client,
-         userName : userData.userName,
-         includeHidden : true
+          token : userData.token,
+          client : client,
+          userName : userData.userName,
+          includeHidden : true
 
-      }
+        }
 
-      let alertCount = GetNotifications (request ,function(err,resp) {
+        let alertCount = GetNotifications (request ,function(err,resp) {
           if (err){
             console.log ('Error siteSettings',err)
           }
@@ -1187,6 +1187,11 @@ export default class App extends React.Component {
             console.log("reverting superUser back to ", this.state.superUser)
             let userData = this.state.superUser
             _this._globalStateChange( { action: "undo-session-override", userData: userData })
+
+            // this is a lazy way to force all screens to reload 
+            // and we don't have to undo the red background on every screen individually
+            NavigationService.stackReset('DrawerStack')
+
           }
 
 
