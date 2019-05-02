@@ -1,0 +1,19 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/macOS/AppCenterPush.framework/Headers/MSPushDelegate.h",
+      "line": 6,
+      "symbol": "MSPushDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/macOS/AppCenterPush.framework/Headers/MSPushNotification.h",
+      "line": 3,
+      "symbol": "MSPushNotification",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/vsts/agent/2.148.0/work/1/s/Scripts"
+}

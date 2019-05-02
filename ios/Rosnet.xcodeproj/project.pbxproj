@@ -58,6 +58,10 @@
 		9187ACDF8F3C4CF9B582E347 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F0D51A2EDFD4E7489F90E3D /* FontAwesome.ttf */; };
 		9B26F8F7A980423B93926BDD /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D51E6942A54DF485CA853F /* libAppCenterReactNativeAnalytics.a */; };
 		9F323F77BA2849579B084C9C /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B448D66F1A4F4FBDBB18AEF0 /* FontAwesome5_Brands.ttf */; };
+		A13E6166227ACA5200125FEA /* libAppCenterReactNativePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BD7D22037E69004941E6 /* libAppCenterReactNativePush.a */; };
+		A13E6196227ACA5800125FEA /* libAppCenterReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDBC22037E6A004941E6 /* libAppCenterReactNative.a */; };
+		A13E6197227ACA5E00125FEA /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDAD22037E6A004941E6 /* libAppCenterReactNativeAnalytics.a */; };
+		A13E6198227ACA7700125FEA /* libAppCenterReactNativeCrashes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDC922037E6A004941E6 /* libAppCenterReactNativeCrashes.a */; };
 		A16BFABB2225ADF90069C462 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A16BFAB72225AD3D0069C462 /* libRNImagePicker.a */; };
 		A5B3233236504EBF828E76D6 /* libAppCenterReactNativePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97F1C53A02CE43F6B727FD0E /* libAppCenterReactNativePush.a */; };
 		A7E065FEDB42457F91959552 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = B65BDF21225D4095A9839C41 /* AppCenter-Config.plist */; };
@@ -521,6 +525,7 @@
 			files = (
 				A16BFABB2225ADF90069C462 /* libRNImagePicker.a in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
+				A13E6166227ACA5200125FEA /* libAppCenterReactNativePush.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -528,9 +533,12 @@
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
+				A13E6196227ACA5800125FEA /* libAppCenterReactNative.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
+				A13E6197227ACA5E00125FEA /* libAppCenterReactNativeAnalytics.a in Frameworks */,
+				A13E6198227ACA7700125FEA /* libAppCenterReactNativeCrashes.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				F84197E740F5480EA343D4B6 /* libRNDeviceInfo.a in Frameworks */,

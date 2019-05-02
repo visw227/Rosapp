@@ -1,0 +1,173 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAbstractLog.h",
+      "line": 3,
+      "symbol": "MSAbstractLog",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenter.h",
+      "line": 11,
+      "symbol": "MSAppCenter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 7,
+      "symbol": "kMSACErrorDomain",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 12,
+      "symbol": "",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 15,
+      "symbol": "kMSACLogInvalidContainerErrorDesc",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 20,
+      "symbol": "",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 23,
+      "symbol": "kMSACConnectionHttpErrorDesc",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 24,
+      "symbol": "kMSACConnectionPausedErrorDesc",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 27,
+      "symbol": "kMSACConnectionHttpCodeErrorKey",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 44,
+      "symbol": "MSLogMessageProvider",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 45,
+      "symbol": "MSLogHandler",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 52,
+      "symbol": "MSPriority.MSPriorityBackground",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 52,
+      "symbol": "MSPriority.MSPriorityDefault",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 52,
+      "symbol": "MSPriority.MSPriorityHigh",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 53,
+      "symbol": "kMSPriorityCount",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 62,
+      "symbol": "MSInitializationPriority.MSInitializationPriorityDefault",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 63,
+      "symbol": "MSInitializationPriority.MSInitializationPriorityHigh",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 64,
+      "symbol": "MSInitializationPriority.MSInitializationPriorityMax",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSDevice.h",
+      "line": 5,
+      "symbol": "MSDevice",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSLog.h",
+      "line": 5,
+      "symbol": "MSLog",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSLogWithProperties.h",
+      "line": 5,
+      "symbol": "MSLogWithProperties",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSLogger.h",
+      "line": 32,
+      "symbol": "MSLogger",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSWrapperLogger.h",
+      "line": 11,
+      "symbol": "MSWrapperLogger.+MSWrapperLog:tag:level:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/vsts/agent/2.148.0/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSWrapperSdk.h",
+      "line": 3,
+      "symbol": "MSWrapperSdk",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/vsts/agent/2.148.0/work/1/s/Scripts"
+}
