@@ -26,6 +26,7 @@ import Styles from './Styles'
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
 import { GetNotifications } from '../../Services/Account';
+import AlertMessage from '../Modules/AlertMessage';
 
 
 class AlertsScreen extends React.Component {
@@ -82,18 +83,16 @@ class AlertsScreen extends React.Component {
           userToken: '',
           data: [],
           title : null,
-          text : null
+          text : null,
+          loading: true
       }
 
 
   }
 
-
-  componentDidMount () {
-
-      let _this = this 
-
-      let userData = this.props.screenProps.state.userData
+  renderNotification = () => {
+    _this = this
+    let userData = this.props.screenProps.state.userData
       let token = this.props.screenProps.state.userData.token
       let client  = this.props.screenProps.state.selectedClient
 
@@ -105,43 +104,69 @@ class AlertsScreen extends React.Component {
          includeHidden : true
 
       }
+    GetNotifications (request ,function(err,resp) {
+      if (err){
+        console.log ('Error siteSettings',err)
+      }
+      else {
+        console.log('response',resp)
+        
 
-      GetNotifications (request ,function(err,resp) {
-        if (err){
-          console.log ('Error siteSettings',err)
-        }
-        else {
-          console.log('response',resp)
-          
-  
-            // resp.forEach(element => {
-            //   title = element.Title
-            //   text = element.PushText
-            // });
-            //console.log('modifiedresp',alertTypes)
-  
-            _this.setState ({
-              data : resp
-            })
-  
-          
-        }
-  
-      })
+          // resp.forEach(element => {
+          //   title = element.Title
+          //   text = element.PushText
+          // });
+          //console.log('modifiedresp',alertTypes)
+
+          _this.setState ({
+            data : resp
+          })
+
+        
+      }
+
+    })
+  }
+
+  componentDidMount () {
+
+      let _this = this 
+
+      let userData = this.props.screenProps.state.userData
+      let token = this.props.screenProps.state.userData.token
+      let client  = this.props.screenProps.state.selectedClient
 
       
+
+      let request = {
+
+         token : userData.token,
+         client : client,
+         userName : userData.userName,
+         includeHidden : true
+
+      }
+      // NOtifications are initially rendered when component is mounted
+      _this.renderNotification()
+
+      // This call the api for every 5secs to render new added notifications
+      _this.interval = setInterval (() => _this.renderNotification()
+      ,5000)
+
       this.props.navigation.setParams({ 
         backgroundColor:this.props.screenProps.state.backgroundColor 
       })
 
+  }
 
-
+  componentWillUnMount(){
+    clearInterval(this.interval)
   }
 
 
   getAvatar = (item) => {
 
-      if(item.pushNeeded)
+      if(item)
         return (
           <View
               style={{
@@ -182,10 +207,26 @@ class AlertsScreen extends React.Component {
 
   }
 
+  renderLoading = () => {
+    
+    {this.state.data.length <1  ? <AlertMessage title={'Loading Alerts..'}/> : null}
+    
+  }
+
+  renderAlertMEssage = () => {
+    
+    {this.state.data.length <1 && this.state.loading === false ? <AlertMessage title={'No Alerts to Display'}/> : null}
+  }
 
   render() {
+    
     return (
 
+      
+          <View>
+
+           
+           {this.state.data.length <1  && <AlertMessage title={'No Alerts to Display at this time'}/> }
 
           <ScrollView
             style={{ backgroundColor: '#ffffff' }}
@@ -249,6 +290,7 @@ class AlertsScreen extends React.Component {
               </View>
            
           </ScrollView>
+          </View>
 
     );
   }

@@ -56,7 +56,7 @@ constructor(props) {
 
   getAvatar = (item) => {
 
-      if(item.pushNeeded)
+      if(item)
         return (
           <View
               style={{
@@ -108,6 +108,8 @@ constructor(props) {
     const { navigation } = this.props;
     const request = navigation.getParam('request', {} );
 
+    console.log('request',request)
+
 
     return (
 
@@ -128,10 +130,10 @@ constructor(props) {
                 </Text>
 
 
-                <Text style={Styles.title}>"{request.title}"</Text>
+                {request.Title ? <Text style={Styles.title}>"{(request.Title).toUpperCase()}"</Text> : null}
 
 
-                <Text style={Styles.info}>"{request.pushText || request.emailText}"</Text>
+                <Text style={Styles.info}>"{request.PushText}"</Text>
       
               
 
