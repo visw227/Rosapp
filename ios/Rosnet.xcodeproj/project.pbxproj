@@ -62,6 +62,7 @@
 		A13E6196227ACA5800125FEA /* libAppCenterReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDBC22037E6A004941E6 /* libAppCenterReactNative.a */; };
 		A13E6197227ACA5E00125FEA /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDAD22037E6A004941E6 /* libAppCenterReactNativeAnalytics.a */; };
 		A13E6198227ACA7700125FEA /* libAppCenterReactNativeCrashes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDC922037E6A004941E6 /* libAppCenterReactNativeCrashes.a */; };
+		A13E6256227B67D500125FEA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A13E6224227B67D500125FEA /* GoogleService-Info.plist */; };
 		A16BFABB2225ADF90069C462 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A16BFAB72225AD3D0069C462 /* libRNImagePicker.a */; };
 		A5B3233236504EBF828E76D6 /* libAppCenterReactNativePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97F1C53A02CE43F6B727FD0E /* libAppCenterReactNativePush.a */; };
 		A7E065FEDB42457F91959552 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = B65BDF21225D4095A9839C41 /* AppCenter-Config.plist */; };
@@ -72,6 +73,7 @@
 		B66B826D8E94428A8A1A37AA /* libTouchID.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC10D33C12B43B38F639BFD /* libTouchID.a */; };
 		D0075F22014944928CC45900 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B11CB1C131E94EB1983B2FBD /* Feather.ttf */; };
 		D91F56473643486EB161B9E3 /* libAppCenterReactNativeCrashes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C3A8453662451BB1629ED8 /* libAppCenterReactNativeCrashes.a */; };
+		EBE30E426F2B4BF89B031C10 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9021F05FF5448AAAE63488 /* libRNFirebase.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		F84197E740F5480EA343D4B6 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F719749DC145EEA7855FAF /* libRNDeviceInfo.a */; };
@@ -316,6 +318,13 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		A13E620C227B5C5D00125FEA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88BB6322E1C54A8BB5B598AE /* RNFirebase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNFirebase;
+		};
 		A16BFAB62225AD3D0069C462 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A16BFA862225AD3D0069C462 /* RNImagePicker.xcodeproj */;
@@ -485,12 +494,15 @@
 		7AC10D33C12B43B38F639BFD /* libTouchID.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libTouchID.a; sourceTree = "<group>"; };
 		80225D1FFD8FC6E8E8C1BFA4 /* libPods-Rosnet-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rosnet-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		88BB6322E1C54A8BB5B598AE /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		890C362B2FF34673AFB65923 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		960B5713130C5E1E05208968 /* Pods-Rosnet-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rosnet-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rosnet-tvOS/Pods-Rosnet-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		97F1C53A02CE43F6B727FD0E /* libAppCenterReactNativePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNativePush.a; sourceTree = "<group>"; };
 		9CF60B77B320460585DB1D81 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
+		A13E6224227B67D500125FEA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A16BFA862225AD3D0069C462 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		A4650213C812321C44D61FAC /* libPods-Rosnet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rosnet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD9021F05FF5448AAAE63488 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B11CB1C131E94EB1983B2FBD /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		B448D66F1A4F4FBDBB18AEF0 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
@@ -550,6 +562,7 @@
 				2DBEFC7B30A3AD6AF1406846 /* libPods-Rosnet.a in Frameworks */,
 				9B26F8F7A980423B93926BDD /* libAppCenterReactNativeAnalytics.a in Frameworks */,
 				D91F56473643486EB161B9E3 /* libAppCenterReactNativeCrashes.a in Frameworks */,
+				EBE30E426F2B4BF89B031C10 /* libRNFirebase.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -793,6 +806,7 @@
 				16E23EC75FDE4A01AC31054F /* AppCenterReactNative.xcodeproj */,
 				6441D2C5A4EC4A35A9127B58 /* AppCenterReactNativeAnalytics.xcodeproj */,
 				3787BD07E3594313B3432404 /* AppCenterReactNativeCrashes.xcodeproj */,
+				88BB6322E1C54A8BB5B598AE /* RNFirebase.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -817,6 +831,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				1855D141ED7742969CF31C07 /* Resources */,
 				B65BDF21225D4095A9839C41 /* AppCenter-Config.plist */,
+				A13E6224227B67D500125FEA /* GoogleService-Info.plist */,
 				64EF9AB068B70C4DCB5E257F /* Pods */,
 				C2806DED22037DD7004CB70D /* Recovered References */,
 			);
@@ -832,6 +847,14 @@
 				00E356EE1AD99517003FC87E /* RosnetTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* Rosnet-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* Rosnet-tvOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A13E6209227B5C5D00125FEA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A13E620D227B5C5D00125FEA /* libRNFirebase.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -932,6 +955,7 @@
 				04C3A8453662451BB1629ED8 /* libAppCenterReactNativeCrashes.a */,
 				68525A3B34CB4E729BC572E3 /* libRNDeviceInfo-tvOS.a */,
 				779CEB3BFD2A433A9240930E /* libRNVectorIcons-tvOS.a */,
+				AD9021F05FF5448AAAE63488 /* libRNFirebase.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1129,6 +1153,10 @@
 				{
 					ProductGroup = C254BDBD22037E6A004941E6 /* Products */;
 					ProjectRef = D2489D34EE694AE09421FF03 /* RNDeviceInfo.xcodeproj */;
+				},
+				{
+					ProductGroup = A13E6209227B5C5D00125FEA /* Products */;
+					ProjectRef = 88BB6322E1C54A8BB5B598AE /* RNFirebase.xcodeproj */;
 				},
 				{
 					ProductGroup = C254BDAE22037E6A004941E6 /* Products */;
@@ -1382,6 +1410,13 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		A13E620D227B5C5D00125FEA /* libRNFirebase.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFirebase.a;
+			remoteRef = A13E620C227B5C5D00125FEA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		A16BFAB72225AD3D0069C462 /* libRNImagePicker.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1519,6 +1554,7 @@
 				33199D527CD24573842BE33C /* FontAwesome5_Regular.ttf in Resources */,
 				A8BAFB425C9E4679844EDE01 /* FontAwesome5_Solid.ttf in Resources */,
 				4821C72CAC19429AB91AD576 /* Foundation.ttf in Resources */,
+				A13E6256227B67D500125FEA /* GoogleService-Info.plist in Resources */,
 				86564915F7CE489DA6EAEB16 /* Ionicons.ttf in Resources */,
 				52F649054B0A4A5AAC82191B /* MaterialCommunityIcons.ttf in Resources */,
 				43AEC40B9D81470E9B3B0055 /* MaterialIcons.ttf in Resources */,
@@ -1731,12 +1767,14 @@
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = RosnetTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1774,12 +1812,14 @@
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = RosnetTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1820,6 +1860,8 @@
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 				);
 				INFOPLIST_FILE = Rosnet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1854,6 +1896,8 @@
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
+					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 				);
 				INFOPLIST_FILE = Rosnet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1893,11 +1937,13 @@
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "Rosnet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1944,11 +1990,13 @@
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "Rosnet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1994,11 +2042,13 @@
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "Rosnet-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2044,11 +2094,13 @@
 					"$(SRCROOT)/../node_modules/appcenter/ios/AppCenterReactNative",
 					"$(SRCROOT)/../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics",
 					"$(SRCROOT)/../node_modules/appcenter-crashes/ios/AppCenterReactNativeCrashes",
+					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = "Rosnet-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
