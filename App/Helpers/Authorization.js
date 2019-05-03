@@ -118,7 +118,7 @@ export var Authorization = {
                     password: password, 
                     deviceUniqueId: deviceInfo.deviceUniqueId,
                     appInstallId: deviceInfo.appInstallId,
-                    fcmDeviceToken : deviceInfo.fcmDeviceToken,
+                    fcmDeviceToken : deviceInfo.fcmDeviceToken ? deviceInfo.fcmDeviceToken : 'null',
                     deviceType: deviceInfo.deviceType,
                     appVersion: deviceInfo.appVersion,
                     appBuild: deviceInfo.appBuild,
