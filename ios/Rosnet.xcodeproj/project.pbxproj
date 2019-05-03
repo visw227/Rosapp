@@ -56,9 +56,7 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		86564915F7CE489DA6EAEB16 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF87E0A3120A48948F200E33 /* Ionicons.ttf */; };
 		9187ACDF8F3C4CF9B582E347 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F0D51A2EDFD4E7489F90E3D /* FontAwesome.ttf */; };
-		9B26F8F7A980423B93926BDD /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D51E6942A54DF485CA853F /* libAppCenterReactNativeAnalytics.a */; };
 		9F323F77BA2849579B084C9C /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B448D66F1A4F4FBDBB18AEF0 /* FontAwesome5_Brands.ttf */; };
-		A1241EB3227C09090073BAD4 /* RosappPushCertt.certSigningRequest in Resources */ = {isa = PBXBuildFile; fileRef = A1241EB2227C09090073BAD4 /* RosappPushCertt.certSigningRequest */; };
 		A1241EB5227C093B0073BAD4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1241EB4227C093B0073BAD4 /* GoogleService-Info.plist */; };
 		A13E6166227ACA5200125FEA /* libAppCenterReactNativePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BD7D22037E69004941E6 /* libAppCenterReactNativePush.a */; };
 		A13E6196227ACA5800125FEA /* libAppCenterReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDBC22037E6A004941E6 /* libAppCenterReactNative.a */; };
@@ -73,7 +71,6 @@
 		AF7549C298D64160AA138B81 /* libAppCenterReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59827F1B7EFA40549350D624 /* libAppCenterReactNative.a */; };
 		B66B826D8E94428A8A1A37AA /* libTouchID.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AC10D33C12B43B38F639BFD /* libTouchID.a */; };
 		D0075F22014944928CC45900 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B11CB1C131E94EB1983B2FBD /* Feather.ttf */; };
-		D91F56473643486EB161B9E3 /* libAppCenterReactNativeCrashes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C3A8453662451BB1629ED8 /* libAppCenterReactNativeCrashes.a */; };
 		EBE30E426F2B4BF89B031C10 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD9021F05FF5448AAAE63488 /* libRNFirebase.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
@@ -562,8 +559,6 @@
 				A5B3233236504EBF828E76D6 /* libAppCenterReactNativePush.a in Frameworks */,
 				AF7549C298D64160AA138B81 /* libAppCenterReactNative.a in Frameworks */,
 				2DBEFC7B30A3AD6AF1406846 /* libPods-Rosnet.a in Frameworks */,
-				9B26F8F7A980423B93926BDD /* libAppCenterReactNativeAnalytics.a in Frameworks */,
-				D91F56473643486EB161B9E3 /* libAppCenterReactNativeCrashes.a in Frameworks */,
 				EBE30E426F2B4BF89B031C10 /* libRNFirebase.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1057,6 +1052,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 9SSSVWSAJR;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1555,7 +1551,6 @@
 				9187ACDF8F3C4CF9B582E347 /* FontAwesome.ttf in Resources */,
 				9F323F77BA2849579B084C9C /* FontAwesome5_Brands.ttf in Resources */,
 				33199D527CD24573842BE33C /* FontAwesome5_Regular.ttf in Resources */,
-				A1241EB3227C09090073BAD4 /* RosappPushCertt.certSigningRequest in Resources */,
 				A8BAFB425C9E4679844EDE01 /* FontAwesome5_Solid.ttf in Resources */,
 				4821C72CAC19429AB91AD576 /* Foundation.ttf in Resources */,
 				86564915F7CE489DA6EAEB16 /* Ionicons.ttf in Resources */,
@@ -1599,7 +1594,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1851,6 +1846,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Rosnet/Rosnet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 9SSSVWSAJR;
@@ -1877,6 +1874,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rosnet.mobile;
 				PRODUCT_NAME = Rosnet;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1888,6 +1886,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Rosnet/Rosnet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9SSSVWSAJR;
 				HEADER_SEARCH_PATHS = (
@@ -1913,6 +1913,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rosnet.mobile;
 				PRODUCT_NAME = Rosnet;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
