@@ -11,6 +11,7 @@ content-type: application/json
     "password": "gorosnet1$",
     "deviceUniqueId":   "1234",  // use all zeros for web "device"
     "appInstallId": "2345",
+    "fcmdevicetoken":"123",
     "deviceType": "ios",  // 1=Android, 2=iOS, 3=Web
     "appVersion": "1",
     "appBuild": "60",

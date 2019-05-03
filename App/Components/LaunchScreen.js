@@ -15,6 +15,7 @@ import brand from '../Styles/brand'
 
 import AppCenter from 'appcenter'
 import Push from 'appcenter-push'
+import firebase from 'react-native-firebase'
 import { Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
@@ -62,10 +63,11 @@ class LaunchScreen extends React.Component {
           deviceUniqueId: DeviceInfo.getUniqueID(),
           appVersion: DeviceInfo.getVersion(),
           appBuild: DeviceInfo.getBuildNumber(),
+          fcmDeviceToken:this.state.FireToken,
           systemName: DeviceInfo.getSystemName(),
           systemVersion: DeviceInfo.getSystemVersion(),
           userAgent: DeviceInfo.getUserAgent(),
-          pushEnabled : await Push.isEnabled(),
+          pushEnabled :  Push.isEnabled(),
           deviceType: Platform.OS
         }
 
@@ -84,6 +86,21 @@ class LaunchScreen extends React.Component {
 
       let _this = this
 
+      _this.checkPermission();
+
+      this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
+        console.log('token refreshed %%%%%%%*********%%%%%%%')
+    });
+
+      var token = AsyncStorage.getItem('fcmToken')
+
+      var superToken = firebase.messaging().getToken();
+      
+      console.log('super Token',superToken)
+
+
+      console.log('fcm token',token)
+
       AppCenter.setLogLevel(AppCenter.LogLevel.VERBOSE);
 
       this.getDeviceInfo(function(deviceInfo){
@@ -92,6 +109,45 @@ class LaunchScreen extends React.Component {
 
       })
 
+      firebase.messaging().getToken().then((token) => {
+        this._onChangeToken(token)
+        console.log('Rosnet: Launch Comp MOunt get token')
+     });
+ 
+     firebase.messaging().onTokenRefresh((token) => {
+         this._onChangeToken(token)
+         console.log('Rosnet: Launch Comp MOunt refresh token')
+
+     });
+
+      const iosConfig = {
+        clientId: '572559084482-tsk2t7sraufar88tlnurg2th263lig8d.apps.googleusercontent.com',
+        appId: '1:572559084482:ios:9cfddcac43eb7f3c',
+        apiKey: 'AIzaSyCfGVJyG03OwiMEXM7z8y_NL3Xbw39Nbd0',
+        databaseURL: 'https://rosnet-105ca.firebaseio.com',
+        storageBucket: 'rosnet-105ca.appspot.com',
+        messagingSenderId: '572559084482',
+        projectId: 'rosnet-105ca',
+      
+        // enable persistence by adding the below flag
+        persistence: true,
+      };
+      
+      // pluck values from your `google-services.json` file you created on the firebase console
+      const androidConfig = {
+        clientId: 'x',
+        appId: 'x',
+        apiKey: 'x',
+        databaseURL: 'x',
+        storageBucket: 'x',
+        messagingSenderId: 'x',
+        projectId: 'x',
+      
+        // enable persistence by adding the below flag
+        persistence: true,
+      };
+      
+     
       //*********************************************************
       // load all the data in storage back into the global state
       //*********************************************************
@@ -179,6 +235,55 @@ class LaunchScreen extends React.Component {
 
   }
 
+
+async checkPermission() {
+  const enabled = await firebase.messaging().hasPermission();
+  if (enabled) {
+      this.getToken();
+  } else {
+      this.requestPermission();
+  }
+}
+
+  //3
+async getToken() {
+  let fcmToken = await AsyncStorage.getItem('fcmToken');
+  if (!fcmToken) {
+      fcmToken =  firebase.messaging().getToken();
+      if (fcmToken) {
+          // user has a device token
+          // AsyncStorage.setItem('fcmDeviceToken', JSON.stringify(fcmToken));
+      }
+  }
+}
+
+  //2
+async requestPermission() {
+  try {
+       firebase.messaging().requestPermission();
+      // User has authorised
+      this.getToken();
+  } catch (error) {
+      // User has rejected permissions
+      console.log('permission rejected');
+  }
+
+}
+_onChangeToken = (token) => {
+      var data = {
+        'device_token': token,
+        'device_type': Platform.OS,
+        
+      };
+      
+      console.log('Rosnet: Launch On change token')
+
+      console.log('Rosnet: Data',data.device_token)
+      if(data.device_token){
+        this.setState({FireToken:data.device_token})
+        AsyncStorage.setItem('Viswa',(data.device_token))
+      }
+    }
 
   // Render any loading content that you like here
   render() {

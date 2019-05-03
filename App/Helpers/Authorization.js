@@ -16,6 +16,7 @@ import { userLogin, verifyToken } from '../Services/Account';
 import { getMobileMenuItems } from '../Services/Menu';
 import { Parsers } from '../Helpers/Parsers';
 
+
 export var Authorization = {
 
 
@@ -97,7 +98,13 @@ export var Authorization = {
 
         let deviceInfo = null
 
-
+        AsyncStorage.getItem('Viswa').then((data)=>{
+            
+                fcmToken = JSON.parse(data)
+            
+            console.log('<<<Firefcm',fcmToken)
+        })
+         
         AsyncStorage.getItem('deviceInfo').then((data) => {
 
             //console.log("refreshToken loginData", data)
@@ -111,6 +118,7 @@ export var Authorization = {
                     password: password, 
                     deviceUniqueId: deviceInfo.deviceUniqueId,
                     appInstallId: deviceInfo.appInstallId,
+                    fcmDeviceToken : deviceInfo.fcmDeviceToken,
                     deviceType: deviceInfo.deviceType,
                     appVersion: deviceInfo.appVersion,
                     appBuild: deviceInfo.appBuild,

@@ -1,4 +1,4 @@
-package com.rosnet;
+package com.rosnet.mobile;
 
 import com.facebook.react.ReactActivity;
 

@@ -28,6 +28,9 @@ import config from './app-config.json'
 
 import { Biometrics } from './Helpers/Biometrics';
 
+import firebase from 'react-native-firebase'
+
+
 
 
 // hide warnings for now...
@@ -880,7 +883,18 @@ export default class App extends React.Component {
         // let token = this.props.screenProps.state.userData.token
         // let client  = this.props.screenProps.state.selectedClient
   
-  
+        //this.checkPermission()
+
+        firebase.messaging().getToken().then((token) => {
+          this._onChangeToken(token)
+          console.log('Rosnet: Comp MOunt get token')
+       });
+   
+       firebase.messaging().onTokenRefresh((token) => {
+           this._onChangeToken(token)
+           console.log('Rosnet: Comp MOunt refresh token')
+
+       });
 
 
         //console.log("App-Rosnet config", config)
@@ -891,6 +905,54 @@ export default class App extends React.Component {
         }
 
 
+    }
+    _onChangeToken = (token) => {
+      var data = {
+        'device_token': token,
+        //'device_type': Platform.OS,
+        
+      };
+      console.log('Rosnet: On change token')
+
+      console.log('Data data',data)
+      if(data.device_token){
+        AsyncStorage.setItem('Viswa',(data.device_token))
+      }
+    }
+
+    async checkPermission() {
+      const enabled = await firebase.messaging().hasPermission();
+      if (enabled) {
+          this.getToken();
+      } else {
+          this.requestPermission();
+      }
+    }
+    
+      //3
+    async getToken() {
+      let fcmToken = await AsyncStorage.getItem('fcmToken');
+      console.log('Get permission')
+      if (!fcmToken) {
+          fcmToken =  firebase.messaging().getToken();
+          if (fcmToken) {
+              // user has a device token
+               AsyncStorage.setItem('fcmDeviceToken', JSON.stringify(fcmToken));
+               console.log('got permission',JSON.stringify(fcmToken))
+          }
+      }
+    }
+    
+      //2
+    async requestPermission() {
+      try {
+           firebase.messaging().requestPermission();
+          // User has authorised
+          this.getToken();
+      } catch (error) {
+          // User has rejected permissions
+          console.log('permission rejected');
+      }
     }
 
     componentWillUnmount() {
