@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>572559084482-tsk2t7sraufar88tlnurg2th263lig8d.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.572559084482-tsk2t7sraufar88tlnurg2th263lig8d</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCfGVJyG03OwiMEXM7z8y_NL3Xbw39Nbd0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>572559084482</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.rosnet.mobile</string>
+	<key>PROJECT_ID</key>
+	<string>rosnet-105ca</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rosnet-105ca.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:572559084482:ios:9cfddcac43eb7f3c</string>
+	<key>DATABASE_URL</key>
+	<string>https://rosnet-105ca.firebaseio.com</string>
+</dict>
+</plist>

@@ -58,7 +58,8 @@
 		9187ACDF8F3C4CF9B582E347 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F0D51A2EDFD4E7489F90E3D /* FontAwesome.ttf */; };
 		9B26F8F7A980423B93926BDD /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D51E6942A54DF485CA853F /* libAppCenterReactNativeAnalytics.a */; };
 		9F323F77BA2849579B084C9C /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B448D66F1A4F4FBDBB18AEF0 /* FontAwesome5_Brands.ttf */; };
-		A1241EAB227C04750073BAD4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1241EAA227C04750073BAD4 /* GoogleService-Info.plist */; };
+		A1241EB3227C09090073BAD4 /* RosappPushCertt.certSigningRequest in Resources */ = {isa = PBXBuildFile; fileRef = A1241EB2227C09090073BAD4 /* RosappPushCertt.certSigningRequest */; };
+		A1241EB5227C093B0073BAD4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1241EB4227C093B0073BAD4 /* GoogleService-Info.plist */; };
 		A13E6166227ACA5200125FEA /* libAppCenterReactNativePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BD7D22037E69004941E6 /* libAppCenterReactNativePush.a */; };
 		A13E6196227ACA5800125FEA /* libAppCenterReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDBC22037E6A004941E6 /* libAppCenterReactNative.a */; };
 		A13E6197227ACA5E00125FEA /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C254BDAD22037E6A004941E6 /* libAppCenterReactNativeAnalytics.a */; };
@@ -499,7 +500,8 @@
 		960B5713130C5E1E05208968 /* Pods-Rosnet-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rosnet-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rosnet-tvOS/Pods-Rosnet-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		97F1C53A02CE43F6B727FD0E /* libAppCenterReactNativePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAppCenterReactNativePush.a; sourceTree = "<group>"; };
 		9CF60B77B320460585DB1D81 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
-		A1241EAA227C04750073BAD4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A1241EB2227C09090073BAD4 /* RosappPushCertt.certSigningRequest */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RosappPushCertt.certSigningRequest; path = ../../../../../Desktop/RosappPushCertt.certSigningRequest; sourceTree = "<group>"; };
+		A1241EB4227C093B0073BAD4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A16BFA862225AD3D0069C462 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		A4650213C812321C44D61FAC /* libPods-Rosnet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rosnet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD9021F05FF5448AAAE63488 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
@@ -717,6 +719,7 @@
 		1855D141ED7742969CF31C07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A1241EB2227C09090073BAD4 /* RosappPushCertt.certSigningRequest */,
 				504F67CD07AD4733851B73C3 /* AntDesign.ttf */,
 				0D46CC5FD7E44CCCA4275E8F /* Entypo.ttf */,
 				C9403F3AD8AD4141A3CE92B2 /* EvilIcons.ttf */,
@@ -823,7 +826,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				A1241EAA227C04750073BAD4 /* GoogleService-Info.plist */,
 				A16BFA862225AD3D0069C462 /* RNImagePicker.xcodeproj */,
 				13B07FAE1A68108700A75B9A /* Rosnet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -832,6 +834,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				1855D141ED7742969CF31C07 /* Resources */,
 				B65BDF21225D4095A9839C41 /* AppCenter-Config.plist */,
+				A1241EB4227C093B0073BAD4 /* GoogleService-Info.plist */,
 				64EF9AB068B70C4DCB5E257F /* Pods */,
 				C2806DED22037DD7004CB70D /* Recovered References */,
 			);
@@ -1552,14 +1555,15 @@
 				9187ACDF8F3C4CF9B582E347 /* FontAwesome.ttf in Resources */,
 				9F323F77BA2849579B084C9C /* FontAwesome5_Brands.ttf in Resources */,
 				33199D527CD24573842BE33C /* FontAwesome5_Regular.ttf in Resources */,
+				A1241EB3227C09090073BAD4 /* RosappPushCertt.certSigningRequest in Resources */,
 				A8BAFB425C9E4679844EDE01 /* FontAwesome5_Solid.ttf in Resources */,
 				4821C72CAC19429AB91AD576 /* Foundation.ttf in Resources */,
-				A1241EAB227C04750073BAD4 /* GoogleService-Info.plist in Resources */,
 				86564915F7CE489DA6EAEB16 /* Ionicons.ttf in Resources */,
 				52F649054B0A4A5AAC82191B /* MaterialCommunityIcons.ttf in Resources */,
 				43AEC40B9D81470E9B3B0055 /* MaterialIcons.ttf in Resources */,
 				393B94559A8040649F56B807 /* Octicons.ttf in Resources */,
 				32090EEBFD3143B7B318578D /* SimpleLineIcons.ttf in Resources */,
+				A1241EB5227C093B0073BAD4 /* GoogleService-Info.plist in Resources */,
 				6938B7DF3BFF45C59111B6F1 /* Zocial.ttf in Resources */,
 				A7E065FEDB42457F91959552 /* AppCenter-Config.plist in Resources */,
 			);
