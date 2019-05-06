@@ -25,7 +25,7 @@ import Styles from './Styles'
 
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
-import { GetNotifications } from '../../Services/Account';
+import { GetNotifications } from '../../Services/Push';
 import AlertMessage from '../Modules/AlertMessage';
 
 

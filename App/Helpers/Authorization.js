@@ -14,6 +14,7 @@ import {  AsyncStorage } from 'react-native';
 
 import { userLogin, verifyToken } from '../Services/Account';
 import { getMobileMenuItems } from '../Services/Menu';
+import {updateFcmDeviceToken} from '../Services/Push'
 import { Parsers } from '../Helpers/Parsers';
 
 
@@ -98,27 +99,24 @@ export var Authorization = {
 
         let deviceInfo = null
 
-        AsyncStorage.getItem('Viswa').then((data)=>{
-            
-                fcmToken = JSON.parse(data)
-            
-            console.log('<<<Firefcm',fcmToken)
-        })
+       
          
         AsyncStorage.getItem('deviceInfo').then((data) => {
+
+            _this = this
 
             //console.log("refreshToken loginData", data)
 
             if(data) {
 
                 deviceInfo = JSON.parse(data)
+                console.log('<<deviceInfo',deviceInfo)
 
                 let request = {
                     userName: userName, 
                     password: password, 
                     deviceUniqueId: deviceInfo.deviceUniqueId,
                     appInstallId: deviceInfo.appInstallId,
-                    fcmDeviceToken : deviceInfo.fcmDeviceToken ? deviceInfo.fcmDeviceToken : 'null',
                     deviceType: deviceInfo.deviceType,
                     appVersion: deviceInfo.appVersion,
                     appBuild: deviceInfo.appBuild,
@@ -217,13 +215,32 @@ export var Authorization = {
 
                                 })
                                 
+                                if(deviceInfo.fcmDeviceToken !== null){
+
+                                    var fcmRequest = {
+                                        appInstallId: deviceInfo.appInstallId,
+                                        fcmDeviceToken : deviceInfo.fcmDeviceToken,
+                                        userId: userData.userId,
+                                        client : selectedClient,
+                                        token : userData.token
+                                      }
+                                      updateFcmDeviceToken(fcmRequest,function(err,resp){
+                                        if (err){
+                                          console.log('FCM Update error',err)
+                                        }
+                                        else {
+                                          console.log('FCM Update',resp)
+                                        }
+                                      })
+    
+                                }
+                                
 
 
                             })
 
-
-
-
+                            
+                          
 
                         }
                         else {

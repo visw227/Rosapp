@@ -16,7 +16,7 @@ import NavigationService from './Helpers/NavigationService';
 
 import { generateRandomNumber, checkForNotifications } from './Services/Background';
 
-import { GetNotifications } from './Services/Account';
+import { GetNotifications } from './Services/Push';
 
 
 import { Authorization } from './Helpers/Authorization';

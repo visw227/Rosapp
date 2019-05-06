@@ -21,6 +21,9 @@ import DeviceInfo from 'react-native-device-info'
 
 import { Biometrics } from '../Helpers/Biometrics';
 
+import {updateFcmDeviceToken} from '../Services/Push'
+
+
 
 class LaunchScreen extends React.Component {
 
@@ -31,8 +34,16 @@ class LaunchScreen extends React.Component {
 
   }
 
+  
+
   constructor(props) {
     super(props);
+
+    this.state = {
+      FireToken : null,
+      appInstallId : null
+
+    }
 
   }
 
@@ -71,6 +82,8 @@ class LaunchScreen extends React.Component {
           deviceType: Platform.OS
         }
 
+        this.setState({appInstallId : deviceInfo.appInstallId})
+
         AsyncStorage.setItem('deviceInfo', JSON.stringify(deviceInfo))
 
         callback(deviceInfo)
@@ -90,16 +103,9 @@ class LaunchScreen extends React.Component {
 
       this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
         console.log('token refreshed %%%%%%%*********%%%%%%%')
+        _this._onChangeToken(fcmToken)
     });
 
-      var token = AsyncStorage.getItem('fcmToken')
-
-      var superToken = firebase.messaging().getToken();
-      
-      console.log('super Token',superToken)
-
-
-      console.log('fcm token',token)
 
       AppCenter.setLogLevel(AppCenter.LogLevel.VERBOSE);
 
@@ -108,17 +114,6 @@ class LaunchScreen extends React.Component {
         //console.log("LaunchScreen - deviceInfo: ", JSON.stringify(deviceInfo, null, 2))
 
       })
-
-      firebase.messaging().getToken().then((token) => {
-        this._onChangeToken(token)
-        console.log('Rosnet: Launch Comp MOunt get token')
-     });
- 
-     firebase.messaging().onTokenRefresh((token) => {
-         this._onChangeToken(token)
-         console.log('Rosnet: Launch Comp MOunt refresh token')
-
-     });
 
       const iosConfig = {
         clientId: '572559084482-tsk2t7sraufar88tlnurg2th263lig8d.apps.googleusercontent.com',
@@ -230,6 +225,9 @@ class LaunchScreen extends React.Component {
 
       })
 
+      
+
+      
 
 
 
@@ -270,6 +268,8 @@ async requestPermission() {
 
 }
 _onChangeToken = (token) => {
+
+  _this = this
       var data = {
         'device_token': token,
         'device_type': Platform.OS,
@@ -279,9 +279,11 @@ _onChangeToken = (token) => {
       console.log('Rosnet: Launch On change token')
 
       console.log('Rosnet: Data',data.device_token)
-      if(data.device_token){
+      
+      if(data.device_token.length > 0){
+       
         this.setState({FireToken:data.device_token})
-        AsyncStorage.setItem('Viswa',(data.device_token))
+
       }
     }
 

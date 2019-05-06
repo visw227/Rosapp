@@ -122,7 +122,8 @@ export default class DrawerContainer extends React.Component {
       userData: this.props.screenProps.state.superUser, 
       backgroundColor:brand.colors.primary 
     })
-
+    
+    
 
     // this is a lazy way to force all screens to reload 
     // and we don't have to undo the red background on every screen individually
