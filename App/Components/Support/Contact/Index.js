@@ -37,7 +37,7 @@ class Contact extends React.Component {
 
       this.state = {
         email: 'support@rosnet.com',
-        phone: '866-746-4100',
+        phone: '816-746-4100',
         links: {
           facebook: {
             app: 'facebook://app',

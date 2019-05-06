@@ -167,11 +167,14 @@ export var Authorization = {
 
                                     selectedClient = client
 
+                                    // Use Case: Session Override Testing - level 99 user logs in with several sites, but 
+                                    // when the QA/Support person logs out and then logs in as the user, the user probably doesnt
+                                    // have the previously selectedClient in their list of sites
                                     // just in case the user's selected site is no longer in their list of sites
                                     // reset the selectedClient back to the first in their list
-                                    // if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
-                                    //     selectedClient = userData.sites[0]
-                                    // }
+                                    if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
+                                        selectedClient = userData.sites[0]
+                                    }
 
 
                                 }

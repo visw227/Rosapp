@@ -53,3 +53,18 @@ export function getUserIdForClient(client, token, userName, callback) {
 
 }
 
+export function isSiteAvailable(client, token, callback) {
+
+  serviceWrapper('/api/ManagerAppSite/isSiteAvailable', 'GET', null, client, token, function(err, resp) {
+
+    if(err) {
+      callback(err)
+    }
+    else {
+      callback(null, resp)
+    }
+
+  })
+
+
+}

@@ -30,6 +30,8 @@ import Styles from './Styles'
 
 import SearchBar from '../ReusableComponents/SearchBar'
 
+import { isSiteAvailable } from '../../Services/Site';
+
 
 export class ClientSelection extends React.Component {
 
@@ -77,7 +79,8 @@ export class ClientSelection extends React.Component {
           userData: this.props.screenProps.state.userData,
           filtered: this.props.screenProps.state.userData.sites,
           changed: false,
-          selectedClient: this.props.screenProps.state.selectedClient
+          selectedClient: this.props.screenProps.state.selectedClient,
+
 
       }
 
@@ -100,21 +103,45 @@ export class ClientSelection extends React.Component {
 
   onSelectedClient = (client) => {
 
+
+    let _this = this
+
     console.log("changed site", client)
 
+    isSiteAvailable(client, this.props.screenProps.state.userData.token, function(err, resp){
 
-    this.setState({
-      changed: true,
-      receiving: true,
-      selectedClient: client
-    }, () => 
-  
-      // add a slight spinner delay just to prove to the user that something has happened when the user selects a site
-      setTimeout(() => {
-        this.doClientChange(client)
-      }, 1000)
+      if(err) {
 
-   );
+        this.setState({
+          requestStatus: {
+            hasError: true
+          }
+        })
+
+      }
+      else {
+
+        _this.setState({
+            changed: true,
+            receiving: true,
+            selectedClient: client
+          }, () => 
+        
+            // add a slight spinner delay just to prove to the user that something has happened when the user selects a site
+            setTimeout(() => {
+              _this.doClientChange(client)
+            }, 1000)
+
+        )
+
+      }
+
+    })
+
+    
+
+
+
 
 
   }
@@ -228,6 +255,19 @@ export class ClientSelection extends React.Component {
                       </View>
                     }
                     
+                    {this.state.requestStatus.hasError &&
+                    <View style={{ 
+                        justifyContent: 'center', 
+                        alignItems: 'center',
+                        marginBottom: 15,
+                        marginTop: 10
+                    }}>
+                        <Text style={styles.message}>
+                          {this.state.selectedClient} is currently unavailable. Please select a different site.
+                        </Text>
+                    </View>
+                    }
+
                   
                     <ScrollView style={{ marginTop: 0 }}>
 

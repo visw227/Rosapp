@@ -1,9 +1,9 @@
 
 
 
-GET https://aag.rosnetqa.com/api/ManagerAppMenu
+GET https://otb.rosnetqa.com/api/ManagerAppMenu
 Content-Type: application/json
-managerAppToken: 1ad591c4-4d8d-499f-81f6-101889ac7b1c
+managerAppToken: 3a5edb89-3bf0-45f4-8e3c-0636fab9d034
 
 
 ###
