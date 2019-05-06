@@ -915,8 +915,8 @@ export default class App extends React.Component {
       console.log('Rosnet: On change token')
 
       console.log('Data data',data)
-      if(data.device_token){
-        AsyncStorage.setItem('Viswa',(data.device_token))
+      if(data){
+        AsyncStorage.setItem('firebaseToken',(data.device_token))
       }
     }
 

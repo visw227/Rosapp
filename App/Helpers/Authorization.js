@@ -215,25 +215,7 @@ export var Authorization = {
 
                                 })
                                 
-                                if(deviceInfo.fcmDeviceToken !== null){
-
-                                    var fcmRequest = {
-                                        appInstallId: deviceInfo.appInstallId,
-                                        fcmDeviceToken : deviceInfo.fcmDeviceToken,
-                                        userId: userData.userId,
-                                        client : selectedClient,
-                                        token : userData.token
-                                      }
-                                      updateFcmDeviceToken(fcmRequest,function(err,resp){
-                                        if (err){
-                                          console.log('FCM Update error',err)
-                                        }
-                                        else {
-                                          console.log('FCM Update',resp)
-                                        }
-                                      })
-    
-                                }
+                              
                                 
 
 

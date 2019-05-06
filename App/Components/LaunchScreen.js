@@ -99,13 +99,6 @@ class LaunchScreen extends React.Component {
 
       let _this = this
 
-      _this.checkPermission();
-
-      this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
-        console.log('token refreshed %%%%%%%*********%%%%%%%')
-        _this._onChangeToken(fcmToken)
-    });
-
 
       AppCenter.setLogLevel(AppCenter.LogLevel.VERBOSE);
 
@@ -233,59 +226,6 @@ class LaunchScreen extends React.Component {
 
   }
 
-
-async checkPermission() {
-  const enabled = await firebase.messaging().hasPermission();
-  if (enabled) {
-      this.getToken();
-  } else {
-      this.requestPermission();
-  }
-}
-
-  //3
-async getToken() {
-  let fcmToken = await AsyncStorage.getItem('fcmToken');
-  if (!fcmToken) {
-      fcmToken =  firebase.messaging().getToken();
-      if (fcmToken) {
-          // user has a device token
-          // AsyncStorage.setItem('fcmDeviceToken', JSON.stringify(fcmToken));
-      }
-  }
-}
-
-  //2
-async requestPermission() {
-  try {
-       firebase.messaging().requestPermission();
-      // User has authorised
-      this.getToken();
-  } catch (error) {
-      // User has rejected permissions
-      console.log('permission rejected');
-  }
-
-}
-_onChangeToken = (token) => {
-
-  _this = this
-      var data = {
-        'device_token': token,
-        'device_type': Platform.OS,
-        
-      };
-      
-      console.log('Rosnet: Launch On change token')
-
-      console.log('Rosnet: Data',data.device_token)
-      
-      if(data.device_token.length > 0){
-       
-        this.setState({FireToken:data.device_token})
-
-      }
-    }
 
   // Render any loading content that you like here
   render() {

@@ -24,6 +24,7 @@ import { NavigationActions, StackActions } from 'react-navigation'
 import { List, ListItem, Avatar } from 'react-native-elements'
 
 import * as Progress from 'react-native-progress'
+import firebase from 'react-native-firebase'
 
 import moment from 'moment'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -40,6 +41,8 @@ import appConfig from '../../app-config.json'
 
 
 import { Authorization } from '../../Helpers/Authorization';
+import{updateFcmDeviceToken} from '../../Services/Push'
+import { AsapScheduler } from 'rxjs/internal/scheduler/AsapScheduler';
 
 
 
@@ -77,7 +80,9 @@ class DashboardScreen extends React.Component {
           userData: this.props.screenProps.state.userData,
           selectedClient: this.props.screenProps.state.selectedClient,
           backArrowEnabled: false,
-          forwardArrowEnabled: false
+          forwardArrowEnabled: false,
+          fcmToken: null,
+          appInstallId: null
       }
 
 
@@ -86,11 +91,68 @@ class DashboardScreen extends React.Component {
 
   componentDidMount() {
 
+    _this = this
+
+    console.log("Dashboard is comp did mount")
+
     // componentDidMount only fires once
     // willFocus instead of componentWillReceiveProps
     this.props.navigation.addListener('willFocus', this.load)
 
+
+      
+      _this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
+        console.log('DSashboard : token refreshed %%%%%%%*********%%%%%%%')
+        //_this._onChangeToken(fcmToken)
+    });
+
+    AsyncStorage.getItem('userData').then((data) => {
+
+
+      //console.log("LoginForm userData", data)
+
+      if(data) {
+          
+          let userData = JSON.parse(data)
+          _this.setState({
+              userName: userData.userName,
+              userData: userData
+          })
+      }
+
+      AsyncStorage.getItem('deviceInfo').then((data) => {
+        let deviceInfo = JSON.parse(data)
+        appInstallId = deviceInfo.appInstallId
+       
+
+        AsyncStorage.getItem('firebaseToken').then((token) => {
+          let fcmToken = token
+          if(deviceInfo && fcmToken){
+            let request = {
+              appInstallId : deviceInfo.appInstallId,
+              fcmDeviceToken : fcmToken,
+              userId : _this.state.userData.userId,
+              token : _this.state.userData.token,
+              client : _this.props.screenProps.state.selectedClient
+            }
+            console.log('Dash req:',request)
+            updateFcmDeviceToken(request,function(err,resp){
+              if(err){
+                console.log("UpdateFCMDash Error",err)
+              }
+              else{
+                console.log("updated fcm",resp)
+              }
+            })
+          }
+        })
+       
+      })
+  })
+
+
   }
+
 
   // willFocus doesn't always fire
   // this will catch any global state updates - via screenProps
