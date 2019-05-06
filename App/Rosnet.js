@@ -30,6 +30,10 @@ import { Biometrics } from './Helpers/Biometrics';
 
 import firebase from 'react-native-firebase'
 
+import  { Notification, NotificationOpen } from 'react-native-firebase';
+
+
+
 
 
 
@@ -799,7 +803,11 @@ const AppStack = createStackNavigator({
   PushNotificationsPermissionStack: { screen: PushNotificationsPermissionStack },
   PasswordChangeRequiredStack: { screen: PasswordChangeRequiredStack }
 
-}, {
+}, 
+
+
+
+{
     initialRouteName: 'LaunchStack',
     // drawerPosition: 'left',
     // gesturesEnabled: true,
@@ -884,6 +892,7 @@ export default class App extends React.Component {
         // let client  = this.props.screenProps.state.selectedClient
   
         //this.checkPermission()
+        
 
         firebase.messaging().getToken().then((token) => {
           this._onChangeToken(token)
@@ -896,6 +905,25 @@ export default class App extends React.Component {
 
        });
 
+
+       // //This is triggered if the notification is tapped  --- App is in the background
+       this.notificationOpenedListener = firebase.notifications().onNotificationOpened(() => {
+        // Get the action triggered by the notification being opened
+        //const action = notificationOpen.action;
+        // Get information about the notification that was opened
+        //const notification  = notificationOpen.notification;
+
+        console.log("notifListener open")
+        NavigationService.navigate('Alerts');
+
+    });
+
+    //This is populated if the notification is tapped and opens the app --- App is closed
+      this.initialNotificationOpenedListener = firebase.notifications().getInitialNotification(() => {
+        console.log("notification initial opening")
+        NavigationService.navigate('Alerts');
+      })
+       
 
         //console.log("App-Rosnet config", config)
 
