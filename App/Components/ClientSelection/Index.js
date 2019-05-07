@@ -108,11 +108,22 @@ export class ClientSelection extends React.Component {
 
     console.log("changed site", client)
 
+    this.setState({
+      receiving: true,
+      selectedClient: client,
+      requestStatus: {
+        hasError: false
+      }
+    })
+
     isSiteAvailable(client, this.props.screenProps.state.userData.token, function(err, resp){
 
       if(err) {
 
-        this.setState({
+        console.log(client + " site not available", err)
+
+        _this.setState({
+          receiving: false,
           requestStatus: {
             hasError: true
           }
@@ -121,10 +132,12 @@ export class ClientSelection extends React.Component {
       }
       else {
 
+        console.log(client + " site IS available. resp: ", resp)
+
         _this.setState({
+            receiving: false,
             changed: true,
-            receiving: true,
-            selectedClient: client
+            receiving: true
           }, () => 
         
             // add a slight spinner delay just to prove to the user that something has happened when the user selects a site
@@ -347,7 +360,14 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: '#fff'   
-  }
+  },
+  message: {
+    textAlign: 'center', 
+    paddingTop: 10, 
+    paddingLeft: 20, 
+    paddingRight: 20,
+    color: brand.colors.primary
+  },
 });
 
 //make this component available to the app
