@@ -30,6 +30,8 @@ import Styles from './Styles'
 
 import SearchBar from '../ReusableComponents/SearchBar'
 
+import { isSiteAvailable } from '../../Services/Site';
+
 
 export class ClientSelection extends React.Component {
 
@@ -77,7 +79,8 @@ export class ClientSelection extends React.Component {
           userData: this.props.screenProps.state.userData,
           filtered: this.props.screenProps.state.userData.sites,
           changed: false,
-          selectedClient: this.props.screenProps.state.selectedClient
+          selectedClient: this.props.screenProps.state.selectedClient,
+
 
       }
 
@@ -100,21 +103,58 @@ export class ClientSelection extends React.Component {
 
   onSelectedClient = (client) => {
 
+
+    let _this = this
+
     console.log("changed site", client)
 
-
     this.setState({
-      changed: true,
       receiving: true,
-      selectedClient: client
-    }, () => 
-  
-      // add a slight spinner delay just to prove to the user that something has happened when the user selects a site
-      setTimeout(() => {
-        this.doClientChange(client)
-      }, 1000)
+      selectedClient: client,
+      requestStatus: {
+        hasError: false
+      }
+    })
 
-   );
+    isSiteAvailable(client, this.props.screenProps.state.userData.token, function(err, resp){
+
+      if(err) {
+
+        console.log(client + " site not available", err)
+
+        _this.setState({
+          receiving: false,
+          requestStatus: {
+            hasError: true
+          }
+        })
+
+      }
+      else {
+
+        console.log(client + " site IS available. resp: ", resp)
+
+        _this.setState({
+            receiving: false,
+            changed: true,
+            receiving: true
+          }, () => 
+        
+            // add a slight spinner delay just to prove to the user that something has happened when the user selects a site
+            setTimeout(() => {
+              _this.doClientChange(client)
+            }, 1000)
+
+        )
+
+      }
+
+    })
+
+    
+
+
+
 
 
   }
@@ -228,6 +268,19 @@ export class ClientSelection extends React.Component {
                       </View>
                     }
                     
+                    {this.state.requestStatus.hasError &&
+                    <View style={{ 
+                        justifyContent: 'center', 
+                        alignItems: 'center',
+                        marginBottom: 15,
+                        marginTop: 10
+                    }}>
+                        <Text style={styles.message}>
+                          {this.state.selectedClient} is currently unavailable. Please select a different site.
+                        </Text>
+                    </View>
+                    }
+
                   
                     <ScrollView style={{ marginTop: 0 }}>
 
@@ -307,7 +360,14 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: '#fff'   
-  }
+  },
+  message: {
+    textAlign: 'center', 
+    paddingTop: 10, 
+    paddingLeft: 20, 
+    paddingRight: 20,
+    color: brand.colors.primary
+  },
 });
 
 //make this component available to the app

@@ -2,7 +2,7 @@
 
 GET https://aag.rosnetqa.com/api/ManagerAppSite/StaffList?location=2020011
 Content-Type: application/json
-managerAppToken: 24340d0f-1c25-43c8-8ddb-c68d2476ce52
+managerAppToken: 3a5edb89-3bf0-45f4-8e3c-0636fab9d034
 
 ###
 
@@ -18,3 +18,14 @@ managerAppToken: 722734c0-4205-4cc1-9113-7f61e8ae3702
 GET https://aag.rosnetqa.com/api/ManagerAppSite/getBrowseUserId?userName=dywayne.johnson
 Content-Type: application/json
 managerAppToken: 722734c0-4205-4cc1-9113-7f61e8ae3702
+
+###
+
+GET https://otb.rosnetqa.com/api/ManagerAppSite/IsSiteAvailable
+Content-Type: application/json
+managerAppToken: 3a5edb89-3bf0-45f4-8e3c-0636fab9d034
+
+###
+
+
+

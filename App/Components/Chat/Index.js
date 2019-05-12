@@ -37,7 +37,7 @@ let fakedUserProfile = require('../../Fixtures/UserProfile')
 
 
 //let chatUrl = "http://localhost:3000" ///theme/conversation-home-3.html"
-let chatUrl = "http://dj-chat-app.herokuapp.com/#/"
+//let chatUrl = "http://dj-chat-app.herokuapp.com/#/"
 
 
 class DashboardScreen extends React.Component {
@@ -50,33 +50,15 @@ class DashboardScreen extends React.Component {
         headerStyle: { backgroundColor: typeof(navigate.navigation.state.params) === 'undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
         headerTintColor: 'white',
         headerLeft: < Ionicon
-                name = "md-menu"
-                size = { 35 }
-                color = { brand.colors.white }
-                style = {
-                    { paddingLeft: 10 }
-                }
-                onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
-            />,
+            name = "md-menu"
+            size = { 35 }
+            color = { brand.colors.white }
+            style = {
+                { paddingLeft: 10 }
+            }
+            onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
+        />,
 
-        // headerRight : 
-        //   <View style={{
-        //     alignItems: 'center',
-        //     flexDirection: 'row',
-        //     height: 40,
-        //     paddingRight: 10,
-        //     width: '100%'
-        //   }}>
-
-        //     <FontAwesome
-        //         name="window-restore"
-        //         size={20}
-        //         color={brand.colors.white}
-        //         style={{ marginRight: 10 }}
-        //         onPress={ navigate.navigation.getParam('toggleClientModal') }
-        //     />
-
-        //   </View>,
 
     })
 
@@ -160,7 +142,8 @@ class DashboardScreen extends React.Component {
 
             let userData = this.props.screenProps.state.userData
 
-            let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+
+            let url = appConfig.PROTOCOL + "://dashboard." + appConfig.DOMAIN + "/chatapp"
 
             let source = {
                 uri: chatUrl,
@@ -195,10 +178,10 @@ class DashboardScreen extends React.Component {
             backgroundColor: this.props.screenProps.state.backgroundColor
         })
 
-        let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+        let url = appConfig.PROTOCOL + "://dashboard." + appConfig.DOMAIN + "/chatapp"
 
         let source = {
-            uri: chatUrl,
+            uri: url,
             headers: {
                 "managerAppToken": userData.token,
             }
