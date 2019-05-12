@@ -25,7 +25,7 @@ import Styles from './Styles'
 
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
-import { GetNotifications } from '../../Services/Push';
+import { GetNotifications,resetBadgeCount } from '../../Services/Push';
 import AlertMessage from '../Modules/AlertMessage';
 
 
@@ -84,7 +84,8 @@ class AlertsScreen extends React.Component {
           data: [],
           title : null,
           text : null,
-          loading: true
+          loading: true,
+         
       }
 
 
@@ -128,6 +129,8 @@ class AlertsScreen extends React.Component {
     })
   }
 
+
+
   componentDidMount () {
 
       let _this = this 
@@ -138,14 +141,24 @@ class AlertsScreen extends React.Component {
 
       
 
+
+
+      
+
       let request = {
 
          token : userData.token,
          client : client,
          userName : userData.userName,
-         includeHidden : true
+         includeHidden : true,
+         appInstallId : this.state.appInstallId,
+         fcmDeviceToken : this.state.fcmDeviceToken
 
       }
+
+      
+
+      
       // NOtifications are initially rendered when component is mounted
       _this.renderNotification()
 

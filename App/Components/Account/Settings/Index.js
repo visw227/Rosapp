@@ -75,6 +75,7 @@ class Settings extends React.Component {
     value = (id,array) => {
 
       console.log('switch vale',array)
+      console.log ('<<<Value method switch values',this.state.switch1,this.state.switch1,this.state.switch3,this.state.switch4)
       if (id === 1){
         return this.state.switch1
       }
@@ -113,11 +114,13 @@ class Settings extends React.Component {
 // we will call backfillSubscription api, which will make the Notify_by_push field true for all the alertTypes of the user
     
     retrieveSubscription(request,function(err,resp){
+      console.log("api response",resp,resp.length)
       if (err){
         console.log(err)
       }
 
       else if (resp.length < 4 ){
+       console.log("back fill entered")
         backfillSubscription(request,function(err,resp){
           if (err){
             console.log(err)

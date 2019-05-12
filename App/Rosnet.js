@@ -16,7 +16,7 @@ import NavigationService from './Helpers/NavigationService';
 
 import { generateRandomNumber, checkForNotifications } from './Services/Background';
 
-import { GetNotifications } from './Services/Push';
+import { GetNotifications,resetBadgeCount } from './Services/Push';
 
 
 import { Authorization } from './Helpers/Authorization';
@@ -30,7 +30,11 @@ import { Biometrics } from './Helpers/Biometrics';
 
 import firebase from 'react-native-firebase'
 
+import {LoginSelectClient} from './Components/Account/Login/SelectClient'
+
 import  { Notification, NotificationOpen } from 'react-native-firebase';
+
+
 
 
 
@@ -135,7 +139,6 @@ let LoginStack = createStackNavigator({
         navigationOptions: ({ navigation, screenProps }) => ({
             title: 'Choose a Site'
         })
-            
         
     },
 
@@ -906,24 +909,23 @@ export default class App extends React.Component {
        });
 
 
-       // //This is triggered if the notification is tapped  --- App is in the background
-       this.notificationOpenedListener = firebase.notifications().onNotificationOpened(() => {
-        // Get the action triggered by the notification being opened
-        //const action = notificationOpen.action;
-        // Get information about the notification that was opened
-        //const notification  = notificationOpen.notification;
+       // //This is triggered if the notification is tapped  --- when App is in the background
+       this.notificationOpenedListener = firebase.notifications().onNotificationOpened((data) => {
+       
 
-        console.log("notifListener open")
-        NavigationService.navigate('Alerts');
-
+        client = data.notification._data.client
+        this.doClientChange(client)       
+       NavigationService.navigate('Alerts');
     });
 
-    //This is populated if the notification is tapped and opens the app --- App is closed
-      this.initialNotificationOpenedListener = firebase.notifications().getInitialNotification(() => {
-        console.log("notification initial opening")
+    //This is populated if the notification is tapped and opens the app --- when App is closed
+      this.initialNotificationOpenedListener = firebase.notifications().getInitialNotification((data) => {
+        
+        client = data.notification._data.client
+        this.doClientChange(client)
         NavigationService.navigate('Alerts');
+
       })
-       
 
         //console.log("App-Rosnet config", config)
 
@@ -934,6 +936,21 @@ export default class App extends React.Component {
 
 
     }
+
+    doClientChange = (client) => {
+
+      // Do this AFTER state updates - this shares the persisted userData to the App-Rosnet.js wrapper
+      this._globalStateChange( { action: "change-client", selectedClient:  client })
+  
+      const resetAction = StackActions.reset({
+          index: 0,
+          key: null, // this is the trick that allows this to work
+          actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+      });
+      NavigationService.navigate('Alerts');
+  
+    }
+
     _onChangeToken = (token) => {
       var data = {
         'device_token': token,
@@ -959,7 +976,6 @@ export default class App extends React.Component {
     
       //3
     async getToken() {
-      let fcmToken = await AsyncStorage.getItem('fcmToken');
       console.log('Get permission')
       if (!fcmToken) {
           fcmToken =  firebase.messaging().getToken();
@@ -1265,6 +1281,11 @@ export default class App extends React.Component {
 
         console.log("+++++++++ STATUS INACTIVE ++++++++++")
 
+
+        _this.resetBadge()
+
+        console.log('******** Rest BAdge')
+
         // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
         // only pasword and token are set to null
         if(this.state.userData && this.state.userData.token) {
@@ -1288,6 +1309,7 @@ export default class App extends React.Component {
         }
         
 
+
         let statusData = {
           limit: 15000, // 15 seconds in milliseconds
           ts: new Date().getTime() // add a timestamp to it for sorting
@@ -1304,6 +1326,53 @@ export default class App extends React.Component {
       // keep track of last state
       this.setState({appState: nextAppState});
 
+    }
+
+
+    resetBadge = () => {
+
+      _this = this
+      
+
+
+        console.log("App inactive :  reset badge called")
+
+        console.log('AppState userData',_this.state.userData)
+
+       
+  
+  
+        AsyncStorage.getItem('deviceInfo').then((data) => {
+          let deviceInfo = JSON.parse(data)
+          appInstallId = deviceInfo.appInstallId
+         
+  
+          AsyncStorage.getItem('firebaseToken').then((token) => {
+            let fcmToken = token
+            if(deviceInfo && fcmToken){
+              let request = {
+                appInstallId : deviceInfo.appInstallId,
+                fcmDeviceToken : fcmToken,
+                userId : _this.state.userData.userId,
+                token : _this.state.userData.token,
+                client : _this.state.selectedClient
+              }
+              console.log('Dash req:',request)
+
+              resetBadgeCount(request,function(err,resp){
+
+                if(err) {
+                  console.log('errorrrrrr',err)
+                }
+                else {
+                  console.log('badge success',resp)
+                }
+              })
+             
+            }
+          })
+         
+        })
     }
 
 

@@ -33,4 +33,20 @@ import { serviceWrapper } from './ServiceWrapper'
   
   }
 
+  export function resetBadgeCount (request,callback) {
+
+    let url = '/api/ManagerAppAlertMethods/badgeReset?appInstallId='+encodeURI(request.appInstallId)+'&fcmDeviceToken='+encodeURI(request.fcmDeviceToken)+'&userId='+encodeURI(request.userId)
+
+    serviceWrapper (url,'GET',null,request.client,request.token,function(err,resp){
+      if (err){
+
+        callback(err)
+      }
+      else {
+        callback(null,resp)
+      }
+    })
+
+  }
+
   

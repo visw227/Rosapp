@@ -33,9 +33,6 @@ class LaunchScreen extends React.Component {
 
 
   }
-
-  
-
   constructor(props) {
     super(props);
 

@@ -34,6 +34,41 @@ X-API-Token: 30b871cf9ae2c7d3aa1570815c4bff165b95cce4
     },
     "notification_target" : {
         "type" : "devices_target",
-        "devices" : ["269D8863-00C5-4195-A746-11DD4A1E0DB2"]
+        "devices" : ["EDA9F233-D8FA-4BF7-B47E-CD5A61214094"]
     }
+}
+
+###
+
+POST https://fcm.googleapis.com/fcm/send
+Content-Type: application/json
+Authorization: key=AIzaSyD4P1ipSHCgI4JIOSGIdaSP5Gbr21rWSWg
+
+{ "data": {
+    "score": "5x1",
+    "time": "15:10"
+  },
+  "registration_ids" : ["d2eSXokIiAA:APA91bEqN0Z_--SiNu7wDVZ-1AnTHel3FHvuoNx-LbO1nNnDCjLNXOGBql_qyxgFe0ZWSFoDtuocr4MwHZwnBhKAvQZPeRsY2ww4EpaiRzTKURyL2qFid1tCFEjxffgpXFMpYyZ2gLlQ","dg8ugugSZkw:APA91bEZHvBN43PvGhdEsw-g4aVWd2QXj4fGVQh1yk0H_tfNDbijvJpflfV8cUi7ci_D7WM9q3REtMaLde8usd_hRP3toVKAQcTj_dEDH6PMLffrQm-vqiLcU61aePqhpqQd60NpedCs"],
+  "notification": {
+    "title": "Viswa is Testing ios",
+    "text": "Let Viswa know you got it..He'll be very happy :-)"
+      }
+}
+
+###
+
+POST https://fcm.googleapis.com/fcm/send
+Content-Type: application/json
+Authorization: key=AIzaSyD4P1ipSHCgI4JIOSGIdaSP5Gbr21rWSWg
+
+{ "data": {
+    "score": "5x1",
+    "time": "15:10"
+  },
+  "to" : "e97h6ZYrfsg:APA91bHgVJKz84y-bXIhl--Njplxqn79GRgYgL0k300qHABUiXZzmsKSFXTSqQyKKHc7PxPW05NfUTtekak4fCWx424U_dvqro3F3kiyvmKXfKNwDHz_DvzfGylZPPs244JTKTvJMCPQ",
+  "notification": {
+    "title": "Test from http",
+    "text": "Succes!!!",
+    "badge" : 1 
+  }
 }
