@@ -26,7 +26,7 @@ import Styles from './Styles'
 
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
-import { GetNotifications,resetBadgeCount,getOpenedAlertsCount,updateOpenAlertsCount} from '../../Services/Push';
+import { GetNotifications,getOpenedAlertsCount,updateOpenAlertsCount} from '../../Services/Push';
 import AlertMessage from '../Modules/AlertMessage';
 import { template } from 'handlebars';
 
@@ -34,10 +34,13 @@ import { template } from 'handlebars';
 class AlertsScreen extends React.Component {
 
   static navigationOptions = (navigate) => ({
+    
+  
+
 
     title: 'Alerts',
 
-  
+    
     // these seem to ONLY work here
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
@@ -49,29 +52,42 @@ class AlertsScreen extends React.Component {
         onPress={() => navigate.navigation.toggleDrawer() }
     />,
 
+      headerRight : navigate.navigation.getParam('renderStyle')
+    
+    // headerRight :   typeof(navigate.navigation.state.params) !== 'undefined' && typeof(navigate.navigation.state.params.AlertState) === 'undefined'  ? <View style={{
+    //   alignItems: 'center',
+    //   flexDirection: 'row',
+    //   height: 40,
+    //   paddingRight: 10,
+    //   width: '100%'
+    // }}>
 
-    headerRight : 
-      <View style={{
-        alignItems: 'center',
-        flexDirection: 'row',
-        height: 40,
-        paddingRight: 10,
-        width: '100%'
-      }}>
+    //   <Entypo
+    //       name="trash"
+    //       size={20}
+    //       color={brand.colors.white}
+    //       style={{ marginRight: 10 }}
+    //       onPress={() => navigate.navigation.setParams({AlertState : 'delete'}) }
+    //   />
 
-        <Entypo
-            name="plus"
-            size={30}
-            color={brand.colors.white}
-            style={{ marginRight: 10 }}
-            onPress={() => navigate.navigation.navigate('AlertCreate') }
-        />
+    // </View> : <View style={{
+    //     alignItems: 'center',
+    //     flexDirection: 'row',
+    //     height: 40,
+    //     paddingRight: 10,
+    //     width: '100%'
+    //   }}>
 
-      </View>,
+    //     <Text> Select All </Text>
+         
 
-
+    //   </View>
+      ,
 
   })
+
+
+
 
     constructor(props) {
       super(props);
@@ -88,18 +104,44 @@ class AlertsScreen extends React.Component {
           openedAlerts :[],
           newOpenAlerts :[],
           title : null,
+          AlertState : 'Select',
           text : null,
           loading: true,
           req : {
-            client : _this.props.screenProps.state.selectedClient,
-            token : _this.props.screenProps.state.userData.token,
-            userName : _this.props.screenProps.state.userData.userName,
+            client : this.props.screenProps.state.selectedClient,
+            token : this.props.screenProps.state.userData.token,
+            userName : this.props.screenProps.state.userData.userName,
             
           }         
   }
     }
 
+    // renderRightHeader = (navigate) => {
+    //   if(navigate.navigation.state.params !== )
+    //   return (
+    //   <View style={{
+    //     alignItems: 'center',
+    //     flexDirection: 'row',
+    //     height: 40,
+    //     paddingRight: 10,
+    //     width: '100%'
+    //   }}>
+
+    //     <Entypo
+    //         name="trash"
+    //         size={20}
+    //         color={brand.colors.white}
+    //         style={{ marginRight: 10 }}
+    //         onPress={() => navigate.navigation.setParams({AlertState : 'delete'}) }
+    //     />
+
+    //   </View>
+    //   )
+    // }
+
   renderNotification = () => {
+
+
     _this = this
     let userData = _this.props.screenProps.state.userData
       let token = _this.props.screenProps.state.userData.token
@@ -150,15 +192,28 @@ class AlertsScreen extends React.Component {
     
   }
 
+  
     
 
   componentDidMount () {
 
-      let _this = this 
+    let _this = this 
+
+    _this.props.navigation.setParams({AlertState : _this.state.AlertState })
+
+    _this.props.navigation.setParams({ 
+      renderStyle: this.renderStyle(),
+      AlertState : _this.state.AlertState
+    })
 
 
+    console.log('Component Did :',_this.props.navigation.params)
+      
+
+      
       // NOtifications are initially rendered when component is mounted
       _this.renderNotification()
+
 
       _this._getOpenAlertsCount(_this.state.req)
 
@@ -166,26 +221,24 @@ class AlertsScreen extends React.Component {
       _this.interval = setInterval (() => _this.renderNotification()
       ,15000)
 
+      
       this.props.navigation.setParams({ 
-        backgroundColor:this.props.screenProps.state.backgroundColor 
+        backgroundColor:_this.props.screenProps.state.backgroundColor 
       })
 
-      
-
-      if(_this.state.data && _this.state.data.length > 0) {
-        var temp = []
-        _this.state.data.forEach(e => {
-          temp.push(e.AlertID)
-        })
-  
-      }
      
-      if(_this.state.newOpenAlerts && _this.state.newOpenAlerts.length > 0){
-        newAlertCount = temp.length - _this.state.newOpenAlerts.length
-        this.props.screenProps._globalStateChange( { action: "Badge-count", newAlertCount:  newAlertCount })
-      }
+  }
+
+
+  renderStyle = () => {
+
+    _this = this
+    //this.props.navigation.setParams({AlertState : 'Select'})
+
+    console.log('NAvigation state', _this.props.navigation.state.params)
 
   }
+
 
   onPress = (l,req) => {
 

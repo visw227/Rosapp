@@ -491,29 +491,7 @@ let TabStack = createBottomTabNavigator({
         
         tabBarIcon: () => <Badge screenProps = {screenProps}/>
 
-          // <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          //   <FontAwesome name="circle" size={20} color={brand.colors.primary} />
-
-          // {
-          //   <View style={{ 
-          //       position: 'absolute', 
-          //       paddingLeft: 4, 
-          //       paddingRight: 4,
-          //       right: -17, 
-          //       top: 1, 
-          //       backgroundColor: brand.colors.secondary, 
-          //       borderRadius: 10, 
-          //       height: 20, 
-          //       //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
-          //       minWidth: 20, // this keeps it round with borderRadius=10
-          //       justifyContent: 'center', 
-          //       alignItems: 'center' }}><Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}></Text></View>
-
-          //   }
-     
-
-          // </View>
-
+         
 
     })
   },
