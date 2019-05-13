@@ -197,6 +197,10 @@ class AlertsScreen extends React.Component {
 
   componentDidMount () {
 
+          
+      // NOtifications are initially rendered when component is mounted
+    this.renderNotification()
+
     let _this = this 
 
     _this.props.navigation.setParams({AlertState : _this.state.AlertState })
@@ -207,13 +211,8 @@ class AlertsScreen extends React.Component {
     })
 
 
-    console.log('Component Did :',_this.props.navigation.params)
+    console.log('Component Did :',_this.props.navigation.state.params)
       
-
-      
-      // NOtifications are initially rendered when component is mounted
-      _this.renderNotification()
-
 
       _this._getOpenAlertsCount(_this.state.req)
 
@@ -356,7 +355,7 @@ class AlertsScreen extends React.Component {
 
   renderAlertMEssage = () => {
     
-    {this.state.data.length <1 && this.state.loading === false ? <AlertMessage title={'No Alerts to Display'}/> : null}
+    {this.state.data.length <1 ? <AlertMessage title={'No Alerts to Display'}/> : null}
   }
 
 
@@ -370,8 +369,6 @@ class AlertsScreen extends React.Component {
     var alerts = []
     
     if(this.state.data && this.state.data.length > 0) {
-       //reverseData = this.state.data.reverse()
-
        alerts = this.state.data   //data is now reversed in setState method itself
     }
 
