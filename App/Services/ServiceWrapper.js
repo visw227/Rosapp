@@ -20,7 +20,11 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     let fullUrl = ''
     let protocol = ''
 
-    console.log("starting request", url, method, jsonBody, subDomain, token)
+
+    if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
+        console.log("starting request", url, method, jsonBody, subDomain, token)
+    }
+    
 
 
     // clear everything on login
@@ -42,8 +46,10 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     // tack on timestamp as a cache buster
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
-    console.log("fullUrl", fullUrl)
 
+    if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
+        console.log("fullUrl", fullUrl)
+    }
 
     //Logger.LogEvent(true, "ServiceWrapper", "Starting request", { url: fullUrl, method: method })
 

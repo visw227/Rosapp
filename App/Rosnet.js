@@ -1440,8 +1440,6 @@ export default class App extends React.Component {
             <AppContainer 
               screenProps={{ 
                 state: this.state, 
-                newAlertCount : this.state.newAlertCount,
-                
                 _globalStateChange: this._globalStateChange,
                 _globalLogger: this._globalLogger
               }} 

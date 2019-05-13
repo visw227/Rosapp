@@ -37,6 +37,7 @@ class AlertsScreen extends React.Component {
 
     title: 'Alerts',
 
+  
     // these seem to ONLY work here
     headerStyle: {backgroundColor: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
     headerTintColor: 'white',
@@ -127,7 +128,7 @@ class AlertsScreen extends React.Component {
           //console.log('modifiedresp',alertTypes)
 
           _this.setState ({
-            data : resp
+            data : resp.reverse()
           },()=> console.log('<<data',_this.state.data))
 
         
@@ -312,7 +313,15 @@ class AlertsScreen extends React.Component {
     
 
   render() {
+
+    var alerts = []
     
+    if(this.state.data && this.state.data.length > 0) {
+       //reverseData = this.state.data.reverse()
+
+       alerts = this.state.data   //data is now reversed in setState method itself
+    }
+
     return (
 
       
@@ -344,11 +353,11 @@ class AlertsScreen extends React.Component {
             <View style={{ marginTop: -20 }} >
 
               {!this.state.receiving &&
-
+                
                 <List style={Styles.list}>
 
-                  {
-                    this.state.data.map((l, i) => (
+                  { 
+                    alerts.map((l, i) => (
                       
                         
 

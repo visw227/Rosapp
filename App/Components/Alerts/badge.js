@@ -24,12 +24,9 @@ class Badge extends React.Component {
 
     this.setBadge();
 
-    console.log('peopsss',this.props.screenProps)
 
     this.interval = setInterval (() => this.setBadge()
         ,15000)
-
-
   }
 
   setBadge = () => {
@@ -74,6 +71,7 @@ class Badge extends React.Component {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <FontAwesome name="bell" size={20} color={brand.colors.primary} />
 
+        {console.log('Satteee badge',this.state.newAlertCount)}
 
       {
         this.state.newAlertCount && this.state.newAlertCount > 0 ?
