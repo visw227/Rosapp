@@ -19,6 +19,7 @@ const brand = {
         danger: '#e74c3c',
         info: '#3498db',
         white: '#ffffff',
+        newAlert : '#F0F8FF' //aliceBlue
 
 
     }

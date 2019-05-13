@@ -9,7 +9,8 @@ import {
   AsyncStorage,
   ScrollView,
   RefreshControl,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from 'react-native';
 
 import moment from 'moment'
@@ -25,8 +26,9 @@ import Styles from './Styles'
 
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
-import { GetNotifications,resetBadgeCount } from '../../Services/Push';
+import { GetNotifications,resetBadgeCount,getOpenedAlertsCount,updateOpenAlertsCount} from '../../Services/Push';
 import AlertMessage from '../Modules/AlertMessage';
+import { template } from 'handlebars';
 
 
 class AlertsScreen extends React.Component {
@@ -82,20 +84,25 @@ class AlertsScreen extends React.Component {
           },
           userToken: '',
           data: [],
+          openedAlerts :[],
+          newOpenAlerts :[],
           title : null,
           text : null,
           loading: true,
-         
-      }
-
-
+          req : {
+            client : _this.props.screenProps.state.selectedClient,
+            token : _this.props.screenProps.state.userData.token,
+            userName : _this.props.screenProps.state.userData.userName,
+            
+          }         
   }
+    }
 
   renderNotification = () => {
     _this = this
-    let userData = this.props.screenProps.state.userData
-      let token = this.props.screenProps.state.userData.token
-      let client  = this.props.screenProps.state.selectedClient
+    let userData = _this.props.screenProps.state.userData
+      let token = _this.props.screenProps.state.userData.token
+      let client  = _this.props.screenProps.state.selectedClient
 
       let request = {
 
@@ -107,7 +114,7 @@ class AlertsScreen extends React.Component {
       }
     GetNotifications (request ,function(err,resp) {
       if (err){
-        console.log ('Error siteSettings',err)
+        console.log ('Error siteSettings',err )
       }
       else {
         console.log('response',resp)
@@ -121,55 +128,121 @@ class AlertsScreen extends React.Component {
 
           _this.setState ({
             data : resp
-          })
+          },()=> console.log('<<data',_this.state.data))
 
         
       }
 
     })
+   
+      var newData = []
+      if(_this.state.data){
+        _this.state.data.forEach(el => {
+          if(el) {
+            newData.push(el.AlertID)
+          }
+        })
+      }
+
+   
+     
+    
   }
 
-
+    
 
   componentDidMount () {
 
       let _this = this 
 
-      let userData = this.props.screenProps.state.userData
-      let token = this.props.screenProps.state.userData.token
-      let client  = this.props.screenProps.state.selectedClient
 
-      
-
-
-
-      
-
-      let request = {
-
-         token : userData.token,
-         client : client,
-         userName : userData.userName,
-         includeHidden : true,
-         appInstallId : this.state.appInstallId,
-         fcmDeviceToken : this.state.fcmDeviceToken
-
-      }
-
-      
-
-      
       // NOtifications are initially rendered when component is mounted
       _this.renderNotification()
 
-      // This call the api for every 5secs to render new added notifications
+      _this._getOpenAlertsCount(_this.state.req)
+
+      // This call the api for every 15secs to render new added notifications
       _this.interval = setInterval (() => _this.renderNotification()
-      ,5000)
+      ,15000)
 
       this.props.navigation.setParams({ 
         backgroundColor:this.props.screenProps.state.backgroundColor 
       })
 
+      
+
+      if(_this.state.data && _this.state.data.length > 0) {
+        var temp = []
+        _this.state.data.forEach(e => {
+          temp.push(e.AlertID)
+        })
+  
+      }
+     
+      if(_this.state.newOpenAlerts && _this.state.newOpenAlerts.length > 0){
+        newAlertCount = temp.length - _this.state.newOpenAlerts.length
+        this.props.screenProps._globalStateChange( { action: "Badge-count", newAlertCount:  newAlertCount })
+      }
+
+  }
+
+  onPress = (l,req) => {
+
+   _this = this
+   
+    updateOpenAlertsCount(req,l.AlertID,function(err,resp){
+      if (err) {
+        console.log('update open alerts error',err + "request" + req)
+      }
+      else {
+        console.log('update open alerts success',resp)
+
+        _this._getOpenAlertsCount(_this.state.req)
+
+
+      }
+    })
+    _this.props.navigation.navigate('AlertDetail',{'request':l})
+
+    var newData = []
+    if(_this.state.data){
+      _this.state.data.forEach(el => {
+        if(el) {
+          newData.push(el.AlertID)
+        }
+      })
+    }
+
+  
+   
+  }
+
+
+  _getOpenAlertsCount = (req) => {
+
+    console.log('<<<<<On press call')
+    getOpenedAlertsCount(req,function(err,resp){
+
+      if (err) {
+        console.log('get alert count error',err)
+      }
+
+      else {
+        console.log('get alert count success',resp)
+
+        var buffer = []
+
+        resp.forEach(e => {
+          buffer.push(e.Alert_ID)
+        })
+        _this.setState({
+          newOpenAlerts : buffer
+        }, ()=> {
+          console.log('get alert :',_this.state.newOpenAlerts)
+        })
+      }
+
+    })
   }
 
   componentWillUnMount(){
@@ -220,6 +293,7 @@ class AlertsScreen extends React.Component {
 
   }
 
+
   renderLoading = () => {
     
     {this.state.data.length <1  ? <AlertMessage title={'Loading Alerts..'}/> : null}
@@ -230,6 +304,12 @@ class AlertsScreen extends React.Component {
     
     {this.state.data.length <1 && this.state.loading === false ? <AlertMessage title={'No Alerts to Display'}/> : null}
   }
+
+
+
+    
+
+    
 
   render() {
     
@@ -259,40 +339,40 @@ class AlertsScreen extends React.Component {
           >
 
 
+
+
             <View style={{ marginTop: -20 }} >
 
               {!this.state.receiving &&
 
                 <List style={Styles.list}>
 
-
                   {
                     this.state.data.map((l, i) => (
-
+                      
+                        
 
                       <ListItem
                           key={l.AlertTypeId}
                           roundAvatar
                           style={Styles.listItem}
                           title={
-
-                            <Text style={Styles.title} numberOfLines={1} ellipsizeMode ={'tail'} >
+                            <Text style = {this.state.newOpenAlerts.includes(l.AlertID) ? Styles.title : Styles.titleC} numberOfLines={1}>
                               {l.Title}
                             </Text>
-
                           }
-
                           subtitle={
-       
                             <Text style={Styles.subtitleView} numberOfLines={2} ellipsizeMode ={'tail'} >
                               {l.PushText}
                             </Text>
 
                           }
                           avatar={this.getAvatar(l)}
-                          
-                          onPress={() => this.props.navigation.navigate('AlertDetail', { request: l }) }
-                      
+                          containerStyle={{ borderBottomColor : 'white', padding:10,
+                           backgroundColor: this.state.newOpenAlerts.includes(l.AlertID) ? 
+                           brand.colors.white : brand.colors.newAlert }}
+                          onPress={() => this.onPress(l,this.state.req) }
+
                       />
 
                     ))
@@ -312,3 +392,4 @@ class AlertsScreen extends React.Component {
 
 //make this component available to the app
 export default AlertsScreen;
+

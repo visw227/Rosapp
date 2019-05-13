@@ -16,7 +16,7 @@ import NavigationService from './Helpers/NavigationService';
 
 import { generateRandomNumber, checkForNotifications } from './Services/Background';
 
-import { GetNotifications,resetBadgeCount } from './Services/Push';
+import { GetNotifications,resetBadgeCount, getBadgeCount } from './Services/Push';
 
 
 import { Authorization } from './Helpers/Authorization';
@@ -33,6 +33,8 @@ import firebase from 'react-native-firebase'
 import {LoginSelectClient} from './Components/Account/Login/SelectClient'
 
 import  { Notification, NotificationOpen } from 'react-native-firebase';
+
+import Badge from './Components/Alerts/badge'
 
 
 
@@ -384,7 +386,10 @@ let ChatStack = createStackNavigator({ ChatScreen });
 
 let TabStack = createBottomTabNavigator({
 
+  
+
   Dashboard: {
+    
     screen: DashboardStack,
     navigationOptions: ({ navigation, screenProps }) => ({
 
@@ -483,31 +488,31 @@ let TabStack = createBottomTabNavigator({
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
         tabBarLabel: 'Alerts',
-        tabBarIcon: () => 
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <FontAwesome name="bell" size={20} color={brand.colors.primary} />
+        
+        tabBarIcon: () => <Badge screenProps = {screenProps}/>
 
+          // <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          //   <FontAwesome name="circle" size={20} color={brand.colors.primary} />
 
-            {screenProps.state.alertCount > 0 &&
-            <View style={{ 
-                position: 'absolute', 
-                paddingLeft: 4, 
-                paddingRight: 4,
-                right: -17, 
-                top: 1, 
-                backgroundColor: brand.colors.secondary, 
-                borderRadius: 10, 
-                height: 20, 
-                //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
-                minWidth: 20, // this keeps it round with borderRadius=10
-                justifyContent: 'center', 
-                alignItems: 'center' }}>
-              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>screenProps.state.alertCount</Text>
-            </View>
-            }
+          // {
+          //   <View style={{ 
+          //       position: 'absolute', 
+          //       paddingLeft: 4, 
+          //       paddingRight: 4,
+          //       right: -17, 
+          //       top: 1, 
+          //       backgroundColor: brand.colors.secondary, 
+          //       borderRadius: 10, 
+          //       height: 20, 
+          //       //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+          //       minWidth: 20, // this keeps it round with borderRadius=10
+          //       justifyContent: 'center', 
+          //       alignItems: 'center' }}><Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}></Text></View>
+
+          //   }
      
 
-          </View>
+          // </View>
 
 
     })
@@ -699,6 +704,7 @@ let ClientSelectionStack = createStackNavigator({ ClientSelectionScreen });
 // *******************************************************************************
 
 import DrawerContainer from './Components/DrawerContainer'
+import { from } from 'rxjs';
 
 const DrawerStack = createDrawerNavigator({
 
@@ -858,6 +864,7 @@ export default class App extends React.Component {
           appState: AppState.currentState,
           alertCount: 0,
           messageCount: 0,
+          newAlertCount : '',
           backgroundColor :brand.colors.primary,
           settings : {
             switch1 : true,
@@ -889,6 +896,16 @@ export default class App extends React.Component {
 
         //console.log("...root componentDidMount")
         AppState.addEventListener('change', this.onAppStateChange);
+
+       
+
+        this.setBadge()
+
+        // this.interval = setInterval (() => this.setBadge()
+        // ,15000)
+
+
+        
 
         // let userData = this.props.screenProps.state.userData
         // let token = this.props.screenProps.state.userData.token
@@ -935,6 +952,32 @@ export default class App extends React.Component {
         }
 
 
+    }
+
+    setBadge = () => {
+
+      _this = this
+      
+      console.log('set bAdge called')
+      if(_this.state.userData) {
+      let request = {
+        client : _this.state.selectedClient,
+        token : _this.state.userData.token,
+        userName : _this.state.userData.userName
+      }
+      getBadgeCount (request,function(err,resp){
+        if (err) {
+          console.log('Badge count error',err)
+        }
+        else {
+          console.log('Badge count success',resp)
+          _this.setState({
+            newAlertCount : resp
+          },()=>console.log('Badge :',_this.state.newAlertCount))
+        }
+      })
+
+    }
     }
 
     doClientChange = (client) => {
@@ -1183,6 +1226,7 @@ export default class App extends React.Component {
           }
     
         })
+
         let messageCount = generateRandomNumber(0,3)
 
 
@@ -1396,6 +1440,8 @@ export default class App extends React.Component {
             <AppContainer 
               screenProps={{ 
                 state: this.state, 
+                newAlertCount : this.state.newAlertCount,
+                
                 _globalStateChange: this._globalStateChange,
                 _globalLogger: this._globalLogger
               }} 

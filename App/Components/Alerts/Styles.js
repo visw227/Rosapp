@@ -26,6 +26,18 @@ export default StyleSheet.create({
   listItem: {
     marginBottom: 10
   },
+  listItem: {
+    marginBottom: 10,
+   
+  },
+  titleC: {
+    // fontStyle: 'italic',
+    flexDirection: 'row',
+    paddingLeft: 10,
+    color: 'black',
+    fontSize: 15,
+    fontWeight: "bold"
+  },
   ratingText: {
     paddingLeft: 0,
     color: '#808080'
