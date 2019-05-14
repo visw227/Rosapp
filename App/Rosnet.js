@@ -491,8 +491,6 @@ let TabStack = createBottomTabNavigator({
         
         tabBarIcon: () => <Badge screenProps = {screenProps}/>
 
-         
-
     })
   },
 
@@ -843,6 +841,7 @@ export default class App extends React.Component {
           alertCount: 0,
           messageCount: 0,
           newAlertCount : '',
+          deleteState : false,
           backgroundColor :brand.colors.primary,
           settings : {
             switch1 : true,
@@ -876,6 +875,7 @@ export default class App extends React.Component {
         AppState.addEventListener('change', this.onAppStateChange);
 
        
+        
 
         this.setBadge()
 
@@ -903,6 +903,7 @@ export default class App extends React.Component {
 
        });
 
+       
 
        // //This is triggered if the notification is tapped  --- when App is in the background
        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((data) => {
@@ -910,7 +911,7 @@ export default class App extends React.Component {
 
         client = data.notification._data.client
         this.doClientChange(client)       
-       NavigationService.navigate('Alerts');
+       NavigationService.navigate('Alerts',{deleteState:false});
     });
 
     //This is populated if the notification is tapped and opens the app --- when App is closed
@@ -918,7 +919,7 @@ export default class App extends React.Component {
         
         client = data.notification._data.client
         this.doClientChange(client)
-        NavigationService.navigate('Alerts');
+        NavigationService.navigate('Alerts',{deleteState:false});
 
       })
 
@@ -931,6 +932,11 @@ export default class App extends React.Component {
 
 
     }
+    
+
+   
+
+
 
     setBadge = () => {
 
@@ -968,7 +974,7 @@ export default class App extends React.Component {
           key: null, // this is the trick that allows this to work
           actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
       });
-      NavigationService.navigate('Alerts');
+      NavigationService.navigate('Alerts',{deleteState: false});
   
     }
 

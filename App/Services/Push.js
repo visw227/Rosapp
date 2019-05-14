@@ -4,7 +4,7 @@ import { serviceWrapper } from './ServiceWrapper'
  //ManagerAppAlertMethods/GetNotifications?userId=454&includeHidden=1
  export function GetNotifications (request,callback) {
 
-    let url = '/api/ManagerAppAlertMethods/GetNotifications?userName='+encodeURI(request.userName)+'&includeHidden='+'true'
+    let url = '/api/ManagerAppAlertMethods/GetNotifications?userName='+encodeURI(request.userName)
   
     serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
       if(err){
@@ -36,6 +36,22 @@ import { serviceWrapper } from './ServiceWrapper'
   export function resetBadgeCount (request,callback) {
 
     let url = '/api/ManagerAppAlertMethods/badgeReset?appInstallId='+encodeURI(request.appInstallId)+'&fcmDeviceToken='+encodeURI(request.fcmDeviceToken)+'&userId='+encodeURI(request.userId)
+
+    serviceWrapper (url,'GET',null,request.client,request.token,function(err,resp){
+      if (err){
+
+        callback(err)
+      }
+      else {
+        callback(null,resp)
+      }
+    })
+
+  }
+
+  export function hideAlert (request,id,callback) {
+
+    let url = '/api/ManagerAppAlertMethods/hideAlert?alertId='+encodeURI(id)
 
     serviceWrapper (url,'GET',null,request.client,request.token,function(err,resp){
       if (err){

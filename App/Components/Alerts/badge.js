@@ -71,7 +71,7 @@ class Badge extends React.Component {
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <FontAwesome name="bell" size={20} color={brand.colors.primary} />
 
-        {console.log('Satteee badge',this.state.newAlertCount)}
+ 
 
       {
         this.state.newAlertCount && this.state.newAlertCount > 0 ?

@@ -26,9 +26,11 @@ import Styles from './Styles'
 
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
-import { GetNotifications,getOpenedAlertsCount,updateOpenAlertsCount} from '../../Services/Push';
+import { GetNotifications,getOpenedAlertsCount,updateOpenAlertsCount,hideAlert} from '../../Services/Push';
 import AlertMessage from '../Modules/AlertMessage';
 import { template } from 'handlebars';
+
+import Swipeout from 'react-native-swipeout'
 
 
 class AlertsScreen extends React.Component {
@@ -54,34 +56,7 @@ class AlertsScreen extends React.Component {
 
       headerRight : navigate.navigation.getParam('renderStyle')
     
-    // headerRight :   typeof(navigate.navigation.state.params) !== 'undefined' && typeof(navigate.navigation.state.params.AlertState) === 'undefined'  ? <View style={{
-    //   alignItems: 'center',
-    //   flexDirection: 'row',
-    //   height: 40,
-    //   paddingRight: 10,
-    //   width: '100%'
-    // }}>
-
-    //   <Entypo
-    //       name="trash"
-    //       size={20}
-    //       color={brand.colors.white}
-    //       style={{ marginRight: 10 }}
-    //       onPress={() => navigate.navigation.setParams({AlertState : 'delete'}) }
-    //   />
-
-    // </View> : <View style={{
-    //     alignItems: 'center',
-    //     flexDirection: 'row',
-    //     height: 40,
-    //     paddingRight: 10,
-    //     width: '100%'
-    //   }}>
-
-    //     <Text> Select All </Text>
-         
-
-    //   </View>
+   
       ,
 
   })
@@ -104,9 +79,10 @@ class AlertsScreen extends React.Component {
           openedAlerts :[],
           newOpenAlerts :[],
           title : null,
-          AlertState : 'Select',
+          deleteState : this.props.screenProps.state.deleteState,
           text : null,
           loading: true,
+          alertMessage : 'Alerts are Loading... This might take a while sometimes',
           req : {
             client : this.props.screenProps.state.selectedClient,
             token : this.props.screenProps.state.userData.token,
@@ -192,7 +168,13 @@ class AlertsScreen extends React.Component {
     
   }
 
-  
+  componentWillMount(){
+
+    this.renderNotification()
+
+    this._getOpenAlertsCount(this.state.req)
+
+  }
     
 
   componentDidMount () {
@@ -201,17 +183,23 @@ class AlertsScreen extends React.Component {
       // NOtifications are initially rendered when component is mounted
     this.renderNotification()
 
+    this._getOpenAlertsCount(this.state.req)
+
+    setTimeout(()=> {
+      if(this.state.data.length < 1 || !this.state.data) {
+        this.setState ({
+          alertMessage : 'No Alerts to Display at this time'
+        })
+      }
+    },20000)
+
     let _this = this 
 
-    _this.props.navigation.setParams({AlertState : _this.state.AlertState })
+  
 
     _this.props.navigation.setParams({ 
-      renderStyle: this.renderStyle(),
-      AlertState : _this.state.AlertState
+      renderStyle: this.renderStyle()
     })
-
-
-    console.log('Component Did :',_this.props.navigation.state.params)
       
 
       _this._getOpenAlertsCount(_this.state.req)
@@ -220,10 +208,14 @@ class AlertsScreen extends React.Component {
       _this.interval = setInterval (() => _this.renderNotification()
       ,15000)
 
+      _this.interval = setInterval (() => _this._getOpenAlertsCount(_this.state.req)
+      ,15000)
+
       
       this.props.navigation.setParams({ 
-        backgroundColor:_this.props.screenProps.state.backgroundColor 
-      })
+        backgroundColor:_this.props.screenProps.state.backgroundColor
+        
+      },() => console.log('viswa',this.props.navigation.state.params))
 
      
   }
@@ -231,10 +223,48 @@ class AlertsScreen extends React.Component {
 
   renderStyle = () => {
 
-    _this = this
-    //this.props.navigation.setParams({AlertState : 'Select'})
+    console.log('********** render style **********',this.state.deleteState)
+    return (
 
-    console.log('NAvigation state', _this.props.navigation.state.params)
+    
+     this.state.deleteState === false ?
+    <View style={{
+      alignItems: 'center',
+      flexDirection: 'row',
+      height: 40,
+      paddingRight: 10,
+      width: '100%'
+    }}>
+
+      <Entypo
+          name="trash"
+          size={20}
+          color={brand.colors.white}
+          style={{ marginRight: 10 }}
+          onPress={() => this.setState({
+            deleteState : true 
+          },()=>{
+            console.log('Delete stateeeeee',this.state.deleteState)
+          })}
+      />
+
+    </View> :
+    
+    <View style={{
+        alignItems: 'center',
+        flexDirection: 'row',
+        height: 40,
+        paddingRight: 10,
+        width: '100%'
+      }}>
+
+        <Text> Select All </Text>
+         
+
+      </View>
+    )
+
+    //console.log('NAvigation state', navigate)
 
   }
 
@@ -358,6 +388,49 @@ class AlertsScreen extends React.Component {
     {this.state.data.length <1 ? <AlertMessage title={'No Alerts to Display'}/> : null}
   }
 
+  deleteAlert = (alertId) => {
+
+    _this = this
+
+    hideAlert(_this.state.req,alertId,function(err,resp){
+      if (err) {
+        console.log ('Delete Alert Error',err)
+      }
+      else {
+        console.log('Delete Alert Success',resp)
+      }
+    })
+
+
+
+  }
+
+  swipeDelete = (listItem) => {
+
+    console.log('Delete clickkkkkkkkkkkkkkkkkkk')
+
+    _this = this
+
+    console.log('Pre pop array',_this.state.data.length)
+
+      var oldData = []
+      _this.state.data.forEach(e => {
+        if(e.AlertID === listItem.AlertID) {
+
+         _this.deleteAlert(listItem.AlertID)
+
+          _this.state.data.pop(e)
+          _this.setState({
+           data : _this.state.data
+          }) 
+
+          console.log('Array after pop',_this.state.data.length)
+        }
+      })
+
+     
+
+  }
 
 
     
@@ -366,19 +439,18 @@ class AlertsScreen extends React.Component {
 
   render() {
 
-    var alerts = []
     
-    if(this.state.data && this.state.data.length > 0) {
-       alerts = this.state.data   //data is now reversed in setState method itself
-    }
-
+  //data is now reversed in setState method itself
     return (
 
       
           <View>
 
            
-           {this.state.data.length <1  && <AlertMessage title={'No Alerts to Display at this time'}/> }
+           {this.state.data.length <1  && <AlertMessage title={this.state.alertMessage}/> }
+
+          
+
 
           <ScrollView
             style={{ backgroundColor: '#ffffff' }}
@@ -397,7 +469,7 @@ class AlertsScreen extends React.Component {
             
           >
 
-
+              
 
 
             <View style={{ marginTop: -20 }} >
@@ -407,11 +479,18 @@ class AlertsScreen extends React.Component {
                 <List style={Styles.list}>
 
                   { 
-                    alerts.map((l, i) => (
-                      
-                        
+                    this.state.data.map((l, i) => (
 
-                      <ListItem
+                       swipeBtns = [{
+                        text: 'Delete',
+                        backgroundColor: 'red',
+                        //underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+                        onPress: () => { this.swipeDelete(l) }
+                      }] ,
+                    
+                      <Swipeout right={swipeBtns}>
+
+                        <ListItem
                           key={l.AlertTypeId}
                           roundAvatar
                           style={Styles.listItem}
@@ -432,7 +511,10 @@ class AlertsScreen extends React.Component {
                            brand.colors.white : brand.colors.newAlert }}
                           onPress={() => this.onPress(l,this.state.req) }
 
-                      />
+                      />       
+
+                      </Swipeout>
+                     
 
                     ))
                   }
