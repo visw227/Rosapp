@@ -15,5 +15,3 @@ export default App
 
 
 
-/// had an error related to importing 'fs' issue.. Don't really know where 'fs' is being imported
-// removed 'fs' from nodemodules/

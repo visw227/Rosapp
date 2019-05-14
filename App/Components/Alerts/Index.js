@@ -30,10 +30,9 @@ import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
 import { GetNotifications,getOpenedAlertsCount,updateOpenAlertsCount,hideAlert} from '../../Services/Push';
 import AlertMessage from '../Modules/AlertMessage';
-import { template } from 'handlebars';
+
 
 import Swipeout from 'react-native-swipeout'
-import { of } from 'rxjs';
 
 
 class AlertsScreen extends React.Component {
