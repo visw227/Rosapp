@@ -21,9 +21,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     let protocol = ''
 
 
-    if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
-        console.log("starting request", url, method, jsonBody, subDomain, token)
-    }
+    // if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
+    //     console.log("starting request", url, method, jsonBody, subDomain, token)
+    // }
     
 
 
@@ -47,9 +47,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
 
-    if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
-        console.log("fullUrl", fullUrl)
-    }
+    // if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
+    //     console.log("fullUrl", fullUrl)
+    // }
 
     //Logger.LogEvent(true, "ServiceWrapper", "Starting request", { url: fullUrl, method: method })
 
@@ -70,19 +70,19 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
     // Setup our listener to process compeleted requests
     xhr.onerror = function(err) {
-        console.log("error", err)
+        //console.log("error", err)
     }
     xhr.onloadstart = function() {
-        console.log("onloadstart")
+        //console.log("onloadstart")
     }
     xhr.onprogress = function() {
-        console.log("onprogress")
+        //console.log("onprogress")
     }
     xhr.onabort = function() {
-        console.log("abort")
+        //console.log("abort")
     }
     xhr.ontimeout = function() {
-        console.log("the request timed out")
+        //console.log("the request timed out")
 
         //Logger.LogEvent(false, "API (TIMED OUT)", url, { request: logRequest })
 
@@ -99,7 +99,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             let json = JSON.parse(xhr.response)
 
-            console.log("xhr.response", json)
+            //console.log("xhr.response", json)
 
             //Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
 
@@ -121,8 +121,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             let message = xhr._response
 
             // the user's token has expired
-            console.log(">>> the user request was unauthorized")
-            console.log("xhr", xhr)
+            //console.log(">>> the user request was unauthorized")
+            //console.log("xhr", xhr)
 
             callback({ status: xhr.status, message: message }, null)
 

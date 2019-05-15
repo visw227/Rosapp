@@ -23,7 +23,7 @@ import { NavigationActions, StackActions } from 'react-navigation'
 
 import { List, ListItem, Avatar } from 'react-native-elements'
 
-import * as Progress from 'react-native-progress'
+//import * as Progress from 'react-native-progress'
 import firebase from 'react-native-firebase'
 
 import moment from 'moment'

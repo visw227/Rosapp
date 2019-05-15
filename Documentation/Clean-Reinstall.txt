@@ -1,0 +1,11 @@
+rm -rf node_modules
+rm -rf $TMPDIR/*
+rm -rf ios/build
+watchman watch-del-all
+yarn cache clean --force
+yarn install
+./android/gradlew clean -p ./android/
+
+Combined:
+
+rm -rf node_modules && rm -rf $TMPDIR/* && rm -rf ios/build && watchman watch-del-all && yarn cache clean --force && yarn install  

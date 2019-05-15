@@ -140,21 +140,20 @@ export class LoginSelectClient extends React.Component {
 
       }
       else if(resp.userData){
-          if(resp.userData) {
 
-            _this.props.screenProps._globalStateChange( { action: "login", userData: resp.userData, selectedClient: resp.selectedClient })
+          _this.props.screenProps._globalStateChange( { action: "login", userData: resp.userData, selectedClient: resp.selectedClient })
 
-            // this shows a back arrow, so don't use this
-            //this.props.navigation.navigate('TabStack')
-            // instead, reset the navigation
-            const resetAction = StackActions.reset({
-                index: 0,
-                key: null, // this is the trick that allows this to work
-                actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
-            });
-            _this.props.navigation.dispatch(resetAction);
+          // this shows a back arrow, so don't use this
+          //this.props.navigation.navigate('TabStack')
+          // instead, reset the navigation
+          const resetAction = StackActions.reset({
+              index: 0,
+              key: null, // this is the trick that allows this to work
+              actions: [NavigationActions.navigate({ routeName: 'DrawerStack' })],
+          });
+          _this.props.navigation.dispatch(resetAction);
 
-          }
+        
       }
       else {
           //_this.showAlert("Unhandled Error")
