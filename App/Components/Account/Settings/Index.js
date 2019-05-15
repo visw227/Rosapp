@@ -21,7 +21,7 @@ import { alertTypes,alertSubscription,retrieveSubscription,backfillSubscription}
 import Styles from './Styles'
 
 import { List, ListItem, Avatar } from 'react-native-elements'
-import { Switch } from 'react-native-gesture-handler';
+//import { Switch } from 'react-native-gesture-handler';
 
 class Settings extends React.Component {
 

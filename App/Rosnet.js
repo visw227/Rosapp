@@ -217,28 +217,6 @@ DashboardStack.navigationOptions = ({ navigation }) => {
   };
 };
 
-// *******************************************************************************
-// My Dashboard 
-// *******************************************************************************
-// import MyDashboardScreen from './Components/MyDashboard/Index'
-
-// let MyDashboardStack = createStackNavigator({ 
-//   MyDashboard: {
-//     screen: MyDashboardScreen,
-//     // to hide the back title for any child screens, it must be set to null here
-//     navigationOptions: ({ navigation }) => ({
-//       headerBackTitle: null
-//     }),
-//   }
-
-// });
-
-// // to hide the tabBar on nested screens, you must do it this way
-// MyDashboardStack.navigationOptions = ({ navigation }) => {
-//   return {
-//     tabBarVisible: navigation.state.index === 0,
-//   };
-// };
 
 // *******************************************************************************
 // Modules 
@@ -250,16 +228,6 @@ import ModulesWebViewScreen from './Components/Modules/WebView'
 import ModulesSearchItemsScreen from './Components/Modules/SearchItems'
 
 let ModulesStack = createStackNavigator({ 
-  // Modules: {
-  //   screen: ModulesScreen,
-  //   // to hide the back title for any child screens, it must be set to null here
-  //   navigationOptions: ({ navigation }) => ({
-  //     headerBackTitle: null
-  //   }),
-  // },
-  // ModulesSubMenu: {
-  //   screen: ModulesSubMenuScreen
-  // },
   ModulesItems: {
     screen: ModulesItemsScreen
   },
@@ -333,39 +301,6 @@ let WorkflowStack = createStackNavigator({
 
 // to hide the tabBar on nested screens, you must do it this way
 WorkflowStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: navigation.state.index === 0,
-  };
-};
-
-// *******************************************************************************
-// Conversations 
-// *******************************************************************************
-
-import ConversationListScreen from './Components/Conversations/Index'
-import CreateConversationScreen from './Components/Conversations/Create'
-import ConversationScreen from './Components/Conversations/Conversation'
-
-let ConversationStack = createStackNavigator({ 
-  ConversationList: {
-    screen: ConversationListScreen,
-    // to hide the back title for any child screens, it must be set to null here
-    navigationOptions: ({ navigation }) => ({
-      headerBackTitle: null
-    }),
-  },
-  CreateConversation: {
-    screen: CreateConversationScreen
-  },
-  Conversation: {
-    screen: ConversationScreen
-  },
-
-});
-
-
-// to hide the tabBar on nested screens, you must do it this way
-ConversationStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: navigation.state.index === 0,
   };
@@ -516,37 +451,6 @@ TabStack.navigationOptions = ({ navigation, screenProps }) => {
   return {
   };
 };
-
-
-
-// *******************************************************************************
-// About
-// *******************************************************************************
-
-// import AboutScreen from './Components/About/Index'
-// import TermsScreen from './Components/About/Terms/Index'
-// import PrivacyScreen from './Components/About/Privacy/Index'
-// import DeviceScreen from './Components/About/Device/Index'
-
-// let AboutStack = createStackNavigator({ 
-//   About: {
-//     screen: AboutScreen,
-//     // to hide the back title for any child screens, it must be set to null here
-//     navigationOptions: ({ navigation }) => ({
-//       headerBackTitle: null
-//     }),
-//   },
-//   Terms: {
-//     screen: TermsScreen
-//   },
-//   Privacy: {
-//     screen: PrivacyScreen
-//   },
-//   Device: {
-//     screen: DeviceScreen
-//   } 
-// });
-
 
 
 

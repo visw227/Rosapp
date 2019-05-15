@@ -24,7 +24,7 @@ import brand from '../../../Styles/brand'
 
 // import Styles from './Styles'
 
-import ImagePicker from 'react-native-image-picker'
+//import ImagePicker from 'react-native-image-picker'
 import { reportIssue } from '../../../Services/Support'
 
 import DeviceInfo from 'react-native-device-info'
