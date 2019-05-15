@@ -62,10 +62,9 @@ Content-Type: application/json
 Authorization: key=AIzaSyD4P1ipSHCgI4JIOSGIdaSP5Gbr21rWSWg
 
 { "data": {
-    "score": "5x1",
-    "time": "15:10"
+    "client": "AAG"
   },
-  "to" : "e97h6ZYrfsg:APA91bHgVJKz84y-bXIhl--Njplxqn79GRgYgL0k300qHABUiXZzmsKSFXTSqQyKKHc7PxPW05NfUTtekak4fCWx424U_dvqro3F3kiyvmKXfKNwDHz_DvzfGylZPPs244JTKTvJMCPQ",
+  "to" : "d8-5Dnvaj9A:APA91bEO5otMbXiIq98Ax_8abG-ahk5VZHWn_aJoDXJujGzi6kxxcldxNRU72iQPo6KW96RoAzum58SAIqW2rGSN7pZWKGVnBAF0NVYdxItJvOk0T2uOsVmjKaEMMFGI56hsW4qafCuU",
   "notification": {
     "title": "Test from http",
     "text": "Succes!!!",

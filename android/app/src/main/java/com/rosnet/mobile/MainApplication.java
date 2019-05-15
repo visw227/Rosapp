@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.google.firebase.FirebaseApp;
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
@@ -47,6 +49,8 @@ public class MainApplication extends Application implements ReactApplication {
             new FingerprintAuthPackage(),
             new RNGestureHandlerPackage(),
             new RNDeviceInfo(),
+            new RNFirebaseMessagingPackage(),
+              new RNFirebaseNotificationsPackage(),
            
             new ImagePickerPackage() // <-- add this line 
             // OR if you want to customize dialog style 
