@@ -64,7 +64,7 @@ Authorization: key=AIzaSyD4P1ipSHCgI4JIOSGIdaSP5Gbr21rWSWg
 { "data": {
     "client": "AAG"
   },
-  "to" : "d8-5Dnvaj9A:APA91bEO5otMbXiIq98Ax_8abG-ahk5VZHWn_aJoDXJujGzi6kxxcldxNRU72iQPo6KW96RoAzum58SAIqW2rGSN7pZWKGVnBAF0NVYdxItJvOk0T2uOsVmjKaEMMFGI56hsW4qafCuU",
+  "to" : "d6Pix7jNtuo:APA91bGNklJwuIChhWN1JDPthwpp_rtaiR8EPbeD8z6URw_iPUOix3YW4WzC-BZjlW7kMTyfxPRnLxeMZVvCOS4KKJPDLrfA0_Wtel_DgO53dlojYP2LlFKmCp-XwSrTFAHB_yAVlV7E",
   "notification": {
     "title": "Test from http",
     "text": "Succes!!!",
