@@ -15,7 +15,7 @@ class Badge extends React.Component {
 
       this.state = {
          
-        newAlertCount :0
+        newAlertCount : 0
           }         
   }
     
@@ -74,7 +74,7 @@ class Badge extends React.Component {
  
 
       {
-        this.state.newAlertCount && this.state.newAlertCount > 0 ?
+        this.state.newAlertCount && this.state.newAlertCount !== 0 ?
         <View style={{ 
             position: 'absolute', 
             paddingLeft: 4, 
