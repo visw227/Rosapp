@@ -376,44 +376,44 @@ let TabStack = createBottomTabNavigator({
   // },
 
 
-  // Conversations: {
-  //   screen: ChatStack,
-  //   navigationOptions: ({ navigation, screenProps }) => ({
+  Conversations: {
+    screen: ChatStack,
+    navigationOptions: ({ navigation, screenProps }) => ({
 
-  //       // title and headerTitle DO NOT WORK HERE
-  //       // the title must be set in the screen
-  //       // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-  //       tabBarLabel: 'Chat',
-  //       // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
-  //       tabBarIcon: () => 
-  //         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-  //           <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary} />
+        // title and headerTitle DO NOT WORK HERE
+        // the title must be set in the screen
+        // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+        tabBarLabel: 'Chat',
+        // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
+        tabBarIcon: () => 
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary} />
 
 
-  //           {screenProps.state.messageCount > 0 &&
-  //           <View style={{ 
-  //               position: 'absolute', 
-  //               paddingLeft: 4, 
-  //               paddingRight: 4,
-  //               right: -20, 
-  //               top: 1, 
-  //               backgroundColor: brand.colors.orange, 
-  //               borderRadius: 10, 
-  //               height: 20, 
-  //               //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
-  //               minWidth: 20, // this keeps it round with borderRadius=10
-  //               justifyContent: 'center', 
-  //               alignItems: 'center' }}>
-  //             <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.messageCount}</Text>
-  //           </View>
-  //           }
+            {screenProps.state.messageCount > 0 &&
+            <View style={{ 
+                position: 'absolute', 
+                paddingLeft: 4, 
+                paddingRight: 4,
+                right: -20, 
+                top: 1, 
+                backgroundColor: brand.colors.orange, 
+                borderRadius: 10, 
+                height: 20, 
+                //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+                minWidth: 20, // this keeps it round with borderRadius=10
+                justifyContent: 'center', 
+                alignItems: 'center' }}>
+              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.messageCount}</Text>
+            </View>
+            }
      
 
-  //         </View>
+          </View>
 
-  //   })
+    })
 
-  // },
+  },
 
   Alerts: {
     screen: AlertStack,
@@ -1100,7 +1100,7 @@ export default class App extends React.Component {
             console.log ('Error siteSettings',err)
           }
           else {
-            console.log('response',resp)
+            //console.log('response',resp)
             
     
               // resp.forEach(element => {

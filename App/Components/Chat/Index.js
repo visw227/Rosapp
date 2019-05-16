@@ -20,27 +20,13 @@ import {
 } from 'react-native';
 
 import { List, ListItem, Avatar } from 'react-native-elements'
-
-
-
 import Ionicon from 'react-native-vector-icons/Ionicons'
-
-
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-
-
 import appConfig from '../../app-config.json'
 
 
-let fakedUserProfile = require('../../Fixtures/UserProfile')
-
-
-//let chatUrl = "http://localhost:3000" ///theme/conversation-home-3.html"
-//let chatUrl = "http://dj-chat-app.herokuapp.com/#/"
-
-
-class DashboardScreen extends React.Component {
+class ChatScreen extends React.Component {
 
     static navigationOptions = (navigate) => ({
 
@@ -90,7 +76,6 @@ class DashboardScreen extends React.Component {
                 hasError: false,
                 message: ""
             },
-            userProfile: fakedUserProfile,
             userData: this.props.screenProps.state.userData,
             selectedClient: this.props.screenProps.state.selectedClient
         }
@@ -98,77 +83,24 @@ class DashboardScreen extends React.Component {
 
     }
 
+    componentDidMount() {
+
+
+        // componentDidMount only fires once
+        // willFocus instead of componentWillReceiveProps
+        this.props.navigation.addListener('willFocus', this.load)
 
 
 
-    // this will catch any global state updates - via screenProps
-    componentWillReceiveProps(nextProps) {
-
-        let selectedClient = nextProps.screenProps.state.selectedClient
-        let token = nextProps.screenProps.state.userData.token
-
-        // ONLY if something has changed
-        if (token !== this.state.userData.token) {
-
-            console.log("Dashboard picked up new token: ", token)
-
-            let userData = this.props.screenProps.state.userData
-
-            let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
-            let source = {
-                uri: chatUrl,
-                headers: {
-                    "managerAppToken": token
-                }
-            }
-
-            console.log("source updated: ", JSON.stringify(source, null, 2))
 
 
-            this.setState({
-                userData: userData,
-                source: source
-            });
-
-        }
-
-        // ONLY if something has changed
-        if (selectedClient !== this.state.selectedClient) {
-
-            console.log("Dashboard picked up new selectedClient: ", selectedClient)
-
-            this.props.navigation.setParams({ title: selectedClient })
-
-            let userData = this.props.screenProps.state.userData
-
-
-            let url = appConfig.PROTOCOL + "://dashboard." + appConfig.DOMAIN + "/chatapp"
-
-            let source = {
-                uri: chatUrl,
-                headers: {
-                    "managerAppToken": userData.token
-                }
-            }
-
-            console.log("source updated: ", JSON.stringify(source, null, 2))
-
-
-            this.setState({
-                selectedClient: selectedClient,
-                source: source
-            });
-
-
-        }
 
     }
 
 
-    componentDidMount() {
+    load = () => {
 
-        let _this = this
+        let now = new Date().getTime()
 
         let userData = this.props.screenProps.state.userData
 
@@ -178,36 +110,108 @@ class DashboardScreen extends React.Component {
             backgroundColor: this.props.screenProps.state.backgroundColor
         })
 
-        let url = appConfig.PROTOCOL + "://dashboard." + appConfig.DOMAIN + "/chatapp"
+        let url = "https://" + 
+                this.props.screenProps.state.selectedClient + "." + 
+                appConfig.DOMAIN + "/chatapp?app=rosnet&client=" + this.state.selectedClient + 
+                "&token=" + this.props.screenProps.state.userData.token + 
+                "&__dt=" + now
 
         let source = {
             uri: url,
-            headers: {
-                "managerAppToken": userData.token,
-            }
+            // headers: {
+            //     "Cookie": "rosnetToken=" + userData.token,
+            // }
         }
+ 
+        console.log("Chat screen source", JSON.stringify(source, null, 2))
 
-
-        console.log("Dashboard source", JSON.stringify(source, null, 2))
-
-
-        _this.setState({
+        this.setState({
             userData: userData,
             source: source
         })
 
-
-
     }
+
+    // this will catch any global state updates - via screenProps
+    // componentWillReceiveProps(nextProps) {
+
+    //     let now = new Date().getTime()
+
+    //     let selectedClient = nextProps.screenProps.state.selectedClient
+    //     let token = nextProps.screenProps.state.userData.token
+
+    //     // ONLY if something has changed
+    //     if (token !== this.state.userData.token) {
+
+    //         console.log("Chat screen picked up new token: ", token)
+
+    //         let userData = this.props.screenProps.state.userData
+
+    //         let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+
+    //         let url = "https://" + 
+    //             selectedClient + "." + 
+    //             appConfig.DOMAIN + "/chatapp/?app=rosnet&client=" + selectedClient + 
+    //             "&token=" + token + 
+    //             "&__dt=" + now
+
+    //         let source = {
+    //             uri: url,
+    //             // headers: {
+    //             //     "managerAppToken": token
+    //             // }
+    //         }
+
+    //         console.log("source updated: ", JSON.stringify(source, null, 2))
+
+
+    //         this.setState({
+    //             userData: userData,
+    //             source: source
+    //         });
+
+    //     }
+
+    //     // ONLY if something has changed
+    //     if (selectedClient !== this.state.selectedClient) {
+
+    //         console.log("Chat screen picked up new selectedClient: ", selectedClient)
+
+    //         this.props.navigation.setParams({ title: selectedClient })
+
+    //         let userData = this.props.screenProps.state.userData
+
+    //         let url = "https://" + 
+    //             selectedClient + "." + 
+    //             appConfig.DOMAIN + "/chatapp/?app=rosnet&client=" + selectedClient + 
+    //             "&token=" + token + 
+    //             "&__dt=" + now
+
+
+    //         let source = {
+    //             uri: url,
+    //             // headers: {
+    //             //     "managerAppToken": userData.token
+    //             // }
+    //         }
+
+    //         console.log("source updated: ", JSON.stringify(source, null, 2))
+
+
+    //         this.setState({
+    //             selectedClient: selectedClient,
+    //             source: source
+    //         });
+
+
+    //     }
+
+    // }
+
 
 
 
     _renderLoading = () => {
-    //   return (
-
-    //     <Progress.Bar progress={0.4} width={700} />
-
-    //   )
         return (
             <ActivityIndicator
                 color='#ffffff'
@@ -223,38 +227,36 @@ class DashboardScreen extends React.Component {
 
             return (
 
-                    <
-                    View style = {
-                        { backgroundColor: brand.colors.primary, height: '100%' }
-                    } >
+
+                
+                    <View style ={{backgroundColor: brand.colors.primary, height: '100%'}}>
 
                         <TextInput ref={x => this.fakedInput = x} style={{ height: 0, backgroundColor: '#ffffff' }}  />
 
-                    {
-                        this.state.source &&
-                        <WebView
-                            source={ this.state.source }
+                        {this.state.source &&
+                            <WebView
+                                source={ this.state.source }
 
-                            //Enable Javascript support
-                            javaScriptEnabled={true}
-                            //For the Cache
-                            domStorageEnabled={true}
+                                //Enable Javascript support
+                                javaScriptEnabled={true}
+                                //For the Cache
+                                domStorageEnabled={true}
 
-                            //Want to show the view or not
-                            startInLoadingState={true}
+                                //Want to show the view or not
+                                startInLoadingState={true}
 
-                            //onLoadProgress={e => console.log(e.nativeEvent.progress)}
-                            renderLoading={this._renderLoading}
+                                //onLoadProgress={e => console.log(e.nativeEvent.progress)}
+                                renderLoading={this._renderLoading}
 
-                            //injectedJavaScript = { hideSiteNav }
+                                //injectedJavaScript = { hideSiteNav }
 
-                            style = {
-                                { flex: 1 }
-                            }
+                                style = {
+                                    { flex: 1 }
+                                }
 
-                            scrollEnabled = { false }
-                        />
-                    }
+                                scrollEnabled = { false }
+                            />
+                        }
 
 
                     </View>
@@ -317,4 +319,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default DashboardScreen;
+export default ChatScreen;

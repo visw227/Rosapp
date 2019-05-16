@@ -101,7 +101,7 @@ class DashboardScreen extends React.Component {
 
 
       
-      _this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
+    _this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
         console.log('DSashboard : token refreshed %%%%%%%*********%%%%%%%')
         //_this._onChangeToken(fcmToken)
     });

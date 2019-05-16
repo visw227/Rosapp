@@ -33,7 +33,7 @@ class Badge extends React.Component {
 
     _this = this
     
-    console.log('set bAdge called')
+    //console.log('set bAdge called')
     
     if(_this.props.screenProps){
 
@@ -45,10 +45,10 @@ class Badge extends React.Component {
 
           getBadgeCount (request,function(err,resp){
             if (err) {
-              console.log('Badge count error',err)
+              //console.log('Badge count error',err)
             }
             else {
-              console.log('Badge count success',resp)
+              //console.log('Badge count success',resp)
               _this.setState({
                   newAlertCount : resp
               })
