@@ -97,6 +97,7 @@ class Settings extends React.Component {
   componentDidMount () {
     _this = this
 
+
     this.props.navigation.setParams({ 
       backgroundColor:this.props.screenProps.state.backgroundColor 
     })
@@ -117,40 +118,6 @@ class Settings extends React.Component {
       console.log("api response",resp,resp.length)
       if (err){
         console.log(err)
-      }
-
-      else if (resp.length < 4 ){
-       console.log("back fill entered")
-        backfillSubscription(request,function(err,resp){
-          if (err){
-            console.log(err)
-          }
-          else   retrieveSubscription(request,function(err,resp){
-            resp.forEach(element => {
-              if(element.Alert_type_ID === 1 ){
-                _this.setState({
-                  switch1: element.Notify_by_Push ===1 ? true : false
-                })
-              }
-              if(element.Alert_type_ID === 2 ){
-                _this.setState({
-                  switch2: element.Notify_by_Push ===1 ? true : false
-                })
-              }
-              if(element.Alert_type_ID === 3 ){
-                _this.setState({
-                  switch3: element.Notify_by_Push ===1 ? true : false
-                })
-              }
-              if(element.Alert_type_ID === 4 ){
-                _this.setState({
-                  switch4: element.Notify_by_Push ===1 ? true : false
-                })
-              }
-              
-            });
-          })
-        })
       }
       else   {
         resp.forEach(element => {
@@ -176,7 +143,7 @@ class Settings extends React.Component {
           }
           
         });
-        console.log(resp)
+       //console.log(resp)
       }
     })
 
@@ -217,6 +184,7 @@ class Settings extends React.Component {
 
 
   render() {
+    
     console.log('<<state',this.state)
     var optionsList = []
       
@@ -245,94 +213,103 @@ class Settings extends React.Component {
      }
 
      
+   
+     if (this.props.screenProps.state.userData && this.props.screenProps.state.userData.userLevel === 1)  {
 
-
-    return (
+      return (
 
       
-      <View>
-        <Text style={{fontSize:18,textAlign: 'center',fontStyle:'italic',color:brand.colors.primary,margin:10}}> 
-        You can Subscribe or Unsubscribe the Notification here
-        </Text>
-      
-
-              <ScrollView
-                style={{ backgroundColor: '#ffffff' }}
-
-                refreshControl={
-
-                <RefreshControl
-                    refreshing={this.state.receiving}
-                    onRefresh={this.loadData}
-                    tintColor={brand.colors.primary}
-                    title="Loading"
-                    titleColor={brand.colors.primary}
-                    //colors={['#ff0000', '#00ff00', '#0000ff']}
-                    progressBackgroundColor="#ffffff"
-                />
-                }
-                
-              >
-                
-                  <Text style={Styles.sectionHeader}>{'Stafflinq Notifications'}</Text>
-            
-                
-                 <SectionList
-                    renderItem={({item, index, section}) => 
-                        <ListItem
-                            key={item.type + index}
-                            style={{ padding:0, marginTop:-10 }}
-                            switchButton 
-                            switched={_this.value(item.id,optionsList)}
-                            //onValueChange ={alert('change')}
-                            hideChevron
-                            title={item.type}
-                            //onSwitch={(value)=>console.log('switch',value)}
-                            onSwitch={(value) => {
-                              this.setState(previousState => {
-                                if(item.id === 1){
-                                  return {...previousState,switch1: value ,request:{...this.state.request,desc :'time off',push: value ? 1 : 0, alertTypeID:1}}
-                                }
-                                if (item.id === 2){
-                                  return {...previousState,switch2: value,request:{...this.state.request,desc :'Availability change req',push: value ? 1 :0, alertTypeID:2}}
-                                }
-                                if (item.id === 3){
-                                  return {...previousState,switch3: value,request:{...this.state.request,desc :'Pick up shift',push: value ? 1 :0, alertTypeID:3}}
-                                }
-                                if (item.id === 4){
-                                  return {...previousState,switch4: value,request:{...this.state.request,desc :'Shift Swap',push: value ? 1 :0, alertTypeID:4}}
-                                }
-                              },()=>
-                              alertSubscription(this.state.request,function(err,resp){
-                                  if (err){
-                                    console.log('error')
+        <View>
+          <Text style={{fontSize:18,textAlign: 'center',fontStyle:'italic',color:brand.colors.primary,margin:10}}> 
+          You can Subscribe or Unsubscribe the Notification here
+          </Text>
+        
+  
+                <ScrollView
+                  style={{ backgroundColor: '#ffffff' }}
+  
+                  refreshControl={
+  
+                  <RefreshControl
+                      refreshing={this.state.receiving}
+                      onRefresh={this.loadData}
+                      tintColor={brand.colors.primary}
+                      title="Loading"
+                      titleColor={brand.colors.primary}
+                      //colors={['#ff0000', '#00ff00', '#0000ff']}
+                      progressBackgroundColor="#ffffff"
+                  />
+                  }
+                  
+                >
+                  
+                    <Text style={Styles.sectionHeader}>{'Stafflinq Notifications'}</Text>
+              
+                  
+                   <SectionList
+                      renderItem={({item, index, section}) => 
+                          <ListItem
+                              key={item.type + index}
+                              style={{ padding:0, marginTop:-10 }}
+                              switchButton 
+                              switched={this.value(item.id,optionsList)}
+                              //onValueChange ={alert('change')}
+                              hideChevron
+                              title={item.type}
+                              //onSwitch={(value)=>console.log('switch',value)}
+                              onSwitch={(value) => {
+                                this.setState(previousState => {
+                                  if(item.id === 1){
+                                    return {...previousState,switch1: value ,request:{...this.state.request,desc :'time off',push: value ? 1 : 0, alertTypeID:1}}
                                   }
-                                  else {
-                                    console.log(resp)
+                                  if (item.id === 2){
+                                    return {...previousState,switch2: value,request:{...this.state.request,desc :'Availability change req',push: value ? 1 :0, alertTypeID:2}}
                                   }
+                                  if (item.id === 3){
+                                    return {...previousState,switch3: value,request:{...this.state.request,desc :'Pick up shift',push: value ? 1 :0, alertTypeID:3}}
+                                  }
+                                  if (item.id === 4){
+                                    return {...previousState,switch4: value,request:{...this.state.request,desc :'Shift Swap',push: value ? 1 :0, alertTypeID:4}}
+                                  }
+                                },()=>
+                                alertSubscription(this.state.request,function(err,resp){
+                                    if (err){
+                                      console.log('error')
+                                    }
+                                    else {
+                                      console.log(resp)
+                                    }
+                                }
+                                )
+                                )
                               }
-                              )
-                              )
+  
                             }
+  
+                          />
+                      }
+                      // [Note :] Header is not needed for now--
+                      // renderSectionHeader={({section: {group,id}}) => (
+                      //     <Text style={Styles.sectionHeader}>{group}</Text>
+                      // )}
+                      sections={optionsList}
+                      keyExtractor={(item, index) => item.type + index}
+                  /> 
+                  
+  
+              </ScrollView>
+              </View>
+  
+  
+      ) 
 
-                          }
+     }
 
-                        />
-                    }
-                    // [Note :] Header is not needed for now--
-                    // renderSectionHeader={({section: {group,id}}) => (
-                    //     <Text style={Styles.sectionHeader}>{group}</Text>
-                    // )}
-                    sections={optionsList}
-                    keyExtractor={(item, index) => item.type + index}
-                /> 
-                
+     else return <View>
 
-            </ScrollView>
-            </View>
+     </View>
 
-
-    );
+    
   }
 }
 
