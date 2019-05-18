@@ -66,7 +66,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     // Set up our HTTP request
     var xhr = new XMLHttpRequest();
 
-    xhr.timeout = 5000; // time in milliseconds
+    xhr.timeout = 15000; // time in milliseconds
 
     // Setup our listener to process compeleted requests
     xhr.onerror = function(err) {

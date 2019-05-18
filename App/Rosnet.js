@@ -1334,12 +1334,13 @@ export default class App extends React.Component {
 
 
                   // 5/18/2019 - IMPORTANT CHANGE: 
-                  // When including LockScreen as the last screen since we always need to know where the user really left off
-                  // However, if the user force closes the app when the LockScreen is shown, knowing that LockScreen
-                  // was the last screen used makes it easy to not allow them to bypass it when it was necessary
-                  // to be shown.
-                  // KEEP IN MIND: if the user force closes the app when the LockScreen is shown, the app will resume
-                  // at the DrawerStack instead of where they may have really been last
+                  {/* 
+                  We WERE excluding the LockScreen as the last screen since want to know where the user really left off and resume there.
+                  However, if the user force closes the app when the LockScreen is shown, knowing that LockScreen
+                  was the last screen used makes it easy with the current logic to not allow them to bypass it when it was necessary
+                  to be shown. The downside is that we can only then resume at the Dashboard, since we lost track of where they really were. 
+                  Is this an okay trade-off?  
+                  */}
                   //if(currentScreen !== 'LockScreen') {
                     AsyncStorage.setItem('lastScreen', currentScreen)
                   //}
