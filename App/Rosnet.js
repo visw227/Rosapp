@@ -339,23 +339,6 @@ let TabStack = createBottomTabNavigator({
 
   },
 
-  // MyDashboard: {
-  //   screen: MyDashboardStack,
-  //   navigationOptions: ({ navigation, screenProps }) => ({
-
-  //       // title and headerTitle DO NOT WORK HERE
-  //       // the title must be set in the screen
-  //       // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-  //       tabBarLabel: 'My Dashboard',
-  //       tabBarIcon: () => <FontAwesome name="cubes" size={20} color={brand.colors.primary} />
-  //       // tabBarIcon: ({ tintColor }) =>
-  //       //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-  //       //     <Image source={require('./Images/TabBar/clock-7.png')} />
-  //       //   </View>
-
-  //   })
-  // },
-
 
   // Workflow: {
   //   screen: WorkflowStack,
@@ -770,24 +753,13 @@ export default class App extends React.Component {
 
     componentDidMount() {
 
-        // check if userData has been persisted in local storage
-        // NOTE: this seems to not fire soon enough, so moving this to LaunchScreen.js, which will
-        // share globally through _globalStateChange
-
-
         //console.log("...root componentDidMount")
         AppState.addEventListener('change', this.onAppStateChange);
-
-       
-        
 
         this.setBadge()
 
         // this.interval = setInterval (() => this.setBadge()
         // ,15000)
-
-
-        
 
         // let userData = this.props.screenProps.state.userData
         // let token = this.props.screenProps.state.userData.token
@@ -797,35 +769,36 @@ export default class App extends React.Component {
         
 
         firebase.messaging().getToken().then((token) => {
-          this._onChangeToken(token)
-          console.log('Rosnet: Comp MOunt get token')
-       });
-   
-       firebase.messaging().onTokenRefresh((token) => {
-           this._onChangeToken(token)
-           console.log('Rosnet: Comp MOunt refresh token')
+            this._onChangeToken(token)
+            console.log('Rosnet: Comp MOunt get token')
+        });
+    
+        firebase.messaging().onTokenRefresh((token) => {
+            this._onChangeToken(token)
+            console.log('Rosnet: Comp MOunt refresh token')
 
-       });
+        });
 
        
 
-       // //This is triggered if the notification is tapped  --- when App is in the background
-       this.notificationOpenedListener = firebase.notifications().onNotificationOpened((data) => {
+        // This is triggered if the notification is tapped  --- when App is in the background
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened((data) => {
        
 
-        client = data.notification._data.client
-        this.doClientChange(client)       
-       NavigationService.navigate('Alerts',{deleteState:false});
-    });
+          client = data.notification._data.client
+          this.doClientChange(client)       
+          NavigationService.navigate('Alerts',{deleteState:false});
 
-    //This is populated if the notification is tapped and opens the app --- when App is closed
-      this.initialNotificationOpenedListener = firebase.notifications().getInitialNotification((data) => {
-        
-        client = data.notification._data.client
-        this.doClientChange(client)
-        NavigationService.navigate('Alerts',{deleteState:false});
+        });
 
-      })
+        //This is populated if the notification is tapped and opens the app --- when App is closed
+        this.initialNotificationOpenedListener = firebase.notifications().getInitialNotification((data) => {
+          
+          client = data.notification._data.client
+          this.doClientChange(client)
+          NavigationService.navigate('Alerts',{deleteState:false});
+
+        })
 
         //console.log("App-Rosnet config", config)
 
@@ -835,7 +808,7 @@ export default class App extends React.Component {
         }
 
 
-    }
+    } // end componentDidMount
     
 
    
@@ -844,29 +817,33 @@ export default class App extends React.Component {
 
     setBadge = () => {
 
-      _this = this
-      
-      console.log('set bAdge called')
-      if(_this.state.userData) {
-      let request = {
-        client : _this.state.selectedClient,
-        token : _this.state.userData.token,
-        userName : _this.state.userData.userName
-      }
-      getBadgeCount (request,function(err,resp){
-        if (err) {
-          console.log('Badge count error',err)
-        }
-        else {
-          console.log('Badge count success',resp)
-          _this.setState({
-            newAlertCount : resp
-          },()=>console.log('Badge :',_this.state.newAlertCount))
-        }
-      })
+        _this = this
+        
+        console.log('set bAdge called')
 
-    }
-    }
+        if(_this.state.userData) {
+
+          let request = {
+            client : _this.state.selectedClient,
+            token : _this.state.userData.token,
+            userName : _this.state.userData.userName
+          }
+
+          getBadgeCount (request,function(err,resp){
+            if (err) {
+              console.log('Badge count error',err)
+            }
+            else {
+              console.log('Badge count success',resp)
+              _this.setState({
+                newAlertCount : resp
+              },()=>console.log('Badge :',_this.state.newAlertCount))
+            }
+          })
+
+        } // end if userData
+
+    } // end setBadge
 
     doClientChange = (client) => {
 
@@ -905,7 +882,7 @@ export default class App extends React.Component {
       }
     }
     
-      //3
+    //3
     async getToken() {
       console.log('Get permission')
       if (!fcmToken) {
@@ -918,7 +895,7 @@ export default class App extends React.Component {
       }
     }
     
-      //2
+    //2
     async requestPermission() {
       try {
            firebase.messaging().requestPermission();
@@ -1355,10 +1332,17 @@ export default class App extends React.Component {
                 if (prevScreen !== currentScreen) {
                   console.log('navigating to this screen', currentScreen);
 
-                  // dont ever include LockScreen as the last screen since we always need to know where the user really left off
-                  if(currentScreen !== 'LockScreen') {
+
+                  // 5/18/2019 - IMPORTANT CHANGE: 
+                  // When including LockScreen as the last screen since we always need to know where the user really left off
+                  // However, if the user force closes the app when the LockScreen is shown, knowing that LockScreen
+                  // was the last screen used makes it easy to not allow them to bypass it when it was necessary
+                  // to be shown.
+                  // KEEP IN MIND: if the user force closes the app when the LockScreen is shown, the app will resume
+                  // at the DrawerStack instead of where they may have really been last
+                  //if(currentScreen !== 'LockScreen') {
                     AsyncStorage.setItem('lastScreen', currentScreen)
-                  }
+                  //}
                 } 
                 
               }}
