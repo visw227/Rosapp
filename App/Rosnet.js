@@ -759,7 +759,7 @@ export default class App extends React.Component {
         this.setBadge()
 
         // this.interval = setInterval (() => this.setBadge()
-        // ,15000)
+        // ,60000)
 
         // let userData = this.props.screenProps.state.userData
         // let token = this.props.screenProps.state.userData.token
@@ -1105,7 +1105,7 @@ export default class App extends React.Component {
 
       }
 
-      let timeout = 15000 // 60000 * 5 = 5 minutes
+      let timeout = 60000 // 60000 * 5 = 5 minutes
       setTimeout(_this.backgroundNotificationsTimer, timeout);
 
 
@@ -1220,7 +1220,7 @@ export default class App extends React.Component {
 
 
         let statusData = {
-          limit: 15000, // 15 seconds in milliseconds
+          limit: 60000, // 15 seconds in milliseconds
           ts: new Date().getTime() // add a timestamp to it for sorting
         }
 

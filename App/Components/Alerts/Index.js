@@ -211,10 +211,10 @@ class AlertsScreen extends React.Component {
 
       // This call the api for every 15secs to render new added notifications
       _this.interval = setInterval (() => _this.renderNotification()
-      ,15000)
+      ,60000)
 
       _this.interval = setInterval (() => _this._getOpenAlertsCount(_this.state.req)
-      ,15000)
+      ,60000)
 
       
       this.props.navigation.setParams({ 
