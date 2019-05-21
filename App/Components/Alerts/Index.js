@@ -23,7 +23,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-
+import firebase, { RNFirebase } from 'react-native-firebase'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
 
@@ -132,11 +132,14 @@ class AlertsScreen extends React.Component {
       else {
         console.log('response',resp)
 
+      
+
           _this.setState ({
             alertOn : false,
             data : resp.reverse()
           },()=> console.log('<<data',_this.state.data))
 
+          
         
       }
 
@@ -447,8 +450,8 @@ class AlertsScreen extends React.Component {
       data : result,
       delList :[],
       deleteState: false,
-      selectAll : true
-    })
+      selectAll : true,
+    },() =>this.props.navigation.setParams({renderStyle : this.renderStyle()}))
     
 
     _this.state.delList.forEach(e => {

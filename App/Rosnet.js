@@ -28,7 +28,7 @@ import config from './app-config.json'
 
 import { Biometrics } from './Helpers/Biometrics';
 
-import firebase from 'react-native-firebase'
+import firebase, { RNFirebase } from 'react-native-firebase'
 
 import {LoginSelectClient} from './Components/Account/Login/SelectClient'
 
@@ -407,7 +407,7 @@ let TabStack = createBottomTabNavigator({
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
         tabBarLabel: 'Alerts',
         
-        tabBarIcon: () => <Badge screenProps = {screenProps}/>
+        tabBarIcon: () => <Badge screenProps = {screenProps} navigation = {navigation}/>
 
     })
   },
@@ -800,6 +800,8 @@ export default class App extends React.Component {
 
         })
 
+       // firebase.notifications().displayNotification(RNFirebase.notifications.Notification)
+
         //console.log("App-Rosnet config", config)
 
         // show QA indicator throughout the app
@@ -835,6 +837,7 @@ export default class App extends React.Component {
             }
             else {
               console.log('Badge count success',resp)
+             
               _this.setState({
                 newAlertCount : resp
               },()=>console.log('Badge :',_this.state.newAlertCount))
