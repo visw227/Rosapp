@@ -19,6 +19,7 @@ import moment from 'moment'
 import { List, ListItem, Avatar, CheckBox} from 'react-native-elements'
 
 import Entypo from 'react-native-vector-icons/Entypo'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -58,11 +59,9 @@ class AlertsScreen extends React.Component {
 
       headerRight : navigate.navigation.getParam('renderStyle')
 
-     // headerRight :  setInterval (() => navigate.navigation.getParam('renderStyle')
-     // ,1000)
-    
-   
-      ,
+      //headerRight : typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.delState) === 'undefined' ? <Text>undefined</Text>: <Text>{navigate.navigation.state.params.delState}</Text>
+
+     
 
   })
 
@@ -87,8 +86,11 @@ class AlertsScreen extends React.Component {
           title : null,
           deleteState : this.props.screenProps.state.deleteState,
           text : null,
+          selectAll : true,
           loading: true,
-          alertMessage : 'Alerts are Loading... This might take a while sometimes',
+          alertOn : true,
+          alertMessage : 'Alerts are Loading...',
+          headerRightTxt : 'Select',
           req : {
             client : this.props.screenProps.state.selectedClient,
             token : this.props.screenProps.state.userData.token,
@@ -98,28 +100,7 @@ class AlertsScreen extends React.Component {
   }
     }
 
-    // renderRightHeader = (navigate) => {
-    //   if(navigate.navigation.state.params !== )
-    //   return (
-    //   <View style={{
-    //     alignItems: 'center',
-    //     flexDirection: 'row',
-    //     height: 40,
-    //     paddingRight: 10,
-    //     width: '100%'
-    //   }}>
-
-    //     <Entypo
-    //         name="trash"
-    //         size={20}
-    //         color={brand.colors.white}
-    //         style={{ marginRight: 10 }}
-    //         onPress={() => navigate.navigation.setParams({AlertState : 'delete'}) }
-    //     />
-
-    //   </View>
-    //   )
-    // }
+  
 
   renderNotification = () => {
 
@@ -139,19 +120,20 @@ class AlertsScreen extends React.Component {
       }
     GetNotifications (request ,function(err,resp) {
       if (err){
+
         console.log ('Error siteSettings',err )
       }
+
+      else if (resp.length < 1) {
+        //console.log('Alert message is logged')
+        _this.setState({alertMessage : 'No Alerts to Display at this time'})
+      }
+
       else {
         console.log('response',resp)
-        
-
-          // resp.forEach(element => {
-          //   title = element.Title
-          //   text = element.PushText
-          // });
-          //console.log('modifiedresp',alertTypes)
 
           _this.setState ({
+            alertOn : false,
             data : resp.reverse()
           },()=> console.log('<<data',_this.state.data))
 
@@ -174,32 +156,28 @@ class AlertsScreen extends React.Component {
     
   }
 
-  componentWillMount(){
-
-    this.renderNotification()
-
-    this._getOpenAlertsCount(this.state.req)
-
-  }
+  
     
 
   componentDidMount () {
 
 
-    this.props.navigation.setParams({renderStyle : this.renderStyle()})
+    this.props.navigation.addListener('willFocus', this.load)
+
+
           
       // NOtifications are initially rendered when component is mounted
     this.renderNotification()
 
     this._getOpenAlertsCount(this.state.req)
 
-    setTimeout(()=> {
-      if(this.state.data.length < 1 || !this.state.data) {
-        this.setState ({
-          alertMessage : 'No Alerts to Display at this time'
-        })
-      }
-    },20000)
+    // setTimeout(()=> {
+    //   if(this.state.data.length < 1 || !this.state.data) {
+    //     this.setState ({
+    //       alertMessage : 'No Alerts to Display at this time'
+    //     })
+    //   }
+    // },20000)
 
     let _this = this 
 
@@ -210,8 +188,8 @@ class AlertsScreen extends React.Component {
       _this._getOpenAlertsCount(_this.state.req)
 
       // This call the api for every 15secs to render new added notifications
-      _this.interval = setInterval (() => _this.renderNotification()
-      ,15000)
+      // _this.interval = setInterval (() => _this.renderNotification()
+      // ,15000)
 
       _this.interval = setInterval (() => _this._getOpenAlertsCount(_this.state.req)
       ,15000)
@@ -225,16 +203,31 @@ class AlertsScreen extends React.Component {
      
   }
 
+  load = () => {
+
+    _this = this 
+
+    _this.renderNotification()
+    _this._getOpenAlertsCount(_this.state.req)
+    this.props.navigation.setParams({renderStyle : this.renderStyle()})
+
+
+  }
 
   renderStyle = () => {
 
     console.log('Rener Style :', this.state.deleteState)
    
-    if(this.state.deleteState ){
+    if(this.state.deleteState){
 
       return(
       
-        <Text color={brand.colors.white}> Cancel </Text> 
+        <Text style ={{color:brand.colors.white,paddingRight:10}} onPress={()=>this.setState({
+          deleteState : false,
+          headerRightTxt : 'Select',
+          delList : [],
+          selectAll : true
+        },()=>this.props.navigation.setParams({renderStyle : this.renderStyle()}))}> {this.state.headerRightTxt} </Text> 
 
      )
 
@@ -242,9 +235,11 @@ class AlertsScreen extends React.Component {
      
               
       <Text style ={{color:brand.colors.white,paddingRight:10}} onPress={()=>this.setState({
-        deleteState : false,
-        delList : []
-      })}> Cancel </Text> 
+        deleteState : true,
+        headerRightTxt : 'Cancel',
+        delList : [],
+        selectAll : true
+      },()=>this.props.navigation.setParams({renderStyle : this.renderStyle()}))}> {this.state.headerRightTxt} </Text> 
 
      
     )
@@ -291,11 +286,11 @@ class AlertsScreen extends React.Component {
     getOpenedAlertsCount(req,function(err,resp){
 
       if (err) {
-        console.log('get alert count error',err)
+       // console.log('get alert count error',err)
       }
 
       else {
-        console.log('get alert count success',resp)
+       // console.log('get alert count success',resp)
 
         var buffer = []
 
@@ -305,16 +300,14 @@ class AlertsScreen extends React.Component {
         _this.setState({
           newOpenAlerts : buffer
         }, ()=> {
-          console.log('get alert :',_this.state.newOpenAlerts)
+          //console.log('get alert :',_this.state.newOpenAlerts)
         })
       }
 
     })
   }
 
-  componentWillUnMount(){
-    clearInterval(this.interval)
-  }
+ 
 
 
   getAvatar = (item) => {
@@ -402,16 +395,6 @@ class AlertsScreen extends React.Component {
   }
 
 
-  renderLoading = () => {
-    
-    {this.state.data.length <1  ? <AlertMessage title={'Loading Alerts..'}/> : null}
-    
-  }
-
-  renderAlertMEssage = () => {
-    
-    {this.state.data.length <1 ? <AlertMessage title={'No Alerts to Display'}/> : null}
-  }
 
   deleteAlert = (alertId) => {
 
@@ -463,7 +446,8 @@ class AlertsScreen extends React.Component {
     _this.setState({
       data : result,
       delList :[],
-      deleteState: false
+      deleteState: false,
+      selectAll : true
     })
     
 
@@ -485,7 +469,8 @@ class AlertsScreen extends React.Component {
     })
 
     this.setState({
-      delList : buffer
+      delList : buffer,
+      selectAll : false
     })
 
 
@@ -534,7 +519,7 @@ class AlertsScreen extends React.Component {
           <View style={{flex :1}}>
 
         
-           {this.state.data.length <1  && <AlertMessage title={this.state.alertMessage}/> }
+           {this.state.alertOn && <AlertMessage title={this.state.alertMessage}/> }
 
            
 
@@ -544,7 +529,7 @@ class AlertsScreen extends React.Component {
 
               <RefreshControl
                 refreshing={this.state.receiving}
-                onRefresh={this.loadData}
+                onRefresh={this.renderNotification}
                 tintColor={brand.colors.primary}
                 title="Loading"
                 titleColor={brand.colors.primary}
@@ -594,7 +579,7 @@ class AlertsScreen extends React.Component {
                           }
                           avatar={this.getAvatar(l)}
                           containerStyle={{ borderBottomColor : 'white', padding:10,
-                           backgroundColor: this.state.newOpenAlerts.includes(l.AlertID) ? 
+                           backgroundColor: this.state.newOpenAlerts.includes(l.AlertID)  || l.AlertOpened ?
                            brand.colors.white : brand.colors.newAlert }}
   
                           onPress={() => this.onPress(l,this.state.req) }
@@ -647,28 +632,36 @@ class AlertsScreen extends React.Component {
               { !this.state.deleteState ? 
               
 
-                  <Avatar
-                  rounded medium
-                  overlayContainerStyle={{backgroundColor: '#1867B2'}}
-                  icon={{name: 'trash', type: 'font-awesome'}}
-                  onPress = {()=>{this.setState({ deleteState:true })}}/>
+                 null
 
          : 
         
          <View>
+        
+        {this.state.selectAll && <View
+              style={{
+                  borderWidth:1,
+                  borderColor: brand.colors.primary,
+                  alignItems:'center',
+                  justifyContent:'center',
+                  width:40,
+                  height:40,
+                  backgroundColor: brand.colors.primary,
+                  borderRadius:100,
+                 
+                }}
+            >
+              <MaterialCommunityIcons name={'check-all'} size={32} color={brand.colors.white} onPress = {()=>{this.selectAll()}} />
+            </View>}
 
-         <Avatar
-         rounded medium
-         overlayContainerStyle={{backgroundColor: brand.colors.gray}}
-         icon={{name: 'check-circle', type: 'font-awesome'}}
-         onPress = {()=>{this.selectAll()}}/>
+         {/* <MaterialCommunityIcons name = {'check-all'} size={32}/> */}
         
         <View style ={{margin : 8}}>
         </View>
 
          <Avatar
          rounded medium
-         overlayContainerStyle={{backgroundColor: brand.colors.success}}
+         overlayContainerStyle={{backgroundColor: brand.colors.primary}}
          icon={{name: 'trash-o', type: 'font-awesome'}}
          onPress = {()=>{this.deleteItem()}}/>
 
