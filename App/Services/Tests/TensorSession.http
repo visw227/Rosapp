@@ -1,0 +1,12 @@
+
+
+GET https://otb.rosnetqa.com/api/ManagerAppAuth/TensorSessionGet
+content-type: application/json
+managerAppToken: b85f258c-1e9d-455d-938c-a6a2fcb2e9d6
+
+###
+
+
+GET https://otb.rosnetqa.com/api/ManagerAppAuth/TensorSessionGet
+content-type: application/json
+managerAppToken: 7a8ab036-dfa3-4984-bbfd-667a50965fbe

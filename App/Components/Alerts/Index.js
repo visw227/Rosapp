@@ -174,14 +174,7 @@ class AlertsScreen extends React.Component {
 
     this._getOpenAlertsCount(this.state.req)
 
-    // setTimeout(()=> {
-    //   if(this.state.data.length < 1 || !this.state.data) {
-    //     this.setState ({
-    //       alertMessage : 'No Alerts to Display at this time'
-    //     })
-    //   }
-    // },20000)
-
+  
     let _this = this 
 
   
@@ -191,17 +184,17 @@ class AlertsScreen extends React.Component {
       _this._getOpenAlertsCount(_this.state.req)
 
       // This call the api for every 15secs to render new added notifications
-      // _this.interval = setInterval (() => _this.renderNotification()
-      // ,15000)
+      _this.interval = setInterval (() => _this.renderNotification()
+      ,15000)
 
       _this.interval = setInterval (() => _this._getOpenAlertsCount(_this.state.req)
-      ,15000)
+      ,60000)
 
       
       this.props.navigation.setParams({ 
         backgroundColor:_this.props.screenProps.state.backgroundColor
         
-      },() => console.log('viswa',this.props.navigation.state.params))
+      })
 
      
   }

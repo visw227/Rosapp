@@ -110,7 +110,15 @@ class ChatScreen extends React.Component {
             backgroundColor: this.props.screenProps.state.backgroundColor
         })
 
-        let url = "https://" + 
+        let protocol = "https://"
+        // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
+        if (appConfig.DOMAIN.indexOf('rosnet') !== -1) {
+            protocol = "https://"
+        } else {
+            protocol = "http://"
+        }
+
+        let url = protocol + 
                 this.props.screenProps.state.selectedClient + "." + 
                 appConfig.DOMAIN + "/chatapp?app=rosnet&client=" + this.state.selectedClient + 
                 "&token=" + this.props.screenProps.state.userData.token + 
@@ -227,8 +235,9 @@ class ChatScreen extends React.Component {
 
             return (
 
+                // NOTE: keyboardShouldPersistTaps doesnt solve the click twice issue
+                // <ScrollView keyboardShouldPersistTaps="always" style ={{backgroundColor: brand.colors.primary, height: 600}}>
 
-                
                     <View style ={{backgroundColor: brand.colors.primary, height: '100%'}}>
 
                         <TextInput ref={x => this.fakedInput = x} style={{ height: 0, backgroundColor: '#ffffff' }}  />
@@ -260,6 +269,7 @@ class ChatScreen extends React.Component {
 
 
                     </View>
+                    // </ScrollView>
 
                 ) // end return
 

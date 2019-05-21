@@ -26,7 +26,8 @@ import Styles from './Styles'
 import AvatarInitials from '../../ReusableComponents/AvatarInitials'
 
 
-import { getRequests, searchUsersByRosnetExternalID } from '../../../Services/Support'
+import { getRequests, searchUsersByEmail } from '../../../Services/Support'
+import { getTensorSessionInfo } from '../../../Services/TensorSession'
 
 import { Utils } from '../../../Helpers/Utils'
 
@@ -133,78 +134,104 @@ class SupportView extends React.Component {
     let userId = this.props.screenProps.state.userData.userId
     let email = this.props.screenProps.state.userData.email
 
-    searchUsersByRosnetExternalID(client, token, userId, function(err, resp){
+    console.log("getTensorSessionInfo...")
+
+    getTensorSessionInfo(client, token, function(err, tokenData){
 
       if(err) {
-            _this.setState({
-                receiving: false, // dont set here so not competing with loadData
-                requestStatus: {
-                  hasError: true,
-                  message: err
-                },
-                registered: false
-            })
+
       }
       else {
 
-        // if the search results found a user by the Rosnet User ID, then we know the user is registered
-        // Note: we can search by email address instead if needed
-        if(resp && resp.users && resp.users.length > 0) {
-      
-            getRequests(client, token, email, function(err, resp){
+        console.log("tensor session", tokenData)
 
-              if(err) {
+        let zenEmail = tokenData.ZendeskEmail
+        let zenName = tokenData.ZendeskFullName
 
-                  let message = "Sorry, we weren't able to retrieve your support requests."
+        _this.setState({
+          tokenData: tokenData
+        })
 
-                  _this.setState({
-                      receiving: false,
-                      requestStatus: {
-                          hasError: true,
-                          message: message
-                      },
-                      data: [],
-                      registered: false
-                  })
-              }
-              else {
+        //searchUsersByRosnetExternalID(client, token, userId, function(err, resp){
+        searchUsersByEmail(client, token, zenEmail, function(err, resp){
 
-                  _this.setState({
-                      receiving: false,
-                      requestStatus: {
-                          hasError: false,
-                          message: null
-                      },
-                      data: resp.requests,
-                      registered: true
-                  })
-              }
+          if(err) {
+                _this.setState({
+                    receiving: false, // dont set here so not competing with loadData
+                    requestStatus: {
+                      hasError: true,
+                      message: err
+                    },
+                    registered: false
+                })
+          }
+          else {
+
+            // if the search results found a user by the Rosnet User ID, then we know the user is registered
+            // Note: we can search by email address instead if needed
+            if(resp && resp.users && resp.users.length > 0) {
+          
+                getRequests(client, token, zenEmail, function(err, resp){
+
+                  if(err) {
+
+                      let message = "Sorry, we weren't able to retrieve your support requests."
+
+                      _this.setState({
+                          receiving: false,
+                          requestStatus: {
+                              hasError: true,
+                              message: message
+                          },
+                          data: [],
+                          registered: false
+                      })
+                  }
+                  else {
+
+                      _this.setState({
+                          receiving: false,
+                          requestStatus: {
+                              hasError: false,
+                              message: null
+                          },
+                          data: resp.requests,
+                          registered: true
+                      })
+                  }
 
 
-          })
+              })
 
 
-        }
-        else {
+            }
+            else {
 
-            _this.setState({
-                receiving: false,
-                requestStatus: {
-                  hasError: true,
-                  message: "You currently don't have an email address registered with Rosnet Support. Would you like to register now?"
-                },
-                data: [],
-                registered: false
-            })
+                _this.setState({
+                    receiving: false,
+                    requestStatus: {
+                      hasError: true,
+                      message: "You currently don't have an email address registered with Rosnet Support. Would you like to register now?"
+                    },
+                    data: [],
+                    registered: false
+                })
 
-            //_this.props.navigation.navigate('SupportRegisterUser')
+                //_this.props.navigation.navigate('SupportRegisterUser')
 
-        }
+            }
+
+          }
+
+
+        })
+
 
       }
 
-
     })
+
+
 
 
 
