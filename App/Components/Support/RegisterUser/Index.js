@@ -23,7 +23,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import brand from '../../../Styles/brand'
 
 
-import { registerUser } from '../../../Services/Support'
+import { Zendesk } from '../../../Helpers/Zendesk'
+
 
 import { updateProfile } from '../../../Services/User';
 
@@ -62,12 +63,7 @@ class RegisterUser extends React.Component {
   constructor(props) {
     super(props)
 
-    let userAskedEnterEmailAddress = false
-    let email = this.props.screenProps.state.userData.email
-    // see if we have the user's email address
-    if(!email || (email && email === '')) {
-      userAskedEnterEmailAddress = true
-    }
+
 
     this.state = {
       sending: false,
@@ -76,8 +72,9 @@ class RegisterUser extends React.Component {
           hasError: false,
           message: ""
       },
-      email: this.props.screenProps.state.userData.email || '',
-      userAskedEnterEmailAddress: userAskedEnterEmailAddress,
+      zenEmail: null,
+      zenName: null,
+      askUserForEmailAddress: false,
       wasAlreadySent: false,
     }
   }
@@ -97,6 +94,8 @@ class RegisterUser extends React.Component {
 
   handleSubmit = () => {
 
+    console.log("submitting", this.state.zenEmail, this.state.zenName)
+
     Keyboard.dismiss()
 
     this.setState({
@@ -107,7 +106,7 @@ class RegisterUser extends React.Component {
       },
     })
 
-    if(this.state.email === '') {
+    if(this.state.zenEmail === '') {
 
       this.setState({
         sending: false,
@@ -144,12 +143,13 @@ class RegisterUser extends React.Component {
 
     Keyboard.dismiss()
     
-    var userData = this.props.screenProps.state.userData
+    let userData = this.props.screenProps.state.userData
+    let client = this.props.screenProps.state.selectedClient
 
     // if we asked the user to enter an email address, save it in ros_master.rosnet_email
-    if(this.state.userAskedEnterEmailAddress) {
+    if(this.state.askUserForEmailAddress) {
 
-      if(this.state.email === '') {
+      if(this.state.zenEmail === '') {
 
         this.setState({
           requestStatus: {
@@ -164,48 +164,39 @@ class RegisterUser extends React.Component {
 
       let profileRequest = {
         //jobTitle: this.state.jobTitle,
-        email: this.state.email
+        email: this.state.zenEmail
       }
 
-      updateProfile(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, profileRequest, function(err, resp){
+      // commenting this out for now since there is a nightly bactch process that creates Zendesk users
+      // updateProfile(this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, profileRequest, function(err, resp){
+      //   if(err){
+      //     console.log('errror updating profile',err)
+      //   }
+      //   else {
+      //     // save the users email to the global state
+      //     userData.email = _this.state.zenEmail
+      //     _this.props.screenProps._globalStateChange( { action: "profile-update", userData: userData })
+      //   }
+      // })
 
-        if(err){
-          console.log('errror updating profile',err)
-
-        }
-        else {
-
-          // save the users email to the global state
-          userData.email = _this.state.email
-          _this.props.screenProps._globalStateChange( { action: "profile-update", userData: userData })
-
-        }
-
-      })
     }
 
-
-    let request = {
-      rosnet_user_id : userData.userId,
-      email : this.state.email,
-      name: userData.commonName,
-      location : userData.location || 0
-      
+    // this is a "faked" session object just to reuse Zendesk.RegisterUser
+    let session = {
+      RosNetUserId: userData.userId,
+      ZendeskEmail: this.state.zenEmail,
+      ZendeskFullName: userData.commonName
     }
 
-    console.log("submitting request", JSON.stringify(request, null, 2))
-
-
-
-    registerUser(this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
+    Zendesk.RegisterUser(userData, client, userData.token, session, function(err, resp){
 
       if(err){
         console.log('errror creating Zendesk user',err)
 
 
-        let message = "Sorry, we weren't able to register your email address. The exact error was: " + err.message.substring(0, 250)
+        let message = "Sorry, we weren't able to register your email address. The exact error was: " + err.message.substring(0, 500)
 
-        if(err.message.indexOf("422") !== -1) {
+        if(err.alreayExists) {
             message = "This email address has already been registered."
         }
 
@@ -255,19 +246,10 @@ class RegisterUser extends React.Component {
         <View style={styles.formContainer}>
 
 
-            {!this.state.userAskedEnterEmailAddress &&
-
-              <Text style={styles.inputLabel} >
-                We will use {this.state.email} to create your Rosnet Support profile.
-              </Text>
-
-            }
-
-            {this.state.userAskedEnterEmailAddress &&
             <View>
 
               <Text style={styles.inputLabel} >
-                To register, please enter your email address below.
+                For support requests, please provide your email address.
               </Text>
 
               <Text style={styles.inputLabel} >
@@ -279,12 +261,12 @@ class RegisterUser extends React.Component {
                       //returnKeyType="go" ref={(input)=> this.passwordInput = input} 
                       placeholder='Email address' 
                       placeholderTextColor={brand.colors.silver}
-                      value={this.state.email}
-                      onChangeText={(email) => this.setState({ email: email.toLowerCase() })}
+                      value={this.state.zenEmail}
+                      onChangeText={(zenEmail) => this.setState({ zenEmail: zenEmail.toLowerCase() })}
               />
 
             </View>
-            }
+     
 
             {this.state.sending &&
             <View style={{ marginTop: 20, marginBottom: 10 }} >

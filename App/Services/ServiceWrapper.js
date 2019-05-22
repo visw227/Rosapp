@@ -142,6 +142,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             // BE AWARE - PC4 responses are VERY unpredictable
             // They can be text strings, HTML, or a JSON object... have fun
 
+            console.log("------------------------------------ ERROR: " + xhr.status + " ---------------------------------------")
+
             console.log("xhr._response", xhr._response)
             let message = xhr._response
 

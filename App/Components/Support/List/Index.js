@@ -25,11 +25,10 @@ import Styles from './Styles'
 
 import AvatarInitials from '../../ReusableComponents/AvatarInitials'
 
-
-import { getRequests, searchUsersByEmail } from '../../../Services/Support'
-import { getTensorSessionInfo } from '../../../Services/TensorSession'
-
 import { Utils } from '../../../Helpers/Utils'
+
+import { Zendesk } from '../../../Helpers/Zendesk'
+
 
 class SupportView extends React.Component {
 
@@ -76,7 +75,8 @@ class SupportView extends React.Component {
               message: ""
           },
           registered: false,
-          data: []
+          data: [],
+          wasAlreadySent: false // used if we create a new user on the fly (when we have the email address)
       }
 
 
@@ -129,103 +129,47 @@ class SupportView extends React.Component {
 
     console.log("getting requests for ", this.props.screenProps.state.userData.email)
 
+    let userData = this.props.screenProps.state.userData
     let client = this.props.screenProps.state.selectedClient
-    let token = this.props.screenProps.state.userData.token
-    let userId = this.props.screenProps.state.userData.userId
-    let email = this.props.screenProps.state.userData.email
+    let token = userData.token
 
-    console.log("getTensorSessionInfo...")
-
-    getTensorSessionInfo(client, token, function(err, tokenData){
+    console.log("calling Zendesk.GetRequests...")
+    Zendesk.GetRequests(userData, client, token, function(err, resp){
 
       if(err) {
+
+        // if the session.ZendeskEmail is null or empty, give the user a chance to enter an email address
+        if(err.missingEmail) {
+
+          _this.props.navigation.navigate('SupportRegisterUser')
+
+        }
+          // if a Zendesk error occurs, not sure what we can do
+        else {
+
+          _this.setState({
+            receiving: false,
+            requestStatus: {
+                hasError: false,
+                message: err
+            }
+          })
+
+
+        }
 
       }
       else {
 
-        console.log("tensor session", tokenData)
-
-        let zenEmail = tokenData.ZendeskEmail
-        let zenName = tokenData.ZendeskFullName
-
         _this.setState({
-          tokenData: tokenData
+          receiving: false,
+          requestStatus: {
+              hasError: false,
+              message: null
+          },
+          data: resp,
+          registered: true
         })
-
-        //searchUsersByRosnetExternalID(client, token, userId, function(err, resp){
-        searchUsersByEmail(client, token, zenEmail, function(err, resp){
-
-          if(err) {
-                _this.setState({
-                    receiving: false, // dont set here so not competing with loadData
-                    requestStatus: {
-                      hasError: true,
-                      message: err
-                    },
-                    registered: false
-                })
-          }
-          else {
-
-            // if the search results found a user by the Rosnet User ID, then we know the user is registered
-            // Note: we can search by email address instead if needed
-            if(resp && resp.users && resp.users.length > 0) {
-          
-                getRequests(client, token, zenEmail, function(err, resp){
-
-                  if(err) {
-
-                      let message = "Sorry, we weren't able to retrieve your support requests."
-
-                      _this.setState({
-                          receiving: false,
-                          requestStatus: {
-                              hasError: true,
-                              message: message
-                          },
-                          data: [],
-                          registered: false
-                      })
-                  }
-                  else {
-
-                      _this.setState({
-                          receiving: false,
-                          requestStatus: {
-                              hasError: false,
-                              message: null
-                          },
-                          data: resp.requests,
-                          registered: true
-                      })
-                  }
-
-
-              })
-
-
-            }
-            else {
-
-                _this.setState({
-                    receiving: false,
-                    requestStatus: {
-                      hasError: true,
-                      message: "You currently don't have an email address registered with Rosnet Support. Would you like to register now?"
-                    },
-                    data: [],
-                    registered: false
-                })
-
-                //_this.props.navigation.navigate('SupportRegisterUser')
-
-            }
-
-          }
-
-
-        })
-
 
       }
 
@@ -233,9 +177,10 @@ class SupportView extends React.Component {
 
 
 
-
-
   }
+
+
+
 
   getAvatar = (item) => {
 
@@ -316,21 +261,6 @@ class SupportView extends React.Component {
           >
 
 
-            {this.state.requestStatus.hasError &&
-              <View style={styles.formContainer}>
-                  <Text style={styles.message} >
-                    {this.state.requestStatus.message}
-                  </Text>
-
-
-                  <TouchableOpacity 
-                      style={ styles.buttonContainer }
-                      onPress={() => this.props.navigation.navigate('SupportRegisterUser') }>
-                      <Text  style={ styles.buttonText }>Register Now</Text>
-                  </TouchableOpacity> 
-
-              </View>
-            }
 
 
             {this.state.registered && !this.state.receiving && this.state.data.length === 0 &&
@@ -353,6 +283,13 @@ class SupportView extends React.Component {
                 <Text style={styles.message} >
                     {this.getCountDisplay(this.state.data.length)}
                 </Text>
+
+                  {/* <TouchableOpacity 
+                      style={ styles.buttonContainer }
+                      onPress={() => this.props.navigation.navigate('SupportRegisterUser') }>
+                      <Text  style={ styles.buttonText }>Test Register</Text>
+                  </TouchableOpacity>  */}
+
 
                 <List style={Styles.list}>
 

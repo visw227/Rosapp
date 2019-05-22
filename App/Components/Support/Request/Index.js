@@ -18,14 +18,12 @@ import moment from 'moment'
 
 import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-//import Entypo from 'react-native-vector-icons/Entypo'
+
 
 import brand from '../../../Styles/brand'
 
-// import Styles from './Styles'
 
-//import ImagePicker from 'react-native-image-picker'
-import { reportIssue } from '../../../Services/Support'
+import { Zendesk } from '../../../Helpers/Zendesk'
 
 import DeviceInfo from 'react-native-device-info'
 
@@ -170,6 +168,7 @@ class SupportRequest extends React.Component {
 
   onSubmitPress = () => {
 
+
     let _this = this
     
     var userData = this.props.screenProps.state.userData
@@ -186,7 +185,7 @@ class SupportRequest extends React.Component {
     console.log("submitting request", JSON.stringify(request, null, 2))
 
 
-    reportIssue (this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
+    Zendesk.ReportIssue (this.props.screenProps.state.selectedClient, userData.token, request, function(err, resp){
       if(err){
         console.log('errror reporting Issue',err)
 

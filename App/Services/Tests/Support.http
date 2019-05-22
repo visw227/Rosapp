@@ -43,12 +43,12 @@ managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
 
 ### SEARCH USERS BY EMAIL ###
 
-GET https://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByEmail?email=djohnson@rosnet.com
+GET https://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByEmail?email=dj-test-002@rosnet.com
 content-type: application/json
-managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
+managerAppToken: 85fd2345-7381-49f8-90d8-a6985304e504
 
 ### SEARCH USERS BY External ID ###
 
-GET https://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByRosnetExternalID?rosnet_user_id=380609323911
+GET https://aag.rosnetqa.com/api/ManagerAppZendesk/SearchUsersByRosnetExternalID?rosnet_user_id=999999002
 content-type: application/json
-managerAppToken: 52d54eb2-c56e-44ea-97e2-92642651fb40
+managerAppToken: 85fd2345-7381-49f8-90d8-a6985304e504
