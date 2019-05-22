@@ -1,8 +1,9 @@
 import React from 'react';
 import { Text, Image, View } from 'react-native';
-import {getBadgeCount} from '../../Services/Push'
+import {getBadgeCount,GetNotifications} from '../../Services/Push'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import brand from '../../Styles/brand'
+import firebase, { RNFirebase } from 'react-native-firebase'
 
 
 
@@ -14,26 +15,27 @@ class Badge extends React.Component {
       super(props);
 
       this.state = {
-         
+        
         newAlertCount : 0
           }         
   }
     
   componentDidMount () {
-
-
     this.setBadge();
 
 
     this.interval = setInterval (() => this.setBadge()
-        ,60000)
+        ,15000)
+    
   }
+
+
 
   setBadge = () => {
 
     _this = this
     
-    //console.log('set bAdge called')
+    //console.log('set bAdge called',_this.state.newAlertCount)
     
     if(_this.props.screenProps){
 
@@ -44,11 +46,21 @@ class Badge extends React.Component {
           }
 
           getBadgeCount (request,function(err,resp){
+            console.log("Resp : : State",resp,  + _this.state.newAlertCount)
             if (err) {
               //console.log('Badge count error',err)
+          
             }
             else {
-              //console.log('Badge count success',resp)
+
+        if (_this.state.newAlertCount && resp > _this.state.newAlertCount) {
+
+
+          _this.displayNotification()
+        
+      
+              }
+
               _this.setState({
                   newAlertCount : resp
               })
@@ -59,6 +71,65 @@ class Badge extends React.Component {
    
 
   
+  }
+
+  displayNotification = () => {
+
+    _this = this 
+
+    let userData = _this.props.screenProps.state.userData
+    let token = _this.props.screenProps.state.userData.token
+    let client  = _this.props.screenProps.state.selectedClient
+
+    let request = {
+
+       token : userData.token,
+       client : client,
+       userName : userData.userName,
+       includeHidden : true
+
+    }
+
+    GetNotifications (request ,function(err,resp) {
+      if (err){
+
+        console.log ('Error siteSettings',err )
+      }
+
+      else {
+        console.log('response',resp)
+        
+        var data = resp.reverse()
+
+        console.log('eraaa',data)
+        
+        const channel = new firebase.notifications.Android.Channel(
+          'default_notification_channel_id',
+          'aa',
+          firebase.notifications.Android.Importance.Max,
+          );
+          channel.setDescription('aa');
+          channel.enableLights(true);
+          channel.enableVibration(true);
+          firebase.notifications().android.createChannel(channel);
+
+        const notification = new firebase.notifications.Notification()
+        .setNotificationId('notificationId')
+        .setTitle('New Notification')
+        .setSound(data[0].Title)
+        .setBody(data[0].PushText)
+        .setData({
+          client: 'value1'
+        });
+ 
+        firebase.notifications().displayNotification(notification)
+      }
+
+    })
+   
+
+
+
   }
 
   render() {
@@ -81,7 +152,7 @@ class Badge extends React.Component {
             paddingRight: 4,
             right: -17, 
             top: 1, 
-            backgroundColor: brand.colors.secondary, 
+            backgroundColor: brand.colors.orange, 
             borderRadius: 10, 
             height: 20, 
             //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
