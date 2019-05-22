@@ -1223,7 +1223,7 @@ export default class App extends React.Component {
 
 
         let statusData = {
-          limit: 60000, // 15 seconds in milliseconds
+          limit: 15000, // 10 seconds in milliseconds
           ts: new Date().getTime() // add a timestamp to it for sorting
         }
 
