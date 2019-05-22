@@ -25,12 +25,8 @@ class Badge extends React.Component {
 
 
     this.interval = setInterval (() => this.setBadge()
-<<<<<<< HEAD
         ,15000)
     
-=======
-        ,60000)
->>>>>>> f139e0786eb71e160522a3605e00fff3fe74674a
   }
 
 
