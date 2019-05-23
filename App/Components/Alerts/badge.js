@@ -34,12 +34,12 @@ class Badge extends React.Component {
     
     //console.log('set bAdge called',_this.state.newAlertCount)
     
-    if(_this.props.screenProps){
+    if(this.props.screenProps){
 
       let request = {
-        client : _this.props.screenProps.state.selectedClient,
-        token : _this.props.screenProps.state.userData.token,
-        userName : _this.props.screenProps.state.userData.userName
+        client : this.props.screenProps.state.selectedClient,
+        token : this.props.screenProps.state.userData.token,
+        userName : this.props.screenProps.state.userData.userName
       }
 
       getBadgeCount (request,function(err,resp){
@@ -72,11 +72,9 @@ class Badge extends React.Component {
 
   displayNotification = () => {
 
-    _this = this 
-
-    let userData = _this.props.screenProps.state.userData
-    let token = _this.props.screenProps.state.userData.token
-    let client  = _this.props.screenProps.state.selectedClient
+    let userData = this.props.screenProps.state.userData
+    let token = this.props.screenProps.state.userData.token
+    let client  = this.props.screenProps.state.selectedClient
 
     let request = {
 
