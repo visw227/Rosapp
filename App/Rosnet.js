@@ -18,6 +18,7 @@ import { generateRandomNumber, checkForNotifications } from './Services/Backgrou
 
 import { GetNotifications,resetBadgeCount, getBadgeCount } from './Services/Push';
 
+import { Chat } from './Helpers/Chat';
 
 import { Authorization } from './Helpers/Authorization';
 // import { Logger } from './Helpers/Logger';
@@ -743,7 +744,7 @@ export default class App extends React.Component {
         }
 
         // this kicks off a background timer loop to check things like forced re-login, etc.
-        this.backgroundCheckUserStatus()
+        this.backgroundChatMessagesTimer()
 
         // this kicks off a background timer loop to check for notifications at set intervals
         this.backgroundNotificationsTimer()
@@ -1035,17 +1036,35 @@ export default class App extends React.Component {
     //**********************************************************************************
     // check for things like forced re-login, etc.
     //**********************************************************************************
-    backgroundCheckUserStatus = () => {
+    backgroundChatMessagesTimer = () => {
 
       let _this = this
       
       if(this.state.userData) {
         //console.log("background checking of user status...")
 
+        Chat.GetUnreadMessageCount('rosnet', this.state.selectedClient, this.state.userData.token, function(err, resp){
+
+          if(err) {
+
+          }
+          else {
+            let total = 0
+            if(resp && resp.length > 0) {
+              resp.forEach(function(c){
+                total += c.unread_count
+              })
+            }
+            _this.setState({
+              messageCount: total
+            })
+          }
+        })
+
       }
 
       let timeout = 10000 // 60000 * 5 = 5 minutes
-      setTimeout(_this.backgroundCheckUserStatus, timeout);
+      setTimeout(_this.backgroundChatMessagesTimer, timeout);
 
 
     }
@@ -1099,7 +1118,6 @@ export default class App extends React.Component {
 
 
         _this.setState({
-          messageCount: messageCount,
           alertCount: alertCount
         })
 
