@@ -65,9 +65,6 @@ class AlertsScreen extends React.Component {
 
   })
 
-
-
-
     constructor(props) {
       super(props);
 
@@ -151,13 +148,8 @@ class AlertsScreen extends React.Component {
       })
     }
 
-   
-     
-    
   }
-
-  
-    
+ 
 
   componentDidMount () {
 
@@ -194,6 +186,7 @@ class AlertsScreen extends React.Component {
     this._getOpenAlertsCount(this.state.req)
     this.props.navigation.setParams({renderStyle : this.renderStyle()})
 
+    this.state.deleteState  ? this.setState ({headerRightTxt : 'Select'}) : this.setState({headerRightTxt : 'Cancel'})
 
   }
 
@@ -409,9 +402,11 @@ class AlertsScreen extends React.Component {
 
          this.deleteAlert(listItem.AlertID)
 
-          this.state.data.pop(e)
+         var buffer = this.state.data.filter(element => element.AlertID !== listItem.AlertID)
+
+          //this.state.data.pop(e)
           this.setState({
-           data : this.state.data
+           data : buffer
           }) 
 
           console.log('Array after pop', this.state.data.length)
@@ -429,6 +424,7 @@ class AlertsScreen extends React.Component {
       data : result,
       delList :[],
       deleteState: false,
+      headerRightTxt : 'Select',
       selectAll : true,
     },() => this.props.navigation.setParams({renderStyle : this.renderStyle()}))
     
@@ -544,30 +540,27 @@ class AlertsScreen extends React.Component {
                     
                       
 
-                      <View style={{flexDirection : 'column'}}>
+                      <View key={l.AlertID} style={{flexDirection : 'column'}}>
 
-                      <Swipeout right={swipeBtns}>
+                      <Swipeout right={swipeBtns} autoClose = {true}>
                      
                       {this.state.deleteState === false ?  <ListItem
-                          key={l.AlertTypeId}
-                          
+                          key={l.AlertTypeId} 
                           style={Styles.listItem}
                           title={
                             <Text style = {this.state.newOpenAlerts.includes(l.AlertID) ? Styles.title : Styles.titleC} numberOfLines={1}>
                               {l.Title}
                             </Text>
                           }
-                          subtitle={
+                          subtitle={ 
                             <Text style={Styles.subtitleView} numberOfLines={2} ellipsizeMode ={'tail'} >
                               {l.PushText}
                             </Text>
-
                           }
                           avatar={this.getAvatar(l)}
                           containerStyle={{ borderBottomColor : 'white', padding:10,
                            backgroundColor: this.state.newOpenAlerts.includes(l.AlertID)  || l.AlertOpened ?
                            brand.colors.white : brand.colors.newAlert }}
-  
                           onPress={() => this.onPress(l,this.state.req) }
 
                       />   :
