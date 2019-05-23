@@ -544,30 +544,27 @@ class AlertsScreen extends React.Component {
                     
                       
 
-                      <View style={{flexDirection : 'column'}}>
+                      <View key={l.AlertID} style={{flexDirection : 'column'}}>
 
                       <Swipeout right={swipeBtns}>
                      
                       {this.state.deleteState === false ?  <ListItem
-                          key={l.AlertTypeId}
-                          
+                          key={l.AlertTypeId} 
                           style={Styles.listItem}
                           title={
                             <Text style = {this.state.newOpenAlerts.includes(l.AlertID) ? Styles.title : Styles.titleC} numberOfLines={1}>
                               {l.Title}
                             </Text>
                           }
-                          subtitle={
+                          subtitle={ 
                             <Text style={Styles.subtitleView} numberOfLines={2} ellipsizeMode ={'tail'} >
                               {l.PushText}
                             </Text>
-
                           }
                           avatar={this.getAvatar(l)}
                           containerStyle={{ borderBottomColor : 'white', padding:10,
                            backgroundColor: this.state.newOpenAlerts.includes(l.AlertID)  || l.AlertOpened ?
                            brand.colors.white : brand.colors.newAlert }}
-  
                           onPress={() => this.onPress(l,this.state.req) }
 
                       />   :
