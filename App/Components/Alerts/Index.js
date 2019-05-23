@@ -30,7 +30,7 @@ import Styles from './Styles'
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
 import { GetNotifications,getOpenedAlertsCount,updateOpenAlertsCount,hideAlert} from '../../Services/Push';
-import AlertMessage from '../Modules/AlertMessage';
+
 
 
 import Swipeout from 'react-native-swipeout'
@@ -89,7 +89,7 @@ class AlertsScreen extends React.Component {
           selectAll : true,
           loading: true,
           alertOn : true,
-          alertMessage : 'Alerts are Loading...',
+          alertMessage : 'Alerts are loading...',
           headerRightTxt : 'Select',
           req : {
             client : this.props.screenProps.state.selectedClient,
@@ -106,18 +106,18 @@ class AlertsScreen extends React.Component {
 
 
     _this = this
-    let userData = _this.props.screenProps.state.userData
-      let token = _this.props.screenProps.state.userData.token
-      let client  = _this.props.screenProps.state.selectedClient
 
-      let request = {
+    let userData = this.props.screenProps.state.userData
+    let token = this.props.screenProps.state.userData.token
+    let client  = this.props.screenProps.state.selectedClient
 
-         token : userData.token,
-         client : client,
-         userName : userData.userName,
-         includeHidden : true
+    let request = {
+        token : userData.token,
+        client : client,
+        userName : userData.userName,
+        includeHidden : true
+    }
 
-      }
     GetNotifications (request ,function(err,resp) {
       if (err){
 
@@ -126,33 +126,30 @@ class AlertsScreen extends React.Component {
 
       else if (resp.length < 1) {
         //console.log('Alert message is logged')
-        _this.setState({alertMessage : 'No Alerts to Display at this time'})
+        _this.setState({alertMessage : 'No alerts to display at this time'})
       }
-
       else {
+
         console.log('response',resp)
 
-      
-
-          _this.setState ({
-            alertOn : false,
-            data : resp.reverse()
-          },()=> console.log('<<data',_this.state.data))
+        _this.setState ({
+          alertOn : false,
+          data : resp.reverse()
+        },()=> console.log('<<data',_this.state.data))
 
           
-        
       }
 
     })
    
-      var newData = []
-      if(_this.state.data){
-        _this.state.data.forEach(el => {
-          if(el) {
-            newData.push(el.AlertID)
-          }
-        })
-      }
+    var newData = []
+    if(this.state.data){
+      this.state.data.forEach(el => {
+        if(el) {
+          newData.push(el.AlertID)
+        }
+      })
+    }
 
    
      
@@ -174,37 +171,27 @@ class AlertsScreen extends React.Component {
 
     this._getOpenAlertsCount(this.state.req)
 
-  
-    let _this = this 
 
-  
+    this._getOpenAlertsCount(this.state.req)
 
-  
+    // This call the api for every 15secs to render new added notifications
+    this.interval = setInterval (() => this.renderNotification(), 60000)
 
-      _this._getOpenAlertsCount(_this.state.req)
+    this.interval = setInterval (() => this._getOpenAlertsCount(this.state.req), 60000)
 
-      // This call the api for every 15secs to render new added notifications
-      _this.interval = setInterval (() => _this.renderNotification()
-      ,15000)
-
-      _this.interval = setInterval (() => _this._getOpenAlertsCount(_this.state.req)
-      ,60000)
-
+    
+    this.props.navigation.setParams({ 
+      backgroundColor:this.props.screenProps.state.backgroundColor
       
-      this.props.navigation.setParams({ 
-        backgroundColor:_this.props.screenProps.state.backgroundColor
-        
-      })
+    })
 
      
   }
 
   load = () => {
 
-    _this = this 
-
-    _this.renderNotification()
-    _this._getOpenAlertsCount(_this.state.req)
+    this.renderNotification()
+    this._getOpenAlertsCount(this.state.req)
     this.props.navigation.setParams({renderStyle : this.renderStyle()})
 
 
@@ -246,7 +233,7 @@ class AlertsScreen extends React.Component {
 
   onPress = (l,req) => {
 
-   _this = this
+    _this = this
    
     updateOpenAlertsCount(req,l.AlertID,function(err,resp){
       if (err) {
@@ -260,11 +247,12 @@ class AlertsScreen extends React.Component {
 
       }
     })
-    _this.props.navigation.navigate('AlertDetail',{'request':l})
+
+    this.props.navigation.navigate('AlertDetail',{'request':l})
 
     var newData = []
-    if(_this.state.data){
-      _this.state.data.forEach(el => {
+    if(this.state.data){
+      this.state.data.forEach(el => {
         if(el) {
           newData.push(el.AlertID)
         }
@@ -278,26 +266,29 @@ class AlertsScreen extends React.Component {
 
   _getOpenAlertsCount = (req) => {
 
-    console.log('<<<<<On press call')
+    let _this = this
+
+    console.log('>>> getOpenAlertsCount...')
     getOpenedAlertsCount(req,function(err,resp){
 
       if (err) {
-       // console.log('get alert count error',err)
+        // console.log('get alert count error',err)
       }
-
       else {
-       // console.log('get alert count success',resp)
+        // console.log('get alert count success',resp)
 
         var buffer = []
 
         resp.forEach(e => {
           buffer.push(e.Alert_ID)
         })
+
         _this.setState({
           newOpenAlerts : buffer
         }, ()=> {
           //console.log('get alert :',_this.state.newOpenAlerts)
         })
+
       }
 
     })
@@ -350,7 +341,6 @@ class AlertsScreen extends React.Component {
   }
   getDelAvatar = (l) => {
 
-    //_this = this
 
    if(this.state.delList && this.state.delList.includes(l.AlertID)) return (
      console.log("hellooooo.....avatar"),
@@ -394,9 +384,7 @@ class AlertsScreen extends React.Component {
 
   deleteAlert = (alertId) => {
 
-    _this = this
-
-    hideAlert(_this.state.req,alertId,function(err,resp){
+    hideAlert(this.state.req,alertId,function(err,resp){
       if (err) {
         console.log ('Delete Alert Error',err)
       }
@@ -411,45 +399,43 @@ class AlertsScreen extends React.Component {
 
   swipeDelete = (listItem) => {
 
-    _this = this
-
-    console.log('Pre pop array',_this.state.data.length)
+    console.log('Pre pop array',this.state.data.length)
 
       var oldData = []
-      _this.state.data.forEach(e => {
+
+      this.state.data.forEach(e => {
+
         if(e.AlertID === listItem.AlertID) {
 
-         _this.deleteAlert(listItem.AlertID)
+         this.deleteAlert(listItem.AlertID)
 
-          _this.state.data.pop(e)
-          _this.setState({
-           data : _this.state.data
+          this.state.data.pop(e)
+          this.setState({
+           data : this.state.data
           }) 
 
-          console.log('Array after pop',_this.state.data.length)
+          console.log('Array after pop', this.state.data.length)
         }
+
       })
 
   }
 
   deleteItem = () => {
 
-    _this = this
+    const result = (this.state.data).filter(e => this.state.delList.indexOf(e.AlertID) == -1 )
 
-
-    const result = (_this.state.data).filter(e => _this.state.delList.indexOf(e.AlertID) == -1 )
-
-    _this.setState({
+    this.setState({
       data : result,
       delList :[],
       deleteState: false,
       selectAll : true,
-    },() =>this.props.navigation.setParams({renderStyle : this.renderStyle()}))
+    },() => this.props.navigation.setParams({renderStyle : this.renderStyle()}))
     
 
-    _this.state.delList.forEach(e => {
+    this.state.delList.forEach(e => {
 
-      _this.deleteAlert(e)
+      this.deleteAlert(e)
 
     })
 
@@ -460,7 +446,6 @@ class AlertsScreen extends React.Component {
 
     var buffer = []
     this.state.data.forEach(e => {
-      
       buffer.push(e.AlertID)
     })
 
@@ -477,14 +462,15 @@ class AlertsScreen extends React.Component {
 
     if(this.state.delList && this.state.delList.indexOf(listItem.AlertID) == -1){
 
-    var buffer = this.state.delList
+      var buffer = this.state.delList
 
-    buffer.push(listItem.AlertID)
+      buffer.push(listItem.AlertID)
 
-    this.setState ({
-      delList : buffer
-    })
-  }
+      this.setState ({
+        delList : buffer
+      })
+
+    }
 
     else{
 
@@ -515,7 +501,11 @@ class AlertsScreen extends React.Component {
           <View style={{flex :1}}>
 
         
-           {this.state.alertOn && <AlertMessage title={this.state.alertMessage}/> }
+          {this.state.alertOn && 
+            <Text style={styles.message} >
+              {this.state.alertMessage}
+            </Text>
+          }
 
            
 
@@ -673,6 +663,18 @@ class AlertsScreen extends React.Component {
     );
   }
 }
+
+// define your styles
+const styles = StyleSheet.create({
+    message: {
+      textAlign: 'center', 
+      paddingTop: 20, 
+      paddingBottom: 20,
+      paddingLeft: 30, 
+      paddingRight: 30,
+      color: brand.colors.primary
+    }
+});
 
 
 //make this component available to the app

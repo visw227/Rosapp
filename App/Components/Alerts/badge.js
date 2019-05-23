@@ -9,23 +9,20 @@ import firebase, { RNFirebase } from 'react-native-firebase'
 
 class Badge extends React.Component {
 
+  constructor(props) {
+    super(props);
 
- 
-    constructor(props) {
-      super(props);
+    this.state = {
+      newAlertCount : 0
+    }       
 
-      this.state = {
-        
-        newAlertCount : 0
-          }         
   }
     
   componentDidMount () {
+
     this.setBadge();
 
-
-    this.interval = setInterval (() => this.setBadge()
-        ,15000)
+    this.interval = setInterval (() => this.setBadge(), 60000)
     
   }
 
@@ -39,34 +36,34 @@ class Badge extends React.Component {
     
     if(_this.props.screenProps){
 
-        let request = {
-            client : _this.props.screenProps.state.selectedClient,
-            token : _this.props.screenProps.state.userData.token,
-            userName : _this.props.screenProps.state.userData.userName
+      let request = {
+        client : _this.props.screenProps.state.selectedClient,
+        token : _this.props.screenProps.state.userData.token,
+        userName : _this.props.screenProps.state.userData.userName
+      }
+
+      getBadgeCount (request,function(err,resp){
+        //console.log("Resp : : State",resp,  + _this.state.newAlertCount)
+        if (err) {
+          //console.log('Badge count error',err)
+      
+        }
+        else {
+
+          if (_this.state.newAlertCount && resp > _this.state.newAlertCount) {
+            _this.displayNotification()
           }
 
-          getBadgeCount (request,function(err,resp){
-            console.log("Resp : : State",resp,  + _this.state.newAlertCount)
-            if (err) {
-              //console.log('Badge count error',err)
-          
-            }
-            else {
-
-        if (_this.state.newAlertCount && resp > _this.state.newAlertCount) {
-
-
-          _this.displayNotification()
-        
-      
-              }
-
-              _this.setState({
-                  newAlertCount : resp
-              })
-            }
+          _this.setState({
+              newAlertCount : resp
           })
-    }
+
+        }
+
+      }) // end getBadgeCount
+
+
+    } // end if screenProps
    
    
 
@@ -139,29 +136,28 @@ class Badge extends React.Component {
     return (
      
         
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+
         <FontAwesome name="bell" size={20} color={brand.colors.primary} />
-
- 
-
-      {
-        this.state.newAlertCount && this.state.newAlertCount !== 0 ?
-        <View style={{ 
-            position: 'absolute', 
-            paddingLeft: 4, 
-            paddingRight: 4,
-            right: -17, 
-            top: 1, 
-            backgroundColor: brand.colors.orange, 
-            borderRadius: 10, 
-            height: 20, 
-            //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
-            minWidth: 20, // this keeps it round with borderRadius=10
-            justifyContent: 'center', 
-            alignItems: 'center' }}><Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{this.state.newAlertCount}</Text></View>
-            :
-            null
-        }
+        
+        {
+          this.state.newAlertCount && this.state.newAlertCount !== 0 ?
+          <View style={{ 
+              position: 'absolute', 
+              paddingLeft: 4, 
+              paddingRight: 4,
+              right: -17, 
+              top: 1, 
+              backgroundColor: brand.colors.orange, 
+              borderRadius: 10, 
+              height: 20, 
+              //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+              minWidth: 20, // this keeps it round with borderRadius=10
+              justifyContent: 'center', 
+              alignItems: 'center' }}><Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{this.state.newAlertCount}</Text></View>
+              :
+              null
+          }
  
 
       </View>
