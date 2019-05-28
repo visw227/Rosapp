@@ -220,10 +220,17 @@ class Settings extends React.Component {
 
       
         <View>
-          <Text style={{fontSize:18,textAlign: 'center',fontStyle:'italic',color:brand.colors.primary,margin:10}}> 
-          You can Subscribe or Unsubscribe the Notification here
+          <View style = {{backgroundColor: brand.colors.lightGray}}>
+
+          <Text style={{fontSize:20,textAlign: 'left',fontStyle:'italic',color:brand.colors.primary,margin:10,marginBottom:3}}> 
+          Let us notify you
           </Text>
-        
+          <Text style={{fontSize:15,textAlign: 'left',fontStyle:'italic',color:brand.colors.primary,margin:10,marginTop:0}}> 
+          Get regular alerts about:
+          </Text>
+
+          </View>
+         
   
                 <ScrollView
                   style={{ backgroundColor: '#ffffff' }}
@@ -243,7 +250,7 @@ class Settings extends React.Component {
                   
                 >
                   
-                    <Text style={Styles.sectionHeader}>{'Stafflinq Notifications'}</Text>
+                    <Text style={Styles.sectionHeader}>{'StaffLinQ Notifications'}</Text>
               
                   
                    <SectionList
