@@ -12,11 +12,11 @@ export var Chat = {
          Chat.RequestHelper(url, 'GET', null, client, token, function(err, resp){
 
             if(err) {
-                console.log("Chat.Authenticate error", err)
+                //console.log("Chat.Authenticate error", err)
                 callback(err, null)
             }
             else {
-                console.log("Chat.Authenticate success", resp)
+                //console.log("Chat.Authenticate success", resp)
                 callback(null, resp)
             }
              
@@ -40,11 +40,11 @@ export var Chat = {
                 Chat.RequestHelper(url, 'GET', null, client, resp.Authorization, function(err, resp){
 
                     if(err) {
-                        console.log("Chat.GetUnreadMessageCount error", err)
+                        //console.log("Chat.GetUnreadMessageCount error", err)
                         callback(err, null)
                     }
                     else {
-                        console.log("Chat.GetUnreadMessageCount success", resp)
+                        //console.log("Chat.GetUnreadMessageCount success", resp)
                         callback(null, resp)
                     }
                     
@@ -70,7 +70,7 @@ export var Chat = {
 
         fullUrl = protocol + subDomain + "." + config.DOMAIN + url
 
-        console.log("fullUrl", fullUrl)
+        //console.log("fullUrl", fullUrl)
 
         // Set up our HTTP request
         var xhr = new XMLHttpRequest();
@@ -123,14 +123,14 @@ export var Chat = {
                 // BE AWARE - PC4 responses are VERY unpredictable
                 // They can be text strings, HTML, or a JSON object... have fun
 
-                console.log("------------------------------------ ERROR: " + xhr.status + " ---------------------------------------")
+                //console.log("------------------------------------ ERROR: " + xhr.status + " ---------------------------------------")
 
-                console.log("xhr._response", xhr._response)
+                //console.log("xhr._response", xhr._response)
                 let message = xhr._response
 
                 if(message.indexOf('{') !== -1) {
 
-                    console.log("error is JSON", JSON.stringify(json, null, 2))
+                    //console.log("error is JSON", JSON.stringify(json, null, 2))
 
                     let json = JSON.parse(message)
 
@@ -139,12 +139,12 @@ export var Chat = {
                 }
                 else if(message.indexOf('<') !== -1) {
 
-                    console.log("error is HTML", message)
+                    //console.log("error is HTML", message)
                     message = "An error occurred, but the response was HTML so unable to parse."
                 }
                 else {
 
-                    console.log("error MAY just be a string", message)
+                    //console.log("error MAY just be a string", message)
 
                     // strip out any extra quotes from response - e.g. _response: ""The email address is not associated with any sites""
                     message = Utils.ReplaceAll(message, '"', '')
@@ -154,7 +154,7 @@ export var Chat = {
 
 
                 // What to do when the request has failed
-                console.log('something went wrong', xhr);
+                //console.log('something went wrong', xhr);
                 callback({ status: xhr.status, message: message }, null)
 
 

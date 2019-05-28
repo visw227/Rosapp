@@ -17,7 +17,7 @@ var lastUrl = "";
 export function serviceWrapper(url, method, jsonBody, subDomain, token, callback) {
 
     // just so we can see API requests happeing easier...
-    console.log("----------------------- SERVICE WRAPPER -----------------------")
+    //console.log("----------------------- SERVICE WRAPPER -----------------------")
 
     let fullUrl = ''
     let protocol = ''
@@ -49,7 +49,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
 
-    console.log("fullUrl", fullUrl)
+    //console.log("fullUrl", fullUrl)
 
     // if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
     //     console.log("fullUrl", fullUrl)
