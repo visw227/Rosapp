@@ -1029,6 +1029,14 @@ export default class App extends React.Component {
         }
 
 
+        if (data.messageCount) {
+          this.setState({
+            messageCount : data.messageCount
+          })
+          // },() => console.log('global state change for bgColor',this.state.backgroundColor))
+        }
+
+
     }
 
 
@@ -1113,8 +1121,6 @@ export default class App extends React.Component {
           }
     
         })
-
-        let messageCount = generateRandomNumber(0,3)
 
 
         _this.setState({

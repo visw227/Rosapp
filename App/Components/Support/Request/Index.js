@@ -201,16 +201,30 @@ class SupportRequest extends React.Component {
 
       }
       else {
-        console.log('issue reported successfully')
 
-        _this.setState({
-          sending: false,
-          requestStatus: {
-              hasError: false,
-              message: "Your support request was sent successfully."
-          },
-          wasAlreadySent: true
-        })
+        // if successfull, take the user back to the list of tickets
+        if(resp.result && resp.result.ok && resp.result.ok === true) {
+
+          console.log('issue reported successfully')
+
+          _this.props.navigation.navigate('SupportList') 
+
+        }
+        else {
+
+          _this.setState({
+            sending: false,
+            requestStatus: {
+                hasError: true,
+                message: "Sorry, but an error occurred while submitting your support request. "
+            },
+            wasAlreadySent: true
+          })
+
+        }
+
+
+
 
       }
     })

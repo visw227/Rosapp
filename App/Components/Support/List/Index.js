@@ -30,7 +30,7 @@ import { Utils } from '../../../Helpers/Utils'
 import { Zendesk } from '../../../Helpers/Zendesk'
 
 
-class SupportView extends React.Component {
+class SupportList extends React.Component {
 
   static navigationOptions = (navigate) => ({
 
@@ -393,4 +393,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default SupportView;
+export default SupportList;

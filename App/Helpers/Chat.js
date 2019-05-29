@@ -1,5 +1,6 @@
 
 import config from '../app-config.json'
+import { Utils } from '../Helpers/Utils';
 
 export var Chat = {
 

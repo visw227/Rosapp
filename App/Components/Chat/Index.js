@@ -25,12 +25,15 @@ import brand from '../../Styles/brand'
 import Styles from './Styles'
 import appConfig from '../../app-config.json'
 
+import { Chat } from '../../Helpers/Chat';
+
 
 class ChatScreen extends React.Component {
 
     static navigationOptions = (navigate) => ({
 
-        title: 'Chat',
+        title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Chat': navigate.navigation.state.params.title,
+
 
         // these seem to ONLY work here
         headerStyle: { backgroundColor: typeof(navigate.navigation.state.params) === 'undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
@@ -83,32 +86,10 @@ class ChatScreen extends React.Component {
 
     }
 
-    componentDidMount() {
-
-
-        // componentDidMount only fires once
-        // willFocus instead of componentWillReceiveProps
-        this.props.navigation.addListener('willFocus', this.load)
-
-
-
-
-
-
-    }
-
-
-    load = () => {
+    loadUrl = (client, token) => {
 
         let now = new Date().getTime()
 
-        let userData = this.props.screenProps.state.userData
-
-        this.props.navigation.setParams({ 
-            menuIconClickHandler: this.onMenuIconClick,
-            title: this.state.selectedClient, 
-            backgroundColor: this.props.screenProps.state.backgroundColor
-        })
 
         let protocol = "https://"
         // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
@@ -119,9 +100,9 @@ class ChatScreen extends React.Component {
         }
 
         let url = protocol + 
-                this.props.screenProps.state.selectedClient + "." + 
-                appConfig.DOMAIN + "/chatapp?app=rosnet&client=" + this.state.selectedClient + 
-                "&token=" + this.props.screenProps.state.userData.token + 
+                client + "." + 
+                appConfig.DOMAIN + "/chatapp?app=rosnet&client=" + client + 
+                "&token=" + token + 
                 "&__dt=" + now
 
         let source = {
@@ -134,87 +115,78 @@ class ChatScreen extends React.Component {
         console.log("Chat screen source", JSON.stringify(source, null, 2))
 
         this.setState({
-            userData: userData,
             source: source
         })
 
     }
 
+    componentDidMount() {
+
+        // DONT use willFocus here since we want the chat webview to stay on the same url unless the token or client changes
+        //this.props.navigation.addListener('willFocus', this.load)
+
+
+        let now = new Date().getTime()
+
+        let userData = this.props.screenProps.state.userData
+        let selectedClient = this.props.screenProps.state.selectedClient
+
+        this.props.navigation.setParams({ 
+            title: 'Chat - ' + this.props.screenProps.state.selectedClient,
+            menuIconClickHandler: this.onMenuIconClick,
+            backgroundColor: this.props.screenProps.state.backgroundColor
+        })
+
+        this.loadUrl(this.props.screenProps.state.selectedClient, userData.token)
+
+        this.setState({
+            userData: userData,
+            selectedClient: selectedClient
+        })
+
+    }
+
     // this will catch any global state updates - via screenProps
-    // componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
 
-    //     let now = new Date().getTime()
+        let now = new Date().getTime()
 
-    //     let selectedClient = nextProps.screenProps.state.selectedClient
-    //     let token = nextProps.screenProps.state.userData.token
+        let next_client = nextProps.screenProps.state.selectedClient
+        let next_token = nextProps.screenProps.state.userData.token
 
-    //     // ONLY if something has changed
-    //     if (token !== this.state.userData.token) {
+        // ONLY if something has changed
+        if (next_token !== this.props.screenProps.state.userData.token) {
 
-    //         console.log("Chat screen picked up new token: ", token)
+            console.log("Chat screen picked up new token: ", next_token)
 
-    //         let userData = this.props.screenProps.state.userData
+            let userData = nextProps.screenProps.state.selectedClient
 
-    //         let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
+            this.setState({
+                userData: userData
+            });
 
-    //         let url = "https://" + 
-    //             selectedClient + "." + 
-    //             appConfig.DOMAIN + "/chatapp/?app=rosnet&client=" + selectedClient + 
-    //             "&token=" + token + 
-    //             "&__dt=" + now
+            this.loadUrl(this.props.screenProps.state.selectedClient, next_token)
 
-    //         let source = {
-    //             uri: url,
-    //             // headers: {
-    //             //     "managerAppToken": token
-    //             // }
-    //         }
+        }
 
-    //         console.log("source updated: ", JSON.stringify(source, null, 2))
+        // ONLY if something has changed
+        if (next_client !== this.props.screenProps.state.selectedClient) {
 
+            console.log("Chat screen picked up new selectedClient: ", next_client)
 
-    //         this.setState({
-    //             userData: userData,
-    //             source: source
-    //         });
+            this.setState({
+                selectedClient: next_client
+            });
 
-    //     }
+            this.loadUrl(next_client, this.props.screenProps.state.userData.token)
 
-    //     // ONLY if something has changed
-    //     if (selectedClient !== this.state.selectedClient) {
+            this.props.navigation.setParams({ 
+                title: 'Chat - ' + next_client
+            })
 
-    //         console.log("Chat screen picked up new selectedClient: ", selectedClient)
+        }
 
-    //         this.props.navigation.setParams({ title: selectedClient })
-
-    //         let userData = this.props.screenProps.state.userData
-
-    //         let url = "https://" + 
-    //             selectedClient + "." + 
-    //             appConfig.DOMAIN + "/chatapp/?app=rosnet&client=" + selectedClient + 
-    //             "&token=" + token + 
-    //             "&__dt=" + now
-
-
-    //         let source = {
-    //             uri: url,
-    //             // headers: {
-    //             //     "managerAppToken": userData.token
-    //             // }
-    //         }
-
-    //         console.log("source updated: ", JSON.stringify(source, null, 2))
-
-
-    //         this.setState({
-    //             selectedClient: selectedClient,
-    //             source: source
-    //         });
-
-
-    //     }
-
-    // }
+    }
 
 
 
@@ -227,6 +199,42 @@ class ChatScreen extends React.Component {
                 style={styles.ActivityIndicatorStyle}
             />
         )
+    }
+
+    onLoadEnd = (url) => {
+        let _this = this
+
+        // there are only 3 urls: /conversation-list, /conversation, /start-conversation
+        // the / index page handles that authentication
+        // refresh the unread count when the user is on the /conversation-list or /conversation page
+        if(url.indexOf('conversation-list') !== -1 || url.indexOf('conversation') !== -1) {
+            this.resetUnreadCount()
+        }
+
+
+
+        console.log("onLoadEnd: " + url)
+    }
+
+    resetUnreadCount = () => {
+
+        Chat.GetUnreadMessageCount('rosnet', this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, function(err, resp){
+
+          if(err) {
+
+          }
+          else {
+            let count = 0
+            if(resp && resp.length > 0) {
+              resp.forEach(function(c){
+                count += c.unread_count
+              })
+            }
+
+            _this.props.screenProps._globalStateChange( { action: "chat", messageCount: count })
+          }
+        })
+
     }
 
     render() {
@@ -246,10 +254,18 @@ class ChatScreen extends React.Component {
                             <WebView
                                 source={ this.state.source }
 
-                                //Enable Javascript support
-                                javaScriptEnabled={true}
-                                //For the Cache
-                                domStorageEnabled={true}
+                                // DJ - crash-on-reload? Enable Javascript support
+                                //javaScriptEnabled={true}
+
+                                // DJ - crash-on-reload? For the Cache
+                                //domStorageEnabled={true}
+
+                                onLoadEnd={(e) => {
+                                    //console.log('onLoadSEnd');
+                                    //console.log(e.nativeEvent.url);
+                                    this.onLoadEnd(e.nativeEvent.url)
+                                }}
+
 
                                 //Want to show the view or not
                                 startInLoadingState={true}

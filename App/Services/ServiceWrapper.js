@@ -17,7 +17,7 @@ var lastUrl = "";
 export function serviceWrapper(url, method, jsonBody, subDomain, token, callback) {
 
     // just so we can see API requests happeing easier...
-    //console.log("----------------------- SERVICE WRAPPER -----------------------")
+    console.log("----------------------- SERVICE WRAPPER -----------------------")
 
     let fullUrl = ''
     let protocol = ''
@@ -49,7 +49,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
 
-    //console.log("fullUrl", fullUrl)
+    console.log("fullUrl", fullUrl)
 
     // if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
     //     console.log("fullUrl", fullUrl)
@@ -103,7 +103,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             let json = JSON.parse(xhr.response)
 
-            //console.log("xhr.response", json)
+            console.log("************************************* 200 ***********************************************")
+            console.log("xhr", xhr)
+            console.log("xhr.response", json)
 
             //Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
 
@@ -125,8 +127,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             let message = xhr._response
 
             // the user's token has expired
-            //console.log(">>> the user request was unauthorized")
-            //console.log("xhr", xhr)
+            // TRY to find out why the we keep seeing the login screen so much
+            console.log("************************************* 401 ***********************************************")
+            console.log("xhr", xhr)
 
             callback({ status: xhr.status, message: message }, null)
 
@@ -142,7 +145,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             // BE AWARE - PC4 responses are VERY unpredictable
             // They can be text strings, HTML, or a JSON object... have fun
 
-            console.log("------------------------------------ ERROR: " + xhr.status + " ---------------------------------------")
+            console.log("************************************* " + xhr.status + " ***********************************************")
 
             console.log("xhr._response", xhr._response)
             let message = xhr._response
