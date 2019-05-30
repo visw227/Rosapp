@@ -123,7 +123,7 @@ class AlertsScreen extends React.Component {
 
       else if (resp.length < 1) {
         //console.log('Alert message is logged')
-        _this.setState({alertMessage : 'No alerts to display at this time'})
+       _this.state && _this.setState({alertMessage : 'No alerts to display at this time'})
       }
       else {
 
