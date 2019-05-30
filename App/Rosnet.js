@@ -1056,6 +1056,15 @@ export default class App extends React.Component {
         }
 
 
+        // cant use if(data.messageCount) since a zero value is interetpted as false
+        if (data.action === 'chat-reset-unread-count') {
+          this.setState({
+            messageCount : data.messageCount
+          })
+          //},() => console.log('global state change messageCount',this.state.messageCount))
+        }
+
+
     }
 
 
@@ -1068,7 +1077,6 @@ export default class App extends React.Component {
       let _this = this
       
       if(this.state.userData) {
-        //console.log("background checking of user status...")
 
         Chat.GetUnreadMessageCount('rosnet', this.state.selectedClient, this.state.userData.token, function(err, resp){
 

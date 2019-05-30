@@ -93,7 +93,7 @@ class DashboardScreen extends React.Component {
 
     _this = this
 
-    console.log("Dashboard is comp did mount")
+    //console.log("Dashboard is comp did mount")
 
     // componentDidMount only fires once
     // willFocus instead of componentWillReceiveProps
@@ -229,7 +229,7 @@ class DashboardScreen extends React.Component {
         }
 
 
-        console.log(">>> Dashboard source", JSON.stringify(source, null, 2))
+        //console.log(">>> Dashboard source", JSON.stringify(source, null, 2))
 
 
         _this.setState({
@@ -250,7 +250,7 @@ class DashboardScreen extends React.Component {
 
   onNavigationStateChange = (navState) => {
 
-    console.log("onNavigatinStateChange", navState)
+    //console.log("onNavigationStateChange", navState)
 
     this.setState({
         backArrowEnabled: navState.canGoBack,
@@ -288,11 +288,11 @@ class DashboardScreen extends React.Component {
   }
 
   onBackArrowPress = () => {
-    console.log("goBack")
+    //console.log("goBack")
     this.refs['webview'].goBack()
   }
   onForwardArrowPress = () => {
-    console.log("goForward")
+    //console.log("goForward")
     this.refs['webview'].goForward()
   }
 

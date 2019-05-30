@@ -201,27 +201,14 @@ class ChatScreen extends React.Component {
         )
     }
 
-    onLoadEnd = (url) => {
-        let _this = this
 
-        // there are only 3 urls: /conversation-list, /conversation, /start-conversation
-        // the / index page handles that authentication
-        // refresh the unread count when the user is on the /conversation-list or /conversation page
-        if(url.indexOf('conversation-list') !== -1 || url.indexOf('conversation') !== -1) {
-            this.resetUnreadCount()
-        }
-
-
-
-        console.log("onLoadEnd: " + url)
-    }
 
     resetUnreadCount = () => {
 
         Chat.GetUnreadMessageCount('rosnet', this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, function(err, resp){
 
           if(err) {
-
+            console.log("chat - error resetting unread count", err)
           }
           else {
             let count = 0
@@ -231,11 +218,32 @@ class ChatScreen extends React.Component {
               })
             }
 
-            _this.props && _this.props.screenProps && _this.props.screenProps._globalStateChange( { action: "chat", messageCount: count })
+            console.log("chat - reset unread count", count)
+            _this.props && _this.props.screenProps && _this.props.screenProps._globalStateChange( { action: "chat-reset-unread-count", messageCount: count })
           }
         })
 
     }
+
+    // this is used to reset the unread count as the URL changes in the webview
+    handleNavigationStateChange = (navState) => {
+        //console.log("navState:", navState)
+
+        let _this = this
+        let url = navState.url
+
+        //console.log("chat - url: ", url)
+        // there are only 3 urls: /conversation-list, /conversation, /start-conversation
+        // the / index page handles that authentication
+        // refresh the unread count when the user is on the /conversation-list or /conversation page
+        if(url.indexOf('conversation-list') !== -1 || url.indexOf('conversation') !== -1) {
+            this.resetUnreadCount()
+        }
+
+
+
+
+    };
 
     render() {
 
@@ -260,15 +268,12 @@ class ChatScreen extends React.Component {
                                 // DJ - crash-on-reload? For the Cache
                                 //domStorageEnabled={true}
 
-                                onLoadEnd={(e) => {
-                                    //console.log('onLoadSEnd');
-                                    //console.log(e.nativeEvent.url);
-                                    this.onLoadEnd(e.nativeEvent.url)
-                                }}
+                                // this is used to reset the unread count as the URL changes in the webview
+                                onNavigationStateChange={this.handleNavigationStateChange}
 
 
                                 //Want to show the view or not
-                                startInLoadingState={true}
+                                //startInLoadingState={true}
 
                                 //onLoadProgress={e => console.log(e.nativeEvent.progress)}
                                 renderLoading={this._renderLoading}
