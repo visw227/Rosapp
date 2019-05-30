@@ -231,7 +231,7 @@ class ChatScreen extends React.Component {
               })
             }
 
-            _this.props.screenProps._globalStateChange( { action: "chat", messageCount: count })
+            _this.props && _this.props.screenProps && _this.props.screenProps._globalStateChange( { action: "chat", messageCount: count })
           }
         })
 

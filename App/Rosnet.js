@@ -5,6 +5,7 @@ import { createAppContainer, createStackNavigator, createDrawerNavigator, Naviga
 
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -332,9 +333,16 @@ let TabStack = createBottomTabNavigator({
         // title and headerTitle DO NOT WORK HERE
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-        tabBarLabel: 'Dashboards',
-        tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
-
+        tabBarLabel: (focused) =><View>
+        {focused.focused ?<View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}><Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Dashboards</Text></View> :
+     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:"center"}}>Dashboards</Text>
+     } 
+   </View>,
+        tabBarIcon: (focused) =><View>
+           {focused.focused ?<View><FontAwesome name="tachometer" size={20} color={brand.colors.primary}/></View> :
+        <FontAwesome name="tachometer" size={20} color={brand.colors.gray} />
+        } 
+      </View>
 
     })
 
@@ -367,13 +375,17 @@ let TabStack = createBottomTabNavigator({
         // title and headerTitle DO NOT WORK HERE
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-        tabBarLabel: 'Chat',
+        tabBarLabel: (focused) =><View>
+        {focused.focused ?<View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}><Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Chat</Text></View> :
+     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Chat</Text>
+     } 
+   </View>,
         // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
-        tabBarIcon: () => 
+        tabBarIcon: (focused) => 
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary} />
-
-
+            {focused.focused ?<View><Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary}/></View>
+:             <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.gray} />
+}
             {screenProps.state.messageCount > 0 &&
             <View style={{ 
                 position: 'absolute', 
@@ -406,9 +418,20 @@ let TabStack = createBottomTabNavigator({
         // title and headerTitle DO NOT WORK HERE
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-        tabBarLabel: 'Alerts',
+        tabBarLabel: (focused) =><View>
+        {focused.focused ?<View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}><Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Alerts</Text></View> :
+     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Alerts</Text>
+     } 
+   </View>,
         
-        tabBarIcon: () => <Badge screenProps = {screenProps} navigation = {navigation}/>
+        tabBarIcon: (focused) => <View>
+
+{
+          focused.focused ?<View><Badge screenProps = {screenProps} navigation = {navigation} color = {brand.colors.primary}/></View>:
+          <Badge screenProps = {screenProps} navigation = {navigation} color = {brand.colors.gray}/>
+        } 
+
+        </View> 
 
     })
   },
@@ -416,7 +439,9 @@ let TabStack = createBottomTabNavigator({
 
 
 }, {
+  
     //initialRouteName: 'TimeOff',
+    
     tabBarOptions: {
       activeTintColor: brand.colors.primary, // not really being used with our images
       inactiveTintColor: 'gray',
@@ -424,9 +449,11 @@ let TabStack = createBottomTabNavigator({
         backgroundColor: '#ffffff',
         paddingTop: 5,
       },
+     
       showIcon: true,
       showLabel: true
     },
+    
   
 })
 
@@ -1029,14 +1056,6 @@ export default class App extends React.Component {
         }
 
 
-        if (data.messageCount) {
-          this.setState({
-            messageCount : data.messageCount
-          })
-          // },() => console.log('global state change for bgColor',this.state.backgroundColor))
-        }
-
-
     }
 
 
@@ -1121,6 +1140,8 @@ export default class App extends React.Component {
           }
     
         })
+
+        let messageCount = generateRandomNumber(0,3)
 
 
         _this.setState({
