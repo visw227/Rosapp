@@ -13,16 +13,19 @@ class Badge extends React.Component {
     super(props);
 
     this.state = {
-      newAlertCount : 0
+      newAlertCount : 0,
+      color : brand.colors.primary
     }       
 
   }
     
-  componentDidMount () {
+  componentDidMount (props) {
 
     this.setBadge();
 
     this.interval = setInterval (() => this.setBadge(), 60000)
+
+    console.log('props',this.props)
     
   }
 
@@ -43,6 +46,7 @@ class Badge extends React.Component {
       }
 
       getBadgeCount (request,function(err,resp){
+        //console.log('props',this.props)
         //console.log("Resp : : State",resp,  + _this.state.newAlertCount)
         if (err) {
           //console.log('Badge count error',err)
@@ -92,11 +96,11 @@ class Badge extends React.Component {
       }
 
       else {
-        console.log('response',resp)
+        console.log('response!!!',resp)
         
         var data = resp.reverse()
 
-        console.log('eraaa',data)
+        
         
         const channel = new firebase.notifications.Android.Channel(
           'default_notification_channel_id',
@@ -136,8 +140,10 @@ class Badge extends React.Component {
         
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 
-        <FontAwesome name="bell" size={20} color={brand.colors.primary} />
         
+
+        <FontAwesome name="bell" size={20} color={this.props.color} />
+       
         {
           this.state.newAlertCount && this.state.newAlertCount !== 0 ?
           <View style={{ 

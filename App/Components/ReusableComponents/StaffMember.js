@@ -78,7 +78,7 @@ constructor(props) {
 
 
     return (
-
+      
 
       <View style={Styles.container}>
 
@@ -125,7 +125,7 @@ constructor(props) {
                     </TouchableOpacity>
 
      } 
-                  {member.sharePhone &&
+                  {/* {member.sharePhone &&
                     <TouchableOpacity
                       style={{
                           borderWidth:1,
@@ -144,9 +144,9 @@ constructor(props) {
                       <Text style={{ color: brand.colors.white }}>Chat</Text>
                     </TouchableOpacity>
        
-                  }       
+                  }        */}
 
-                  {member.shareEmail &&     
+                  {/* {member.shareEmail &&     
 
                   <TouchableOpacity
                     style={{
@@ -167,7 +167,7 @@ constructor(props) {
                     <Text style={{ color: brand.colors.white }}>Email</Text>
                   </TouchableOpacity>
 
-                  }
+                  } */}
                 </View>
 
             </View>
