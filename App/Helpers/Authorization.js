@@ -43,18 +43,18 @@ export var Authorization = {
 
     // This is a workaround to create a fake API request so that subsequent requests will work
     // The first API request ALWAYS times out
-    WakeUpServer: function(callback) {
+    // WakeUpServer: function(callback) {
 
-        //console.log("waking up the server...")
-        Authorization.UserLogin("fake", "fake", function(err, resp){
+    //     //console.log("waking up the server...")
+    //     Authorization.UserLogin("fake", "fake", function(err, resp){
 
-            //console.log("server has been woke up")
-            if(callback) {
-                callback(null, { message: "It has been woke up"})
-            }
-        })
+    //         //console.log("server has been woke up")
+    //         if(callback) {
+    //             callback(null, { message: "It has been woke up"})
+    //         }
+    //     })
 
-    },
+    // },
 
 
     RefreshToken: function(callback) {

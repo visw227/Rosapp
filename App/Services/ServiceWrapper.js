@@ -14,27 +14,35 @@ import NavigationService from '../Helpers/NavigationService';
 
 var lastUrl = "";
 
+var NO_401_REDIRECT_LIST = [
+    "/api/ManagerAppAlertMethods"
+]
+
+function checkIfShouldRedirectToLoginOn401(url) {
+
+    let result = false
+
+    NO_401_REDIRECT_LIST.forEach(function(no401){
+
+        console.log("401 redirect?", url, item)
+
+        // e.g. - if "/api/ManagerAppAlertMethods" exists somewhere in the url...
+        if(url.indexOf(no401) !== -1) {
+            console.log("401 EXCLUDED: ", no401)
+            result = true
+        }
+    })
+
+    return result
+}
+
 export function serviceWrapper(url, method, jsonBody, subDomain, token, callback) {
 
     // just so we can see API requests happeing easier...
-    console.log("----------------------- SERVICE WRAPPER -----------------------")
+    //console.log("----------------------- SERVICE WRAPPER -----------------------")
 
     let fullUrl = ''
     let protocol = ''
-
-
-    // if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
-    //     console.log("starting request", url, method, jsonBody, subDomain, token)
-    // }
-    
-
-
-    // clear everything on login
-    // if(url.toLowerCase().indexOf("/login") !== -1) {
-    //     Logger.DeleteAllEvents()
-    // }
-
- 
 
     // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
     if (config.DOMAIN.indexOf('rosnet') !== -1) {
@@ -49,11 +57,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
 
-    console.log("fullUrl", fullUrl)
-
-    // if(url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts?userName') == -1) {
-    //     console.log("fullUrl", fullUrl)
-    // }
+    //console.log("fullUrl", fullUrl)
 
     //Logger.LogEvent(true, "ServiceWrapper", "Starting request", { url: fullUrl, method: method })
 
@@ -103,8 +107,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             let json = JSON.parse(xhr.response)
 
-            console.log("************************************* 200 ***********************************************")
-            console.log("xhr", xhr)
+            console.log("************************************* ServiceWrapper - 200 ***********************************************")
+            console.log("url", xhr._url)
+            console.log("xhr", xhr) //JSON.stringify(xhr, null, 2))
             console.log("xhr.response", json)
 
             //Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
@@ -128,7 +133,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             // the user's token has expired
             // TRY to find out why the we keep seeing the login screen so much
-            console.log("************************************* 401 ***********************************************")
+            console.log("************************************* ServiceWrapper - 401 ***********************************************")
+            console.log("url", xhr._url)
             console.log("xhr", xhr)
 
             callback({ status: xhr.status, message: message }, null)
@@ -136,8 +142,12 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
 
             //Logger.LogEvent(false, "API (401)", url, { request: logRequest, response: xhr._response })
 
-            // force the user to the login screen
-            NavigationService.navigate('LoginStack');
+            // exclude some 401s from causing a redirect to login
+            let gotoLogin = checkIfShouldRedirectToLoginOn401(url)
+            if(gotoLogin) {
+                // force the user to the login screen
+                NavigationService.navigate('LoginStack')
+            }
 
         } 
         else {
@@ -145,7 +155,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             // BE AWARE - PC4 responses are VERY unpredictable
             // They can be text strings, HTML, or a JSON object... have fun
 
-            console.log("************************************* " + xhr.status + " ***********************************************")
+            console.log("************************************* ServiceWrapper - " + xhr.status + " ***********************************************")
+            console.log("url", xhr._url)
 
             console.log("xhr._response", xhr._response)
             let message = xhr._response

@@ -26,8 +26,6 @@ import { Authorization } from '../../../Helpers/Authorization';
 import brand from '../../../Styles/brand'
 import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
 
-let fakedMenu = require('../../../Fixtures/Modules')
-
 import logo from '../../../Images/logo-lg-white-square.png';
 import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
 

@@ -718,7 +718,7 @@ export default class App extends React.Component {
 
         // This is a workaround to create a fake API request so that subsequent requests will work
         // The first API request ALWAYS times out
-        Authorization.WakeUpServer()
+        // Authorization.WakeUpServer()
 
         this.state = {
           showLock: false,
@@ -1071,7 +1071,7 @@ export default class App extends React.Component {
 
       }
 
-      let timeout = 10000 // 60000 * 5 = 5 minutes
+      let timeout = 60000 // 60000 * 5 = 5 minutes
       setTimeout(_this.backgroundChatMessagesTimer, timeout);
 
 
