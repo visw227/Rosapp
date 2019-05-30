@@ -1197,17 +1197,6 @@ export default class App extends React.Component {
         if(this.state.userData && this.state.userData.token) {
 
 
-          // see if the user needs to see the lock screen - based on elapsed time
-          Biometrics.CheckIfShouldShowLockScreen(function(result){
-
-            if(result.showLock) {
-                // this is needed since props.navigation isn't present for unmounted screen components
-                NavigationService.navigate('LockStack');
-            }
-
-
-          })
-
           //console.log("userData", this.state.userData)
 
 
@@ -1229,6 +1218,18 @@ export default class App extends React.Component {
 
               _this._globalLogger(false, "App", "Token Refreshed Successfully", { userData: resp.userData })
             
+
+              // AFTER token refresh, which may cause 401 redirect to login, 
+              // see if the user needs to see the lock screen
+              Biometrics.CheckIfShouldShowLockScreen(function(result){
+
+                if(result.showLock) {
+                    // this is needed since props.navigation isn't present for unmounted screen components
+                    NavigationService.navigate('LockStack');
+                }
+
+
+              })
             
             } // end else
 

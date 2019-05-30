@@ -158,9 +158,9 @@ class LaunchScreen extends React.Component {
 
                 // just in case the user's selected site is no longer in their list of sites
                 // reset the selectedClient back to the first in their list
-                // if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
-                //   selectedClient = userData.sites[0]
-                // }
+                if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
+                  selectedClient = userData.sites[0]
+                }
 
             }
             else {
