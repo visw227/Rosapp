@@ -1180,8 +1180,8 @@ export default class App extends React.Component {
       const { appState } = this.state
 
       // active, inactive, background
-      // console.log('current appState', appState)
-      // console.log('next appState   ', nextAppState)
+      console.log('current appState', appState)
+      console.log('next appState   ', nextAppState)
 
       // IMPORTANT: ONLY check for "background" not "inactive" here or the LockScreen will render in a loop
       if (appState.match(/background/) && nextAppState === 'active') {
@@ -1243,7 +1243,10 @@ export default class App extends React.Component {
 
           
       }
-      else if (appState.match(/active/) && nextAppState === 'inactive') {
+      // slight differences in app state name for iOS and Android
+      // iOS app state = 'active' and next app state = 'inactive'
+      // Android app state = 'active' and next app state = 'background'
+      else if (appState.match(/active/) && (nextAppState === 'inactive' || nextAppState === 'background')) {
 
         console.log("+++++++++ STATUS INACTIVE ++++++++++")
 

@@ -22,13 +22,13 @@ function checkIfShouldRedirectToLoginOn401(url) {
 
     let result = false
 
-    NO_401_REDIRECT_LIST.forEach(function(no401){
+    NO_401_REDIRECT_LIST.forEach(function(item){
 
         console.log("401 redirect?", url, item)
 
         // e.g. - if "/api/ManagerAppAlertMethods" exists somewhere in the url...
-        if(url.indexOf(no401) !== -1) {
-            console.log("401 EXCLUDED: ", no401)
+        if(url.indexOf(item) !== -1) {
+            console.log("401 EXCLUDED: ", item)
             result = true
         }
     })
