@@ -51,7 +51,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RNDeviceInfo(),
             new RNFirebaseMessagingPackage(),
               new RNFirebaseNotificationsPackage(),
-           
+            //new RNFirebaseBackgroundMessage(),
             new ImagePickerPackage() // <-- add this line 
             // OR if you want to customize dialog style 
             
@@ -76,5 +76,6 @@ public class MainApplication extends Application implements ReactApplication {
     FirebaseApp.initializeApp(this);
     Push.enableFirebaseAnalytics(getApplicationContext());
     SoLoader.init(this, /* native exopackage */ false);
+    
   }
 }
