@@ -15,8 +15,6 @@ import brand from './Styles/brand'
 
 import NavigationService from './Helpers/NavigationService';
 
-import { generateRandomNumber, checkForNotifications } from './Services/Background';
-
 import { GetNotifications,resetBadgeCount, getBadgeCount } from './Services/Push';
 
 import { Chat } from './Helpers/Chat';
@@ -1130,9 +1128,6 @@ export default class App extends React.Component {
 
       let _this = this
 
-
-      
-
       if(this.state.userData) {
 
         let userData = this.state.userData
@@ -1168,15 +1163,10 @@ export default class App extends React.Component {
     
         })
 
-        let messageCount = generateRandomNumber(0,3)
-
 
         _this.setState({
           alertCount: alertCount
         })
-
-
-
 
       }
 
