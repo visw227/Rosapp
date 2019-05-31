@@ -1,4 +1,12 @@
 
+/*
+
+NOTE: Chat uses it's own RequestHelper (not ServiceWrapper) since the chat API uses a different
+authentication header, which is a hybrid token shared by both the Stafflinq and Rosnet apps
+
+*/
+
+
 import config from '../app-config.json'
 import { Utils } from '../Helpers/Utils';
 
@@ -91,28 +99,14 @@ export var Chat = {
 
                 let json = JSON.parse(xhr.response)
 
-                //console.log("xhr.response", json)
-
-                //Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
-
-                // 200 successes can return errors - e.g. { Success: false, ErrorMsg: "Login attempt failed 5 times. Account is now locked." }
-                if(json.ErrorMsg) {
-
-                    //Logger.LogEvent(false, "API (200 with ERROR)", url, { request: logRequest, response: json })
-
-                    callback( { status: xhr.status, message: json.ErrorMsg }, null)
-                }
-                else {
-                    callback(null, json)
-                }
-
+                callback(null, json)
 
             } 
             else if (xhr.status === 401) {
 
                 let message = xhr._response
 
-                // the user's token has expired
+                // the user's Authorization has expired
                 //console.log(">>> the user request was unauthorized")
                 //console.log("xhr", xhr)
 
@@ -121,45 +115,12 @@ export var Chat = {
             } 
             else {
 
-                // BE AWARE - PC4 responses are VERY unpredictable
-                // They can be text strings, HTML, or a JSON object... have fun
-
-                //console.log("------------------------------------ ERROR: " + xhr.status + " ---------------------------------------")
-
                 //console.log("xhr._response", xhr._response)
                 let message = xhr._response
-
-                if(message.indexOf('{') !== -1) {
-
-                    //console.log("error is JSON", JSON.stringify(json, null, 2))
-
-                    let json = JSON.parse(message)
-
-
-                    message = (json.Message || "") + " " + (json.ExceptionMessage || "")
-                }
-                else if(message.indexOf('<') !== -1) {
-
-                    //console.log("error is HTML", message)
-                    message = "An error occurred, but the response was HTML so unable to parse."
-                }
-                else {
-
-                    //console.log("error MAY just be a string", message)
-
-                    // strip out any extra quotes from response - e.g. _response: ""The email address is not associated with any sites""
-                    message = Utils.ReplaceAll(message, '"', '')
-
-                }
-
-
 
                 // What to do when the request has failed
                 //console.log('something went wrong', xhr);
                 callback({ status: xhr.status, message: message }, null)
-
-
-                //Logger.LogEvent(false, "API (" + xhr.status.toString() + ")", url, { request: logRequest, response: message })
 
             }
 

@@ -3,18 +3,17 @@
 import { registerUser, getRequests, searchUsersByEmail, reportIssue } from '../Services/Support'
 import { getTensorSessionInfo } from '../Services/TensorSession'
 
-//import async from 'async'
+// async caused crashes in Android, so using async-waterfall instead
+//import async from 'async' 
 var waterfall = require('async-waterfall');
 
 export var Zendesk = {
-
 
     GetRequests: function(userData, client, token, callback) {
 
         console.log("GetRequests")
       
-
-       waterfall([
+        waterfall([
 
             
             // get the TensorSession data

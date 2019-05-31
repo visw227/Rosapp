@@ -32,8 +32,8 @@ class ChatScreen extends React.Component {
 
     static navigationOptions = (navigate) => ({
 
-        title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Chat': navigate.navigation.state.params.title,
-
+        //title: typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.title) === 'undefined' ? 'Chat': navigate.navigation.state.params.title,
+        title: "Chat",
 
         // these seem to ONLY work here
         headerStyle: { backgroundColor: typeof(navigate.navigation.state.params) === 'undefined' || typeof(navigate.navigation.state.params.backgroundColor) === 'undefined' ? brand.colors.primary : navigate.navigation.state.params.backgroundColor },
@@ -132,7 +132,7 @@ class ChatScreen extends React.Component {
         let selectedClient = this.props.screenProps.state.selectedClient
 
         this.props.navigation.setParams({ 
-            title: 'Chat - ' + this.props.screenProps.state.selectedClient,
+            //title: 'Chat - ' + this.props.screenProps.state.selectedClient,
             menuIconClickHandler: this.onMenuIconClick,
             backgroundColor: this.props.screenProps.state.backgroundColor
         })
@@ -180,9 +180,9 @@ class ChatScreen extends React.Component {
 
             this.loadUrl(next_client, this.props.screenProps.state.userData.token)
 
-            this.props.navigation.setParams({ 
-                title: 'Chat - ' + next_client
-            })
+            // this.props.navigation.setParams({ 
+            //     title: 'Chat - ' + next_client
+            // })
 
         }
 
