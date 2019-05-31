@@ -15,8 +15,6 @@ import brand from './Styles/brand'
 
 import NavigationService from './Helpers/NavigationService';
 
-import { generateRandomNumber, checkForNotifications } from './Services/Background';
-
 import { GetNotifications,resetBadgeCount, getBadgeCount } from './Services/Push';
 
 import { Chat } from './Helpers/Chat';
@@ -376,32 +374,41 @@ let TabStack = createBottomTabNavigator({
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
         tabBarLabel: (focused) =><View>
-        {focused.focused ?<View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}><Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Chat</Text></View> :
-     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Chat</Text>
-     } 
-   </View>,
+          {focused.focused ?
+            <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
+              <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Chat</Text>
+            </View> 
+          :
+            <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Chat</Text>
+          } 
+        </View>,
+
         // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
         tabBarIcon: (focused) => 
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            {focused.focused ?<View><Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary}/></View>
-:             <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.gray} />
-}
+
+            {focused.focused ?
+              <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary}/>
+            :             
+              <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.gray} />
+            }
+
             {screenProps.state.messageCount > 0 &&
-            <View style={{ 
-                position: 'absolute', 
-                paddingLeft: 4, 
-                paddingRight: 4,
-                right: -20, 
-                top: 1, 
-                backgroundColor: brand.colors.orange, 
-                borderRadius: 10, 
-                height: 20, 
-                //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
-                minWidth: 20, // this keeps it round with borderRadius=10
-                justifyContent: 'center', 
-                alignItems: 'center' }}>
-              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.messageCount}</Text>
-            </View>
+              <View style={{ 
+                  position: 'absolute', 
+                  paddingLeft: 4, 
+                  paddingRight: 4,
+                  right: -20, 
+                  top: 1, 
+                  backgroundColor: brand.colors.orange, 
+                  borderRadius: 10, 
+                  height: 20, 
+                  //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+                  minWidth: 20, // this keeps it round with borderRadius=10
+                  justifyContent: 'center', 
+                  alignItems: 'center' }}>
+                <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.messageCount}</Text>
+              </View>
             }
      
 
@@ -419,16 +426,26 @@ let TabStack = createBottomTabNavigator({
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
         tabBarLabel: (focused) =><View>
-        {focused.focused ?<View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}><Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Alerts</Text></View> :
-     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Alerts</Text>
-     } 
-   </View>,
+          {focused.focused ?
+            <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
+              <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Alerts</Text>
+            </View> 
+          :
+            <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Alerts</Text>
+          } 
+        </View>,
         
         tabBarIcon: (focused) => <View>
 
-{
-          focused.focused ?<View><Badge screenProps = {screenProps} navigation = {navigation} color = {brand.colors.primary}/></View>:
-          <Badge screenProps = {screenProps} navigation = {navigation} color = {brand.colors.gray}/>
+        {
+          focused.focused ?
+            <Badge screenProps = {screenProps} navigation = {navigation} color = {brand.colors.primary}/>
+          :
+
+            // TODO: find out why the Badge call below (when not 'focused') generates this warning sometimes:
+            // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. 
+            //  To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+            <Badge screenProps = {screenProps} navigation = {navigation} color = {brand.colors.gray}/>
         } 
 
         </View> 
@@ -1111,9 +1128,6 @@ export default class App extends React.Component {
 
       let _this = this
 
-
-      
-
       if(this.state.userData) {
 
         let userData = this.state.userData
@@ -1149,15 +1163,10 @@ export default class App extends React.Component {
     
         })
 
-        let messageCount = generateRandomNumber(0,3)
-
 
         _this.setState({
           alertCount: alertCount
         })
-
-
-
 
       }
 

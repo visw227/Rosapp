@@ -4,7 +4,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 // export const IMAGE_HEIGHT = window.width / 2;
 // export const IMAGE_HEIGHT_SMALL = window.width / 5;
 
-export const MIN_HEIGHT = 150;
+export const MIN_HEIGHT = 80;
 export const MAX_HEIGHT = 200;
 
 import brand from '../../../Styles/brand'
@@ -18,7 +18,8 @@ export default StyleSheet.create({
     logoContainer:{
         alignItems: 'center',
         flexGrow: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 20
     },
     logo: {
         position: 'absolute',

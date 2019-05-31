@@ -14,6 +14,8 @@ import NavigationService from '../Helpers/NavigationService';
 
 var lastUrl = "";
 
+// list of partial urls that shouldn't cause a redirect to the login when a 401 happens
+// mostly API calls that are done in the background
 var NO_401_REDIRECT_LIST = [
     "/api/ManagerAppAlertMethods"
 ]
