@@ -17,6 +17,8 @@ export default StyleSheet.create({
     },
     logoContainer:{
         alignItems: 'center',
+        paddingTop : 70,
+        marginTop:20,
         flexGrow: 1,
         justifyContent: 'center',
         marginBottom: 20
