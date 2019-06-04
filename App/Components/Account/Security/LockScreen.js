@@ -341,7 +341,7 @@ class LockScreen extends React.Component {
                                         onPress={this.onButtonPress}>
                                         <Text 
                                         style={ this.state.sending ? styles.buttonDisabledText : styles.buttonText }>
-                                        {`Authenticate with ${this.state.bioType}`}
+                                        Authenticate with {this.state.bioType == true ? 'Finger Print' : this.state.bioType}
                                         </Text>
                                     </TouchableOpacity> 
 
