@@ -29,11 +29,13 @@ function checkIfShouldRedirectToLoginOn401(url) {
         console.log("401 redirect?", url, item)
 
         // e.g. - if "/api/ManagerAppAlertMethods" exists somewhere in the url...
-        if(url.indexOf(item) !== -1) {
+        if(url.indexOf(item) == -1) {
             console.log("401 EXCLUDED: ", item)
             result = true
         }
     })
+
+    
 
     return result
 }
