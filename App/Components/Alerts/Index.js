@@ -60,8 +60,7 @@ class AlertsScreen extends React.Component {
       headerRight : navigate.navigation.getParam('renderStyle')
 
       //headerRight : typeof(navigate.navigation.state.params)==='undefined' || typeof(navigate.navigation.state.params.delState) === 'undefined' ? <Text>undefined</Text>: <Text>{navigate.navigation.state.params.delState}</Text>
-
-     
+ 
 
   })
 
@@ -85,6 +84,7 @@ class AlertsScreen extends React.Component {
           text : null,
           selectAll : true,
           loading: true,
+          disableHeaderright :false,
           alertOn : true,
           alertMessage : 'Alerts are loading...',
           headerRightTxt : 'Select',
@@ -123,7 +123,7 @@ class AlertsScreen extends React.Component {
 
       else if (resp.length < 1) {
         //console.log('Alert message is logged')
-       _this.state && _this.setState({alertMessage : 'No alerts to display at this time'})
+       _this.state && _this.setState({alertMessage : 'No alerts to display at this time', headerRightTxt : ''}) 
       }
       else {
 
@@ -185,8 +185,10 @@ class AlertsScreen extends React.Component {
     this.renderNotification()
     this._getOpenAlertsCount(this.state.req)
     this.props.navigation.setParams({renderStyle : this.renderStyle()})
-
-    this.state.deleteState  ? this.setState ({headerRightTxt : 'Select'}) : this.setState({headerRightTxt : 'Cancel'})
+    
+      this.state.deleteState  ? this.setState ({headerRightTxt : 'Cancel'}) : this.setState({headerRightTxt : 'Select'})
+    
+    
 
   }
 
