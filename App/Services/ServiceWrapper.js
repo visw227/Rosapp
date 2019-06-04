@@ -10,6 +10,7 @@ import { Logger } from '../Helpers/Logger';
 import { Utils } from '../Helpers/Utils';
 
 import NavigationService from '../Helpers/NavigationService';
+import { arrayExpression } from '@babel/types';
 
 
 var lastUrl = "";
@@ -29,11 +30,13 @@ function checkIfShouldRedirectToLoginOn401(url) {
         console.log("401 redirect?", url, item)
 
         // e.g. - if "/api/ManagerAppAlertMethods" exists somewhere in the url...
-        if(url.indexOf(item) !== -1) {
+        if(url.indexOf(item) == -1) {
             console.log("401 EXCLUDED: ", item)
             result = true
         }
     })
+
+    
 
     return result
 }
