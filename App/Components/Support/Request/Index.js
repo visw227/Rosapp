@@ -239,7 +239,7 @@ class SupportRequest extends React.Component {
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
 
-        <View style={styles.formContainer}>
+        <ScrollView style={styles.formContainer}>
 
 
             <Text style={styles.inputLabel}>Subject</Text>
@@ -293,7 +293,7 @@ class SupportRequest extends React.Component {
             </Text>
 
 
-        </View>
+        </ScrollView>
 
 
       </KeyboardAvoidingView>
@@ -305,7 +305,7 @@ class SupportRequest extends React.Component {
 // define your styles
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         backgroundColor: brand.colors.white,
 
     },
@@ -326,7 +326,9 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     textArea: {
-      height: 100
+      height: 100,
+      textAlignVertical: 'top',
+      paddingTop: 10
     },
     inputLabel: {
       color: brand.colors.primary,
