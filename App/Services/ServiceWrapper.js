@@ -10,7 +10,6 @@ import { Logger } from '../Helpers/Logger';
 import { Utils } from '../Helpers/Utils';
 
 import NavigationService from '../Helpers/NavigationService';
-import { arrayExpression } from '@babel/types';
 
 
 var lastUrl = "";
