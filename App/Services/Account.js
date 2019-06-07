@@ -24,7 +24,7 @@ export function userLogin(request, callback) {
   let url = '/api/ManagerAppAuth/Login'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-  serviceWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
+  serviceWrapper(url, 'POST', request, 'dashboard', null, false, function(err, resp) {
 
     if(err) {
       console.log("login error", err)
@@ -46,7 +46,7 @@ export function userLogout(client, token, callback) {
   let url = '/api/ManagerAppAuth/Logout'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-  serviceWrapper(url, 'GET', null, client, token, function(err, resp) {
+  serviceWrapper(url, 'GET', null, client, token, false, function(err, resp) {
     if(err) {
       callback(err)
     }
@@ -63,7 +63,7 @@ export function verifyToken(client, token, callback) {
   let url = '/api/ManagerAppAuth/VerifyToken'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-  serviceWrapper(url, 'GET', null, client, token, function(err, resp) {
+  serviceWrapper(url, 'GET', null, client, token, true, function(err, resp) {
     if(err) {
       callback(err)
     }
@@ -79,7 +79,7 @@ export function changePassword (request, token, callback) {
 
   let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password) + '&app=true'
 
-  serviceWrapper(url, 'GET', null, request.clientCode , token, function(err, resp) {
+  serviceWrapper(url, 'GET', null, request.clientCode , token, true, function(err, resp) {
     if (err) {
       callback(err)
 
@@ -89,7 +89,7 @@ export function changePassword (request, token, callback) {
        
        let emailUrl = '/api/ManagerAppAuth/EmailPasswordChange?email='+encodeURI(request.email)+'&selectedSite='+encodeURI(request.clientCode)+'&userID='+encodeURI(request.userId)
        
-       serviceWrapper(emailUrl, 'GET', null, request.clientCode , token, function(err, resp) {
+       serviceWrapper(emailUrl, 'GET', null, request.clientCode , token, true, function(err, resp) {
         if (err) {
           
           // DONT do callback here. It already happened above
@@ -116,7 +116,7 @@ export function changePassword (request, token, callback) {
 
 //   let url = '/api/ManagerAppAuth/changePasswordAccess'
 
-//   serviceWrapper(url, 'GET', null,client,token,function(err,resp){
+//   serviceWrapper(url, 'GET', null,client,token,true,function(err,resp){
 //     if (err){
 //       callback(err)
 
@@ -135,7 +135,7 @@ export function forgotPassword(request, callback) {
   let url = '/api/ManagerAppAuth/RetrievePassword'
 
   // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-  serviceWrapper(url, 'POST', request, 'dashboard', null, function(err, resp) {
+  serviceWrapper(url, 'POST', request, 'dashboard', null, true, function(err, resp) {
 
     if(err) {
       callback(err)
@@ -152,7 +152,7 @@ export function alertTypes (client,token,callback) {
 
   let url = '/api/ManagerAppAlertMethods/AlertMethods'
 
-  serviceWrapper(url, 'GET',null,client,token,function(err,resp){
+  serviceWrapper(url, 'GET',null,client,token,false,function(err,resp){
     if (err){
       callback(err)
 
@@ -168,7 +168,7 @@ export function alertSubscription (request,callback) {
 
   let url = '/api/ManagerAppAlertMethods/storeSubscription?userName='+encodeURI(request.userName)+'&alertTypeID='+encodeURI(request.alertTypeID)+'&desc='+encodeURI(request.desc)+'&email='+encodeURI(request.email)+'&push='+encodeURI(request.push)
 
-  serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
+  serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
     if(err){
       callback(err)
     }
@@ -183,7 +183,7 @@ export function retrieveSubscription (request,callback) {
 
   let url = '/api/ManagerAppAlertMethods/retrieveSubscription?userName='+encodeURI(request.userName)
 
-  serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
+  serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
     if(err){
       callback(err)
     }
@@ -198,7 +198,7 @@ export function backfillSubscription (request,callback) {
 
   let url = '/api/ManagerAppAlertMethods/backfillSubscription?userName='+encodeURI(request.userName)
 
-  serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
+  serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
     if(err){
       callback(err)
     }

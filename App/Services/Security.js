@@ -4,7 +4,7 @@ export function getSiteSecuritySettings (request,callback) {
 
   let url = '/api/Security/ManagerAppSecSetting?selectedClient='+request
 
-  serviceWrapper(url, 'GET', null, request, null, function(err,resp){
+  serviceWrapper(url, 'GET', null, request, null, true, function(err,resp){
     if (err){
       callback(err)
 

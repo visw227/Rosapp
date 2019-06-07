@@ -6,7 +6,7 @@ import { serviceWrapper } from './ServiceWrapper'
 
     let url = '/api/ManagerAppAlertMethods/GetNotifications?userName='+encodeURI(request.userName)
   
-    serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
+    serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
       if(err){
         callback(err)
       }
@@ -22,7 +22,7 @@ import { serviceWrapper } from './ServiceWrapper'
 
     let url = '/api/ManagerAppAlertMethods/updateFcmDeviceToken?appInstallId='+encodeURI(request.appInstallId)+'&fcmDeviceToken='+encodeURI(request.fcmDeviceToken)+'&userId='+encodeURI(request.userId)
   
-    serviceWrapper(url,'GET',null,request.client,request.token,function(err,resp){
+    serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
       if(err){
         callback(err)
       }
@@ -37,7 +37,7 @@ import { serviceWrapper } from './ServiceWrapper'
 
     let url = '/api/ManagerAppAlertMethods/badgeReset?appInstallId='+encodeURI(request.appInstallId)+'&fcmDeviceToken='+encodeURI(request.fcmDeviceToken)+'&userId='+encodeURI(request.userId)
 
-    serviceWrapper (url,'GET',null,request.client,request.token,function(err,resp){
+    serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
       if (err){
 
         callback(err)
@@ -53,7 +53,7 @@ import { serviceWrapper } from './ServiceWrapper'
 
     let url = '/api/ManagerAppAlertMethods/hideAlert?alertId='+encodeURI(id)
 
-    serviceWrapper (url,'GET',null,request.client,request.token,function(err,resp){
+    serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
       if (err){
 
         callback(err)
@@ -69,7 +69,7 @@ import { serviceWrapper } from './ServiceWrapper'
 
     let url = '/api/ManagerAppAlertMethods/getOpenedAlerts?userName='+encodeURI(request.userName)
 
-    serviceWrapper (url,'GET',null,request.client,request.token,function(err,resp){
+    serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
       if (err){
 
         callback(err)
@@ -86,7 +86,7 @@ import { serviceWrapper } from './ServiceWrapper'
 
     let url = '/api/ManagerAppAlertMethods/updateOpenedAlerts?userName='+encodeURI(request.userName)+'&alertId='+encodeURI(id)
 
-    serviceWrapper (url,'GET',null,request.client,request.token,function(err,resp){
+    serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
       if (err){
 
         callback(err)
@@ -102,7 +102,7 @@ import { serviceWrapper } from './ServiceWrapper'
 
     let url = '/api/ManagerAppAlertMethods/unOpenedAlerts?userName='+encodeURI(request.userName)
 
-    serviceWrapper (url,'GET',null,request.client,request.token,function(err,resp){
+    serviceWrapper(url,'GET',null,request.client,request.token,false,function(err,resp){
       if (err){
 
         callback(err)

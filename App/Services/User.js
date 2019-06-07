@@ -6,7 +6,7 @@ export function updateProfile(client, token, request, callback) {
     let url = '/api/ManagerAppUser/UpdateProfile'
   
     // IMPORTANT: request IS NULL since params are passed in the url of this POST request
-    serviceWrapper(url, 'POST', request, client, token, function(err, resp) {
+    serviceWrapper(url, 'POST', request, client, token, true, function(err, resp) {
   
       if(err) {
         callback(err)

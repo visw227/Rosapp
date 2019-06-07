@@ -4,7 +4,7 @@ import { Parsers } from '../Helpers/Parsers'
 
 export function getTensorSessionInfo(client, token, callback) {
 
-  serviceWrapper('/api/ManagerAppAuth/TensorSessionGet', 'GET', null, client, token, function(err, resp) {
+  serviceWrapper('/api/ManagerAppAuth/TensorSessionGet', 'GET', null, client, token, true, function(err, resp) {
 
     if(err) {
       callback(err)

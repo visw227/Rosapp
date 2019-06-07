@@ -14,33 +14,8 @@ import NavigationService from '../Helpers/NavigationService';
 
 var lastUrl = "";
 
-// list of partial urls that shouldn't cause a redirect to the login when a 401 happens
-// mostly API calls that are done in the background
-var NO_401_REDIRECT_LIST = [
-    "/api/ManagerAppAlertMethods"
-]
 
-function checkIfShouldRedirectToLoginOn401(url) {
-
-    let result = false
-
-    NO_401_REDIRECT_LIST.forEach(function(item){
-
-        console.log("401 redirect?", url, item)
-
-        // e.g. - if "/api/ManagerAppAlertMethods" exists somewhere in the url...
-        if(url.indexOf(item) == -1) {
-            console.log("401 EXCLUDED: ", item)
-            result = true
-        }
-    })
-
-    
-
-    return result
-}
-
-export function serviceWrapper(url, method, jsonBody, subDomain, token, callback) {
+export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect_on_401, callback) {
 
     // just so we can see API requests happeing easier...
     //console.log("----------------------- SERVICE WRAPPER -----------------------")
@@ -147,8 +122,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, callback
             //Logger.LogEvent(false, "API (401)", url, { request: logRequest, response: xhr._response })
 
             // exclude some 401s from causing a redirect to login
-            let gotoLogin = checkIfShouldRedirectToLoginOn401(url)
-            if(gotoLogin) {
+            if(redirect_on_401) {
                 // force the user to the login screen
                 NavigationService.navigate('LoginStack')
             }
