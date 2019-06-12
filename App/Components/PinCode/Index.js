@@ -19,15 +19,10 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-import { NavigationActions, StackActions } from 'react-navigation'
-
-import { List, ListItem, Avatar, Button } from 'react-native-elements'
-
 //import * as Progress from 'react-native-progress'
 
-import SmoothPinCodeInput from 'react-native-smooth-pincode-input'
 import CodeInput from 'react-native-confirmation-code-input';
-import AlertMessage from '../Modules/AlertMessage';
+
 import brand from '../../Styles/brand';
 
 
