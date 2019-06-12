@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppState, AsyncStorage, StyleSheet, Text, View, Image, Alert } from 'react-native';
+import { fromTop } from 'react-navigation-transitions';
 
 import { createAppContainer, createStackNavigator, createDrawerNavigator, NavigationActions, StackActions } from 'react-navigation'
 
@@ -85,6 +86,7 @@ import LaunchScreen from './Components/LaunchScreen'
 import LockScreen from './Components/Account/Security/LockScreen'
 
 
+
 let LaunchStack = createStackNavigator({ 
   screen: LaunchScreen,
   navigationOptions: ({ navigation, screenProps }) => ({
@@ -92,7 +94,10 @@ let LaunchStack = createStackNavigator({
   })
 });
 
-let LockScreenStack = createStackNavigator({ LockScreen });
+let LockScreenStack = createStackNavigator({ LockScreen,
+  PinCode:{
+  screen : PinCodeScreen
+} });
 // added this to introduce screenProps into the stack
 LockScreenStack.navigationOptions = ({ navigation, screenProps }) => {
   return {
@@ -100,6 +105,8 @@ LockScreenStack.navigationOptions = ({ navigation, screenProps }) => {
     swipeEnabled: false
   };
 };
+
+
 
 
 // *******************************************************************************
@@ -146,6 +153,7 @@ let LoginStack = createStackNavigator({
 
 }, {
     initialRouteName: 'Login',
+    transitionConfig: () => fromTop(1000),
     // headerMode: 'float',
     // navigationOptions: ({navigation}) => ({
     //     headerStyle: {backgroundColor: global.colors.brand.primary },
@@ -199,6 +207,7 @@ let AccountStack = createStackNavigator({
 // *******************************************************************************
 import DashboardScreen from './Components/Dashboard/Index'
 
+
 let DashboardStack = createStackNavigator({ 
   Dashboard: {
     screen: DashboardScreen,
@@ -212,6 +221,30 @@ let DashboardStack = createStackNavigator({
 
 // to hide the tabBar on nested screens, you must do it this way
 DashboardStack.navigationOptions = ({ navigation }) => {
+  return {
+    tabBarVisible: navigation.state.index === 0,
+  };
+};
+
+
+// *******************************************************************************
+// PinCode 
+// *******************************************************************************
+import PinCodeScreen from './Components/PinCode/Index'
+
+let PinCodeStack = createStackNavigator({ 
+  PinCode: {
+    screen: PinCodeScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  }
+
+});
+
+// to hide the tabBar on nested screens, you must do it this way
+PinCodeStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: navigation.state.index === 0,
   };
@@ -279,6 +312,7 @@ AlertStack.navigationOptions = ({ navigation }) => {
     tabBarVisible: navigation.state.index === 0,
   };
 };
+
 
 // *******************************************************************************
 // Workflow 
@@ -726,6 +760,8 @@ const AppStack = createStackNavigator({
 
 {
     initialRouteName: 'LaunchStack',
+    transitionConfig: () => fromTop(1000),
+
     // drawerPosition: 'left',
     // gesturesEnabled: true,
     // contentComponent: DrawerContainer,
@@ -885,7 +921,7 @@ export default class App extends React.Component {
              
               _this.setState({
                 newAlertCount : resp
-              },()=>console.log('Badge :',_this.state.newAlertCount))
+              })
             }
           })
 

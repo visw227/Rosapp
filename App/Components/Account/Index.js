@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Platform } from 'react-native'
 import { List, ListItem, Avatar } from 'react-native-elements'
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -161,8 +161,26 @@ export class Account extends React.Component {
                       onPress={() => this.props.navigation.navigate('Password') }
                   
                   />
-                } 
 
+                  
+                } 
+                {Platform.OS === 'android' &&   <ListItem
+                      style={Styles.listItem}
+                      title='Change Passcode'
+                      titleStyle={{ color: brand.colors.gray }}
+
+                      subtitle={
+                      <View style={Styles.subtitleView}>
+                          <Text style={Styles.ratingText}>Change your app passcode</Text>
+                      </View>
+                      }
+                      avatar={<Avatar rounded medium
+                          overlayContainerStyle={{backgroundColor: '#31B0D5'}}
+                          icon={{name: 'key', type: 'font-awesome'}}/>}
+                      
+                      onPress={() => this.props.navigation.navigate('PinCode',{change : 'true'}) }
+                  
+                  />}
 
               </List>
 

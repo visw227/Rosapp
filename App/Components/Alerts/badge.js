@@ -54,11 +54,11 @@ class Badge extends React.Component {
         }
         else {
 
-          if (_this.state.newAlertCount && resp > _this.state.newAlertCount) {
+          if (_this.state && _this.state.newAlertCount && resp > _this.state.newAlertCount) {
             _this.displayNotification()
           }
 
-          _this.setState({
+          _this.state && _this.setState({
               newAlertCount : resp
           })
 
@@ -145,7 +145,7 @@ class Badge extends React.Component {
         <FontAwesome name="bell" size={20} color={this.props.color} />
        
         {
-          this.state.newAlertCount && this.state.newAlertCount !== 0 ?
+          this.state && this.state.newAlertCount && this.state.newAlertCount !== 0 ?
           <View style={{ 
               position: 'absolute', 
               paddingLeft: 4, 

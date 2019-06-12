@@ -27,6 +27,11 @@ import {
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
+import DeviceInfo from 'react-native-device-info';
+
+
+import CodePin from 'react-native-pin-code'
+import SmoothPinCodeInput from 'react-native-smooth-pincode-input'
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
@@ -68,7 +73,8 @@ class LockScreen extends React.Component {
       this.state = {
         requestStatus: {
             hasError: false,
-            message: ""
+            message: "",
+            reRoute:false
         },
         bioType: null,
         isQA: this.props.screenProps.state.isQA,
@@ -85,7 +91,7 @@ class LockScreen extends React.Component {
     // willFocus will cause the biometrics challenge to display anytime this screen is displayed
     // this will happen many times during the use of the app
     this.props.navigation.addListener('willFocus', this.load)
-
+    
     if (Platform.OS=='ios'){
         this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
         this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
@@ -149,18 +155,21 @@ class LockScreen extends React.Component {
 
 
   load = () => {
+      const {navigation} = this.props
 
     // clear the password in case they entered it previously when screen locked
     this.setState({
         password: null
     })
-
     // this provides shared logging via screenProps
     this.props.screenProps._globalLogger(true, "LockScreen", "Opened", {})
+    
+    const forgotPasscode = navigation.getParam('cancel', 'some default value')
 
     TouchID.isSupported()
     .then(bioType => {
-      
+        
+        console.log('<<LockScreen : BioType', bioType)
         // this provides shared logging via screenProps
         this.props.screenProps._globalLogger(true, "LockScreen", "Biometrics Supported", { bioType: bioType })
 
@@ -190,11 +199,25 @@ class LockScreen extends React.Component {
 
     })
     .catch(error => {
-
         // if there aren't any biometrics available, just take user where they were
-
+       
         // this provides shared logging via screenProps
         this.props.screenProps._globalLogger(false, "LockScreen", "Biometrics Error", { error: error })
+        
+        //Android is not falling back to ask passcode if there is no finger print setup
+        //Adding a new screen to lock the app if there is no biometric setup
+        if (Platform.OS == 'android') 
+        {   if (forgotPasscode !== 'true') {
+
+            DeviceInfo.isPinOrFingerprintSet()(isPinOrFingerprintSet => {
+                if (isPinOrFingerprintSet) {
+                    this.props.navigation.navigate('PinCode')
+                }
+              });
+
+        }
+           
+        }
 
         console.log(">>> Biometrics error: ", error)
 
@@ -221,10 +244,11 @@ class LockScreen extends React.Component {
 
     authenticate = (bioType) => {
 
+        console.log('Authenticate : BioType',bioType)
         // this provides shared logging via screenProps
         this.props.screenProps._globalLogger(true, "LockScreen", "authenticate - " + bioType, { bioType: bioType })
 
-
+        
         return TouchID.authenticate('', touchConfig)
         .then(success => {
 
@@ -320,6 +344,8 @@ class LockScreen extends React.Component {
 
                     <View style={Styles.formContainer}>
 
+  
+
                         <View style={{ 
                             justifyContent: 'center', 
                             alignItems: 'center',
@@ -329,7 +355,7 @@ class LockScreen extends React.Component {
                         }}>
                             <Text style={styles.message}>
                             As an extra security measure, Rosnet requires authentication using 
-                            Face ID, Touch ID, your device passcode, or your Rosnet password.
+                            Face ID, Touch ID, passcode, or your Rosnet password.
                             </Text>
                         </View>
 
@@ -381,6 +407,8 @@ class LockScreen extends React.Component {
                                         Authenticate with Rosnet Password
                                         </Text>
                                     </TouchableOpacity> 
+
+                                  
 
                             </View>
                         }
