@@ -243,7 +243,11 @@ class AlertsScreen extends React.Component {
       }
     })
 
-    this.props.navigation.navigate('AlertDetail',{'request':l})
+     l.PushText.indexOf('pick || swap') !== -1 ? this.props.navigation.navigate('AlertsWebView',{'AlertScreen':'true'}) : this.props.navigation.navigate('AlertDetail',{'request':l})
+
+    
+
+    
 
     var newData = []
     if(this.state.data){

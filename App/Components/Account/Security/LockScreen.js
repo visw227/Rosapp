@@ -30,9 +30,6 @@ import { NavigationActions, StackActions } from 'react-navigation'
 import DeviceInfo from 'react-native-device-info';
 
 
-import CodePin from 'react-native-pin-code'
-import SmoothPinCodeInput from 'react-native-smooth-pincode-input'
-
 import Ionicon from 'react-native-vector-icons/Ionicons'
 //import Entypo from 'react-native-vector-icons/Entypo'
 

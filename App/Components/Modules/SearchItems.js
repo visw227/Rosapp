@@ -83,7 +83,7 @@ class SearchItems extends React.Component {
   onSelect = (item) => {
 
     console.log("opening web view", item)
-    this.props.navigation.navigate('ModulesWebView', { item: item })
+    this.props.navigation.navigate('ModulesWebView', { item: item , 'AlertScreen':'false' })
 
   }
 

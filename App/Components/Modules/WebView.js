@@ -144,6 +144,16 @@ class WebViewScreen extends React.Component {
           // this is a partial (relative) url provided from the modules API
           let url = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
 
+          const {navigation} = _this.props
+
+          const alertScreen = navigation.getParam('AlertScreen','false')
+
+          console.log('WebVIEW : ALertscreen :',alertScreen)
+
+
+          alertScreen.indexOf('true') !== -1 ?  url = "https://" + _this.props.screenProps.state.selectedClient + "."+ env  + '/Scheduling/StafflinqShiftApprovals?isApp=true' 
+            : url = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
+
           // this was a inner-navigation change, with a complete URL, so resume there
           if(item.deepLink) {
             url = item.url

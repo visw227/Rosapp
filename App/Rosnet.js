@@ -303,6 +303,9 @@ let AlertStack = createStackNavigator({
   AlertCreate: {
     screen: AlertCreateScreen
   },
+  AlertsWebView : {
+    screen : ModulesWebViewScreen
+  }
 
 });
 

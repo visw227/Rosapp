@@ -132,7 +132,7 @@ class ModuleItems extends React.Component {
   onSelect = (item) => {
 
     console.log("opening ModulesWebView", item)
-    this.props.navigation.navigate('ModulesWebView', { item: item })
+    this.props.navigation.navigate('ModulesWebView', { item: item, 'AlertScreen' : 'false' })
 
   }
 
