@@ -142,7 +142,7 @@ class WebViewScreen extends React.Component {
           console.log(">>> Modules WebView - Token is Valid", resp)
 
           // this is a partial (relative) url provided from the modules API
-          let url = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
+          //let url = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
 
           const {navigation} = _this.props
 
@@ -151,11 +151,13 @@ class WebViewScreen extends React.Component {
           console.log('WebVIEW : ALertscreen :',alertScreen)
 
 
-          alertScreen.indexOf('true') !== -1 ?  url = "https://" + _this.props.screenProps.state.selectedClient + "."+ env  + '/Scheduling/StafflinqShiftApprovals?isApp=true' 
+          alertScreen === 'true' ?  url = "https://" + _this.props.screenProps.state.selectedClient + "."+ env  + '/Scheduling/StafflinqShiftApprovals?isApp=true' 
             : url = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
 
+
+            console.log('webview Url:',url)
           // this was a inner-navigation change, with a complete URL, so resume there
-          if(item.deepLink) {
+          if(item.deepLink && alertScreen !== 'true') {
             url = item.url
           }
 
