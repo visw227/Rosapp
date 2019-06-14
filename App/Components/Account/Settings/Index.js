@@ -75,7 +75,7 @@ class Settings extends React.Component {
     value = (id,array) => {
 
       console.log('switch vale',array)
-      console.log ('<<<Value method switch values',this.state.switch1,this.state.switch1,this.state.switch3,this.state.switch4)
+      console.log ('<<<Value method switch values',this.state.switch1,this.state.switch2,this.state.switch3,this.state.switch4)
       if (id === 1){
         return this.state.switch1
       }
@@ -123,7 +123,7 @@ class Settings extends React.Component {
         resp.forEach(element => {
           if(element.Alert_type_ID === 1 ){
             _this.setState({
-              switch1: element.Notify_by_Push ===1 ? true : false
+              switch1: element.Notify_by_Push === 1 ? true : false
             })
           }
           if(element.Alert_type_ID === 2 ){
