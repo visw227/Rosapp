@@ -200,7 +200,8 @@ class LockScreen extends React.Component {
        
         // this provides shared logging via screenProps
         this.props.screenProps._globalLogger(false, "LockScreen", "Biometrics Error", { error: error })
-        
+
+     
         //Android is not falling back to ask passcode if there is no finger print setup
         //Adding a new screen to lock the app if there is no biometric setup
         if (Platform.OS == 'android') 

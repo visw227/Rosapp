@@ -100,7 +100,7 @@ class Badge extends React.Component {
         
         var data = resp.reverse()
 
-        
+        console.log('badge :',data)
         
         const channel = new firebase.notifications.Android.Channel(
           'default_notification_channel_id',
@@ -112,16 +112,21 @@ class Badge extends React.Component {
           channel.enableVibration(true);
           firebase.notifications().android.createChannel(channel);
 
+      
         const notification = new firebase.notifications.Notification()
         .setNotificationId('notificationId')
         .setTitle('New Notification')
         .setSound(data[0].Title)
-        .setBody(data[0].PushText)
-        .setData({
-          client: 'value1'
-        });
+        .setBody(data[0].PushText);
+
+
+        //Sending notifications on app foreground state is not being implemented for now
+          
+        // if (data[0].pushNeed !== false) {
+        //   firebase.notifications().displayNotification(notification)
+        // }
  
-        firebase.notifications().displayNotification(notification)
+        
       }
 
     })

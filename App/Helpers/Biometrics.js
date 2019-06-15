@@ -41,6 +41,7 @@ export var Biometrics = {
 
                     // check if limit was exceeded or if lastScreen was the LockScreen (and the user force-closed the app when LockScreen was shown)
                     // if the app is in debug-mode or on simulator , the locakscreen is bypassed (for dev convinience)
+
                     if(!__DEV__ && (diff >= statusData.limit || lastScreen === 'LockScreen') ) {
 
                         result.log.push({
@@ -50,10 +51,9 @@ export var Biometrics = {
 
                         // this is needed since props.navigation isn't present for unmounted screen components
                         //NavigationService.navigate('LockStack');
-
                         result.showLock = true
-
                     }
+
                     else {
 
                         result.log.push({
