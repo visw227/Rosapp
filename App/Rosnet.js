@@ -1283,7 +1283,7 @@ export default class App extends React.Component {
               _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
 
 
-              _this._globalLogger(false, "App", "Token Refreshed Successfully", { userData: resp.userData })
+              _this._globalLogger(true, "App", "Token Refreshed Successfully", { userData: resp.userData })
             
             
             } // end else
