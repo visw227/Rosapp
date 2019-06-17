@@ -38,7 +38,7 @@ import  { Notification, NotificationOpen } from 'react-native-firebase';
 import Badge from './Components/Alerts/badge'
 
 
-
+import { userLogout } from './Services/Account';
 
 
 
@@ -1096,6 +1096,13 @@ export default class App extends React.Component {
           })
           // }, () => console.log("global state change back to real user", data.userData ) )
 
+          // this API request will delete the user's token from the database and other stuff
+          userLogout(this.state.selectedClient, this.state.userData.token, function(err,resp){
+
+            // dont wait on this to happen. Slow in QA a lot of the time
+
+          })
+
 
         }
         
@@ -1322,14 +1329,12 @@ export default class App extends React.Component {
 
           }
 
-
         }
         
 
-
         let statusData = {
-          limit: 15000, // 10 seconds in milliseconds
-          ts: new Date().getTime() // add a timestamp to it for sorting
+          limit: config.BIOMETRICS_DURATION, // milliseconds
+          ts: new Date().getTime() // add a timestamp to know when inactivated
         }
 
         AsyncStorage.setItem('statusData', JSON.stringify(statusData))

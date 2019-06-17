@@ -41,6 +41,8 @@ import TouchID from 'react-native-touch-id'
 import logo from '../../../Images/logo-lg-white-square.png';
 import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
 
+import NavigationService from '../../../Helpers/NavigationService';
+
 //config is optional to be passed in on Android
 const touchConfig = {
     title: "Authentication Required", // Android
@@ -311,6 +313,19 @@ class LockScreen extends React.Component {
 
     }
 
+    onBackToLoginScreen = () => {
+
+        // so that the user can't just close and reopen the app after being taken to the login screen,
+        // null the token to really log them out
+        let userData = this.props.screenProps.state.userData
+        userData.token = null
+
+        this.props.screenProps._globalStateChange( { action: "logout", userData: userData })
+
+        NavigationService.stackReset('LoginStack')
+
+    }
+
     render() {
 
 
@@ -406,7 +421,13 @@ class LockScreen extends React.Component {
                                         </Text>
                                     </TouchableOpacity> 
 
-                                  
+                                    <View>
+                                        <Text 
+                                            style={styles.hotlink} 
+                                            onPress={this.onBackToLoginScreen}>
+                                            Back to Login
+                                        </Text>
+                                    </View>
 
                             </View>
                         }
@@ -481,8 +502,13 @@ const styles = StyleSheet.create({
       paddingRight: 10,
       color: brand.colors.white,
       fontSize: 15
+    },
+    hotlink:{
+        color: brand.colors.white,
+        fontSize: 14,
+        textAlign: 'center',
+        marginTop: 20
     }
-   
 });
 
 //make this component available to the app
