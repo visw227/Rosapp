@@ -23,6 +23,9 @@ import Styles from './Styles'
 import { List, ListItem, Avatar } from 'react-native-elements'
 //import { Switch } from 'react-native-gesture-handler';
 
+import Push from 'appcenter-push'
+
+
 class Settings extends React.Component {
 
   // this is a child/nested screen in the SchedulesStack
@@ -38,6 +41,18 @@ class Settings extends React.Component {
 
     constructor(props) {
       super(props);
+
+
+      // const pushEnabled = async () => {
+      //   const enabled = await Push.isEnabled()
+
+      //   console.log('enabled 1:', enabled);
+
+      //   let isEnabled = enabled
+      // }
+
+      // console.log("pushEnabled 2", pushEnabled)
+
 
       this.state = {
           sending: false,
@@ -65,11 +80,37 @@ class Settings extends React.Component {
             desc : null ,
             email : 1,
             push : null
-          }
+          },
+          pushEnabled: false
          
       }
 
   }
+
+    checkSettings = () => {
+
+      let _this = this
+
+      this.pushIsEnabled(function(isEnabled){
+        console.log("isEnabled", isEnabled)
+
+        _this.setState({
+          pushEnabled: isEnabled
+        })
+
+      })
+
+    }
+
+    pushIsEnabled = async (callback) => {
+      // do something
+      const enabled = await Push.isEnabled()
+
+      console.log("enabled", enabled)
+
+      callback(enabled)
+
+    }
 
 
     value = (id,array) => {
@@ -92,11 +133,16 @@ class Settings extends React.Component {
       }
 
     }
- 
+
 
   componentDidMount () {
     _this = this
 
+
+    this.props.navigation.addListener('willFocus', this.checkSettings)
+
+
+    console.log("state", this.state)
 
     this.props.navigation.setParams({ 
       backgroundColor:this.props.screenProps.state.backgroundColor 
@@ -185,15 +231,12 @@ class Settings extends React.Component {
 
   render() {
     
-    console.log('<<state',this.state)
+    //console.log('<<state',this.state)
     var optionsList = []
       
-     if(this.state.alertOptions.length > 0) {
-
+    if(this.state.alertOptions.length > 0) {
       // Returing an array object suitable for List / section list
-
       for (i=0; i < this.state.alertOptions.length ; i++ ) {
-        
         opts = Object.assign(
          {},{  group:this.state.alertOptions[i] ,
                 id : this.state.alerttypeids[i],
@@ -205,16 +248,27 @@ class Settings extends React.Component {
            },
          ]}
         )
-        optionsList.push(opts)
-       
+        optionsList.push(opts) 
      }
-     
+    }
+
+    
+    if(this.state.pushEnabled === false) {
+
+      return (
+        <View>
+            <Text style={{ 
+              color: brand.colors.primary,
+              justifyContent: 'center', 
+              alignItems: 'center',
+              textAlign: 'center',
+              margin: 15
+            }}>Please update your device settings to allow notifications for Rosnet.</Text>
+        </View>
+      )
 
      }
-
-     
-   
-     if (this.props.screenProps.state.userData && this.props.screenProps.state.userData.userLevel === 1)  {
+     else if (this.props.screenProps.state.userData && this.props.screenProps.state.userData.userLevel === 1)  {
 
       return (
 
