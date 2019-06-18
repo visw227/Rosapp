@@ -85,12 +85,14 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
         if (xhr.status === 200) {
 
             let json = JSON.parse(xhr.response)
-
+            if(xhr._url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts') == -1) {
             console.log("************************************* ServiceWrapper - 200 ***********************************************")
             console.log("url", xhr._url)
             console.log("xhr", xhr) //JSON.stringify(xhr, null, 2))
             console.log("xhr.response", json)
 
+            }
+            
             //Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
 
             // 200 successes can return errors - e.g. { Success: false, ErrorMsg: "Login attempt failed 5 times. Account is now locked." }
@@ -132,22 +134,26 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
 
             // BE AWARE - PC4 responses are VERY unpredictable
             // They can be text strings, HTML, or a JSON object... have fun
+           
 
-            console.log("************************************* ServiceWrapper - " + xhr.status + " ***********************************************")
-            console.log("url", xhr._url)
+                console.log("************************************* ServiceWrapper - " + xhr.status + " ***********************************************")
+                console.log("url", xhr._url)
+    
+                console.log("xhr._response", xhr._response)
+                let message = xhr._response
+    
+                if(message.indexOf('{') !== -1) {
+    
+                    console.log("error is JSON", JSON.stringify(json, null, 2))
+    
+                    let json = JSON.parse(message)
+    
+    
+                    message = (json.Message || "") + " " + (json.ExceptionMessage || "")
 
-            console.log("xhr._response", xhr._response)
-            let message = xhr._response
-
-            if(message.indexOf('{') !== -1) {
-
-                console.log("error is JSON", JSON.stringify(json, null, 2))
-
-                let json = JSON.parse(message)
-
-
-                message = (json.Message || "") + " " + (json.ExceptionMessage || "")
             }
+           
+            
             else if(message.indexOf('<') !== -1) {
 
                 console.log("error is HTML", message)
