@@ -29,7 +29,7 @@ import Styles from './Styles'
 
 import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
-import { GetNotifications,getOpenedAlertsCount,updateOpenAlertsCount,hideAlert} from '../../Services/Push';
+import { GetNotifications,getOpenedAlertsCount,updateOpenAlertsCount,hideAlert,getBadgeCount} from '../../Services/Push';
 
 
 
@@ -129,6 +129,7 @@ class AlertsScreen extends React.Component {
 
         console.log('response',resp)
 
+
         _this.setState ({
           alertOn : false,
           data : resp.reverse()
@@ -147,6 +148,35 @@ class AlertsScreen extends React.Component {
         }
       })
     }
+
+    //todo badge count
+
+    if(this.props.screenProps){
+
+      let request = {
+        client : this.props.screenProps.state.selectedClient,
+        token : this.props.screenProps.state.userData.token,
+        userName : this.props.screenProps.state.userData.userName
+      }
+
+      getBadgeCount (request,function(err,resp){
+        //console.log('props',this.props)
+        //console.log("Resp : : State",resp,  + _this.state.newAlertCount)
+        if (err) {
+          //console.log('Badge count error',err)
+      
+        }
+        else {
+
+          _this.props && _this.props.screenProps && _this.props.screenProps._globalStateChange( { action: "notification-count", notifCount: resp  })
+
+        }
+
+      }) // end getBadgeCount
+
+
+    } // end if screenProps
+
 
   }
  

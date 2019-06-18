@@ -35,7 +35,7 @@ import {LoginSelectClient} from './Components/Account/Login/SelectClient'
 
 import  { Notification, NotificationOpen } from 'react-native-firebase';
 
-import Badge from './Components/Alerts/badge'
+
 
 
 
@@ -456,13 +456,16 @@ let TabStack = createBottomTabNavigator({
   },
 
   Alerts: {
+
+    
     screen: AlertStack,
     navigationOptions: ({ navigation, screenProps }) => ({
-
+     
         // title and headerTitle DO NOT WORK HERE
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
         tabBarLabel: (focused) =><View>
+          {console.log('<<alertsCount',screenProps.state.notifCount)}
           {focused.focused ?
             <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
               <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Alerts</Text>
@@ -472,20 +475,38 @@ let TabStack = createBottomTabNavigator({
           } 
         </View>,
         
-        tabBarIcon: (focused) => <View>
+        tabBarIcon: (focused) =>      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 
-        {
-          focused.focused ?
-            <Badge screenProps = {screenProps} navigation = {navigation} color = {brand.colors.primary}/>
-          :
+        {focused.focused ?
+        
+          <FontAwesome name="bell" size={20} color={brand.colors.primary} />
+        :             
+         
 
-            // TODO: find out why the Badge call below (when not 'focused') generates this warning sometimes:
-            // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. 
-            //  To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
-            <Badge screenProps = {screenProps} navigation = {navigation} color = {brand.colors.gray}/>
-        } 
+          <FontAwesome name="bell" size={20} color={brand.colors.gray} />
+          
+        }
 
-        </View> 
+        {screenProps.state.notifCount > 0 &&
+          <View style={{ 
+              position: 'absolute', 
+              paddingLeft: 4, 
+              paddingRight: 4,
+              right: -20, 
+              top: 1, 
+              backgroundColor: brand.colors.orange, 
+              borderRadius: 10, 
+              height: 20, 
+              //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+              minWidth: 20, // this keeps it round with borderRadius=10
+              justifyContent: 'center', 
+              alignItems: 'center' }}>
+            <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.notifCount}</Text>
+          </View>
+        }
+ 
+
+      </View>
 
     })
   },
@@ -811,6 +832,7 @@ export default class App extends React.Component {
           appState: AppState.currentState,
           alertCount: 0,
           messageCount: 0,
+          notifCount : 0,
           newAlertCount : '',
           deleteState : false,
           backgroundColor :brand.colors.primary,
@@ -829,6 +851,7 @@ export default class App extends React.Component {
         // this kicks off a background timer loop to check things like forced re-login, etc.
         this.backgroundChatMessagesTimer()
 
+
         // this kicks off a background timer loop to check for notifications at set intervals
         this.backgroundNotificationsTimer()
 
@@ -842,8 +865,8 @@ export default class App extends React.Component {
 
         this.setBadge()
 
-        // this.interval = setInterval (() => this.setBadge()
-        // ,60000)
+         this.interval = setInterval (() => this.setBadge()
+         ,60000)
 
         // let userData = this.props.screenProps.state.userData
         // let token = this.props.screenProps.state.userData.token
@@ -923,7 +946,7 @@ export default class App extends React.Component {
               console.log('Badge count success',resp)
              
               _this.setState({
-                newAlertCount : resp
+                notifCount : resp
               })
             }
           })
@@ -1118,6 +1141,13 @@ export default class App extends React.Component {
             messageCount : data.messageCount
           })
           //},() => console.log('global state change messageCount',this.state.messageCount))
+        }
+
+        if (data.action === 'notification-count') {
+          this.setState({
+            notifCount : data.notifCount
+          })
+        
         }
 
 
@@ -1394,7 +1424,7 @@ export default class App extends React.Component {
 
 
     render() {
-
+        
         // gets the current screen from navigation state
         function getCurrentRouteName(navigationState) {
           if (!navigationState) {
