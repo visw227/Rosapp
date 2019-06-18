@@ -465,7 +465,7 @@ let TabStack = createBottomTabNavigator({
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
         tabBarLabel: (focused) =><View>
-          {console.log('<<alertsCount',screenProps.state.notifCount)}
+
           {focused.focused ?
             <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
               <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Alerts</Text>
@@ -1219,34 +1219,28 @@ export default class App extends React.Component {
 
         }
 
-        let alertCount = GetNotifications (request ,function(err,resp) {
-          if (err){
-            console.log ('Error siteSettings',err)
+        let alertCount =    getBadgeCount (request,function(err,resp){
+          //console.log('props',this.props)
+          //console.log("Resp : : State",resp,  + _this.state.newAlertCount)
+          if (err) {
+            //console.log('Badge count error',err)
+        
           }
           else {
-            //console.log('response',resp)
-            
-    
-              // resp.forEach(element => {
-              //   title = element.Title
-              //   text = element.PushText
-              // });
-              //console.log('modifiedresp',alertTypes)
-    
-             return resp.length
-            
+  
+            _this.setState({
+              notifCount: resp
+            })
           }
-    
-        })
+  
+        }) // end getBadgeCount
 
 
-        _this.setState({
-          alertCount: alertCount
-        })
+        
 
       }
 
-      let timeout = 60000 // 60000 * 5 = 5 minutes
+      let timeout = 2000 // 60000 * 5 = 5 minutes
       setTimeout(_this.backgroundNotificationsTimer, timeout);
 
 
