@@ -32,6 +32,8 @@ import SearchBar from '../ReusableComponents/SearchBar'
 
 import { isSiteAvailable } from '../../Services/Site';
 
+import { Authorization } from '../../Helpers/Authorization';
+
 
 export class ClientSelection extends React.Component {
 
@@ -134,18 +136,46 @@ export class ClientSelection extends React.Component {
 
         console.log(client + " site IS available. resp: ", resp)
 
-        _this.setState({
-            receiving: false,
-            changed: true,
-            receiving: true
-          }, () => 
-        
-            // add a slight spinner delay just to prove to the user that something has happened when the user selects a site
-            setTimeout(() => {
-              _this.doClientChange(client)
-            }, 1000)
+        // before changing sites, refresh the user token, which also updates their list of allowed modules
+        Authorization.RefreshToken(function(err, resp){
+          
+          if(err) {
+            console.log("err refreshing token", err)
 
-        )
+            _this._globalLogger(false, "App", "Error Refreshing Token On Site Change", { error: err})
+
+          }
+          else {
+
+            console.log("token refreshed")
+
+            // if we are refreshing the token, we must reset all global state attributes back to defaults as well
+            _this.props.screenProps._globalStateChange( { action: "token-refresh", userData: resp.userData })
+
+
+            _this.props.screenProps._globalLogger(true, "App", "Token Refreshed Successfully On Site Change", { userData: resp.userData })
+          
+
+            _this.setState({
+                receiving: false,
+                changed: true,
+                receiving: true
+              }, () => 
+            
+                // add a slight spinner delay just to prove to the user that something has happened when the user selects a site
+                setTimeout(() => {
+                  _this.doClientChange(client)
+                }, 1000)
+
+            )
+          
+          } // end else
+
+        }) // end Authorization.RefreshToken
+
+
+
+
 
       }
 

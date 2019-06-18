@@ -31,9 +31,9 @@ import AvatarInitials from '../ReusableComponents/AvatarInitials'
 import LocationButtons from '../ReusableComponents/LocationButtons';
 import { GetNotifications,getOpenedAlertsCount,updateOpenAlertsCount,hideAlert,getBadgeCount} from '../../Services/Push';
 
-
-
 import Swipeout from 'react-native-swipeout'
+
+import Push from 'appcenter-push'
 
 
 class AlertsScreen extends React.Component {
@@ -182,6 +182,9 @@ class AlertsScreen extends React.Component {
  
 
   componentDidMount () {
+
+    // do something to show the device permission dialog 
+    Push.setEnabled(true)
 
 
     this.props.navigation.addListener('willFocus', this.load)

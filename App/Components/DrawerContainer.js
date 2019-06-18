@@ -5,7 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 
-import { userLogout } from '../Services/Account';
+// import { userLogout } from '../Services/Account';
 
 //import config from '../app-config.json'
 
@@ -70,21 +70,10 @@ export default class DrawerContainer extends React.Component {
         userData.token = null
       }
 
-
       
       // update global state
       _this.props.screenProps._globalStateChange( { action: "logout", userData: userData })
 
-      // this API request will delete the user's token from the database and other stuff
-      userLogout(_this.props.screenProps.state.selectedClient, _this.props.screenProps.state.userData.token, function(err,resp){
-
-        // dont wait on this to happen. Slow in QA a lot of the time
-
-      })
-
-        
-      // this shows a back arrow, so don't use this
-      //this.props.navigation.navigate('LoginStack')
 
       // instead, reset the navigation
       const resetAction = StackActions.reset({
