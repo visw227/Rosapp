@@ -1357,7 +1357,7 @@ export default class App extends React.Component {
         
 
         let statusData = {
-          limit: config.BIOMETRICS_DURATION, // milliseconds
+          limit: config.BIOMETRICS_WAIT_DURATION, // milliseconds
           ts: new Date().getTime() // add a timestamp to know when inactivated
         }
 
