@@ -108,6 +108,7 @@ export default class DrawerContainer extends React.Component {
     // place the impersonated user's data into userData, but copy the "real" user into superUser so that we can revert back later...
     this.props.screenProps._globalStateChange( { 
       action: "undo-session-override", 
+      superUser: null, // the action above is all that's needed to clear superUser
       userData: this.props.screenProps.state.superUser, 
       backgroundColor:brand.colors.primary 
     })

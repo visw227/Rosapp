@@ -1087,6 +1087,9 @@ export default class App extends React.Component {
           })
           // }, () => console.log("global state change to superUser", this.state.superUser ) )
 
+          // always save any changes to local storage
+          AsyncStorage.setItem('superUser', JSON.stringify(data.superUser))
+
           
         }
 
@@ -1118,6 +1121,9 @@ export default class App extends React.Component {
             backgroundColor: brand.colors.primary
           })
           // }, () => console.log("global state change back to real user", data.userData ) )
+
+          // always save any changes to local storage
+          AsyncStorage.removeItem('superUser')
 
           // this API request will delete the user's token from the database and other stuff
           userLogout(this.state.selectedClient, this.state.userData.token, function(err,resp){
@@ -1329,31 +1335,30 @@ export default class App extends React.Component {
 
         console.log("+++++++++ STATUS INACTIVE ++++++++++")
 
-
         _this.resetBadge()
 
         console.log('******** Rest BAdge')
 
-        // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
-        // only pasword and token are set to null
-        if(this.state.userData && this.state.userData.token) {
+
+        // REMOVED 6-18-2019 - Logic moved to LaunchScreen to rehydrate superUser if available
+        //if(this.state.userData && this.state.userData.token) {
 
           // IMPORTANT:
           // revert back to the real user if impersonating - 
           // THIS IS ESPECIALLY important if the user then exits/closes/terminates the app entirely.
           // Otherwise, when the user re-launches the app, they will still be logged in as an impersonator
-          if(this.state.superUser) {
-            console.log("reverting superUser back to ", this.state.superUser)
-            let userData = this.state.superUser
-            _this._globalStateChange( { action: "undo-session-override", userData: userData })
+          // if(this.state.superUser) {
+          //   console.log("reverting superUser back to ", this.state.superUser)
+          //   let userData = this.state.superUser
+          //   _this._globalStateChange( { action: "undo-session-override", userData: userData })
 
-            // this is a lazy way to force all screens to reload 
-            // and we don't have to undo the red background on every screen individually
-            NavigationService.stackReset('DrawerStack')
+          //   // this is a lazy way to force all screens to reload 
+          //   // and we don't have to undo the red background on every screen individually
+          //   NavigationService.stackReset('DrawerStack')
 
-          }
+          // }
 
-        }
+        //}
         
 
         let statusData = {

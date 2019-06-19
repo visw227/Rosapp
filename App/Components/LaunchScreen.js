@@ -136,7 +136,21 @@ class LaunchScreen extends React.Component {
       //*********************************************************
       // load all the data in storage back into the global state
       //*********************************************************
-      
+    
+      // IMPORTANT:
+      // Rehydrate the superUser object if available 
+      // THIS IS ESPECIALLY important if a superUser exits/closes/terminates the app entirely.
+      // Otherwise, when the superUser re-launches the app, they will still be logged in as an impersonated person
+      AsyncStorage.getItem('superUser').then((superUser) => {
+
+        console.log("superUser", superUser)
+
+        if(superUser) {
+          _this.props.screenProps._globalStateChange({ action: "launch", superUser: JSON.parse(superUser), backgroundColor: brand.colors.danger } )
+        }
+
+      })
+
       AsyncStorage.getItem('userData').then((data) => {
 
         let userData = null
