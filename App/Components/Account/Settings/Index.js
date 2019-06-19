@@ -22,7 +22,7 @@ import Styles from './Styles'
 
 import { List, ListItem, Avatar } from 'react-native-elements'
 //import { Switch } from 'react-native-gesture-handler';
-
+import firebase from 'react-native-firebase'
 import Push from 'appcenter-push'
 
 
@@ -87,6 +87,7 @@ class Settings extends React.Component {
 
   }
 
+
     checkSettings = () => {
 
       let _this = this
@@ -104,7 +105,7 @@ class Settings extends React.Component {
 
     pushIsEnabled = async (callback) => {
       // do something
-      const enabled = await Push.isEnabled()
+      const enabled = await firebase.messaging().hasPermission()
 
       console.log("enabled", enabled)
 
@@ -115,8 +116,8 @@ class Settings extends React.Component {
 
     value = (id,array) => {
 
-      console.log('switch vale',array)
-      console.log ('<<<Value method switch values',this.state.switch1,this.state.switch2,this.state.switch3,this.state.switch4)
+      // console.log('switch vale',array)
+      // console.log ('<<<Value method switch values',this.state.switch1,this.state.switch2,this.state.switch3,this.state.switch4)
       if (id === 1){
         return this.state.switch1
       }
@@ -138,7 +139,7 @@ class Settings extends React.Component {
   componentDidMount () {
     _this = this
 
-
+    
     this.props.navigation.addListener('willFocus', this.checkSettings)
 
 
