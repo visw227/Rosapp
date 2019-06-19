@@ -1127,21 +1127,16 @@ export default class App extends React.Component {
 
           // this API request will delete the user's token from the database and other stuff
           userLogout(this.state.selectedClient, this.state.userData.token, function(err,resp){
-
             // dont wait on this to happen. Slow in QA a lot of the time
-
           })
-
 
         }
         
-        // this will refresh the real user's token
-        // this action will force the app to reset back to the real user
+
         if(data.action && data.action === "token-refresh") {
 
           this.setState({
             userData: data.userData,
-            superUser: null,
             backgroundColor: brand.colors.primary
           })
           // }, () => console.log("global state change for token refresh", data.userData ) )
