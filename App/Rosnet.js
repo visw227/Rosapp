@@ -945,7 +945,7 @@ export default class App extends React.Component {
             else {
               console.log('Badge count success',resp)
              
-              _this.setState({
+              _this.state && _this.setState({
                 notifCount : resp
               })
             }

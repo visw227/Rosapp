@@ -9,7 +9,8 @@ import {
   RefreshControl,
   SectionList,
   Linking,
-  TouchableHighlight
+  TouchableHighlight,
+  Platform
 } from 'react-native';
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -25,7 +26,7 @@ import { List, ListItem, Avatar,Button } from 'react-native-elements'
 //import { Switch } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase'
 import Push from 'appcenter-push'
-
+import AndroidOpenSettings from 'react-native-android-open-settings'
 
 class Settings extends React.Component {
 
@@ -153,6 +154,9 @@ class Settings extends React.Component {
       });
     }
 
+    openSettings = () => {
+      Platform.OS === 'android' ? AndroidOpenSettings.appNotificationSettings() : Linking.openURL('app-settings:')
+    }
 
   renderStyle = () => {
     
@@ -160,7 +164,7 @@ class Settings extends React.Component {
 
       return(
         
-        <Text style ={{color:brand.colors.white,paddingRight:10}} onPress={()=>{Linking.openURL('app-settings:')}}> Update </Text> 
+        <Text style ={{color:brand.colors.white,paddingRight:10}} onPress={()=>{this.openSettings()}}> Update </Text> 
      )
      else return(
        null
