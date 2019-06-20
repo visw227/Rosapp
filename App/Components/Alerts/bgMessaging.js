@@ -3,7 +3,7 @@ import firebase from 'react-native-firebase';
 import  { RemoteMessage } from 'react-native-firebase';
 
 
-// this is needed for the android to get notifications when the app is in the foreground
+// this is needed for the android to get push notifications when the app is in the foreground
 
 export default async (RemoteMessage) => {
     // handle your message

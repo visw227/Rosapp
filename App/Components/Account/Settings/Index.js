@@ -4,10 +4,11 @@ import {
   View,
   Image,
   Text,
-  Button,
+  //Button,
   ScrollView,
   RefreshControl,
   SectionList,
+  Linking,
   TouchableHighlight
 } from 'react-native';
 
@@ -20,7 +21,7 @@ import { alertTypes,alertSubscription,retrieveSubscription,backfillSubscription}
 
 import Styles from './Styles'
 
-import { List, ListItem, Avatar } from 'react-native-elements'
+import { List, ListItem, Avatar,Button } from 'react-native-elements'
 //import { Switch } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase'
 import Push from 'appcenter-push'
@@ -36,7 +37,8 @@ class Settings extends React.Component {
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
-    headerTintColor: 'white'
+    headerTintColor: 'white',
+    headerRight : navigate.navigation.getParam('renderStyle')
   })
 
     constructor(props) {
@@ -92,16 +94,20 @@ class Settings extends React.Component {
 
       let _this = this
 
+      _this.checkPermission()
+
       this.pushIsEnabled(function(isEnabled){
         console.log("isEnabled", isEnabled)
 
         _this.setState({
           pushEnabled: isEnabled
-        })
+        },() =>  _this.props.navigation.setParams({renderStyle : _this.renderStyle() }) )
 
       })
 
     }
+
+    
 
     pushIsEnabled = async (callback) => {
       // do something
@@ -113,6 +119,53 @@ class Settings extends React.Component {
 
     }
 
+    async checkPermission() {
+      const enabled = await firebase.messaging().hasPermission();
+      if (enabled) {
+          this.getToken();
+      } else {
+          this.requestPermission();
+      }
+    }
+    
+      //3
+    async getToken() {
+      let fcmToken = await AsyncStorage.getItem('firebaseToken');
+      if (!fcmToken) {
+          fcmToken = await firebase.messaging().getToken();
+          if (fcmToken) {
+              // user has a device token
+              await AsyncStorage.setItem('firebaseToken', fcmToken);
+          }
+      }
+    }
+    
+      //2
+    async requestPermission() {
+      firebase.messaging().requestPermission()
+      .then(() => {
+
+        this.checkSettings()
+        // User has authorised  
+      })
+      .catch(error => {
+        // User has rejected permissions  
+      });
+    }
+
+
+  renderStyle = () => {
+    
+   if (this.state.pushEnabled === false)
+
+      return(
+        
+        <Text style ={{color:brand.colors.white,paddingRight:10}} onPress={()=>{Linking.openURL('app-settings:')}}> Update </Text> 
+     )
+     else return(
+       null
+     )
+  }
 
     value = (id,array) => {
 
@@ -137,9 +190,10 @@ class Settings extends React.Component {
 
 
   componentDidMount () {
+   
     _this = this
 
-    
+
     this.props.navigation.addListener('willFocus', this.checkSettings)
 
 
@@ -264,7 +318,8 @@ class Settings extends React.Component {
               alignItems: 'center',
               textAlign: 'center',
               margin: 15
-            }}>Please update your device settings to allow notifications for Rosnet.</Text>
+            }}>Rosnet notifications are turned off on your device. Please update your device settings to allow push notifications for Rosnet.</Text>
+            
         </View>
       )
 
