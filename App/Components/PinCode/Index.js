@@ -22,6 +22,8 @@ import {
 //import * as Progress from 'react-native-progress'
 
 import CodeInput from 'react-native-confirmation-code-input';
+import { NavigationActions, StackActions } from 'react-navigation'
+
 
 import brand from '../../Styles/brand';
 
@@ -87,6 +89,17 @@ class PinCodeScreen extends React.Component {
     this.setState ({
       password : false
     })
+  }
+
+  navigate = () => {
+   
+    const resetNav = NavigationActions.navigate({
+      routeName: 'LockScreen',
+      params: { cancel: 'true' }
+      //key: 'LockScreen',
+    });
+    this.props.navigation.dispatch(resetNav);
+
   }
 
   renderWhat = () => {
@@ -175,9 +188,7 @@ class PinCodeScreen extends React.Component {
 
 <TouchableOpacity 
         style={ styles.buttonContainer }
-        onPress={()=>(this.props.navigation.navigate('LockScreen', {
-          cancel : "true"
-        }))}>
+        onPress={()=>(this.navigate())}>
         <Text 
         style={ styles.buttonText }>
         Forgot PinCode

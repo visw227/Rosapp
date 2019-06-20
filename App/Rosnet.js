@@ -84,6 +84,7 @@ Push.setListener({
 
 import LaunchScreen from './Components/LaunchScreen'
 import LockScreen from './Components/Account/Security/LockScreen'
+import PinCodeScreen from './Components/PinCode/Index'
 
 
 
@@ -221,30 +222,6 @@ let DashboardStack = createStackNavigator({
 
 // to hide the tabBar on nested screens, you must do it this way
 DashboardStack.navigationOptions = ({ navigation }) => {
-  return {
-    tabBarVisible: navigation.state.index === 0,
-  };
-};
-
-
-// *******************************************************************************
-// PinCode 
-// *******************************************************************************
-import PinCodeScreen from './Components/PinCode/Index'
-
-let PinCodeStack = createStackNavigator({ 
-  PinCode: {
-    screen: PinCodeScreen,
-    // to hide the back title for any child screens, it must be set to null here
-    navigationOptions: ({ navigation }) => ({
-      headerBackTitle: null
-    }),
-  }
-
-});
-
-// to hide the tabBar on nested screens, you must do it this way
-PinCodeStack.navigationOptions = ({ navigation }) => {
   return {
     tabBarVisible: navigation.state.index === 0,
   };
