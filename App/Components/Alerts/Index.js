@@ -276,7 +276,7 @@ class AlertsScreen extends React.Component {
       }
     })
 
-     l.Title.indexOf('Pickup') !== -1 || l.Title.indexOf('Swap') !== -1  ? this.props.navigation.navigate('AlertsWebView',{'AlertScreen':'true'}) : this.props.navigation.navigate('AlertDetail',{'request':l})
+      this.props.navigation.navigate('AlertDetail',{'request':l})
 
     
 

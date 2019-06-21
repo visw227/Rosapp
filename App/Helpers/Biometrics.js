@@ -42,7 +42,7 @@ export var Biometrics = {
                     // check if limit was exceeded or if lastScreen was the LockScreen (and the user force-closed the app when LockScreen was shown)
                     // if the app is in debug-mode or on simulator , the locakscreen is bypassed (for dev convinience)
 
-                    if(__DEV__ && (diff >= statusData.limit || lastScreen === 'LockScreen') ) {
+                    if(!__DEV__ && (diff >= statusData.limit || lastScreen === 'LockScreen') ) {
 
                         result.log.push({
                             action: "Showing Lock Screen",
