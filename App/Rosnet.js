@@ -1,3 +1,15 @@
+/*
+
+Developer Notes:
+
+There seems to be a miriad of reasons in the PC4 system for why a user's token may become invalid, so based on business rules, 
+we are pounding the daylights out of the server with Authorization.RefreshToken and other token verification processes
+
+ServiceWrapper.js handles 401's and does a redirect to login if any API call results in a 401 (except those noted)
+
+*/
+
+
 import React from 'react';
 import { AppState, AsyncStorage, StyleSheet, Text, View, Image, Alert } from 'react-native';
 import { fromTop } from 'react-navigation-transitions';
@@ -826,6 +838,9 @@ export default class App extends React.Component {
         }
 
         // this kicks off a background timer loop to check things like forced re-login, etc.
+        this.backgroundTokenRefreshTimer()
+
+        // this kicks off a background timer loop to check things like forced re-login, etc.
         this.backgroundChatMessagesTimer()
 
 
@@ -1138,6 +1153,41 @@ export default class App extends React.Component {
 
     }
 
+
+    backgroundTokenRefreshTimer = () => {
+
+      let _this = this
+
+      console.log("backgroundTokenRefreshTimer...")
+
+      // this MAY cause a 401 redirect to login WHILE the biometrics screen is being displayed
+      Authorization.RefreshToken(function(err, resp){
+        
+        if(err) {
+          console.log("err refreshing token", err)
+
+          _this._globalLogger(false, "App", "Error Refreshing Token", { error: err})
+
+        }
+        else {
+
+          console.log("token refreshed")
+
+          // if we are refreshing the token, we must reset all global state attributes back to defaults as well
+          _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
+
+
+          _this._globalLogger(true, "App", "Token Refreshed Successfully", { userData: resp.userData })
+        
+        
+        } // end else
+
+      }) // end Authorization.RefreshToken
+
+      let timeout = 300000 // 5 minutes = 300,000 milliseconds
+      setTimeout(_this.backgroundTokenRefreshTimer, timeout);
+
+    }
 
 
     //**********************************************************************************

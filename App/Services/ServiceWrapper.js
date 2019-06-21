@@ -18,7 +18,7 @@ var lastUrl = "";
 export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect_on_401, callback) {
 
     // just so we can see API requests happeing easier...
-    //console.log("----------------------- SERVICE WRAPPER -----------------------")
+    console.log("----------------------- SERVICE WRAPPER -----------------------")
 
     let fullUrl = ''
     let protocol = ''
@@ -36,7 +36,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
 
-    //console.log("fullUrl", fullUrl)
+    console.log("fullUrl", fullUrl)
+    console.log(method, jsonBody)
 
     //Logger.LogEvent(true, "ServiceWrapper", "Starting request", { url: fullUrl, method: method })
 
