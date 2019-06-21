@@ -128,7 +128,7 @@ constructor(props) {
       }
     }
 
-    if (request.Title.indexOf('Pickup') !== -1 || request.title.indexOf('Swap') !== -1){
+    if (request.Title.indexOf('Pickup') !== -1 || request.Title.indexOf('Swap') !== -1){
       
       return (
       
