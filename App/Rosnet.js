@@ -1268,7 +1268,7 @@ export default class App extends React.Component {
 
       }
 
-      let timeout = 2000 // 60000 * 5 = 5 minutes
+      let timeout = 60000 // 60000 * 5 = 5 minutes
       setTimeout(_this.backgroundNotificationsTimer, timeout);
 
 

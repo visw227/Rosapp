@@ -142,7 +142,7 @@ export class ClientSelection extends React.Component {
           if(err) {
             console.log("err refreshing token", err)
 
-            _this._globalLogger(false, "App", "Error Refreshing Token On Site Change", { error: err})
+            _this.props.screenProps._globalStateChange(false, "App", "Error Refreshing Token On Site Change", { error: err})
 
           }
           else {

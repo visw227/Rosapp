@@ -7,9 +7,9 @@
 ###
 
 
-POST https://aag.rosnetqa.com/api/ManagerAppAuth/SuperUser
+POST https://srr.rosnetqa.com/api/ManagerAppAuth/SuperUser
 Content-Type: application/json
-managerAppToken: fa3154b1-cb12-4d26-be46-92ada5c5f6fd
+managerAppToken: c1e8f443-8517-4abd-98d8-b91a288ab12b
 
 {
     "userName": "dfreese",
@@ -23,5 +23,31 @@ managerAppToken: fa3154b1-cb12-4d26-be46-92ada5c5f6fd
     "systemVersion": "12.1",
     "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16B91"
 }
+
+
+###
+
+
+POST https://acgtx.rosnetqa.com/api/ManagerAppAuth/SuperUser
+Content-Type: application/json
+managerAppToken: c1e8f443-8517-4abd-98d8-b91a288ab12b
+
+{
+    "userName": "jallred",
+    "password": "",
+    "deviceUniqueId":   "drews-device-id",  // use all zeros for web "device"
+    "appInstallId": "drews-app-install-id",
+    "deviceType": "ios",  // 1=Android, 2=iOS, 3=Web
+    "appVersion": "1",
+    "appBuild": "60",
+    "systemName": "iOS",
+    "systemVersion": "12.1",
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16B91"
+}
+
+
+
+
+###
 
 

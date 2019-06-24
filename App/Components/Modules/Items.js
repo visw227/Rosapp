@@ -181,7 +181,8 @@ class ModuleItems extends React.Component {
 
           </ScrollView>
 
-           <View style={{ marginLeft:300,
+            {/* // commented out for app store screenshots */}
+            {/* <View style={{ marginLeft:300,
                    position: 'absolute',
                   bottom: 20}}>
           
@@ -192,7 +193,7 @@ class ModuleItems extends React.Component {
                   onPress={()=> 
                     this.props.navigation.navigate('SearchItems')}/>
                 
-            </View> 
+            </View>   */}
 
         </View>
 
