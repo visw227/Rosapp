@@ -21,7 +21,7 @@ export default class DrawerContainer extends React.Component {
     super(props);
     this.state = {
       backgroundColor : brand.colors.primary,
-      isQA: this.props.screenProps.state.isQA
+      isQA: false //this.props.screenProps.state.isQA
     }
   }
 
@@ -202,7 +202,7 @@ export default class DrawerContainer extends React.Component {
                         alignContent: 'space-between', 
                         marginTop: 5 }}>
           <Text style={{ margin: 5, color: 'white', fontSize: 16 }}>
-           {this.props.screenProps.state.userData.commonName}
+           Gene Peters
            </Text>
            {this.props.screenProps.state.superUser && 
             <FontAwesome name={'undo'} size={20} style={{ margin: 5, color: brand.colors.white}}
@@ -274,14 +274,14 @@ export default class DrawerContainer extends React.Component {
             /> 
            } 
 
-            {this.props.screenProps.state.userData.isRosnetEmployee &&  
+            {/* {this.props.screenProps.state.userData.isRosnetEmployee &&  
             <DrawerLabel
               icon={'user-plus'}
               label={'Session Override'}
               routeName={'SessionOverride'}
               iconSize={25}
             /> 
-            }  
+            }   */}
           
           {/* // making sure userLevel exists - wont if user currently logged in */}
           {this.props.screenProps.state.userData.userLevel && 
