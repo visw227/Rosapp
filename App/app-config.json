@@ -1,6 +1,6 @@
 {
   // rosnetdev.com, rosnetqa.com, rosnet.com
-  "DOMAIN": "rosnetqa.com",
+  "DOMAIN": "rosnet.com",
   // 5 minutes = 300,000 milliseconds
   "BIOMETRICS_WAIT_DURATION": 300000 
 }
