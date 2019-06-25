@@ -10,7 +10,8 @@ import {
   SectionList,
   Linking,
   TouchableHighlight,
-  Platform
+  Platform,
+  AsyncStorage
 } from 'react-native';
 
 import Ionicon from 'react-native-vector-icons/Ionicons'

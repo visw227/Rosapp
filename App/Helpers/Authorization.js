@@ -162,6 +162,8 @@ export var Authorization = {
 
                             AsyncStorage.getItem('selectedClient').then((client) => {
 
+                                console.log("Login - previously selectedClient:", client)
+
                                 // if have a selectedClient in local storage
                                 if(client) {
 
@@ -173,9 +175,11 @@ export var Authorization = {
                                     // just in case the user's selected site is no longer in their list of sites
                                     // reset the selectedClient back to the first in their list
                                     if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
+                                        console.log("Login - previously selected client no longer valid so using first in list")
                                         selectedClient = userData.sites[0]
                                     }
 
+                                    console.log("Login - selectedClient", selectedClient)
 
                                 }
                                 // otherwise, default to the first site in their list
@@ -203,6 +207,7 @@ export var Authorization = {
                                     }
                                     else {
 
+                                        //console.log("menu items", selectedClient, JSON.stringify(menuItems, null, 2))
                                         // rename the FontAwesome icons by removing the fa- preface
                                         menuItems.forEach(function(item){
                                             item.icon = item.icon.replace('fa-', '')
