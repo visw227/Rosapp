@@ -162,11 +162,15 @@ class LaunchScreen extends React.Component {
 
           userData = JSON.parse(data)
 
+          console.log("LaunchScreen - userData: ", userData)
+
         }
 
         if(userData && userData.token) {
 
           AsyncStorage.getItem('selectedClient').then((selectedClient) => {
+
+            console.log("LaunchScreen - selectedClient: ", selectedClient)
 
             if(selectedClient) {
 

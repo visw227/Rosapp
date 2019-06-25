@@ -1,8 +1,6 @@
 {
-  // localhost, 876ddea7.ngrok.io
-  //"localhost:59170" 
   // rosnetdev.com, rosnetqa.com, rosnet.com
   "DOMAIN": "rosnetqa.com",
-  // 5 minutes = 300000 milliseconds
-  "BIOMETRICS_WAIT_DURATION": 2000
+  // 5 minutes = 300,000 milliseconds
+  "BIOMETRICS_WAIT_DURATION": 300000 
 }

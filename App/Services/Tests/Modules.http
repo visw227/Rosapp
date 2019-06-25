@@ -1,9 +1,9 @@
 
 
 
-GET https://otb.rosnetqa.com/api/ManagerAppMenu
+GET https://acgbbq.rosnetqa.com/api/ManagerAppMenu
 Content-Type: application/json
-managerAppToken: 3a5edb89-3bf0-45f4-8e3c-0636fab9d034
+managerAppToken: 9e0d82fa-9113-4076-8901-3c575bff05d5
 
 
 ###
