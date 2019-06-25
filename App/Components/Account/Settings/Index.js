@@ -387,7 +387,7 @@ class Settings extends React.Component {
 
       
         <View>
-          <View style = {{backgroundColor: brand.colors.lightGray}}>
+          {/* <View style = {{backgroundColor: brand.colors.lightGray}}>
 
           <Text style={{fontSize:20,textAlign: 'left',fontStyle:'italic',color:brand.colors.primary,margin:10,marginBottom:3}}> 
           Let us notify you
@@ -396,7 +396,7 @@ class Settings extends React.Component {
           Get regular alerts about:
           </Text>
 
-          </View>
+          </View> */}
          
   
                 <ScrollView
@@ -533,7 +533,7 @@ class Settings extends React.Component {
      else if (this.props.screenProps.state.userData ) {
        return (
         <View>
-        <View style = {{backgroundColor: brand.colors.lightGray}}>
+        {/* <View style = {{backgroundColor: brand.colors.lightGray}}>
 
         <Text style={{fontSize:20,textAlign: 'left',fontStyle:'italic',color:brand.colors.primary,margin:10,marginBottom:3}}> 
         Let us notify you
@@ -542,7 +542,7 @@ class Settings extends React.Component {
         Get regular alerts about:
         </Text>
 
-        </View>
+        </View> */}
        
 
               <ScrollView
