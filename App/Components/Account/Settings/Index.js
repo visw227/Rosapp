@@ -68,6 +68,7 @@ class Settings extends React.Component {
           value: false,
           userProfile: null,
           alertOptions : [],
+          nonStafflinqAlertOptions :[],
           alerttypeids: [],
           Text : 'Stafflinq',
           options : [],
@@ -171,23 +172,30 @@ class Settings extends React.Component {
      )
   }
 
-    value = (id,array) => {
+    value = (type,array) => {
 
-      // console.log('switch vale',array)
-      // console.log ('<<<Value method switch values',this.state.switch1,this.state.switch2,this.state.switch3,this.state.switch4)
-      if (id === 1){
+      if (type === 'Time Off Request'){
         return this.state.switch1
       }
-      else if (id === 2){
+      else if (type === 'Availability Change Request'){
         return this.state.switch2
       }
 
-      else if (id === 3) {
+      else if (type === 'Pick up Shift') {
         return this.state.switch3
       }
 
-      else if (id === 4) {
+      else if (type === 'Shift Swap') {
         return this.state.switch4
+      }
+      else if (type === 'Chat Message') {
+        return this.state.switch5
+      }
+      else if (type === 'Rosnet Communication') {
+        return this.state.switch6
+      }
+      else if (type === 'Max Hours') {
+        return this.state.switch7
       }
 
     }
@@ -246,6 +254,21 @@ class Settings extends React.Component {
               switch4: element.Notify_by_Push ===1 ? true : false
             })
           }
+          if(element.Alert_type_ID === 5 ){
+            _this.setState({
+              switch5: element.Notify_by_Push ===1 ? true : false
+            })
+          }
+          if(element.Alert_type_ID === 6 ){
+            _this.setState({
+              switch6: element.Notify_by_Push ===1 ? true : false
+            })
+          }
+          if(element.Alert_type_ID === 7 ){
+            _this.setState({
+              switch7: element.Notify_by_Push ===1 ? true : false
+            })
+          }
           
         });
        //console.log(resp)
@@ -262,6 +285,7 @@ class Settings extends React.Component {
         console.log('response',resp)
         var alertTypes = []
         var alertyTypeId = []
+        var nonStafflinqAlerts = []
 
           resp.forEach(element => {
             if(element.alert_category.toLowerCase() === 'stafflinq'){
@@ -269,12 +293,20 @@ class Settings extends React.Component {
               alertyTypeId.push(element.alert_type_id)
             }
           });
+          resp.forEach(el => {
+            if(el.alert_category.toLowerCase() !== 'stafflinq'){
+              nonStafflinqAlerts.push(el.alert_name)
+              alertyTypeId.push(el.alert_type_id)
+            }
+          } )
           console.log('modifiedresp',alertTypes)
+          console.log('new alerts',nonStafflinqAlerts)
 
           _this.setState ({
             alertOptions : alertTypes,
-            alerttypeids : alertyTypeId
-          }, ()=> console.log('AlertState',_this.state.alertOptions))
+            alerttypeids : alertyTypeId,
+            nonStafflinqAlertOptions : nonStafflinqAlerts,
+          }, ()=> console.log('AlertState',_this.state.nonStafflinqAlertOptions))
 
         
       }
@@ -292,6 +324,7 @@ class Settings extends React.Component {
     
     //console.log('<<state',this.state)
     var optionsList = []
+    var nonStafflinqOptionsList = []
       
     if(this.state.alertOptions.length > 0) {
       // Returing an array object suitable for List / section list
@@ -310,6 +343,25 @@ class Settings extends React.Component {
         optionsList.push(opts) 
      }
     }
+
+    if(this.state.nonStafflinqAlertOptions.length > 0) {
+      // Returing an array object suitable for List / section list
+      for (i=0; i < this.state.nonStafflinqAlertOptions.length ; i++ ) {
+        opts = Object.assign(
+         {},{  group:this.state.nonStafflinqAlertOptions[i] ,
+                id : this.state.alerttypeids[i],
+         data: [
+           {
+             type: this.state.nonStafflinqAlertOptions[i],
+             id: this.state.alerttypeids[i],
+             selected: true
+           },
+         ]}
+        )
+        nonStafflinqOptionsList.push(opts) 
+     }
+    }
+
 
     
     if(this.state.pushEnabled === false) {
@@ -373,23 +425,24 @@ class Settings extends React.Component {
                               key={item.type + index}
                               style={{ padding:0, marginTop:-10 }}
                               switchButton 
-                              switched={this.value(item.id,optionsList)}
+                              switched={this.value(item.type,optionsList)}
                               //onValueChange ={alert('change')}
                               hideChevron
                               title={item.type}
                               //onSwitch={(value)=>console.log('switch',value)}
                               onSwitch={(value) => {
+                                console.log('item id',item)
                                 this.setState(previousState => {
-                                  if(item.id === 1){
+                                  if(item.type === 'Time Off Request'){
                                     return {...previousState,switch1: value ,request:{...this.state.request,desc :'time off',push: value ? 1 : 0, alertTypeID:1}}
                                   }
-                                  if (item.id === 2){
+                                  if (item.type === 'Availability Change Request'){
                                     return {...previousState,switch2: value,request:{...this.state.request,desc :'Availability change req',push: value ? 1 :0, alertTypeID:2}}
                                   }
-                                  if (item.id === 3){
+                                  if (item.type === 'Pick up Shift'){
                                     return {...previousState,switch3: value,request:{...this.state.request,desc :'Pick up shift',push: value ? 1 :0, alertTypeID:3}}
                                   }
-                                  if (item.id === 4){
+                                  if (item.type === 'Shift Swap'){
                                     return {...previousState,switch4: value,request:{...this.state.request,desc :'Shift Swap',push: value ? 1 :0, alertTypeID:4}}
                                   }
                                 },()=>
@@ -416,7 +469,57 @@ class Settings extends React.Component {
                       sections={optionsList}
                       keyExtractor={(item, index) => item.type + index}
                   /> 
+                  <Text style={Styles.sectionHeader}>{'Rosnet Notifications'}</Text>
+              
                   
+              <SectionList
+                 renderItem={({item, index, section}) => 
+                     <ListItem
+                         key={item.type + index}
+                         style={{ padding:0, marginTop:-10 }}
+                         switchButton 
+                         switched={this.value(item.type,nonStafflinqOptionsList)}
+                         //onValueChange ={alert('change')}
+                         hideChevron
+                         title={item.type}
+                         //onSwitch={(value)=>console.log('switch',value)}
+                         onSwitch={(value) => {
+                           console.log('item id',item)
+                           this.setState(previousState => {
+                             if(item.type === 'Chat Message'){
+                               return {...previousState,switch5: value ,request:{...this.state.request,desc :'Chat',push: value ? 1 : 0, alertTypeID:5}}
+                             }
+                             if (item.type === 'Rosnet Communication'){
+                               return {...previousState,switch6: value,request:{...this.state.request,desc :'Rosnet Communication',push: value ? 1 :0, alertTypeID:6}}
+                             }
+                             if (item.type === 'Max Hours'){
+                               return {...previousState,switch7: value,request:{...this.state.request,desc :'Max Hours',push: value ? 1 :0, alertTypeID:7}}
+                             }
+                             
+                           },()=>
+                           alertSubscription(this.state.request,function(err,resp){
+                               if (err){
+                                 console.log('error')
+                               }
+                               else {
+                                 console.log(resp)
+                               }
+                           }
+                           )
+                           )
+                         }
+
+                       }
+
+                     />
+                 }
+                 // [Note :] Header is not needed for now--
+                 // renderSectionHeader={({section: {group,id}}) => (
+                 //     <Text style={Styles.sectionHeader}>{group}</Text>
+                 // )}
+                 sections={nonStafflinqOptionsList}
+                 keyExtractor={(item, index) => item.type + index}
+             /> 
   
               </ScrollView>
               </View>
@@ -424,6 +527,97 @@ class Settings extends React.Component {
   
       ) 
 
+     }
+
+     else if (this.props.screenProps.state.userData ) {
+       return (
+        <View>
+        <View style = {{backgroundColor: brand.colors.lightGray}}>
+
+        <Text style={{fontSize:20,textAlign: 'left',fontStyle:'italic',color:brand.colors.primary,margin:10,marginBottom:3}}> 
+        Let us notify you
+        </Text>
+        <Text style={{fontSize:15,textAlign: 'left',fontStyle:'italic',color:brand.colors.primary,margin:10,marginTop:0}}> 
+        Get regular alerts about:
+        </Text>
+
+        </View>
+       
+
+              <ScrollView
+                style={{ backgroundColor: '#ffffff' }}
+
+                refreshControl={
+
+                <RefreshControl
+                    refreshing={this.state.receiving}
+                    onRefresh={this.loadData}
+                    tintColor={brand.colors.primary}
+                    title="Loading"
+                    titleColor={brand.colors.primary}
+                    //colors={['#ff0000', '#00ff00', '#0000ff']}
+                    progressBackgroundColor="#ffffff"
+                />
+                }
+                
+              >
+                
+                 
+                <Text style={Styles.sectionHeader}>{'Rosnet Notifications'}</Text>
+              
+                  
+              <SectionList
+                 renderItem={({item, index, section}) => 
+                     <ListItem
+                         key={item.type + index}
+                         style={{ padding:0, marginTop:-10 }}
+                         switchButton 
+                         switched={this.value(item.type,nonStafflinqOptionsList)}
+                         //onValueChange ={alert('change')}
+                         hideChevron
+                         title={item.type}
+                         //onSwitch={(value)=>console.log('switch',value)}
+                         onSwitch={(value) => {
+                           console.log('item id',item)
+                           this.setState(previousState => {
+                             if(item.type === 'Chat Message'){
+                               return {...previousState,switch5: value ,request:{...this.state.request,desc :'Chat',push: value ? 1 : 0, alertTypeID:5}}
+                             }
+                             if (item.type === 'Rosnet Communication'){
+                               return {...previousState,switch6: value,request:{...this.state.request,desc :'Rosnet Communication',push: value ? 1 :0, alertTypeID:6}}
+                             }
+                             if (item.type === 'Max Hours'){
+                               return {...previousState,switch7: value,request:{...this.state.request,desc :'Max Hours',push: value ? 1 :0, alertTypeID:7}}
+                             }
+                             
+                           },()=>
+                           alertSubscription(this.state.request,function(err,resp){
+                               if (err){
+                                 console.log('error')
+                               }
+                               else {
+                                 console.log(resp)
+                               }
+                           }
+                           )
+                           )
+                         }
+
+                       }
+
+                     />
+                 }
+                 // [Note :] Header is not needed for now--
+                 // renderSectionHeader={({section: {group,id}}) => (
+                 //     <Text style={Styles.sectionHeader}>{group}</Text>
+                 // )}
+                 sections={nonStafflinqOptionsList}
+                 keyExtractor={(item, index) => item.type + index}
+             /> 
+
+            </ScrollView>
+            </View>
+       )
      }
 
      else return <View>
