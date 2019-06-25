@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>5</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -39,6 +39,12 @@
 	</dict>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick and secure access to your Rosnet account.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Rosnet is not using any location features in this release.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Rosnet is not using any location features in this release.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enabling access to your photos will allow you to manage your Rosnet profile picture.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
