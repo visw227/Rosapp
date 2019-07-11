@@ -82,7 +82,9 @@ class DashboardScreen extends React.Component {
           backArrowEnabled: false,
           forwardArrowEnabled: false,
           fcmToken: null,
-          appInstallId: null
+          appInstallId: null,
+          webviewNdx: 1,
+          homeUrl: ""
       }
 
 
@@ -221,9 +223,12 @@ class DashboardScreen extends React.Component {
         _this.props.screenProps._globalLogger(true, "Dashboard", "Token is valid", { response: resp })
 
 
+        let homeUrl = "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/home/appdash?isApp=true"
+
         let source = {
-          uri: "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/home/appdash?isApp=true",
+          uri: homeUrl,
           headers: {
+            "webviewNdx": "1",
             "managerAppToken":  userData.token
           }
         }
@@ -233,6 +238,7 @@ class DashboardScreen extends React.Component {
 
 
         _this.setState({
+          homeUrl: homeUrl,
           userData: userData,
           source: source // DONT change this in onNavigationStateChange
         })
@@ -250,11 +256,12 @@ class DashboardScreen extends React.Component {
 
   onNavigationStateChange = (navState) => {
 
-    //console.log("onNavigationStateChange", navState)
+    console.log("onNavigationStateChange", navState)
 
     this.setState({
         backArrowEnabled: navState.canGoBack,
         forwardArrowEnabled: navState.canGoForward,
+        webviewNdx: this.state.webviewNdx + 1
     });
 
     // hijack the current item and save it with a new title and url - just in case app launches from here 
@@ -287,6 +294,23 @@ class DashboardScreen extends React.Component {
       )
   }
 
+  onHomePress = () => {
+    console.log("onHomePress")
+
+    // webViewNdx is a hack to trick the webview into reloading the original url
+    let source = {
+      uri: this.state.homeUrl,
+      headers: {
+        "webViewNdx": (this.state.webviewNdx + 1).toString(),
+        "managerAppToken":  this.props.screenProps.state.userData.token
+      }
+    }
+
+    this.setState({
+      webviewNdx: this.state.webviewNdx + 1,
+      source: source
+    })
+  }
   onBackArrowPress = () => {
     //console.log("goBack")
     this.refs['webview'].goBack()
@@ -297,6 +321,54 @@ class DashboardScreen extends React.Component {
   }
 
   render() {
+
+    RenderToolbar = () => {
+
+      if(!this.state.source || (this.state.backArrowEnabled === false && this.state.forwardArrowEnabled === false) ) {
+
+        return (<View/>)
+      }
+
+
+      return (
+
+        <View style={styles.toolBar}>
+
+          <SimpleLineIcon
+              disabled={!this.state.backArrowEnabled}
+              name="arrow-left"
+              size={18}
+              color={this.state.backArrowEnabled ? brand.colors.gray : brand.colors.white}
+              style={[styles.toolBarIcon, { paddingLeft: 10 }]}
+              onPress={this.onBackArrowPress}
+          />
+
+
+          <SimpleLineIcon
+              name="home"
+              size={18}
+              color={brand.colors.gray}
+              style={[styles.toolBarIcon, { paddingLeft: 10 }]}
+              onPress={this.onHomePress}
+          />
+
+
+          <SimpleLineIcon
+              disabled={!this.state.forwardArrowEnabled}
+              name="arrow-right"
+              size={18}
+              color={this.state.forwardArrowEnabled ? brand.colors.gray : brand.colors.white}
+              style={[styles.toolBarIcon, { paddingRight: 10 }]}
+              onPress={this.onForwardArrowPress}
+          />
+
+
+        </View>
+
+      )
+
+
+    }
 
       const hideSiteNav = `
       let x = document.getElementsByTagName('nav')
@@ -322,7 +394,7 @@ class DashboardScreen extends React.Component {
 
                 startInLoadingState = {true}
                 
-                //onLoadProgress={e => //console.log(e.nativeEvent.progress)}
+                //onLoadProgress={e => console.log("onLoadProgress", e.nativeEvent.progress)}
                 renderLoading={this.showLoadingIndicator}
                 injectedJavaScript = { hideSiteNav } 
                 style={{ flex: 1 }}
@@ -331,31 +403,10 @@ class DashboardScreen extends React.Component {
 
             }
 
-            {this.state.source && (this.state.backArrowEnabled || this.state.forwardArrowEnabled) &&
-              
-              <View style={styles.toolBar}>
+
+            <RenderToolbar/>
 
 
-                <SimpleLineIcon
-                    disabled={!this.state.backArrowEnabled}
-                    name="arrow-left"
-                    size={25}
-                    color={brand.colors.gray}
-                    style={[styles.toolBarIcon, { paddingLeft: 10 }]}
-                    onPress={this.onBackArrowPress}
-                />
-
-                <SimpleLineIcon
-                    disabled={!this.state.forwardArrowEnabled}
-                    name="arrow-right"
-                    size={25}
-                    color={brand.colors.gray}
-                    style={[styles.toolBarIcon, { paddingRight: 10 }]}
-                    onPress={this.onForwardArrowPress}
-                />
-
-              </View>
-            }
 
           </View>
 
@@ -423,7 +474,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     alignContent: 'flex-start',
     borderColor: 'white',
-    backgroundColor: brand.colors.lightGray
+    backgroundColor: 'transparent',
+    opacity: 0.6
   },
 
   toolBarIcon: {
