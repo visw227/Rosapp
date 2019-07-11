@@ -72,7 +72,8 @@ class WebViewScreen extends React.Component {
           backArrowEnabled: false,
           forwardArrowEnabled: false,
           webviewNdx: 1,
-          homeUrl: ""
+          homeUrl: "",
+          history: []
       }
 
   }
@@ -169,6 +170,7 @@ class WebViewScreen extends React.Component {
           console.log("Modules Webview source", JSON.stringify(source, null, 2))
 
           _this.setState({
+            history: [homeUrl.toLowerCase()], // seed it with the starting url
             homeUrl: homeUrl,
             source: source,
             item: item
@@ -236,10 +238,21 @@ class WebViewScreen extends React.Component {
 
     console.log("onNavigatinStateChange", navState)
 
+    let url = navState.url.toLowerCase()
+
+    let history = this.state.history
+    if(history.includes(url) === false) {
+      history.push(url)
+
+      console.log("history", JSON.stringify(history, null, 2))
+    }
+
+
     this.setState({
         backArrowEnabled: navState.canGoBack,
         forwardArrowEnabled: navState.canGoForward,
-        webviewNdx: this.state.webviewNdx + 1
+        webviewNdx: this.state.webviewNdx + 1,
+        history: history
     });
 
     // hijack the current item and save it with a new title and url - just in case app launches from here 
@@ -285,7 +298,8 @@ class WebViewScreen extends React.Component {
 
     this.setState({
       webviewNdx: this.state.webviewNdx + 1,
-      source: source
+      source: source,
+      history: [this.state.homeUrl.toLowerCase()] // reset history back to the home page
     })
   }
   onBackArrowPress = () => {
@@ -304,11 +318,10 @@ class WebViewScreen extends React.Component {
 
     RenderToolbar = () => {
 
-      if(!this.state.source || (this.state.backArrowEnabled === false && this.state.forwardArrowEnabled === false) ) {
+      if(!this.state.source || (this.state.history && this.state.history.length === 1) ) {
 
         return (<View/>)
       }
-
 
       return (
 

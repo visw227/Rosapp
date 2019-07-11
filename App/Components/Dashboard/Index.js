@@ -84,7 +84,8 @@ class DashboardScreen extends React.Component {
           fcmToken: null,
           appInstallId: null,
           webviewNdx: 1,
-          homeUrl: ""
+          homeUrl: "",
+          history: []
       }
 
 
@@ -238,6 +239,7 @@ class DashboardScreen extends React.Component {
 
 
         _this.setState({
+          history: [homeUrl.toLowerCase()], // seed it with the starting url
           homeUrl: homeUrl,
           userData: userData,
           source: source // DONT change this in onNavigationStateChange
@@ -258,10 +260,22 @@ class DashboardScreen extends React.Component {
 
     console.log("onNavigationStateChange", navState)
 
+    let url = navState.url.toLowerCase()
+
+    let history = this.state.history
+    if(history.includes(url) === false) {
+      history.push(url)
+
+      console.log("history", JSON.stringify(history, null, 2))
+    }
+
+
+
     this.setState({
         backArrowEnabled: navState.canGoBack,
         forwardArrowEnabled: navState.canGoForward,
-        webviewNdx: this.state.webviewNdx + 1
+        webviewNdx: this.state.webviewNdx + 1,
+        history: history
     });
 
     // hijack the current item and save it with a new title and url - just in case app launches from here 
@@ -308,7 +322,8 @@ class DashboardScreen extends React.Component {
 
     this.setState({
       webviewNdx: this.state.webviewNdx + 1,
-      source: source
+      source: source,
+      history: [this.state.homeUrl.toLowerCase()] // reset history back to the home page
     })
   }
   onBackArrowPress = () => {
@@ -324,7 +339,17 @@ class DashboardScreen extends React.Component {
 
     RenderToolbar = () => {
 
-      if(!this.state.source || (this.state.backArrowEnabled === false && this.state.forwardArrowEnabled === false) ) {
+      // if(this.state.source) {
+      // console.log("comparing")
+      // console.log(this.state.homeUrl)
+      // console.log(this.state.source.uri)
+      // }
+
+      // if(this.state.source && this.state.homeUrl && this.state.homeUrl.toLowerCase() === this.state.source.uri.toLowerCase()) {
+      //   console.log("back to home")
+      //   return (<View/>)
+      // }
+      if(!this.state.source || (this.state.history && this.state.history.length === 1) ) {
 
         return (<View/>)
       }
