@@ -129,7 +129,8 @@ class Password extends React.Component {
         newPasswordConfirmed: "",
         newPasswordScore: -1,
         isConfirmPasswordSecureText: false,
-        isAcceptable: false
+        isAcceptable: false,
+        levelLabel: ""
     };
   }
   
@@ -164,8 +165,21 @@ class Password extends React.Component {
       }
       else {
 
+        console.log("security settings", resp)
+
+        let level = strengthLevels.find(function(item){
+            return item.score === resp.Pswd_Complexity
+        })
+
+        let levelLabel = ""
+        if(level) {
+          levelLabel = level.label
+        }
+
         _this.setState ({
-          securitySettings : resp
+          securitySettings : resp,
+          level: level,
+          levelLabel: levelLabel
         },()=> console.log('security settings',_this.state.securitySettings))
         
       }
@@ -197,12 +211,15 @@ class Password extends React.Component {
     // this is the score we need to match with this.state.securitySettings.Pswd_Complexity
     let score = zxcvbn(pwd).score
 
-    //console.log("password: ", pwd, "score: ", score)
+    console.log("password: ", pwd)
+    console.log("score: ", score)
+    console.log("Pswd_Complexity", this.state.securitySettings.Pswd_Complexity)
 
     let level = strengthLevels.find(function(item){
         return item.score === score
     })
 
+    console.log("level", level)
 
     let isAcceptable = false
     if(score >= this.state.securitySettings.Pswd_Complexity) {
@@ -212,6 +229,8 @@ class Password extends React.Component {
       // just swap red and green to match the site colors
       level.borderColor = brand.colors.success
       level.backgroundColor = brand.colors.success
+      //level.label = "Acceptable"
+
 
     }
     else {
@@ -219,9 +238,12 @@ class Password extends React.Component {
       // just swap red and green to match the site colors
       level.borderColor = brand.colors.danger
       level.backgroundColor = brand.colors.danger
+      //level.label = "Weak"
 
     }
 
+
+    console.log("isAcceptable", isAcceptable)
 
     //console.log('level: ', level.label)
 
@@ -437,7 +459,7 @@ class Password extends React.Component {
 
 
 
-            <Text style={styles.inputLabel} >New Password</Text>
+            <Text style={styles.inputLabel} >New Password - Must be at least {this.state.levelLabel}</Text>
 
 
             <View style={{
