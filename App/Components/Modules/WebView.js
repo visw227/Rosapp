@@ -70,7 +70,10 @@ class WebViewScreen extends React.Component {
           userData: this.props.screenProps.state.userData,
           selectedClient: this.props.screenProps.state.selectedClient,
           backArrowEnabled: false,
-          forwardArrowEnabled: false
+          forwardArrowEnabled: false,
+          webviewNdx: 1,
+          homeUrl: "",
+          history: []
       }
 
   }
@@ -146,10 +149,10 @@ class WebViewScreen extends React.Component {
 
      
 
-          url = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
+          let homeUrl = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
 
 
-            console.log('webview Url:',url)
+          console.log('webview Url:',homeUrl)
           // this was a inner-navigation change, with a complete URL, so resume there
           if(item.deepLink ) {
             url = item.url
@@ -157,8 +160,9 @@ class WebViewScreen extends React.Component {
 
 
           let source = {
-            uri: url,
+            uri: homeUrl,
             headers: {
+              "webviewNdx": "1",
               "managerAppToken":  userData.token
             }
           }
@@ -166,6 +170,8 @@ class WebViewScreen extends React.Component {
           console.log("Modules Webview source", JSON.stringify(source, null, 2))
 
           _this.setState({
+            history: [homeUrl.toLowerCase()], // seed it with the starting url
+            homeUrl: homeUrl,
             source: source,
             item: item
           })
@@ -232,9 +238,21 @@ class WebViewScreen extends React.Component {
 
     console.log("onNavigatinStateChange", navState)
 
+    let url = navState.url.toLowerCase()
+
+    let history = this.state.history
+    if(history.includes(url) === false) {
+      history.push(url)
+
+      console.log("history", JSON.stringify(history, null, 2))
+    }
+
+
     this.setState({
         backArrowEnabled: navState.canGoBack,
-        forwardArrowEnabled: navState.canGoForward
+        forwardArrowEnabled: navState.canGoForward,
+        webviewNdx: this.state.webviewNdx + 1,
+        history: history
     });
 
     // hijack the current item and save it with a new title and url - just in case app launches from here 
@@ -266,6 +284,24 @@ class WebViewScreen extends React.Component {
       )
   }
 
+  onHomePress = () => {
+    console.log("onHomePress")
+
+    // webViewNdx is a hack to trick the webview into reloading the original url
+    let source = {
+      uri: this.state.homeUrl,
+      headers: {
+        "webViewNdx": (this.state.webviewNdx + 1).toString(),
+        "managerAppToken":  this.props.screenProps.state.userData.token
+      }
+    }
+
+    this.setState({
+      webviewNdx: this.state.webviewNdx + 1,
+      source: source,
+      history: [this.state.homeUrl.toLowerCase()] // reset history back to the home page
+    })
+  }
   onBackArrowPress = () => {
     console.log("goBack")
     this.refs['webview'].goBack()
@@ -280,6 +316,52 @@ class WebViewScreen extends React.Component {
 
   render() {
 
+    RenderToolbar = () => {
+
+      if(!this.state.source || (this.state.history && this.state.history.length === 1) ) {
+
+        return (<View/>)
+      }
+
+      return (
+
+        <View style={styles.toolBar}>
+
+          <SimpleLineIcon
+              disabled={!this.state.backArrowEnabled}
+              name="arrow-left"
+              size={18}
+              color={this.state.backArrowEnabled ? brand.colors.gray : brand.colors.white}
+              style={[styles.toolBarIcon, { paddingLeft: 10 }]}
+              onPress={this.onBackArrowPress}
+          />
+
+
+          <SimpleLineIcon
+              name="home"
+              size={18}
+              color={brand.colors.gray}
+              style={[styles.toolBarIcon, { paddingLeft: 10 }]}
+              onPress={this.onHomePress}
+          />
+
+
+          <SimpleLineIcon
+              disabled={!this.state.forwardArrowEnabled}
+              name="arrow-right"
+              size={18}
+              color={this.state.forwardArrowEnabled ? brand.colors.gray : brand.colors.white}
+              style={[styles.toolBarIcon, { paddingRight: 10 }]}
+              onPress={this.onForwardArrowPress}
+          />
+
+
+        </View>
+
+      )
+
+
+    }
 
     const hideSiteNav = `
       // alert('hello')
@@ -315,31 +397,7 @@ class WebViewScreen extends React.Component {
         }
 
 
-        {this.state.source && (this.state.backArrowEnabled || this.state.forwardArrowEnabled) &&
-          
-          <View style={styles.toolBar}>
-
-
-            <SimpleLineIcon
-                disabled={!this.state.backArrowEnabled}
-                name="arrow-left"
-                size={25}
-                color={brand.colors.gray}
-                style={[styles.toolBarIcon, { paddingLeft: 10 }]}
-                onPress={this.onBackArrowPress}
-            />
-
-            <SimpleLineIcon
-                disabled={!this.state.forwardArrowEnabled}
-                name="arrow-right"
-                size={25}
-                color={brand.colors.gray}
-                style={[styles.toolBarIcon, { paddingRight: 10 }]}
-                onPress={this.onForwardArrowPress}
-            />
-
-          </View>
-        }
+        <RenderToolbar/>
 
 
       </View>
@@ -373,7 +431,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     alignContent: 'flex-start',
     borderColor: 'white',
-    backgroundColor: brand.colors.lightGray
+    backgroundColor: 'transparent',
+    opacity: 0.9
   },
 
   toolBarIcon: {
