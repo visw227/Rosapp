@@ -107,7 +107,7 @@ class Settings extends React.Component {
         },() =>  _this.props.navigation.setParams({renderStyle : _this.renderStyle() }) )
 
       })
-
+      _this.componentDidMount()
     }
 
     
