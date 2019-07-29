@@ -495,6 +495,8 @@ class AlertsScreen extends React.Component {
 
   selectItem = (listItem) => {
 
+    console.log('<<listItem',listItem)
+
     if(this.state.delList && this.state.delList.indexOf(listItem.AlertID) == -1){
 
       var buffer = this.state.delList
@@ -509,7 +511,7 @@ class AlertsScreen extends React.Component {
 
     else{
 
-      this.state.delList.pop(listItem.AlertID)
+      this.state.delList.splice(this.state.delList.indexOf(listItem.AlertID),1)
 
       this.setState ({
         delList : this.state.delList
