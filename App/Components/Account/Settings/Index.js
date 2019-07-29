@@ -97,6 +97,7 @@ class Settings extends React.Component {
 
       let _this = this
 
+
       _this.checkPermission()
 
       this.pushIsEnabled(function(isEnabled){
@@ -368,7 +369,18 @@ class Settings extends React.Component {
     if(this.state.pushEnabled === false) {
 
       return (
-        <View>
+        <ScrollView
+        refreshControl = {
+          <RefreshControl
+          refreshing={this.state.receiving}
+          onRefresh={this.checkSettings}
+          tintColor={brand.colors.primary}
+          title="Loading"
+          titleColor={brand.colors.primary}
+          //colors={['#ff0000', '#00ff00', '#0000ff']}
+          progressBackgroundColor="#ffffff"/>
+        }>
+               <View>
             <Text style={{ 
               color: brand.colors.primary,
               justifyContent: 'center', 
@@ -378,6 +390,13 @@ class Settings extends React.Component {
             }}>Rosnet notifications are turned off on your device. Please update your device settings to allow push notifications for Rosnet.</Text>
             
         </View>
+        <View style={{justifyContent:'center',alignContent:'center',alignItems:'center'}}>
+          <Text style={{color:'grey'}}>
+            Pull down to refresh
+          </Text>
+        </View>
+        </ScrollView>
+   
       )
 
      }
@@ -406,7 +425,7 @@ class Settings extends React.Component {
   
                   <RefreshControl
                       refreshing={this.state.receiving}
-                      onRefresh={this.loadData}
+                      onRefresh={this.checkSettings}
                       tintColor={brand.colors.primary}
                       title="Loading"
                       titleColor={brand.colors.primary}

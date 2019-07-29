@@ -221,8 +221,6 @@ class AlertsScreen extends React.Component {
     
       this.state.deleteState  ? this.setState ({headerRightTxt : 'Cancel'}) : this.setState({headerRightTxt : 'Select'})
     
-    
-
   }
 
   renderStyle = () => {
@@ -371,6 +369,7 @@ class AlertsScreen extends React.Component {
 
 
   }
+  
   getDelAvatar = (l) => {
 
 
