@@ -281,6 +281,7 @@ class LockScreen extends React.Component {
 
             console.log('continuing at lastScreen', lastScreen)
 
+           
             // dont get stuck on one of these screens
             if(lastScreen && lastScreen !== 'LockScreen' && lastScreen !== 'Login' && lastScreen !== 'ForgotPassword' && lastScreen !== 'LoginSelectClient') {
                 screen = lastScreen

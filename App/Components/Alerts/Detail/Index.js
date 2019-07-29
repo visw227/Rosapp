@@ -118,7 +118,7 @@ constructor(props) {
     let env = appConfig.DOMAIN
     const request = navigation.getParam('request', {} );
     console.log('AlertDetails :request',request)
-    url = "https://" + _this.props.screenProps.state.selectedClient + "."+ env  + '/Scheduling/StafflinqShiftApprovals?isApp=true' 
+    url = "https://" + this.props.screenProps.state.selectedClient + "."+ env  + '/Scheduling/StafflinqShiftApprovals?isApp=true' 
     userData = this.props.screenProps.state.userData
 
     let source = {
