@@ -4,6 +4,7 @@ import {
     View,
     Image,
     Text,
+    FlatList,
     AsyncStorage,
     RefreshControl,
     ScrollView,
@@ -24,11 +25,15 @@ import { GetTaskLists } from '../../Services/TaskList';
 
 import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
 import appConfig from '../../app-config.json'
-import img from '../../Images/logo-lg-white-square.png';
-import { CardList } from 'react-native-card-list';
+import img from '../../Images/rosnet-logo1.png'
+import blueBg from '../../Images/blue-screen.jpeg'
+import greenBg from '../../Images/green-screen.jpg'
+
+
 
 
 
@@ -59,6 +64,7 @@ class TaskListScreen extends React.Component {
         super(props);
   
         this.state = {
+            receiving: false,
             alertMessage : '',
             data : {}
     }
@@ -94,7 +100,7 @@ class TaskListScreen extends React.Component {
         }
   
         else if (resp.length < 1) {
-          //console.log('Alert message is logged')
+         
          _this.state && _this.setState({alertMessage : 'No Tasklists created or published'}) 
         }
         else {
@@ -110,117 +116,168 @@ class TaskListScreen extends React.Component {
   
       })
 
-      
+   }
 
-  
+   isTasklistComplete = (arr) => {
+    
+    if(arr.TasklistSteps && arr.TasklistSteps.length > 0) {
+        
+        var color = blueBg
+        index = 0
+        arr.TasklistSteps.forEach(element => {
+            if (!element.Is_Completed) 
+            {
+                index ++
+            }
+          
+           if(index > 0) {
+               
+               color = blueBg
+           }
+           else {
+           
+    
+               color = greenBg
+           }
+           
+        });
+    }
+    return color
+
    }
 
     render() {
 
-const cards = [
-  
-  ]
-  const cardss = [
-    {
-      text: 'Card One',
-      name: 'One',
-      //image: require('./img/swiper-1.png'),
-    },
-    {
-        text: 'Card two',
-        name: 'One',
-        //image: require('./img/swiper-1.png'),
-      }, {
-        text: 'Card three   ',
-        name: 'One',
-        //image: require('./img/swiper-1.png'),
-      },
-  ];
-  if(this.state.data.length > 0) {
-    // Returing an array object suitable for List / section list
-    for (i=0; i < this.state.data.length ; i++ ) {
-      opts = Object.assign(
-       {},{  text:this.state.data[i].Tasklist_Title ,
-              //note : this.state.data[i].Tasklist_ID,
-                name : this.state.data[i].Tasklist_Title }
-      )
-      cards.push(opts) 
-   }
-  }
-  
-  console.log('<<Cards',cards)
-  console.log('<<Cards',cardss)
-        // const cards = [
-        //     {
-        //       text: 'Card One',
-        //       name: 'One',
-        //       image: img,
-        //     },
-        //     {
-        //         text: 'Card two',
-        //         name: 'two',
-        //         image: img,
-        //       },
-        //       {
-        //         text: 'Card three',
-        //         name: 'three',
-        //         image: img,
-        //       },
-        //   ];
-        //     if(this.state && this.state.data) {
+    /******************************NOT being used but might be helpful later**************************************/
+        const cards = []
+        if(this.state.data.length > 0) {
+          // Returing an array object suitable for List / section list
+          for (i=0; i < this.state.data.length ; i++ ) {
+            opts = Object.assign(
+             {},{  text:this.state.data[i].Tasklist_Title ,
+                    //note : this.state.data[i].Tasklist_ID,
+                      name : this.state.data[i].Tasklist_Title,
+                    steps : this.state.data[i].TasklistSteps  }
+            )
+            cards.push(opts) 
+         }
 
-        //         return (
+         //******************************************************************/
 
-        //             <View style={styles.container}>
-        //                 <CardList cards={cards} />
-        //         </View> )
-        //     }
-        //    else {
-        //        return (
-        //            <View>
+        }
+        
+        if (this.state && this.state.data && this.state.data.length > 0)
+        
+        {  
+            
+            return (
 
-        //            </View>
-        //        )
-        //    }
-            if (cards.length > 0) {
-                return( <Container>
-                    <Header />
-                    <View>
+                    <ScrollView
+                    style={{ backgroundColor: '#ffffff' }}
+    
+                    refreshControl={
+    
+                    <RefreshControl
+                        refreshing={this.state.receiving}
+                        onRefresh={this.getTaskLists}
+                        tintColor={brand.colors.primary}
+                        title="Loading"
+                        titleColor={brand.colors.primary}
+                        colors={['#ff0000', '#00ff00', '#0000ff']}
+                        progressBackgroundColor="#ffffff"
+                    />
+                    }
+                    
+                  >
+                    
+                    <View style={{margin:12,marginTop:'20%'}}>
                       <DeckSwiper
-                        dataSource={cards}
+                      
+                      dataSource={this.state.data}
                         renderItem={item =>
-                          <Card style={{ elevation: 4 }}>
+                          <Card style={{ elevation: 30}}>
                             <CardItem>
                               <Left>
-                                {/* <Thumbnail source={item.image} /> */}
+                                <Thumbnail small style ={{backgroundColor:brand.colors.primary}}source={img} />
                                 <Body>
-                                  <Text>{item.text}</Text>
-                                  <Text note>NativeBase</Text>
-                                </Body>
+                                  <Text style={{color:brand.colors.primary,fontSize:20,fontWeight:'bold'}}>{item.Tasklist_Title}</Text>
+                               </Body>
                               </Left>
                             </CardItem>
-                            <CardItem cardBody>
-                              {/* <Image style={{ height: 300, flex: 1 }} source={item.image} /> */}
+                            <CardItem cardBody  >
+                               
+                              <Image style={{ height: 300, flex: 1 }} source={this.isTasklistComplete(item)}/>
+                           
+                            
+                   {item && item.TasklistSteps ? <ScrollView style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}>
+                        <FlatList 
+                        data={item.TasklistSteps}
+                        renderItem={({item, index, section}) => 
+                      
+                             <ListItem onPress={()=>console.log('step pressed')}
+                             hideChevron
+                              key={item.Step_ID }
+
+                              //icon={<Ionicon name={'md-radio-button-on'} size={22} color={brand.colors.white} />}
+                              title={<View style={{flexDirection:'row'}}>
+                                  <View style={{flexDirection :'row',justifyContent:'space-between',alignItems:'flex-start',alignContent:'flex-end'}}>
+                                  <Text style = {{color:brand.colors.white,fontWeight:'bold',fontSize:20,marginRight:60}} >{item.Step_Title}</Text>
+                                  </View>
+                                  <View style={{flexDirection :'row',justifyContent:'space-between',alignItems:'flex-end',alignContent:'flex-end'}}style={{marginLeft:'90%',position:'absolute'}}>
+                                 {
+                                     item.Is_Completed ? <FontAwesome name={'check-square-o'} size={22} color='#00FF00' /> : 
+                                     <FontAwesome name={'square-o'} size={22} color='#00FF00' />
+                                 } 
+                                  </View>
+                                  
+                                  </View>}
+                          />
+                      
+                      }
+                     
+                  /> 
+                       </ScrollView>
+                       : 
+                       <Text style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>
+                           No steps added</Text> }
+
                             </CardItem>
                             <CardItem>
-                              <Icon name="heart" style={{ color: '#ED4A6A' }} />
-                              <Text>{item.name}</Text>
+                              <Icon name="clock" style={{ color: brand.colors.secondary }} />
+                              <Text>{item.Tasklist_Time_Formatted}</Text>
+                              
+                              <View style={{flexDirection:'column',marginLeft:'80%',position:'absolute'}}>
+                              <Text style={{color:brand.colors.primary}}>
+                                  {this.state.data.indexOf(item)+1} of {this.state.data.length} → 
+                                 
+                              </Text>
+                              <Text style={{marginTop:'25%',marginLeft:'20%',position:'absolute',color:brand.colors.gray}}>
+                                  swipe 
+                              </Text>
+                              </View>
+                             
+                            
                             </CardItem>
                           </Card>
                         }
                       />
                     </View>
-                  </Container>)  
+                    <Text>
+                        
+                    </Text>
+                  </ScrollView>
+    
+                    )
             } 
             else {
-                return (
-                    <View>
-                        
-                    </View>
-                )
-            }
-
-                // end return
+            return (
+                <View>
+                    <Text style={{color:brand.colors.primary,textAlign:"center"}}>
+                         No TaskList added or published
+                         </Text>
+                </View>
+            )
+            }// end return
 
 
 
@@ -231,6 +288,5 @@ const cards = [
 
 
 
-    
 //make this component available to the app
 export default TaskListScreen;
