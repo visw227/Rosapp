@@ -20,11 +20,12 @@ import {
     TextInput
 } from 'react-native';
 
-import { Container, Header,  DeckSwiper, Card, CardItem, Thumbnail, Left, Body, Icon } from 'native-base';
+import { Container, Header,  DeckSwiper, Card, CardItem, Thumbnail, Left, Body, Icon , Content, Accordion} from 'native-base';
 import { GetTaskLists } from '../../Services/TaskList';
 
 import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
@@ -66,7 +67,10 @@ class TaskListScreen extends React.Component {
         this.state = {
             receiving: false,
             alertMessage : '',
-            data : {}
+            data : {},
+            gridView  : true,
+            listView :false,
+            doneTL :['0']
     }
       }
   
@@ -74,6 +78,8 @@ class TaskListScreen extends React.Component {
    componentDidMount () {
 
     this.props.navigation.addListener('willFocus', this.getTaskLists)
+
+  
 
 
    }
@@ -109,13 +115,80 @@ class TaskListScreen extends React.Component {
   
           _this.setState ({
             data : resp
-          },()=> console.log('<<data',_this.state.data))
+          }, () => {
+            completedTL = []
+
+            _this.state && _this.state.data && _this.state.data.forEach(element => {
+                 if(element.TasklistSteps && element.TasklistSteps.length > 0) {
+                       
+                   element.TasklistSteps.forEach(e => {
+                
+
+                       index = 0
+                       if(e.Is_Completed){
+                           index ++;
+                       }
+                     
+                       if (index == element.TasklistSteps.length) {
+                           completedTL.push(element.Tasklist_ID)
+                       }
+                      
+                   })
+       
+                 }
+
+             })
+           
+             _this.setState({
+                 doneTL : completedTL
+             },()=> console.log('<<done',_this.state.doneTL))
+          } )
   
             
         }
   
       })
 
+      
+
+   }
+   
+    
+
+  
+
+   _renderContent = (item) => {
+      
+       return (
+        <FlatList 
+        data={item.TasklistSteps}
+        
+        //keyExtractor={(item, index) => item.Tasklist_Title}
+        renderItem={({item, index, section}) => 
+      
+             <ListItem onPress={()=>console.log('step pressed')}
+             hideChevron
+              key={item.Step_ID }
+
+              //icon={<Ionicon name={'md-radio-button-on'} size={22} color={brand.colors.white} />}
+              title={<View style={{flexDirection:'row'}}>
+                  <View style={{flexDirection :'row',justifyContent:'space-between',alignItems:'flex-start',alignContent:'flex-end'}}>
+                  <Text style = {{color:brand.colors.white,fontWeight:'bold',fontSize:14,marginRight:60}} >{item.Step_Title}</Text>
+                  </View>
+                  <View style={{flexDirection :'row',justifyContent:'space-between',alignItems:'flex-end',alignContent:'flex-end'}}style={{marginLeft:'90%',position:'absolute'}}>
+                 {
+                     item.Is_Completed ? <FontAwesome name={'check-square-o'} size={22} color='#00FF00' /> : 
+                     <FontAwesome name={'square-o'} size={22} color='#00FF00' />
+                 } 
+                  </View>
+                  
+                  </View>}
+          />
+      
+      }
+     
+  /> 
+       )
    }
 
    isTasklistComplete = (arr) => {
@@ -148,32 +221,57 @@ class TaskListScreen extends React.Component {
 
     render() {
 
+        _renderHeader = (item, expanded) => {
+            _this = this
+             return (
+                 
+                 <View style={{
+                   flexDirection: "row",
+                   padding: 10,
+                   justifyContent: "space-between",
+                   alignItems: "center" ,
+                   backgroundColor: this.state.doneTL.includes(item.Tasklist_ID) ? brand.colors.success : brand.colors.secondary }}>
+                 
+                   {expanded
+                     ? <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}><Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.warning}}>
+                     {" "}{item.Tasklist_Title}
+                   </Text><Icon style={{ fontSize: 20}} name="remove-circle" /></View>
+                     : <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}><Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.white}}>
+                     {" "}{item.Tasklist_Title}
+                   </Text><Icon style={{ fontSize: 20}} name="add-circle" /></View>}
+                 </View>
+               );
+         
+      
+       }
+
     /******************************NOT being used but might be helpful later**************************************/
-        const cards = []
+        const cardss = []
         if(this.state.data.length > 0) {
           // Returing an array object suitable for List / section list
           for (i=0; i < this.state.data.length ; i++ ) {
             opts = Object.assign(
              {},{  text:this.state.data[i].Tasklist_Title ,
                     //note : this.state.data[i].Tasklist_ID,
-                      name : this.state.data[i].Tasklist_Title,
-                    steps : this.state.data[i].TasklistSteps  }
+                      title : this.state.data[i].Tasklist_Title,
+                      steps : this.state.data[i].TasklistSteps
+                      }
             )
-            cards.push(opts) 
+            cardss.push(opts) 
          }
 
          //******************************************************************/
 
         }
         
-        if (this.state && this.state.data && this.state.data.length > 0)
+        if (this.state.gridView && this.state && this.state.data && this.state.data.length > 0)
         
         {  
             
             return (
 
                     <ScrollView
-                    style={{ backgroundColor: '#ffffff' }}
+                    style={{ backgroundColor: brand.colors.primary }}
     
                     refreshControl={
     
@@ -189,13 +287,20 @@ class TaskListScreen extends React.Component {
                     }
                     
                   >
+
+<                   View style={{flex:1,justifyContent:'flex-end',flexDirection:'row'}}>
+                      <Ionicon name={'ios-grid'} size={35} color= {this.state.gridView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:true , listView:false})} />
+                      <Ionicon name={'ios-list'} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:false , listView:true})} />
+
+                  </View>
+                      
                     
                     <View style={{margin:12,marginTop:'20%'}}>
                       <DeckSwiper
-                      
+                      style={{backgroundColor:brand.colors.danger,borderWidth:2}}
                       dataSource={this.state.data}
                         renderItem={item =>
-                          <Card style={{ elevation: 30}}>
+                          <Card style={{ elevation: 30,borderColor:brand.colors.white,borderWidth:5}}>
                             <CardItem>
                               <Left>
                                 <Thumbnail small style ={{backgroundColor:brand.colors.primary}}source={img} />
@@ -268,16 +373,53 @@ class TaskListScreen extends React.Component {
                   </ScrollView>
     
                     )
-            } 
-            else {
-            return (
-                <View>
-                    <Text style={{color:brand.colors.primary,textAlign:"center"}}>
-                         No TaskList added or published
-                         </Text>
-                </View>
-            )
-            }// end return
+            }
+            else if (this.state.listView &&  this.state.doneTL && this.state.data && this.state.data.length > 0) {
+                return (
+                    <ScrollView
+                    style={{ backgroundColor: brand.colors.primary }}
+    
+                    refreshControl={
+    
+                    <RefreshControl
+                        refreshing={this.state.receiving}
+                        onRefresh={this.getTaskLists}
+                        tintColor={brand.colors.primary}
+                        title="Loading"
+                        titleColor={brand.colors.primary}
+                        colors={['#ff0000', '#00ff00', '#0000ff']}
+                        progressBackgroundColor="#ffffff"
+                    />
+                    }
+                    
+                  > 
+                  <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row'}}>
+                      <Ionicon name={'ios-grid'} size={35} color= {this.state.gridView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:true , listView:false})} />
+                      <Ionicon name={'ios-list'} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:false , listView:true})} />
+
+                  </View>
+                    <Container style={{backgroundColor:brand.colors.primary,margin:12,marginTop:'20%'}}>
+       
+                        <Content padder>
+                        <Accordion dataArray={this.state.data} expanded={0}expandMultiple
+                        renderContent={this._renderContent}
+                         renderHeader={_renderHeader}/>
+                        </Content>
+                        </Container>
+                    </ScrollView>
+                                )
+                            }  
+                            else {
+                            return (
+                                <View>
+                                    <Text style={{color:brand.colors.primary,textAlign:"center",marginTop:'40%'}}>
+                                        No TaskList added or published
+                                        </Text>
+                                </View>
+                            )
+                            }// end return
+
+           
 
 
 
