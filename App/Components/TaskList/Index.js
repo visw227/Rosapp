@@ -233,12 +233,22 @@ class TaskListScreen extends React.Component {
                    backgroundColor: this.state.doneTL.includes(item.Tasklist_ID) ? brand.colors.success : brand.colors.secondary }}>
                  
                    {expanded
-                     ? <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}><Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.warning}}>
-                     {" "}{item.Tasklist_Title}
-                   </Text><Icon style={{ fontSize: 20}} name="remove-circle" /></View>
-                     : <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}><Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.white}}>
-                     {" "}{item.Tasklist_Title}
-                   </Text><Icon style={{ fontSize: 20}} name="add-circle" /></View>}
+                     ? <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}>
+                         <View style={{flex:1,flexDirection:'column-reverse', justifyContent: 'flex-start'}}>
+                         <Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.warning}}>
+                     {" "}{item.Tasklist_Title} </Text>
+                     <Text style={{ fontWeight: 'bold',fontSize:12,color:brand.colors.warning,margin:2}}>
+                     {" "}{item.Tasklist_Time_Formatted} </Text>
+                   </View>
+                   <Icon style={{ fontSize: 20}} name="remove-circle" /></View>
+                     : <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}>
+                     <View style={{flex:1,flexDirection:'column-reverse', justifyContent: 'flex-start'}}>
+                     <Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.white}}>
+                 {" "}{item.Tasklist_Title} </Text>
+                 <Text style={{ fontWeight: 'bold',fontSize:12,color:brand.colors.white,margin:2}}>
+                 {" "}{item.Tasklist_Time_Formatted} </Text>
+               </View>
+               <Icon style={{ fontSize: 20}} name="remove-circle" /></View>}
                  </View>
                );
          
@@ -288,9 +298,9 @@ class TaskListScreen extends React.Component {
                     
                   >
 
-<                   View style={{flex:1,justifyContent:'flex-end',flexDirection:'row'}}>
-                      <Ionicon name={'ios-grid'} size={35} color= {this.state.gridView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:true , listView:false})} />
-                      <Ionicon name={'ios-list'} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:false , listView:true})} />
+                    <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row',margin:5}}>
+                      <Ionicon name={'md-grid'} style={{margin:5}} size={35} color= {this.state.gridView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:true , listView:false})} />
+                      <Ionicon name={'ios-list'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:false , listView:true})} />
 
                   </View>
                       
@@ -393,9 +403,9 @@ class TaskListScreen extends React.Component {
                     }
                     
                   > 
-                  <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row'}}>
-                      <Ionicon name={'ios-grid'} size={35} color= {this.state.gridView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:true , listView:false})} />
-                      <Ionicon name={'ios-list'} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:false , listView:true})} />
+                  <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row',margin:5}}>
+                      <Ionicon name={'md-grid'} style={{margin:5}} size={35} color= {this.state.gridView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:true , listView:false})} />
+                      <Ionicon name={'ios-list'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:false , listView:true})} />
 
                   </View>
                     <Container style={{backgroundColor:brand.colors.primary,margin:12,marginTop:'20%'}}>
