@@ -92,7 +92,8 @@ class Device extends React.Component {
                   
                   />
                   
-                  <ListItem
+                  {this.state.appCenterInstallId !== null &&
+                   <ListItem
 
                       hideChevron={true}
                       style={Styles.listItem}
@@ -108,8 +109,8 @@ class Device extends React.Component {
                           overlayContainerStyle={{backgroundColor: '#31B0D5'}}
                           icon={{name: 'info', type: 'font-awesome'}}/>}
                   
-                  />
-
+                  /> 
+                  }
                   
                   <ListItem
 
