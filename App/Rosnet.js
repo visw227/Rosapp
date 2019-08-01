@@ -166,7 +166,7 @@ let LoginStack = createStackNavigator({
 
 }, {
     initialRouteName: 'Login',
-    transitionConfig: () => fromTop(1000),
+    transitionConfig: () => fromTop(500),
     // headerMode: 'float',
     // navigationOptions: ({navigation}) => ({
     //     headerStyle: {backgroundColor: global.colors.brand.primary },
@@ -773,7 +773,7 @@ const AppStack = createStackNavigator({
 
 {
     initialRouteName: 'LaunchStack',
-    transitionConfig: () => fromTop(1000),
+    transitionConfig: () => fromTop(500),
 
     // drawerPosition: 'left',
     // gesturesEnabled: true,
