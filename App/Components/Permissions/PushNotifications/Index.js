@@ -28,7 +28,8 @@ class PushNotifications extends React.Component {
       super(props);
 
       this.state = {
-        isQA: this.props.screenProps.state.isQA
+        isQA: this.props.screenProps.state.isQA,
+        isLocal : this.props.screenProps.state.isLocal
       }
 
   }
@@ -78,6 +79,11 @@ render() {
 
             )
         }
+        else if (this.state.isLocal) {
+          return (
+              <Tex style={{color : brand.colors.danger}}> Local </Tex> 
+         )
+      }
         else {
             return (
                 <Image source={logo} style={styles.logo} />
