@@ -22,7 +22,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import brand from '../../../Styles/brand'
 
-// import Styles from '../Styles'
+// import styles from '../styles'
 
 import { Utils } from '../../../Helpers/Utils'
 
@@ -128,15 +128,15 @@ class SupportRequestDetail extends React.Component {
 
         
         <ScrollView>
-            <View style={styles.formContainer}>
+            <View style={styles.container}>
 
 
-                <Text style={styles.inputLabel}>Subject</Text>
+                {/* <Text style={styles.inputLabel}>Subject</Text>
 
 
                 <Text style={styles.displayText}>{this.state.item.subject}</Text>
 
-
+                <View style={styles.horizontalRule} />
 
                 <Text style={styles.inputLabel} >Description</Text>
 
@@ -163,8 +163,74 @@ class SupportRequestDetail extends React.Component {
 
                 <Text style={styles.displayText}>
                   {moment(this.state.item.updated_at).format('dddd, MMM Do')} @ {moment(this.state.item.updated_at).format('h:mm A')}
-                </Text>
+                </Text> */}
 
+
+                <List style={styles.list}>
+
+
+                    <ListItem
+                        hideChevron={true}
+                        style={styles.listItem}
+                        title='Subject'
+                            titleStyle={{ color: brand.colors.gray }}
+                        subtitle={
+                          <View style={styles.subtitleView}>
+                              <Text style={styles.ratingText}>{this.state.item.subject}</Text>
+                          </View>
+                        }
+                    />
+                    
+                    <ListItem
+                        hideChevron={true}
+                        style={styles.listItem}
+                        title='Description'
+                            titleStyle={{ color: brand.colors.gray }}
+                        subtitle={
+                          <View style={styles.subtitleView}>
+                              <Text style={styles.ratingText}>{this.state.item.description}</Text>
+                          </View>
+                        }
+                    />
+
+                    <ListItem
+                        hideChevron={true}
+                        style={styles.listItem}
+                        title='Status'
+                            titleStyle={{ color: brand.colors.gray }}
+                        subtitle={
+                          <View style={styles.subtitleView}>
+                              <Text style={styles.ratingText}>{this.state.item.status}</Text>
+                          </View>
+                        }
+                    />
+
+                    <ListItem
+                        hideChevron={true}
+                        style={styles.listItem}
+                        title='Created On'
+                            titleStyle={{ color: brand.colors.gray }}
+                        subtitle={
+                          <View style={styles.subtitleView}>
+                              <Text style={styles.ratingText}>{moment(this.state.item.created_at).format('dddd, MMM Do')} @ {moment(this.state.item.created_at).format('h:mm A')}</Text>
+                          </View>
+                        }
+                    />
+
+                    <ListItem
+                        hideChevron={true}
+                        style={styles.listItem}
+                        title='Last Updated'
+                            titleStyle={{ color: brand.colors.gray }}
+                        subtitle={
+                          <View style={styles.subtitleView}>
+                              <Text style={styles.ratingText}>{moment(this.state.item.updated_at).format('dddd, MMM Do')} @ {moment(this.state.item.updated_at).format('h:mm A')}</Text>
+                          </View>
+                        }
+                    />
+
+
+                </List>
 
             </View>
         </ScrollView>
@@ -175,17 +241,13 @@ class SupportRequestDetail extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: brand.colors.white,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 0,
+    marginTop: -20
+  },
 
-    },
-    formContainer: {
-        marginTop: 20,
-        marginLeft: 10,
-        marginRight: 10,
-        marginBottom: 100
-    },
     inputLabel: {
       color: brand.colors.primary,
       marginTop: 15, 
@@ -243,8 +305,36 @@ const styles = StyleSheet.create({
       borderBottomRightRadius: 10,
       maxWidth: 120
 
-    }
-   
+    },
+
+    horizontalRule: {
+      borderBottomColor: 'black',
+      borderBottomWidth: 1,
+    },
+
+    subtitleView: {
+      flexDirection: 'row',
+      paddingLeft: 10,
+      paddingTop: 5
+    },
+    subtitleText: {
+      paddingLeft: 0,
+      color: '#808080',
+      fontSize: 12
+    },
+    list: {
+      marginTop: -20,
+      paddingTop: 0,
+      paddingBottom: 0
+    },
+    listItem: {
+      marginBottom: 10
+    },
+    ratingText: {
+      paddingLeft: 0,
+      color: '#808080'
+    },
+
 });
 
 

@@ -73,8 +73,6 @@ export class LoginSelectClient extends React.Component {
 
   componentDidMount() {
 
-    let _this = this
-
     const { navigation } = this.props;
 
     let userName = navigation.getParam('userName', '' );
@@ -103,7 +101,7 @@ export class LoginSelectClient extends React.Component {
   onSelectedClient = (client) => {
 
 
-    _this = this
+    let _this = this
 
     console.log("changed site", client)
 

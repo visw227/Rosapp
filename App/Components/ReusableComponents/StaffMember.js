@@ -146,7 +146,7 @@ constructor(props) {
        
                   }        */}
 
-                  {/* {member.shareEmail &&     
+                  {member.shareEmail &&     
 
                   <TouchableOpacity
                     style={{
@@ -167,7 +167,7 @@ constructor(props) {
                     <Text style={{ color: brand.colors.white }}>Email</Text>
                   </TouchableOpacity>
 
-                  } */}
+                  }
                 </View>
 
             </View>

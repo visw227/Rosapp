@@ -166,7 +166,7 @@ let LoginStack = createStackNavigator({
 
 }, {
     initialRouteName: 'Login',
-    transitionConfig: () => fromTop(1000),
+    transitionConfig: () => fromTop(500),
     // headerMode: 'float',
     // navigationOptions: ({navigation}) => ({
     //     headerStyle: {backgroundColor: global.colors.brand.primary },
@@ -833,7 +833,7 @@ const AppStack = createStackNavigator({
 
 {
     initialRouteName: 'LaunchStack',
-    transitionConfig: () => fromTop(1000),
+    transitionConfig: () => fromTop(500),
 
     // drawerPosition: 'left',
     // gesturesEnabled: true,
@@ -892,6 +892,7 @@ export default class App extends React.Component {
             switch4 : null
           },
           isQA: false,
+          isLocal : false,
           logData: [],
           notificationCount : 0
 
@@ -966,6 +967,9 @@ export default class App extends React.Component {
         // show QA indicator throughout the app
         if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
           this.setState({ isQA: true })
+        }
+        if (config.DOMAIN.toLowerCase() === 'roslocal.com'){
+          this.setState({isLocal : true})
         }
 
 

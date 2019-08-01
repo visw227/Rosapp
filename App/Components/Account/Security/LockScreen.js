@@ -77,6 +77,7 @@ class LockScreen extends React.Component {
         },
         bioType: null,
         isQA: this.props.screenProps.state.isQA,
+        isLocal : this.props.screenProps.state.isLocal,
         password: null,
         passwordValid: false
       }
@@ -336,6 +337,11 @@ class LockScreen extends React.Component {
                     <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
                 )
+            }
+            else if (this.state.isLocal) {
+                return (
+                    <Text style={{color : brand.colors.danger}}> Local </Text> 
+               )
             }
             else {
                 return (

@@ -36,6 +36,9 @@ class LaunchScreen extends React.Component {
   constructor(props) {
     super(props);
 
+    // force set it here to test a client that isn't available
+    //AsyncStorage.setItem('selectedClient', 'ACGTX')
+
     this.state = {
       FireToken : null,
       appInstallId : null

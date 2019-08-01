@@ -50,7 +50,8 @@ export class ForgotPassword extends React.Component {
             email: '',
             password: '',
             userData: null,
-            isQA: this.props.screenProps.state.isQA
+            isQA: this.props.screenProps.state.isQA,
+            isLocal : this.props.screenProps.state.isLocal
         }
 
     }
@@ -219,6 +220,11 @@ export class ForgotPassword extends React.Component {
                 <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
             )
+        }
+        else if (this.state.isLocal) {
+            return (
+                <Text style={{color : brand.colors.danger}}> Local </Text> 
+           )
         }
         else {
             return (

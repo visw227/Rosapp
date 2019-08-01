@@ -21,7 +21,8 @@ export default class DrawerContainer extends React.Component {
     super(props);
     this.state = {
       backgroundColor : brand.colors.primary,
-      isQA: this.props.screenProps.state.isQA
+      isQA: this.props.screenProps.state.isQA,
+      isLocal : this.props.screenProps.state.isLocal
     }
   }
 
@@ -138,6 +139,11 @@ export default class DrawerContainer extends React.Component {
             source={require('../Images/logo-xs-white-QA.png')} />
         )
       }
+      else if (this.state.isLocal) {
+        return (
+            <Text style={{color : brand.colors.danger}}> Local </Text> 
+       )
+    }
       else {
         return (
           <Image
