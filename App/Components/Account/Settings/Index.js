@@ -226,8 +226,6 @@ class Settings extends React.Component {
       userName : this.props.screenProps.state.userData.userName
     }
 
-// This is an api call -- we are retrieving the subscription values of the use and if there is not entry in the subscription table,
-// we will call backfillSubscription api, which will make the Notify_by_push field true for all the alertTypes of the user
     
     retrieveSubscription(request,function(err,resp){
       console.log("api response",resp,resp.length)
