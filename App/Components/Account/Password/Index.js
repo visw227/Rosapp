@@ -373,13 +373,12 @@ class Password extends React.Component {
               userData = _this.props.screenProps.state.userData
 
               userData.password = _this.state.newPassword
-
-
-              // keep this around for later uses like auto-re-login to make sure user is still active and/or has same client locations
-              //AsyncStorage.setItem('loginData', JSON.stringify( { userName: userData.userName, password: userData.password }))
-
+              // update this to false so that we don't keep asking them to change it,
+              // or wait for another login to potentially update it
+              userData.mustChangePassword = false 
 
               _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })
+
 
               // redirect to the DrawerStack
               const resetAction = StackActions.reset({
@@ -459,7 +458,7 @@ class Password extends React.Component {
 
 
 
-            <Text style={styles.inputLabel} >New Password - Must be at least {this.state.levelLabel}</Text>
+            <Text style={styles.inputLabel} >New Password - Strength must be '{this.state.levelLabel}'</Text>
 
 
             <View style={{

@@ -10,6 +10,7 @@ export var Biometrics = {
 
         let result = {
             showLock: false,
+            lastScreen: null,
             log: []
         }
 
@@ -20,7 +21,8 @@ export var Biometrics = {
             console.log('continuing at lastScreen', lastScreen)
 
            
-
+            // might as well share this with any components using this helper
+            result.lastScreen = lastScreen
 
 
             // see if the user needs to see the lock screen
@@ -71,7 +73,7 @@ export var Biometrics = {
 
                 }
 
-                //console.log("SHOW LOCK", JSON.stringify(result, null, 2))
+                console.log("Biometrics?", JSON.stringify(result, null, 2))
 
                 callback(result)
 

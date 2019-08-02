@@ -158,6 +158,13 @@ export var Authorization = {
                                 userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
                             }
 
+
+                            // if(__DEV__ && userName === 'dywayne.johnson') {
+                            //     console.log(">> DJ hack...")
+                            //     userData.mustChangePassword = true
+                            // }
+
+
                             let selectedClient = ""
 
                             AsyncStorage.getItem('selectedClient').then((client) => {
