@@ -374,7 +374,7 @@ class Password extends React.Component {
 
               userData.password = _this.state.newPassword
               // update this to false so that we don't keep asking them to change it,
-              // or wait for another login to potentially update it
+              // or have to wait for another login to potentially update it
               userData.mustChangePassword = false 
 
               _this.props.screenProps._globalStateChange( { action: "change-password", userData: userData })

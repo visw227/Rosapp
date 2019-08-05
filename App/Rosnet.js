@@ -811,7 +811,7 @@ export default class App extends React.Component {
 
         // This is a workaround to create a fake API request so that subsequent requests will work
         // The first API request ALWAYS times out
-        // Authorization.WakeUpServer()
+        Authorization.WakeUpServer()
 
         this.state = {
           showLock: false,
