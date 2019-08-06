@@ -22,9 +22,9 @@ export var Config = {
         if(__DEV__) {
             ENV = dev
         }
-        else if(RUNNING_IN_APP_CENTER) {
-            ENV = qa
-        }
+        // else if(RUNNING_IN_APP_CENTER) {
+        //     ENV = qa
+        // }
 
         console.log("ENV", ENV)
 
