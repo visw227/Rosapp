@@ -28,7 +28,7 @@ import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
 
 import logo from '../../../Images/logo-lg-white-square.png';
 import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
-
+import logo_DEV from '../../../Images/logo-lg-white-square-DEV.png';
 
 // create a component
 class Login extends Component {
@@ -46,6 +46,8 @@ class Login extends Component {
         
         this.imageHeight = new Animated.Value(MAX_HEIGHT);
 
+        console.log("*** this.props.screenProps.state.config", this.props.screenProps.state.config)
+
         this.state = {
             sending: false,
             receiving: false,
@@ -55,10 +57,7 @@ class Login extends Component {
             },
             userName: '',
             password: '',
-            userData: null,
-            isQA: this.props.screenProps.state.isQA,
-            isLocal : this.props.screenProps.state.isLocal
-            //deviceInfo: null
+            userData: null
         }
 
     }
@@ -325,20 +324,21 @@ class Login extends Component {
     render() {
 
         chooseLogo = () => {
-            if(this.state.isQA) {
+            if(this.props.screenProps.state.config.ENV === "prod") {
+                return (
+                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+                )
+            }
+            else if(this.props.screenProps.state.config.ENV === "qa") {
                 return (
                     <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
                 )
             }
-            else if (this.state.isLocal) {
+            else if(this.props.screenProps.state.config.ENV === "dev") {
                 return (
-                    <Text style={{color : brand.colors.danger}}> Local </Text> 
-               )
-            }
-            else {
-                return (
-                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+                    <Animated.Image source={logo_DEV} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
                 )
             }

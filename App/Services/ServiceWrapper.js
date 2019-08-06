@@ -3,7 +3,7 @@
 // abandonded fetch wrapper - XmlHttpRequest provides a timeout 
 //******************************************************************************
 
-import config from '../app-config.json'
+import { Config } from '../Helpers/Config';
 import { withCacheBustingTimestamp } from '../Helpers/WithCacheBustingTimestamp';
 
 import { Logger } from '../Helpers/Logger';
@@ -23,14 +23,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
     let fullUrl = ''
     let protocol = ''
 
-    // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
-    if (config.DOMAIN.indexOf('rosnet') !== -1) {
-        protocol = "https://"
-    } else {
-        protocol = "http://"
-    }
+    let config = Config.Environment()
 
-    fullUrl = protocol + subDomain + "." + config.DOMAIN + url
+    fullUrl = config.DOMAIN_PROTOCOL + subDomain + "." + config.DOMAIN + url
 
     // tack on timestamp as a cache buster
     fullUrl = withCacheBustingTimestamp(fullUrl)

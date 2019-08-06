@@ -15,7 +15,6 @@ import moment from 'moment'
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
-import appConfig from '../../../../App/app-config.json'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import brand from '../../../Styles/brand'
@@ -115,10 +114,9 @@ constructor(props) {
     }
   `;
     const { navigation } = this.props;
-    let env = appConfig.DOMAIN
     const request = navigation.getParam('request', {} );
     console.log('AlertDetails :request',request)
-    url = "https://" + this.props.screenProps.state.selectedClient + "."+ env  + '/Scheduling/StafflinqShiftApprovals?isApp=true' 
+    url = "https://" + this.props.screenProps.state.selectedClient + "."+ this.props.screenProps.state.config.DOMAIN  + '/Scheduling/StafflinqShiftApprovals?isApp=true' 
     userData = this.props.screenProps.state.userData
 
     let source = {

@@ -24,7 +24,6 @@ import Styles from './Styles'
 //import * as Progress from 'react-native-progress'
 import { getFavorites, saveFavorite, emptyFavorites } from '../../Helpers/Favorites';
 
-import appConfig from '../../app-config.json'
 
 import { NavigationActions, StackActions } from 'react-navigation'
 
@@ -117,8 +116,6 @@ class WebViewScreen extends React.Component {
 
       let userData = _this.props.screenProps.state.userData
 
-      let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
 
       console.log("----------------- Modules WebView ----------------------")
       console.log("Authorization.VerifyToken", _this.props.screenProps.state.selectedClient, userData.token)
@@ -144,12 +141,10 @@ class WebViewScreen extends React.Component {
 
           console.log(">>> Modules WebView - Token is Valid", resp)
 
-          // this is a partial (relative) url provided from the modules API
-          //let url = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
 
-     
-
-          let homeUrl = "https://" + _this.props.screenProps.state.selectedClient + "." + env + item.href + '?isApp=true'
+          let homeUrl = _this.props.screenProps.state.config.DOMAIN_PROTOCOL + 
+            _this.props.screenProps.state.selectedClient + "." + 
+            _this.props.screenProps.state.config.DOMAIN + item.href + '?isApp=true'
 
 
           console.log('webview Url:',homeUrl)

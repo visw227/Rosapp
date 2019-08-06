@@ -10,6 +10,7 @@ import brand from '../../../Styles/brand'
 
 import logo from '../../../Images/logo-lg-white-square.png';
 import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
+import logo_DEV from '../../../Images/logo-lg-white-square-DEV.png';
 
 import Push from 'appcenter-push'
 

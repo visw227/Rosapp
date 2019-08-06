@@ -40,6 +40,7 @@ import TouchID from 'react-native-touch-id'
 
 import logo from '../../../Images/logo-lg-white-square.png';
 import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
+import logo_DEV from '../../../Images/logo-lg-white-square-DEV.png';
 
 import NavigationService from '../../../Helpers/NavigationService';
 
@@ -332,20 +333,21 @@ class LockScreen extends React.Component {
 
 
         chooseLogo = () => {
-            if(this.state.isQA) {
+            if(this.props.screenProps.state.config.ENV === "prod") {
+                return (
+                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+                )
+            }
+            else if(this.props.screenProps.state.config.ENV === "qa") {
                 return (
                     <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
                 )
             }
-            else if (this.state.isLocal) {
+            else if(this.props.screenProps.state.config.ENV === "dev") {
                 return (
-                    <Text style={{color : brand.colors.danger}}> Local </Text> 
-               )
-            }
-            else {
-                return (
-                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+                    <Animated.Image source={logo_DEV} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
                 )
             }

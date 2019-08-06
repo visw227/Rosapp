@@ -37,8 +37,6 @@ import brand from '../../Styles/brand'
 import Styles from './Styles'
 
 
-import appConfig from '../../app-config.json'
-
 
 import { Authorization } from '../../Helpers/Authorization';
 import{updateFcmDeviceToken} from '../../Services/Push'
@@ -186,8 +184,6 @@ class DashboardScreen extends React.Component {
       backgroundColor: this.props.screenProps.state.backgroundColor 
     })
 
-    let env = appConfig.DOMAIN // rosnetdev.com, rosnetqa.com, rosnet.com
-
     //console.log("----------------- Dashboard ----------------------")
     //console.log("Authorization.VerifyToken",this.props.screenProps.state.selectedClient, userData.token)
 
@@ -224,7 +220,7 @@ class DashboardScreen extends React.Component {
         _this.props.screenProps._globalLogger(true, "Dashboard", "Token is valid", { response: resp })
 
 
-        let homeUrl = "https://" + _this.props.screenProps.state.selectedClient + "." + env + "/home/appdash?isApp=true"
+        let homeUrl = "https://" + _this.props.screenProps.state.selectedClient + "." + _this.props.screenProps.state.config.DOMAIN + "/home/appdash?isApp=true"
 
         let source = {
           uri: homeUrl,

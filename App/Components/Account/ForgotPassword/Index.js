@@ -24,6 +24,7 @@ import brand from '../../../Styles/brand'
 import Styles, {  MIN_HEIGHT, MAX_HEIGHT } from './Styles';
 import logo from '../../../Images/logo-lg-white-square.png';
 import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
+import logo_DEV from '../../../Images/logo-lg-white-square-DEV.png';
 
 import { forgotPassword } from '../../../Services/Account';
 
@@ -49,9 +50,7 @@ export class ForgotPassword extends React.Component {
             },
             email: '',
             password: '',
-            userData: null,
-            isQA: this.props.screenProps.state.isQA,
-            isLocal : this.props.screenProps.state.isLocal
+            userData: null
         }
 
     }
@@ -214,25 +213,26 @@ export class ForgotPassword extends React.Component {
 
   render() {
 
-    chooseLogo = () => {
-        if(this.state.isQA) {
-            return (
-                <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+        chooseLogo = () => {
+            if(this.props.screenProps.state.config.ENV === "prod") {
+                return (
+                    <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
-            )
-        }
-        else if (this.state.isLocal) {
-            return (
-                <Text style={{color : brand.colors.danger}}> Local </Text> 
-           )
-        }
-        else {
-            return (
-                <Animated.Image source={logo} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+                )
+            }
+            else if(this.props.screenProps.state.config.ENV === "qa") {
+                return (
+                    <Animated.Image source={logo_QA} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
 
-            )
+                )
+            }
+            else if(this.props.screenProps.state.config.ENV === "dev") {
+                return (
+                    <Animated.Image source={logo_DEV} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+
+                )
+            }
         }
-    }
 
 
     return (

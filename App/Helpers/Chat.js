@@ -7,8 +7,7 @@ authentication header, which is a hybrid token shared by both the Stafflinq and 
 */
 
 
-import config from '../app-config.json'
-import { Utils } from '../Helpers/Utils';
+import { Config } from './Config';
 
 export var Chat = {
 
@@ -44,16 +43,16 @@ export var Chat = {
             }
             else {
 
-                let url = '/api/chat/conversationGetUnreadMessageCount'
+                let url = '/api/chat/getUnreadMessageCount'
 
                 Chat.RequestHelper(url, 'GET', null, client, resp.Authorization, function(err, resp){
 
                     if(err) {
-                        //console.log("Chat.GetUnreadMessageCount error", err)
+                        console.log("Chat.GetUnreadMessageCount error", err)
                         callback(err, null)
                     }
                     else {
-                        //console.log("Chat.GetUnreadMessageCount success", resp)
+                        console.log("Chat.GetUnreadMessageCount success", resp)
                         callback(null, resp)
                     }
                     
@@ -71,15 +70,16 @@ export var Chat = {
     RequestHelper: function(url, method, jsonBody, subDomain, token, callback) {
 
         // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
-        if (config.DOMAIN.indexOf('rosnet') !== -1) {
-            protocol = "https://"
-        } else {
-            protocol = "http://"
-        }
+        // if (config.DOMAIN.indexOf('rosnet') !== -1) {
+        //     protocol = "https://"
+        // } else {
+        //     protocol = "http://"
+        // }
+        let config = Config.Environment()
 
-        fullUrl = protocol + subDomain + "." + config.DOMAIN + url
+        fullUrl = config.DOMAIN_PROTOCOL + subDomain + "." + config.DOMAIN + url
 
-        //console.log("fullUrl", fullUrl)
+        console.log("Chat.js fullUrl", fullUrl)
 
         // Set up our HTTP request
         var xhr = new XMLHttpRequest();

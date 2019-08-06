@@ -1,18 +1,17 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, AsyncStorage, TouchableHighlight, ScrollView } from 'react-native'
+import { Animated, StyleSheet, Text, View, Image, AsyncStorage, TouchableHighlight, ScrollView } from 'react-native'
 import { NavigationActions, StackActions } from 'react-navigation'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 
-// import { userLogout } from '../Services/Account';
-
-//import config from '../app-config.json'
-
 import brand from '../Styles/brand'
 
 import NavigationService from '../Helpers/NavigationService';
 
+import logo from '../Images/logo-lg-white-square.png';
+import logo_QA from '../Images/logo-lg-white-square-QA.png';
+import logo_DEV from '../Images/logo-lg-white-square-DEV.png';
 
 export default class DrawerContainer extends React.Component {
 
@@ -20,9 +19,7 @@ export default class DrawerContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      backgroundColor : brand.colors.primary,
-      isQA: this.props.screenProps.state.isQA,
-      isLocal : this.props.screenProps.state.isLocal
+      backgroundColor : brand.colors.primary
     }
   }
 
@@ -131,26 +128,47 @@ export default class DrawerContainer extends React.Component {
 
     //console.log(">>>>>>>>>   DrawerContainer screenProps", this.props.screenProps)
 
+    // chooseLogo = () => {
+    //   if(this.state.isQA) {
+    //     return (
+    //       <Image
+    //         resizeMode="contain" 
+    //         source={require('../Images/logo-xs-white-QA.png')} />
+    //     )
+    //   }
+    //   else if (this.state.isLocal) {
+    //     return (
+    //         <Text style={{color : brand.colors.danger}}> Local </Text> 
+    //    )
+    // }
+    //   else {
+    //     return (
+    //       <Image
+    //         resizeMode="contain" 
+    //         source={require('../Images/logo-xs-white.png')} />
+    //     )
+    //   }
+    // }
+
     chooseLogo = () => {
-      if(this.state.isQA) {
-        return (
-          <Image
-            resizeMode="contain" 
-            source={require('../Images/logo-xs-white-QA.png')} />
-        )
-      }
-      else if (this.state.isLocal) {
-        return (
-            <Text style={{color : brand.colors.danger}}> Local </Text> 
-       )
-    }
-      else {
-        return (
-          <Image
-            resizeMode="contain" 
-            source={require('../Images/logo-xs-white.png')} />
-        )
-      }
+        if(this.props.screenProps.state.config.ENV === "prod") {
+            return (
+                <Animated.Image source={logo} style={styles.logo} />
+
+            )
+        }
+        else if(this.props.screenProps.state.config.ENV === "qa") {
+            return (
+                <Animated.Image source={logo_QA} style={styles.logo} />
+
+            )
+        }
+        else if(this.props.screenProps.state.config.ENV === "dev") {
+            return (
+                <Animated.Image source={logo_DEV} style={styles.logo} />
+
+            )
+        }
     }
 
     // using routeKey allows us to reuse the same ModulesSubMenu route but with different menu data being passed to it
@@ -196,11 +214,6 @@ export default class DrawerContainer extends React.Component {
           {chooseLogo()}
         </View>
 
-        {/* {this.state.isQA &&
-        <View style={{ marginTop: 10, alignItems: 'center' }}>
-          <Text style={{ color: brand.colors.orange }}>WARNING!!! YOU ARE IN QA!!!</Text>
-        </View>
-        } */}
 
         <View style={{  flexDirection: 'row',
                         justifyContent: 'center',
@@ -331,6 +344,8 @@ export default class DrawerContainer extends React.Component {
   }
 }
 
+const MIN_HEIGHT = 80;
+const MAX_HEIGHT = 200;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -348,5 +363,12 @@ const styles = StyleSheet.create({
     // borderColor: '#E73536',
     // borderWidth: 1,
     textAlign: 'left'
-  }
+  },
+  logo: {
+      //position: 'absolute',
+      // width: 400,
+      height: 80,
+      maxHeight: 80,
+      maxWidth: 80
+  },
 })

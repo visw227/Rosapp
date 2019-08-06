@@ -37,7 +37,7 @@ import { Authorization } from './Helpers/Authorization';
 
 import Push from 'appcenter-push'
 
-import config from './app-config.json'
+import { Config } from './Helpers/Config';
 
 import { Biometrics } from './Helpers/Biometrics';
 
@@ -813,7 +813,12 @@ export default class App extends React.Component {
         // The first API request ALWAYS times out
         Authorization.WakeUpServer()
 
+        let config = Config.Environment()
+        console.log("*** config", JSON.stringify(config, null, 2))
+
+
         this.state = {
+          config: config,
           showLock: false,
           userData: null,
           selectedClient: null,
@@ -902,13 +907,12 @@ export default class App extends React.Component {
 
        // firebase.notifications().displayNotification(RNFirebase.notifications.Notification)
 
-        //console.log("App-Rosnet config", config)
 
         // show QA indicator throughout the app
-        if(config.DOMAIN.toLowerCase() === 'rosnetqa.com') {
+        if(this.state.config.ENV === 'qa') {
           this.setState({ isQA: true })
         }
-        if (config.DOMAIN.toLowerCase() === 'roslocal.com'){
+        else if (this.state.config.ENV === 'dev'){
           this.setState({isLocal : true})
         }
 
@@ -1388,7 +1392,7 @@ export default class App extends React.Component {
         
 
         let statusData = {
-          limit: config.BIOMETRICS_WAIT_DURATION, // milliseconds
+          limit: this.state.config.BIOMETRICS_WAIT_DURATION, // milliseconds
           ts: new Date().getTime() // add a timestamp to know when inactivated
         }
 

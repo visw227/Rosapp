@@ -23,7 +23,7 @@ import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import brand from '../../Styles/brand'
 import Styles from './Styles'
-import appConfig from '../../app-config.json'
+
 
 import { Chat } from '../../Helpers/Chat';
 
@@ -90,18 +90,9 @@ class ChatScreen extends React.Component {
 
         let now = new Date().getTime()
 
-
-        let protocol = "https://"
-        // if NOT rosnetdev.com, rosnetqa.com, rosnet.com, probably running as localhost or ngrok
-        if (appConfig.DOMAIN.indexOf('rosnet') !== -1) {
-            protocol = "https://"
-        } else {
-            protocol = "http://"
-        }
-
-        let url = protocol + 
+        let url = this.props.screenProps.state.config.DOMAIN_PROTOCOL  + 
                 client + "." + 
-                appConfig.DOMAIN + "/chatapp?app=rosnet&client=" + client + 
+                this.props.screenProps.state.config.DOMAIN + "/chatapp?app=rosnet&client=" + client + 
                 "&token=" + token + 
                 "&__dt=" + now
 
