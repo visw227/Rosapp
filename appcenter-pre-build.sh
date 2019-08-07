@@ -16,7 +16,7 @@ CONFIG_FILE=$APPCENTER_SOURCE_DIRECTORY/App/Helpers/Config.js
 if [ -e "$CONFIG_FILE" ]
 then
     echo "Updating the env to $ROSNET_APP_ENV_VAR in /App/Helpers/Config.js"
-    sed -i '' -e 's/ROSNET_APP_ENV/"'$ROSNET_APP_ENV_VAR'"/g' $CONFIG_FILE
+    sed -i '' -e 's/ROSNET_APP_ENV/'$ROSNET_APP_ENV_VAR'/g' $CONFIG_FILE
 
     echo "Updated contents:"
     cat $CONFIG_FILE
