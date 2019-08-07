@@ -11,6 +11,9 @@ https://docs.microsoft.com/en-us/appcenter/build/custom/variables/
 In App Center:
 https://appcenter.ms/orgs/Rosnet/apps/iOS-Rosnet/build/branches/master/configure
 
+Samples:
+https://github.com/microsoft/appcenter/blob/master/sample-build-scripts/react-native/version-name/appcenter-pre-build.sh
+
 */
 
 import dev  from '../.env.dev.json'
