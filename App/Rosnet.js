@@ -836,8 +836,6 @@ export default class App extends React.Component {
             switch3 :null,
             switch4 : null
           },
-          isQA: false,
-          isLocal : false,
           logData: [],
           notificationCount : 0
 
@@ -907,14 +905,6 @@ export default class App extends React.Component {
 
        // firebase.notifications().displayNotification(RNFirebase.notifications.Notification)
 
-
-        // show QA indicator throughout the app
-        if(this.state.config.ENV === 'qa') {
-          this.setState({ isQA: true })
-        }
-        else if (this.state.config.ENV === 'dev'){
-          this.setState({isLocal : true})
-        }
 
 
     } // end componentDidMount

@@ -126,30 +126,6 @@ export default class DrawerContainer extends React.Component {
 
     const { navigation } = this.props
 
-    //console.log(">>>>>>>>>   DrawerContainer screenProps", this.props.screenProps)
-
-    // chooseLogo = () => {
-    //   if(this.state.isQA) {
-    //     return (
-    //       <Image
-    //         resizeMode="contain" 
-    //         source={require('../Images/logo-xs-white-QA.png')} />
-    //     )
-    //   }
-    //   else if (this.state.isLocal) {
-    //     return (
-    //         <Text style={{color : brand.colors.danger}}> Local </Text> 
-    //    )
-    // }
-    //   else {
-    //     return (
-    //       <Image
-    //         resizeMode="contain" 
-    //         source={require('../Images/logo-xs-white.png')} />
-    //     )
-    //   }
-    // }
-
     chooseLogo = () => {
         if(this.props.screenProps.state.config.ENV === "prod") {
             return (

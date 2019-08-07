@@ -77,8 +77,6 @@ class LockScreen extends React.Component {
             reRoute:false
         },
         bioType: null,
-        isQA: this.props.screenProps.state.isQA,
-        isLocal : this.props.screenProps.state.isLocal,
         password: null,
         passwordValid: false
       }
