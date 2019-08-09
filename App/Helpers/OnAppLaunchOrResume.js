@@ -7,6 +7,19 @@ things that must happen when the app either launches or is resumed (changes from
 
 
 
+Pseuedo code:
+
+if NOT logged in (or first use)
+
+    redirect to login screen
+
+if logged in
+
+    refresh the token
+    show biometric screen if time for that
+    redirect to any forced actions (e.g. required password change)
+
+
 
 
 
@@ -20,6 +33,44 @@ import { Authorization } from './Authorization';
 export var OnAppLaunchOrResume = {
 
 
+    GetAllKeys: function(callback) {
+
+        let keys = {}
+
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    
+                    // get at each store's key/value so you can work with it
+                    let key = store[i][0];
+                    let value = store[i][1];
+
+                    switch(key) {
+                      case "userData":
+                        keys.userData = JSON.parse(value)
+                        break;
+                      case "lastScreen":
+                        keys.lastScreen = value
+                        break;
+                      case "statusData":
+                        keys.statusData = JSON.parse(value)
+                        break;
+                      default:
+                        // code block
+                    }
+
+                    
+                })
+
+                console.log(">>> OnAppLaunchOrResume ALL keys", keys)
+
+
+                callback(keys)
+            })
+        })
+
+    },
+
     // event = 'launch' or 'activate'
     OnEvent: function(event, callback) {
 
@@ -27,111 +78,72 @@ export var OnAppLaunchOrResume = {
             error: null,
             userData: null,
             lastScreen: null,
-            forcedScreen: null
+            forcedAction: null,
+            showLock: false
         }
 
 
-
-
-        AsyncStorage.getItem('userData').then((data) => {
+        OnAppLaunchOrResume.GetAllKeys(function(keys){
 
             let userData = null
             let routeName = null
 
             //console.log("LaunchScreen - userData: ", data)
+            if(keys.userData === null) {
 
-            if(data) {
+                result.forcedScreen = "LoginStack"
 
-                userData = JSON.parse(data)
+                return callback(null, result)
 
-                console.log("ForcedActions - userData: ", userData)
-
-                if(userData && userData.token) {
-
-
-                    result.userData = userData
-
-
-                    // this MAY cause a 401 redirect to login 
-                    Authorization.RefreshToken(function(err, resp){
-                        
-                        if(err) {
-                            console.log("err refreshing token", err)
-
-                            //_this._globalLogger(false, "App", "Error Refreshing Token", { error: err})
-                            result.error = err
-
-                        }
-                        else {
-
-                            console.log("token refreshed")
-
-                            // if we are refreshing the token, we must reset all global state attributes back to defaults as well
-                            //_this._globalStateChange( { action: "token-refresh", userData: resp.userData })
-                            result.userData = resp.userData
-
-
-                            //_this._globalLogger(true, "App", "Token Refreshed Successfully", { userData: resp.userData })
-                            
-
-                            // see if the user needs to see the lock screen
-                            Biometrics.CheckIfShouldShowLockScreen(function(result){
-
-                                //log = log.concat(result.log)
-
-                                if(resp.userData.mustChangePassword ===  true) {
-                                    result.forcedScreen = 'PasswordChangeRequiredStack'
-                                }
-
-                                if(result.showLock) {
-                                    result.forcedScreen = 'LockStack'
-                                }
-                                else {
-                                    // NOTE: if the user closed the app, we start back at the Dashboard
-                                    // only when the app is minimized and re-opened do we worry about what screen to resume at
-                                    // after biometric auth
-                                    routeName = 'DrawerStack' 
-
-                                    if(userData.mustChangePassword ===  true) {
-                                        result.forcedScreen = 'PasswordChangeRequiredStack'
-                                    }
-
-                                }
-
-                                //_this.props.screenProps._globalLogger(true, "App", "Activated", { log: result.log })
-
-                                // redirect to the route
-                                _this.doRedirect(routeName)
-
-
-                            })
-
-                        
-                        } // end else
-
-                    }) // end Authorization.RefreshToken
-
-
-
-
-
-                } // end if userData
 
             }
             else {
 
-                callback(null, { routeName: 'LoginStack' })
+                // decided this first - even if a forced action is needed like password reset, we may want to ask for biometric auth first...
+                if(keys.statusData) {
 
-            } // end if data
+                    result.statusData = keys.statusData
+
+                    let currentTime = new Date().getTime() // in milliseconds
+
+                    let diff = currentTime - keys.statusData.ts
+
+                    //if(!__DEV__ && (diff >= statusData.limit || (keys.lastScreen && keys.lastScreen === 'LockScreen')) ) {
+                    if( diff >= keys.statusData.limit || (keys.lastScreen && keys.lastScreen === 'LockScreen') ) {
+
+                        result.showLock = true
+                    }
+
+
+                }
+
+                //console.log("ForcedActions - keys.userData: ", keys.userData)
+
+                if(keys.userData && keys.userData.token) {
+
+                    result.userData = keys.userData
+                    result.lastScreen = keys.lastScreen
+
+
+                    // look for any forced actions for the user
+                    if(keys.userData.mustChangePassword ===  true) {
+                        result.forcedScreen = 'PasswordChangeRequiredStack'
+                    }
+
+                    return callback(null, result)
+
+                } 
+                else {
+                    return callback(null, result)
+                }
+
+            } 
+
+        }) // end GetAllKeys
 
 
 
-
-        }) // end userData
-
-
-
-    },
+    } 
 
 
 

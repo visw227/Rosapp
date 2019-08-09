@@ -13,15 +13,16 @@ https://github.com/microsoft/appcenter/blob/master/sample-build-scripts/react-na
 
 */
 
-import dev  from '../.env.dev.json'
-import qa   from '../.env.qa.json'
-import prod from '../.env.prod.json'
-
 
 export var Config = {
 
     Environment: function() {
-      
+
+        // load them here so that if they change in __DEV__, the simulator reloads them
+        let dev = require("../Environments/dev.json");
+        let qa = require("../Environments/qa.json");
+        let prod = require("../Environments/prod.json");
+
         // default to prod, but override below if the environment variables are available
         let ENV = prod
 
