@@ -16,4 +16,19 @@ import { serviceWrapper } from './ServiceWrapper'
     })
   
   }
+
+  export function UpdateStep (client,token,request,callback) {
+
+    let url = '/api/ManagerAppTaskList/UpdateStep'
+  
+    serviceWrapper(url,'POST',request,client,token,false,function(err,resp){
+      if(err){
+        callback(err)
+      }
+      else {
+        callback(null,resp)
+      }
+    })
+  
+  }
  

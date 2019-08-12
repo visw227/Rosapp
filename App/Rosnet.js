@@ -342,11 +342,26 @@ let ChatStack = createStackNavigator({ ChatScreen });
 
 
 // *******************************************************************************
-// Chat - Replaces Conversastions 
+// TaskList -  TAsklist screens 
 // *******************************************************************************
 
 import TaskListScreen from './Components/TaskList/Index'
-let TaskListStack = createStackNavigator({ TaskListScreen });
+import TaskListDetail from './Components/TaskList/Detail/Index'
+
+let TaskListStack = createStackNavigator({ 
+  TaskListScreen: {
+    screen: TaskListScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+  TaskListDetail: {
+    screen: TaskListDetail
+  }
+ });
+
+
 
 
 
