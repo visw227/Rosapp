@@ -157,11 +157,12 @@ export var Authorization = {
                                 userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
                             }
 
-
-                            // if(__DEV__ && userName === 'shilton') {
-                            //     console.log(">> DJ hack...")
-                            //     userData.mustChangePassword = true
-                            // }
+                            // SRR test user
+                            // shilton / "now is the"
+                            if(__DEV__ && userName === 'shilton') {
+                                console.log(">> DJ hack...")
+                                userData.mustChangePassword = true
+                            }
 
 
                             let selectedClient = ""

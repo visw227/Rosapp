@@ -79,6 +79,8 @@ export function changePassword (request, token, callback) {
 
   let url = '/Signon/PasswordChangeExec?userId=' + encodeURI(request.userId) + '&password=' + encodeURI(request.password) + '&app=true'
 
+  console.log("changePassword url", url, "token", token)
+
   serviceWrapper(url, 'GET', null, request.clientCode , token, true, function(err, resp) {
     if (err) {
       callback(err)

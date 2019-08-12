@@ -47,8 +47,12 @@ class LaunchScreen extends React.Component {
 
   }
 
-  doRedirect = (routeName) => {
+  doRedirect = (routeName, mustChangePassword) => {
 
+      let redirectTo = ''
+      if(mustChangePassword) {
+        redirectTo = 'PasswordChangeRequiredStack'
+      }
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
       //this.props.navigation.navigate(userToken ? 'DrawerStack' : 'LoginStack');
@@ -56,7 +60,7 @@ class LaunchScreen extends React.Component {
       const resetAction = StackActions.reset({
           index: 0,
           key: null, // this is the trick that allows this to work
-          actions: [NavigationActions.navigate({ routeName: routeName })],
+          actions: [NavigationActions.navigate({ routeName: routeName, params: { redirectTo: redirectTo } })],
       });
       
       this.props.navigation.dispatch(resetAction);
@@ -196,7 +200,6 @@ class LaunchScreen extends React.Component {
             _this.props.screenProps._globalStateChange( { action: "launch", userData: userData, selectedClient: selectedClient } )
 
 
-
             // see if the user needs to see the lock screen
             Biometrics.CheckIfShouldShowLockScreen(function(result){
 
@@ -210,12 +213,20 @@ class LaunchScreen extends React.Component {
                 // only when the app is minimized and re-opened do we worry about what screen to resume at
                 // after biometric auth
                 routeName = 'DrawerStack' 
+
+                // if user hasn't yet changed their password, force them to - even if they go to the 
+                // biometrics screen first
+                if(userData.mustChangePassword) {
+                  routeName = 'PasswordChangeRequiredStack'
+                }
+
               }
 
               _this.props.screenProps._globalLogger(true, "App", "Activated", { log: result.log })
 
-              // redirect to the route
-              _this.doRedirect(routeName)
+                // if user hasn't yet changed their password, force them to - even if they go to the 
+                // biometrics screen first
+              _this.doRedirect(routeName, userData.mustChangePassword)
 
 
             })

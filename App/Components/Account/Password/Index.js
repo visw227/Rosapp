@@ -328,7 +328,7 @@ class Password extends React.Component {
               sending: false,
               requestStatus: {
                   hasError: true,
-                  message: err
+                  message: err.message
               },
             })
 

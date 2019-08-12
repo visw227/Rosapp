@@ -70,6 +70,13 @@ class LockScreen extends React.Component {
 
       this.imageHeight = new Animated.Value(MAX_HEIGHT);
 
+      const { navigation } = this.props;
+
+      const redirectTo = navigation.getParam('redirectTo', 'DrawerStack');
+
+      console.log("redirectTo", redirectTo)
+
+
       this.state = {
         requestStatus: {
             hasError: false,
@@ -78,7 +85,8 @@ class LockScreen extends React.Component {
         },
         bioType: null,
         password: null,
-        passwordValid: false
+        passwordValid: false,
+        redirectTo: redirectTo
       }
 
   }
@@ -276,6 +284,7 @@ class LockScreen extends React.Component {
 
     onContinue = () => {
 
+
         let screen = 'Dashboard'
         AsyncStorage.getItem('lastScreen').then((lastScreen) => {
 
@@ -288,7 +297,12 @@ class LockScreen extends React.Component {
             }
 
             // this should allow for the back button to appear in the header
-            this.props.navigation.navigate(screen)
+            if(this.state.redirectTo && this.state.redirectTo !== '') {
+                this.props.navigation.navigate(this.state.redirectTo)
+            }
+            else {
+                this.props.navigation.navigate(screen)
+            }
         
 
         })

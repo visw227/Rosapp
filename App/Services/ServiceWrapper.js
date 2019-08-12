@@ -132,28 +132,26 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
             // They can be text strings, HTML, or a JSON object... have fun
            
 
-                console.log("************************************* ServiceWrapper - " + xhr.status + " ***********************************************")
-                console.log("url", xhr._url)
-    
-                console.log("xhr._response", xhr._response)
-                let message = xhr._response
-    
-                if(message.indexOf('{') !== -1) {
-    
-                    console.log("error is JSON", JSON.stringify(json, null, 2))
-    
-                    let json = JSON.parse(message)
-    
-    
-                    message = (json.Message || "") + " " + (json.ExceptionMessage || "")
+            console.log("************************************* ServiceWrapper - " + xhr.status + " ***********************************************")
+            console.log("url", xhr._url)
 
-            }
-           
-            
-            else if(message.indexOf('<') !== -1) {
+            console.log("xhr._response", xhr._response)
+            let message = xhr._response
+
+            if(message.indexOf('<html') !== -1) {
 
                 console.log("error is HTML", message)
-                message = "An error occurred, but the response was HTML so unable to parse."
+                message = "We're sorry, but an unexpected error occurred while processing your request."
+            }
+            else if(message.indexOf('{') !== -1) {
+
+                console.log("error is JSON", JSON.stringify(json, null, 2))
+
+                let json = JSON.parse(message)
+
+
+                message = (json.Message || "") + " " + (json.ExceptionMessage || "")
+
             }
             else {
 
