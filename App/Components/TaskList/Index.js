@@ -27,6 +27,8 @@ import { GetTaskLists,UpdateStep } from '../../Services/TaskList';
 
 import { List, ListItem, Avatar } from 'react-native-elements'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import brand from '../../Styles/brand'
@@ -520,7 +522,7 @@ class TaskListScreen extends React.Component {
                    padding: 10,
                    justifyContent: "space-between",
                    alignItems: "center" ,
-                   backgroundColor: this.state.doneTL.includes(item.Tasklist_ID) ? brand.colors.success : brand.colors.secondary }}>
+                   backgroundColor: this.state.doneTL.includes(item.Tasklist_ID) ? brand.colors.success : brand.colors.white }}>
                  
                    {expanded
                      ? <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}>
@@ -534,9 +536,9 @@ class TaskListScreen extends React.Component {
                    </View>
                      : <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}>
                      <View style={{flex:1,flexDirection:'column-reverse', justifyContent: 'flex-start'}}>
-                     <Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.white}}>
+                     <Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.primary}}>
                  {" "}{item.Tasklist_Title} </Text>
-                 <Text style={{ fontWeight: 'bold',fontSize:12,color:brand.colors.white,margin:2}}>
+                 <Text style={{ fontWeight: 'bold',fontSize:12,color:brand.colors.primary,margin:2}}>
                  {" "}{item.Tasklist_Time_Formatted} </Text>
                </View>
                <Icon style={{ fontSize: 20}} name="add-circle" /></View>}
@@ -591,8 +593,8 @@ class TaskListScreen extends React.Component {
                   >
 
                     <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row',margin:5}}>
-                      <Ionicon name={'md-grid'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , listView:false})} />
-                      <Ionicon name={'ios-list'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , listView:true})} />
+                      <MaterialCommunityIcons name={'cards-outline'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , listView:false})} />
+                      <MaterialCommunityIcons name={'layers-outline'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , listView:true})} />
 
                   </View>
                       
@@ -726,8 +728,8 @@ class TaskListScreen extends React.Component {
                     
                   > 
                   <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row',margin:5}}>
-                      <Ionicon name={'md-grid'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , listView:false})} />
-                      <Ionicon name={'ios-list'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , listView:true})} />
+                      <MaterialCommunityIcons name={'cards-outline'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , listView:false})} />
+                      <MaterialCommunityIcons name={'layers-outline'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , listView:true})} />
 
                   </View>
                     <Container style={{backgroundColor:brand.colors.primary,margin:12,marginTop:'20%'}}>
