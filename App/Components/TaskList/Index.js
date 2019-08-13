@@ -83,6 +83,8 @@ class TaskListScreen extends React.Component {
 
    }
 
+
+
    getTaskLists = () => {
 
     _this = this
@@ -111,51 +113,94 @@ class TaskListScreen extends React.Component {
         else {
   
           console.log('response',resp)
-  
-          _this.setState ({
-            data : resp
-          }, () => {
-            completedTL = []
 
-            _this.state && _this.state.data && _this.state.data.forEach(element => {
-                 if(element.TasklistSteps && element.TasklistSteps.length > 0) {
-                       
-                   element.TasklistSteps.forEach(e => {
+          if(_this.state.tasklistId) {
+
+            _this.setState ({
+              data : resp
+            }, () => {
+
+              indexValue = 0
+
+              _this.state.data.forEach(e => {
                 
-
-                       index = 0
-                       if(e.Is_Completed){
-                           index ++;
-                       }
-                     
-                       if (index == element.TasklistSteps.length) {
-                           completedTL.push(element.Tasklist_ID)
-                       }
-                      
-                   })
-       
-                 }
-
-             })
-           
-             _this.setState({
-                 doneTL : completedTL
-             },()=> console.log('<<done',_this.state.doneTL))
-          } )
+                if(e.Tasklist_ID === _this.state.tasklistId.Tasklist_ID){
+                  indexValue = _this.state.data.indexOf(e)
   
+              }
+             
+            })
+                        
+            _this.swiper.jumpToCardIndex(indexValue) // This is important to keep the Tasklist deck unchanged on clicking the checkbox--
             
+            
+          }
+            )
+         
+          }
+            else {
+
+              tasklistId = resp[0]
+
+              _this.setState ({
+                data : resp,
+                tasklistId : tasklistId
+              }, () => {
+
+                _this.state.data.forEach(e => {
+                  
+                  if(e.Tasklist_ID === tasklistId.Tasklist_ID){
+                    indexValue = _this.state.data.indexOf(e)
+    
+                }
+               
+              })
+
+            
+            
+            
+            _this.swiper.jumpToCardIndex(indexValue)  // This is important to keep the Tasklist deck unchanged on clicking the checkbox--
+
+                
+                completedTL = []
+    
+                _this.state && _this.state.data && _this.state.data.forEach(element => {
+                     if(element.TasklistSteps && element.TasklistSteps.length > 0) {
+                           
+                       element.TasklistSteps.forEach(e => {
+                    
+    
+                           index = 0
+                           if(e.Is_Completed){
+                               index ++;
+                           }
+                         
+                           if (index == element.TasklistSteps.length) {
+                               completedTL.push(element.Tasklist_ID)
+                           }
+                          
+                       })
+           
+                     }
+    
+                 })
+               
+                 _this.setState({
+                     doneTL : completedTL
+                 })
+              } )
+
+            }
+ 
         }
   
       })
-
-      
 
    }
    
     
 
-  
-
+ 
    _renderContent = (item) => {
       
        return (
@@ -219,28 +264,11 @@ class TaskListScreen extends React.Component {
    }
 
    onSwiped = (index) => {
-     index = !index ? 0 : index
-     console.log('onswipe index',index)
-
-    //this.setState({currIndex:index+1},()=>console.log('on swiped index',this.state.currIndex))
+     
     reqCard = this.state.data[index+1] ? this.state.data[index+1] : this.state.data[0]
     this.setState({
-      tasklistId : this.state.data[index+1] && this.state.data[index+1].Tasklist_ID
-    },()=>console.log('onSwiped',this.state.tasklistId))
-
-    this.state.data.forEach(e => {
-      console.log('forEACH',reqCard)
-      if  (reqCard) {
-        if(e.Tasklist_ID === reqCard.Tasklist_ID) {
-          console.log('if enteredddd')
-          this.setState({
-            currIndex : this.state.data.indexOf(e)
-          },()=>console.log('currIndex',this.state.currIndex))
-        }
-      }
-      
-     
-    })
+      tasklistId : reqCard
+    },()=>console.log('reqCard',this.state.tasklistId))
 
    }
 
@@ -250,11 +278,11 @@ class TaskListScreen extends React.Component {
 
     _this = this
     
-    console.log('ste --pressed roi',step)
     _this.setState({
       stepId : step.Step_ID,
       checked : !step.Is_Completed
-    },()=>{console.log('step Id & Checked',_this.state.checked + _this.state.stepId)})
+    })
+
 
     console.log('step pressed',step.Step_Type_Name === "External Site"? Linking.openURL(step.URL).catch((err) => console.error('An error occurred', err)):step)
     let env = appConfig.DOMAIN
@@ -304,7 +332,6 @@ class TaskListScreen extends React.Component {
     
 
     if (step.Step_Type_ID === 4) {
-      console.log('entered',step.Step_Type_ID)
       // Do some more complex stuff. Never uncheck manually.
       if (step.LocsNotDone.length == 1) { // Single location-we can link directly to the function.
         
@@ -315,7 +342,6 @@ class TaskListScreen extends React.Component {
             "managerAppToken":  this.props.screenProps.state.userData.token
           }
         }
-        console.log('if clause',url)
         _this.props.navigation.navigate('TaskListDetail',{source})
       } else {
         link = '/Tasklist/RunTasklist?Tasklist_ID=' + step.Tasklist_ID+'&Step_ID='+step.Step_ID
@@ -326,7 +352,6 @@ class TaskListScreen extends React.Component {
             "managerAppToken":  this.props.screenProps.state.userData.token
           }
         }
-        console.log('if clause',url)
         _this.props.navigation.navigate('TaskListDetail',{source})
 
       }
@@ -354,9 +379,7 @@ class TaskListScreen extends React.Component {
           }
 
         }) 
-        this.getTaskLists()
-        //this._deckSwiper._root.swipeRight(3)
-        //{console.log('swipe',this._deckSwiper._root.swipeRight(3))}
+        _this.getTaskLists()
         !step.Is_Completed && Linking.openURL(step.URL).catch((err) => console.error('An error occurred', err))
       }
        if (step && step.Step_Type_ID === 3) {
@@ -411,16 +434,16 @@ class TaskListScreen extends React.Component {
         }
   
       }) 
-       this.getTaskLists()
-      //this._deckSwiper._root.swipeRight(3)
-      //{console.log('swipe',this._deckSwiper._root.swipeRight(3))}
+       _this.getTaskLists()
+      // _this.swiper.jumpToCardIndex(_this.state.data.indexOf(_this.state.tasklistId))
       }
      
    
   }
 
-    render() {
 
+
+    render() {
       
 
         _renderHeader = (item, expanded) => {
@@ -511,12 +534,14 @@ class TaskListScreen extends React.Component {
 
                       <DeckSwiper
                       style={{backgroundColor:brand.colors.danger,borderWidth:2}}
-                      ref={(c) => this._deckSwiper = c} 
+                      ref={swiper => {
+                        this.swiper = swiper;
+                      }} 
                       infinite = {true}
-                      cardIndex={this.state.currIndex ? this.state.currIndex : 0}
+                      cardIndex= {this.state.item  ? this.state.data.indexOf(this.state.item) : 0}
                       showSecondCard = {true}
                       stackSize = {this.state.data.length}
-                      onSwiped = {this.onSwiped}
+                      onSwiped = {(i)=>this.onSwiped(i)}
                       useViewOverflow = {false}
                       cards={this.state.data}
                       renderCard={item =>
