@@ -350,7 +350,7 @@ class TaskListScreen extends React.Component {
     })
 
 
-    console.log('step pressed',step.Step_Type_Name === "External Site"? Linking.openURL(step.URL).catch((err) => console.error('An error occurred', err)):step)
+    !step.Is_Completed && step.Step_Type_Name === "External Site"? Linking.openURL(step.URL).catch((err) => console.error('An error occurred', err)):step
     let env = appConfig.DOMAIN
     const hideSiteNav = `
     // alert('hello')
@@ -446,7 +446,7 @@ class TaskListScreen extends React.Component {
 
         }) 
         _this.getTaskLists()
-        !step.Is_Completed && Linking.openURL(step.URL).catch((err) => console.error('An error occurred', err))
+        //!step.Is_Completed && Linking.openURL(step.URL).catch((err) => console.error('An error occurred', err))
       }
        if (step && step.Step_Type_ID === 3) {
       if (step.Output_Format && step.Output_Format != "" && step.Report_Saved_Settings_ID) {
@@ -572,6 +572,7 @@ class TaskListScreen extends React.Component {
             return (
 
                     <ScrollView
+                    
                     style={{ backgroundColor: brand.colors.primary }}
     
                     refreshControl={
@@ -596,9 +597,13 @@ class TaskListScreen extends React.Component {
                   </View>
                       
                   {this.state.fetching &&
-            <View style={{ marginLeft :'36%',marginTop: 65, position: 'absolute' }} >
-                <ActivityIndicator size="large" color={'#ffffff'} />
+                  <View>
+            <View style={{ alignItems : 'center',marginTop: 45, justifyContent : 'space-between'  }} >
+                {/* <ActivityIndicator size="large" color={'#ffffff'} /> */}
+                <Text style={{color:brand.colors.white,textAlign:'center'}}> Refreshing.... </Text>
             </View>
+             <Text style={{color:brand.colors.white,textAlign:'center',marginTop:10}}> Refresh taking too long? Scroll down to refresh quickly</Text>
+                    </View>
             }
 
                     
@@ -614,6 +619,7 @@ class TaskListScreen extends React.Component {
                       showSecondCard = {true}
                       stackSize = {this.state.data.length}
                       onSwiped = {(i)=>this.onSwiped(i)}
+                      verticalSwipe = {false}
                       useViewOverflow = {false}
                       cards={this.state.data}
                       renderCard={item =>
@@ -645,7 +651,7 @@ class TaskListScreen extends React.Component {
                              <ListItem onPress={()=>this.runTasklistStep(item)}
                              hideChevron
                              key={String(index)}
-                             
+
 
                               //icon={<Ionicon name={'md-radio-button-on'} size={22} color={brand.colors.white} />}
                               title={<View style={{flexDirection:'row'}}>
