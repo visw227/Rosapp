@@ -72,7 +72,7 @@ class TaskListScreen extends React.Component {
             receiving: false,
             alertMessage : '',
             data : {},
-            gridView  : true,
+            cardView  : true,
             listView :false,
             indexValue : 0,
             doneTL :['0'],
@@ -122,7 +122,7 @@ class TaskListScreen extends React.Component {
   
           console.log('response',resp)
 
-          if(_this.state.tasklistId && _this.state.gridView) {
+          if(_this.state.tasklistId && _this.state.cardView) {
 
             _this.setState ({
               data : resp,
@@ -194,7 +194,7 @@ class TaskListScreen extends React.Component {
 
                 indexValue = 0
 
-                _this.state.gridView && _this.state.data.forEach(e => {
+                _this.state.cardView && _this.state.data.forEach(e => {
                   
                   if(e.Tasklist_ID === tasklistId.Tasklist_ID){
                     indexValue = _this.state.data.indexOf(e)
@@ -215,7 +215,7 @@ class TaskListScreen extends React.Component {
             
             _this.setState({indexValue})
             
-            _this.state.gridView && _this.swiper.jumpToCardIndex(indexValue)  // This is important to keep the Tasklist deck unchanged on clicking the checkbox--
+            _this.state.cardView && _this.swiper.jumpToCardIndex(indexValue)  // This is important to keep the Tasklist deck unchanged on clicking the checkbox--
 
             _this.state.listView && _this.accordion.setSelected(indexValue)
 
@@ -565,7 +565,7 @@ class TaskListScreen extends React.Component {
 
         }
         
-        if (this.state.gridView && this.state && this.state.data && this.state.data.length > 0)
+        if (this.state.cardView && this.state && this.state.data && this.state.data.length > 0)
         
         {  
             
@@ -591,8 +591,8 @@ class TaskListScreen extends React.Component {
                   >
 
                     <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row',margin:5}}>
-                      <Ionicon name={'md-grid'} style={{margin:5}} size={35} color= {this.state.gridView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:true , listView:false})} />
-                      <Ionicon name={'ios-list'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:false , listView:true})} />
+                      <Ionicon name={'md-grid'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , listView:false})} />
+                      <Ionicon name={'ios-list'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , listView:true})} />
 
                   </View>
                       
@@ -726,8 +726,8 @@ class TaskListScreen extends React.Component {
                     
                   > 
                   <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row',margin:5}}>
-                      <Ionicon name={'md-grid'} style={{margin:5}} size={35} color= {this.state.gridView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:true , listView:false})} />
-                      <Ionicon name={'ios-list'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({gridView:false , listView:true})} />
+                      <Ionicon name={'md-grid'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , listView:false})} />
+                      <Ionicon name={'ios-list'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , listView:true})} />
 
                   </View>
                     <Container style={{backgroundColor:brand.colors.primary,margin:12,marginTop:'20%'}}>
