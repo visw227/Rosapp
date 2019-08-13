@@ -35,6 +35,8 @@ import appConfig from '../../app-config.json'
 import img from '../../Images/rosnet-logo1.png'
 import blueBg from '../../Images/blue-screen.jpeg'
 import greenBg from '../../Images/green-screen.jpg'
+import grayBg from '../../Images/gray-screen.jpg'
+
 
 
 
@@ -57,7 +59,7 @@ class TaskListScreen extends React.Component {
             style = {
                 { paddingLeft: 10 }
             }
-            onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
+            onPress={() => navigate.navigation.toggleDrawer() }
         />,
 
 
@@ -72,7 +74,9 @@ class TaskListScreen extends React.Component {
             data : {},
             gridView  : true,
             listView :false,
-            doneTL :['0']
+            indexValue : 0,
+            doneTL :['0'],
+            fetching : false
     }
       }
   
@@ -98,6 +102,10 @@ class TaskListScreen extends React.Component {
         userName : userData.userName,
     }
 
+    this.setState({
+      fetching : true
+    })
+
     GetTaskLists (request ,function(err,resp) {
        
 
@@ -108,16 +116,17 @@ class TaskListScreen extends React.Component {
   
         else if (resp.length < 1) {
          
-         _this.state && _this.setState({alertMessage : 'No Tasklists created or published'}) 
+         _this.state && _this.setState({alertMessage : 'No Tasklists created or published',fetching:false}) 
         }
         else {
   
           console.log('response',resp)
 
-          if(_this.state.tasklistId) {
+          if(_this.state.tasklistId && _this.state.gridView) {
 
             _this.setState ({
-              data : resp
+              data : resp,
+              fetching:false
             }, () => {
 
               indexValue = 0
@@ -138,16 +147,54 @@ class TaskListScreen extends React.Component {
             )
          
           }
+
+          else if(_this.state.listViewTasklistId && _this.state.listView) {
+
+            _this.setState ({
+              data : resp,
+              fetching:false
+            }, () => {
+
+              indexValue = 0
+
+              _this.state.data.forEach(e => {
+                
+                if(e.Tasklist_ID === _this.state.listViewTasklistId.Tasklist_ID){
+                  indexValue = _this.state.data.indexOf(e)
+
+                  console.log('index -- value',indexValue)
+  
+              }
+             
+            })
+
+            _this.setState({indexValue})
+
+            _this.accordion.setSelected(indexValue)
+                        
+            //_this.swiper.jumpToCardIndex(indexValue) // This is important to keep the Tasklist deck unchanged on clicking the checkbox--
+            
+            
+          }
+            )
+         
+          }
             else {
 
               tasklistId = resp[0]
 
+              listViewTasklistId = resp[0]
+
               _this.setState ({
                 data : resp,
-                tasklistId : tasklistId
+                tasklistId : tasklistId,
+                listViewTasklistId : listViewTasklistId,
+                fetching : false
               }, () => {
 
-                _this.state.data.forEach(e => {
+                indexValue = 0
+
+                _this.state.gridView && _this.state.data.forEach(e => {
                   
                   if(e.Tasklist_ID === tasklistId.Tasklist_ID){
                     indexValue = _this.state.data.indexOf(e)
@@ -156,10 +203,21 @@ class TaskListScreen extends React.Component {
                
               })
 
+              _this.state.listView && _this.state.data.forEach(e => {
+                  
+                if(e.Tasklist_ID === listViewTasklistId.Tasklist_ID){
+                  indexValue = _this.state.data.indexOf(e)
+  
+              }
+             
+            })
+
             
+            _this.setState({indexValue})
             
-            
-            _this.swiper.jumpToCardIndex(indexValue)  // This is important to keep the Tasklist deck unchanged on clicking the checkbox--
+            _this.state.gridView && _this.swiper.jumpToCardIndex(indexValue)  // This is important to keep the Tasklist deck unchanged on clicking the checkbox--
+
+            _this.state.listView && _this.accordion.setSelected(indexValue)
 
                 
                 completedTL = []
@@ -206,13 +264,13 @@ class TaskListScreen extends React.Component {
        return (
         <FlatList 
         data={item.TasklistSteps}
-        
+        keyExtractor={(item, index) => String(index)}
         //keyExtractor={(item, index) => item.Tasklist_Title}
         renderItem={({item, index, section}) => 
       
-             <ListItem onPress={()=>console.log('step pressed')}
+             <ListItem onPress={()=>this.runTasklistStep(item)}
              hideChevron
-              key={item.Step_ID }
+             key={String(index)}
 
               //icon={<Ionicon name={'md-radio-button-on'} size={22} color={brand.colors.white} />}
               title={<View style={{flexDirection:'row'}}>
@@ -251,9 +309,8 @@ class TaskListScreen extends React.Component {
                
                color = blueBg
            }
-           else {
            
-    
+           else {
                color = greenBg
            }
            
@@ -269,6 +326,15 @@ class TaskListScreen extends React.Component {
     this.setState({
       tasklistId : reqCard
     },()=>console.log('reqCard',this.state.tasklistId))
+
+   }
+
+   onOpened = (index) => {
+     console.log ('open index',index)
+    reqList = index ? index : this.state.data[0]
+    this.setState({
+      listViewTasklistId : reqList
+    },()=>console.log('reList',this.state.listViewTasklistId))
 
    }
 
@@ -394,7 +460,7 @@ class TaskListScreen extends React.Component {
               "managerAppToken":  this.props.screenProps.state.userData.token
             }
           }
-          _this.props.navigation.navigate('TaskListDetail',{source}) &&   
+         !step.Is_Completed && _this.props.navigation.navigate('TaskListDetail',{source})   
 
           UpdateStep (_this.props.screenProps.state.selectedClient,_this.props.screenProps.state.userData.token,request ,
               function(err,resp) {
@@ -435,7 +501,6 @@ class TaskListScreen extends React.Component {
   
       }) 
        _this.getTaskLists()
-      // _this.swiper.jumpToCardIndex(_this.state.data.indexOf(_this.state.tasklistId))
       }
      
    
@@ -465,7 +530,8 @@ class TaskListScreen extends React.Component {
                      <Text style={{ fontWeight: 'bold',fontSize:12,color:brand.colors.warning,margin:2}}>
                      {" "}{item.Tasklist_Time_Formatted} </Text>
                    </View>
-                   <Icon style={{ fontSize: 20}} name="remove-circle" /></View>
+                   <Icon style={{ fontSize: 20}} name="remove-circle" />
+                   </View>
                      : <View style={{flex:1,flexDirection:'row', justifyContent: 'space-between'}}>
                      <View style={{flex:1,flexDirection:'column-reverse', justifyContent: 'flex-start'}}>
                      <Text style={{ fontWeight: 'bold',fontSize:20,color:brand.colors.white}}>
@@ -473,7 +539,7 @@ class TaskListScreen extends React.Component {
                  <Text style={{ fontWeight: 'bold',fontSize:12,color:brand.colors.white,margin:2}}>
                  {" "}{item.Tasklist_Time_Formatted} </Text>
                </View>
-               <Icon style={{ fontSize: 20}} name="remove-circle" /></View>}
+               <Icon style={{ fontSize: 20}} name="add-circle" /></View>}
                  </View>
                );
          
@@ -529,16 +595,22 @@ class TaskListScreen extends React.Component {
 
                   </View>
                       
-                    
-                    <View style={{margin:12,marginTop:'20%'}}>
+                  {this.state.fetching &&
+            <View style={{ marginLeft :'36%',marginTop: 65, position: 'absolute' }} >
+                <ActivityIndicator size="large" color={'#ffffff'} />
+            </View>
+            }
 
+                    
+                    <View style={{margin:2,marginTop:'-3%'}}>
+       
                       <DeckSwiper
                       style={{backgroundColor:brand.colors.danger,borderWidth:2}}
                       ref={swiper => {
                         this.swiper = swiper;
                       }} 
                       infinite = {true}
-                      cardIndex= {this.state.item  ? this.state.data.indexOf(this.state.item) : 0}
+                      //cardIndex= {this.state.item  ? this.state.data.indexOf(this.state.item) : 0}
                       showSecondCard = {true}
                       stackSize = {this.state.data.length}
                       onSwiped = {(i)=>this.onSwiped(i)}
@@ -550,6 +622,7 @@ class TaskListScreen extends React.Component {
                               <Left>
                                 <Thumbnail small style ={{backgroundColor:brand.colors.primary}}source={img} />
                                 <Body>
+                                  
                                   <Text style={{color:brand.colors.primary,fontSize:20,fontWeight:'bold'}}>{item.Tasklist_Title}</Text>
                                </Body>
                               </Left>
@@ -563,6 +636,7 @@ class TaskListScreen extends React.Component {
                      
                         <FlatList 
                         data={item.TasklistSteps}
+                        keyExtractor={(item, index) => String(index)}
                         
                         renderItem={({item, index, section}) => 
                                
@@ -570,7 +644,8 @@ class TaskListScreen extends React.Component {
                               
                              <ListItem onPress={()=>this.runTasklistStep(item)}
                              hideChevron
-                              key={item.Step_ID}
+                             key={String(index)}
+                             
 
                               //icon={<Ionicon name={'md-radio-button-on'} size={22} color={brand.colors.white} />}
                               title={<View style={{flexDirection:'row'}}>
@@ -601,13 +676,13 @@ class TaskListScreen extends React.Component {
                               <Icon name="clock" style={{ color: brand.colors.secondary }} />
                               <Text>{item.Tasklist_Time_Formatted}</Text>
                               
-                              <View style={{flexDirection:'column',marginLeft:'80%',position:'absolute'}}>
+                              <View style={{flexDirection:'column',marginLeft:'77%',position:'absolute'}}>
                               <Text style={{color:brand.colors.primary}}>
 
                                   {this.state.data.indexOf(item)+1} of {this.state.data.length} → 
                                  
                               </Text>
-                              <Text style={{marginTop:'25%',marginLeft:'20%',position:'absolute',color:brand.colors.gray}}>
+                              <Text style={{marginTop:'25%',marginLeft:'30%',position:'absolute',color:brand.colors.gray}}>
                                   swipe 
                               </Text>
                               </View>
@@ -650,10 +725,15 @@ class TaskListScreen extends React.Component {
 
                   </View>
                     <Container style={{backgroundColor:brand.colors.primary,margin:12,marginTop:'20%'}}>
-       
+                        {/* {console.log('index value',this.state.indexValue)} */}
                         <Content padder>
-                        <Accordion dataArray={this.state.data} expanded={0}expandMultiple
+                        <Accordion dataArray={this.state.data} expanded = {this.state.indexValue}
+                        ref={accordion => {
+                          this.accordion = accordion;
+                        }}
+                       
                         renderContent={this._renderContent}
+                        onAccordionOpen={(e) => this.onOpened(e)}
                          renderHeader={_renderHeader}/>
                         </Content>
                         </Container>
@@ -663,9 +743,15 @@ class TaskListScreen extends React.Component {
                             else {
                             return (
                                 <View>
+                                {this.state.fetching ?
+                                  <View style={{ marginLeft :'36%',marginTop: '50%', marginBottom: 10 , position: 'absolute' }} >
+                                      <ActivityIndicator size="large" color={'#000000'} />
+                                  </View> :
+                                  
                                     <Text style={{color:brand.colors.primary,textAlign:"center",marginTop:'40%'}}>
                                         No TaskList added or published
                                         </Text>
+                                               }
                                 </View>
                             )
                             }// end return
