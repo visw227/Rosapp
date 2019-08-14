@@ -31,7 +31,7 @@ class TaskListDetail extends React.Component {
   // Look at SchedulesStack for tricks with hiding the tabBar and hiding the back button title
   static navigationOptions = (navigate) => ({
 
-    title: 'Tasklist Details',
+    title: navigate.navigation.getParam('type') ?  navigate.navigation.getParam('type')+' Tasklist' : 'Tasklist Detail',
 
     // these seem to ONLY work here
     headerStyle: {backgroundColor: brand.colors.primary },
@@ -92,25 +92,8 @@ constructor(props) {
     }
   `;
 
-  const hideCreateTasklistAlert = `
-  let usersPanel = document.getElementByClassName('panel panel-primary panel-condensed')
-    if(usersPanel.length > 0) {
-      usersPanel[0].style.display = "width:80px";
 
-    }
-`;
 
-const debugging = `
- // Debug
- console = new Object();
- console.log = function(log) {
-   window.webViewBridge.send("console", log);
- };
- console.debug = console.log;
- console.info = console.log;
- console.warn = console.log;
- console.error = console.log;
- `;
     const { navigation } = this.props;
     let env = appConfig.DOMAIN
 

@@ -106,7 +106,7 @@ class TaskListScreen extends React.Component {
 
     return (
 
-      <MaterialCommunityIcons name = {'plus-outline'} style={{margin:5}} size={25} color= { brand.colors.white } onPress ={() => this.props.navigation.navigate('TaskListDetail',{source})} />
+      <MaterialCommunityIcons name = {'plus-outline'} style={{margin:5}} size={25} color= { brand.colors.white } onPress ={() => this.props.navigation.navigate('TaskListDetail',{source,type:'Create'})} />
     )
 
    }
@@ -657,16 +657,24 @@ class TaskListScreen extends React.Component {
                               <Left>
                                 <Thumbnail small style ={{backgroundColor:brand.colors.primary}}source={img} />
                                 <Body>
-                                  
-                                  <Text style={{color:brand.colors.primary,fontSize:20,fontWeight:'bold'}}
+                                  <View style ={{flexDirection:'row',justifyContent:'space-between'}}>
+                                  <Text style={{color:brand.colors.primary,fontSize:20,fontWeight:'bold',marginTop:4.5}}
                                   onPress = {() => this.props.navigation.navigate('TaskListDetail',{source: {uri: "http://" + this.props.screenProps.state.selectedClient + "."+ appConfig.DOMAIN +"/Tasklist/RunTasklist?Tasklist_ID="+item.Tasklist_ID,
                                   headers: {
                                     "managerAppToken":  this.props.screenProps.state.userData.token
-                                  }}})
+                                  }},type:'Run'})
                                 }
                                   >
                                   {item.Tasklist_Title}
                                   </Text>
+                                  <View style={{justifyContent:'flex-end',alignItems:'flex-end'}}>
+                                  <MaterialCommunityIcons name={'marker'} style={{margin:5}} size={20} color= {this.state.cardView && brand.colors.primary} onPress = {() => this.props.navigation.navigate('TaskListDetail',{source: {uri: "http://" + this.props.screenProps.state.selectedClient + "."+ appConfig.DOMAIN +"/Tasklist/TasklistConfig",
+                                  headers: {
+                                    "managerAppToken":  this.props.screenProps.state.userData.token
+                                  }},type:'Configure'})
+                                } />
+                                  </View>
+                                  </View>
                                </Body>
                               </Left>
                             </CardItem>
