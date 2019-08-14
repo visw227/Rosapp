@@ -16,7 +16,9 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Animated,
-  Platform
+  Platform,
+  SafeAreaView,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -130,7 +132,8 @@ class Password extends React.Component {
         newPasswordScore: -1,
         isConfirmPasswordSecureText: false,
         isAcceptable: false,
-        levelLabel: ""
+        levelLabel: "",
+        keyboardVisible: false
     };
   }
   
@@ -157,6 +160,15 @@ class Password extends React.Component {
     })
 
     _this = this
+
+    if (Platform.OS=='ios'){
+        this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+        this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+    }
+    else{
+        this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+        this.keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+    }
 
     getSecuritySettings (this.props.screenProps.state.selectedClient, userData.token, function(err, resp) {
 
@@ -187,6 +199,43 @@ class Password extends React.Component {
     })
   }
 
+      componentWillUnmount () {
+
+        this.keyboardWillShowSub.remove();
+        this.keyboardWillHideSub.remove();
+    }
+
+    keyboardWillShow = (event) => {
+
+        this.setState({
+            keyboardVisible: true
+        })
+
+    };
+
+    keyboardWillHide = (event) => {
+
+        this.setState({
+            keyboardVisible: false
+        })
+    };
+
+
+    keyboardDidShow = (event) => {
+
+        this.setState({
+            keyboardVisible: true
+        })
+
+    };
+
+    keyboardDidHide = (event) => {
+
+        this.setState({
+            keyboardVisible: false
+        })
+
+    };
 
   handleSubmit = () => {
 
@@ -427,120 +476,106 @@ class Password extends React.Component {
 
     return (
         
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+          <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : null}
+                style={[{ flex: 1 }, styles.formContainer]} 
+                keyboardVerticalOffset={64}
+            >
 
 
-        <View style={styles.formContainer}>
-
-
+            {this.state.keyboardVisible === false &&
             <Text style={[styles.title, { marginBottom: 20 } ]}>
               Rosnet has adopted Dropbox's password strength evaluation system. 
               This encourages users towards stronger passwords by asking them to type a bit more instead of demanding awkward character types. 
             </Text>
-
-            {/* 
-            <Text style={styles.inputLabel}>Current Password</Text>
-
-
-            <TextInput style={styles.input}  
-                    autoCapitalize="none"
-                    autoCorrect={false}   
-                    ref={input => { this.textInput = input }}
-                    placeholder='Current Password' 
-                    placeholderTextColor={brand.colors.silver}
-                    value={this.state.confirmCurrentPassword}
-                    onChangeText={(text) => this.setState({ confirmCurrentPassword: text}) }
-                    // these settings will allow the text to be seen until the input looses focus
-                    secureTextEntry = { this.state.isCurrentPasswordSecureText }
-                    onFocus={() => this.setState({ isCurrentPasswordSecureText: false })}
-                    onBlur={() => this.setState({ isCurrentPasswordSecureText: true })}
-            /> */}
-
-
-
-            <Text style={styles.inputLabel} >New Password - Strength must be '{this.state.levelLabel}'</Text>
-
-
-            <View style={{
-                flexDirection: 'row',
-                alignItems: 'flex-start',
-                alignContent: 'flex-start',
-              }}
-              >
-
-              <TextInput style={[styles.inputNewPassword, { borderColor: this.state.newPasswordLevel.borderColor }]} 
-                  autoCapitalize="none" 
-                  autoCorrect={false} 
-                  keyboardType='default' 
-                  placeholder='New Password'
-                  placeholderTextColor={brand.colors.silver}
-                  value={this.state.newPassword}
-                  onChangeText={(text) => this.validateNewPassword(text)}
-                  // these settings will allow the text to be seen until the input looses focus
-                  secureTextEntry = { this.state.isNewPasswordSecureText }
-                  onFocus={() => this.setState({ isNewPasswordSecureText: false })}
-                  onBlur={() => this.setState({ isNewPasswordSecureText: true })}
-
-              />
-
-              <View style={[
-                  styles.strengthDisplay, 
-                  { 
-                    borderColor: this.state.newPasswordLevel.borderColor, 
-                    backgroundColor: this.state.newPasswordLevel.backgroundColor 
-                  } 
-              ]}>
-                <Text style={[
-                  { 
-                    color: this.state.newPasswordLevel.labelColor, 
-                    textAlign: 'center',
-                    fontWeight: 'bold'
-                  } ]}>{this.state.newPasswordLevel.label}</Text>
-              </View>
-
-            </View>
-
-
-
-
-            <Text style={styles.inputLabel}>Confirm Password</Text>
-
-
-            <TextInput style={styles.input}   
-                    autoCapitalize="none"
-                    autoCorrect={false} 
-                    //returnKeyType="go"  
-                    placeholder='Confirm Password' 
-                    ref={input => { this.confirmPassInput = input }}
-                    placeholderTextColor={brand.colors.silver}
-                    value={this.state.newPasswordConfirmed}
-                    onChangeText= {(text) => this.setState({ newPasswordConfirmed: text})}
-                    // these settings will allow the text to be seen until the input looses focus
-                    secureTextEntry = { this.state.isConfirmPasswordSecureText }
-                    onFocus={() => this.setState({ isConfirmPasswordSecureText: false })}
-                    onBlur={() => this.setState({ isConfirmPasswordSecureText: true })}
-            />
-
-
-
-
-
-            {this.state.sending &&
-            <View style={{ marginTop: 20, marginBottom: 10 }} >
-                <ActivityIndicator size="large" color={brand.colors.primary} />
-                </View>
             }
 
+                <SafeAreaView style={styles.container}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={styles.inner}>
 
-            <Text style={styles.message} >
-              {this.state.requestStatus.message}
-            </Text>
-              
-
-        </View>
+                            <Text style={styles.inputLabel} >New Password - Strength must be '{this.state.levelLabel}'</Text>
 
 
-      </KeyboardAvoidingView>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'flex-start',
+                                alignContent: 'flex-start',
+                            }}
+                            >
+
+                            <TextInput style={[styles.inputNewPassword, { borderColor: this.state.newPasswordLevel.borderColor }]} 
+                                autoCapitalize="none" 
+                                autoCorrect={false} 
+                                keyboardType='default' 
+                                placeholder='New Password'
+                                placeholderTextColor={brand.colors.silver}
+                                value={this.state.newPassword}
+                                onChangeText={(text) => this.validateNewPassword(text)}
+                                // these settings will allow the text to be seen until the input looses focus
+                                secureTextEntry = { this.state.isNewPasswordSecureText }
+                                onFocus={() => this.setState({ isNewPasswordSecureText: false })}
+                                onBlur={() => this.setState({ isNewPasswordSecureText: true })}
+
+                            />
+
+                            <View style={[
+                                styles.strengthDisplay, 
+                                { 
+                                    borderColor: this.state.newPasswordLevel.borderColor, 
+                                    backgroundColor: this.state.newPasswordLevel.backgroundColor 
+                                } 
+                            ]}>
+                                <Text style={[
+                                { 
+                                    color: this.state.newPasswordLevel.labelColor, 
+                                    textAlign: 'center',
+                                    fontWeight: 'bold'
+                                } ]}>{this.state.newPasswordLevel.label}</Text>
+                            </View>
+
+                            </View>
+
+
+                            <Text style={styles.inputLabel}>Confirm Password</Text>
+
+
+                            <TextInput style={styles.input}   
+                                    autoCapitalize="none"
+                                    autoCorrect={false} 
+                                    //returnKeyType="go"  
+                                    placeholder='Confirm Password' 
+                                    ref={input => { this.confirmPassInput = input }}
+                                    placeholderTextColor={brand.colors.silver}
+                                    value={this.state.newPasswordConfirmed}
+                                    onChangeText= {(text) => this.setState({ newPasswordConfirmed: text})}
+                                    // these settings will allow the text to be seen until the input looses focus
+                                    secureTextEntry = { this.state.isConfirmPasswordSecureText }
+                                    onFocus={() => this.setState({ isConfirmPasswordSecureText: false })}
+                                    onBlur={() => this.setState({ isConfirmPasswordSecureText: true })}
+                            />
+
+
+
+
+
+                            {this.state.sending &&
+                            <View style={{ marginTop: 20, marginBottom: 10 }} >
+                                <ActivityIndicator size="large" color={brand.colors.primary} />
+                                </View>
+                            }
+
+
+                            <Text style={styles.message} >
+                            {this.state.requestStatus.message}
+                            </Text>
+
+                            <View style={{ flex : 1 }} />
+                        </View>
+                    </TouchableWithoutFeedback>
+                </SafeAreaView>
+    
+            </KeyboardAvoidingView>
 
 
         
@@ -551,13 +586,30 @@ class Password extends React.Component {
 
 }
 
-// define your styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: brand.colors.white,
-
     },
+    inner: {
+        padding: 24,
+        flex: 1,
+        justifyContent: "flex-end",
+    },
+    header: {
+        fontSize: 36,
+        marginBottom: 48,
+    },
+    input: {
+        height: 40,
+        borderColor: "#000000",
+        borderBottomWidth: 1,
+        marginBottom: 36,
+    },
+    btnContainer: {
+        backgroundColor: "white",
+        marginTop: 12,
+    },
+
     formContainer: {
         marginTop: 20,
         marginLeft: 10,
@@ -628,7 +680,6 @@ const styles = StyleSheet.create({
       maxWidth: 120
 
     }
-   
 });
 
 

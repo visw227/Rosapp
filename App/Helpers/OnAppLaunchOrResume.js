@@ -4,10 +4,14 @@
 Note: this is not in use yet. I'm trying to come up with a way to encapsulate all of the 
 things that must happen when the app either launches or is resumed (changes from inactive to active)
 
+I’ve been wanting to consolidate the logic for the app launching and the app being resumed, 
+since they both can 
+    * cause the bio screen to apprear
+    * both must refresh the token
+    * both must force actions (password change)  
 
 
-
-Pseuedo code:
+Launch OR re-activate pseuedo code:
 
 if NOT logged in (or first use)
 
@@ -15,10 +19,14 @@ if NOT logged in (or first use)
 
 if logged in
 
-    refresh the token
-    show biometric screen if time for that
-    redirect to any forced actions (e.g. required password change)
+    if time to show biometric screen...
+        show biometric screen
+            refresh the token
+                redirect to any forced actions (e.g. required password change)
 
+    if not time for biometric
+        refresh the token
+            redirect to any forced actions
 
 
 
@@ -88,8 +96,17 @@ export var OnAppLaunchOrResume = {
             let userData = null
             let routeName = null
 
-            //console.log("LaunchScreen - userData: ", data)
+            // user has never logged in (or has reinstalled the app)
             if(keys.userData === null) {
+
+                result.forcedScreen = "LoginStack"
+
+                return callback(null, result)
+
+            }
+            // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
+            // only pasword and token are set to null
+            else if(keys.userData === null || (keys.userData && keys.userData.token === null)) {
 
                 result.forcedScreen = "LoginStack"
 
