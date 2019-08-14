@@ -64,6 +64,7 @@ class TaskListScreen extends React.Component {
             onPress={() => navigate.navigation.toggleDrawer() }
         />,
 
+        headerRight : navigate.navigation.getParam('createTasklist')
 
     })
 
@@ -75,7 +76,7 @@ class TaskListScreen extends React.Component {
             alertMessage : '',
             data : {},
             cardView  : true,
-            listView :false,
+            stackView :false,
             indexValue : 0,
             doneTL :['0'],
             fetching : false
@@ -89,11 +90,37 @@ class TaskListScreen extends React.Component {
 
    }
 
+  
+
+    
+   
+   createTasklist = () => {
+
+    url = "http://" + this.props.screenProps.state.selectedClient + "."+ appConfig.DOMAIN  + "/Tasklist/CreateTasklist/Mobile"
+     source = {
+      uri: url,
+      headers: {
+        "managerAppToken":  this.props.screenProps.state.userData.token
+      }
+    }
+
+    return (
+
+      <MaterialCommunityIcons name = {'plus-outline'} style={{margin:5}} size={25} color= { brand.colors.white } onPress ={() => this.props.navigation.navigate('TaskListDetail',{source})} />
+    )
+
+   }
+    
+
+                  
+  
 
 
    getTaskLists = () => {
 
     _this = this
+
+    _this.props.navigation.setParams({createTasklist : this.createTasklist()})
 
     let userData = _this.props.screenProps.state.userData
     let client  = _this.props.screenProps.state.selectedClient
@@ -150,7 +177,7 @@ class TaskListScreen extends React.Component {
          
           }
 
-          else if(_this.state.listViewTasklistId && _this.state.listView) {
+          else if(_this.state.stackViewTasklistId && _this.state.stackView) {
 
             _this.setState ({
               data : resp,
@@ -161,7 +188,7 @@ class TaskListScreen extends React.Component {
 
               _this.state.data.forEach(e => {
                 
-                if(e.Tasklist_ID === _this.state.listViewTasklistId.Tasklist_ID){
+                if(e.Tasklist_ID === _this.state.stackViewTasklistId.Tasklist_ID){
                   indexValue = _this.state.data.indexOf(e)
 
                   console.log('index -- value',indexValue)
@@ -185,12 +212,12 @@ class TaskListScreen extends React.Component {
 
               tasklistId = resp[0]
 
-              listViewTasklistId = resp[0]
+              stackViewTasklistId = resp[0]
 
               _this.setState ({
                 data : resp,
                 tasklistId : tasklistId,
-                listViewTasklistId : listViewTasklistId,
+                stackViewTasklistId : stackViewTasklistId,
                 fetching : false
               }, () => {
 
@@ -205,9 +232,9 @@ class TaskListScreen extends React.Component {
                
               })
 
-              _this.state.listView && _this.state.data.forEach(e => {
+              _this.state.stackView && _this.state.data.forEach(e => {
                   
-                if(e.Tasklist_ID === listViewTasklistId.Tasklist_ID){
+                if(e.Tasklist_ID === stackViewTasklistId.Tasklist_ID){
                   indexValue = _this.state.data.indexOf(e)
   
               }
@@ -219,7 +246,7 @@ class TaskListScreen extends React.Component {
             
             _this.state.cardView && _this.swiper.jumpToCardIndex(indexValue)  // This is important to keep the Tasklist deck unchanged on clicking the checkbox--
 
-            _this.state.listView && _this.accordion.setSelected(indexValue)
+            _this.state.stackView && _this.accordion.setSelected(indexValue)
 
                 
                 completedTL = []
@@ -335,8 +362,8 @@ class TaskListScreen extends React.Component {
      console.log ('open index',index)
     reqList = index ? index : this.state.data[0]
     this.setState({
-      listViewTasklistId : reqList
-    },()=>console.log('reList',this.state.listViewTasklistId))
+      stackViewTasklistId : reqList
+    },()=>console.log('reList',this.state.stackViewTasklistId))
 
    }
 
@@ -593,8 +620,8 @@ class TaskListScreen extends React.Component {
                   >
 
                     <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row',margin:5}}>
-                      <MaterialCommunityIcons name={'cards-outline'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , listView:false})} />
-                      <MaterialCommunityIcons name={'layers-outline'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , listView:true})} />
+                      <MaterialCommunityIcons name={'cards-outline'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , stackView:false})} />
+                      <MaterialCommunityIcons name={'layers-outline'} style={{margin:5}} size={35} color= {this.state.stackView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , stackView:true})} />
 
                   </View>
                       
@@ -631,7 +658,15 @@ class TaskListScreen extends React.Component {
                                 <Thumbnail small style ={{backgroundColor:brand.colors.primary}}source={img} />
                                 <Body>
                                   
-                                  <Text style={{color:brand.colors.primary,fontSize:20,fontWeight:'bold'}}>{item.Tasklist_Title}</Text>
+                                  <Text style={{color:brand.colors.primary,fontSize:20,fontWeight:'bold'}}
+                                  onPress = {() => this.props.navigation.navigate('TaskListDetail',{source: {uri: "http://" + this.props.screenProps.state.selectedClient + "."+ appConfig.DOMAIN +"/Tasklist/RunTasklist?Tasklist_ID="+item.Tasklist_ID,
+                                  headers: {
+                                    "managerAppToken":  this.props.screenProps.state.userData.token
+                                  }}})
+                                }
+                                  >
+                                  {item.Tasklist_Title}
+                                  </Text>
                                </Body>
                               </Left>
                             </CardItem>
@@ -708,7 +743,7 @@ class TaskListScreen extends React.Component {
     
                     )
             }
-            else if (this.state.listView &&  this.state.doneTL && this.state.data && this.state.data.length > 0) {
+            else if (this.state.stackView &&  this.state.doneTL && this.state.data && this.state.data.length > 0) {
                 return (
                     <ScrollView
                     style={{ backgroundColor: brand.colors.primary }}
@@ -728,8 +763,8 @@ class TaskListScreen extends React.Component {
                     
                   > 
                   <View style={{flex:1,justifyContent:'flex-end',flexDirection:'row',margin:5}}>
-                      <MaterialCommunityIcons name={'cards-outline'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , listView:false})} />
-                      <MaterialCommunityIcons name={'layers-outline'} style={{margin:5}} size={35} color= {this.state.listView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , listView:true})} />
+                      <MaterialCommunityIcons name={'cards-outline'} style={{margin:5}} size={35} color= {this.state.cardView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:true , stackView:false})} />
+                      <MaterialCommunityIcons name={'layers-outline'} style={{margin:5}} size={35} color= {this.state.stackView ? brand.colors.white : brand.colors.gray} onPress ={()=>this.setState({cardView:false , stackView:true})} />
 
                   </View>
                     <Container style={{backgroundColor:brand.colors.primary,margin:12,marginTop:'20%'}}>

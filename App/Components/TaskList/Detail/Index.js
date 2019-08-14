@@ -67,16 +67,57 @@ constructor(props) {
   render() {
 
     const hideSiteNav = `
-    // alert('hello')
     let x = document.getElementsByTagName('nav')
     if(x.length > 0) {
       x[0].style.display = "none";
     }
+
+    let y = document.getElementsByTagName('small')
+    if(y.length > 0) {
+      y[0].style.display = "none";
+    }
+
+
+    let textMuted = document.getElementsByClassName('text-muted')
+    if(textMuted.length > 0) {
+      
+      textMuted[0].style.display = "none";
+    }
+
+
+    let usersPanel = document.getElementsByClassName('panel panel-primary panel-condensed')
+    if(usersPanel.length > 0) {
+      usersPanel[0].style.width = '80px';
+
+    }
   `;
+
+  const hideCreateTasklistAlert = `
+  let usersPanel = document.getElementByClassName('panel panel-primary panel-condensed')
+    if(usersPanel.length > 0) {
+      usersPanel[0].style.display = "width:80px";
+
+    }
+`;
+
+const debugging = `
+ // Debug
+ console = new Object();
+ console.log = function(log) {
+   window.webViewBridge.send("console", log);
+ };
+ console.debug = console.log;
+ console.info = console.log;
+ console.warn = console.log;
+ console.error = console.log;
+ `;
     const { navigation } = this.props;
     let env = appConfig.DOMAIN
 
     const source = navigation.getParam('source', {} );
+
+
+
 
     return (
       
@@ -88,9 +129,10 @@ constructor(props) {
                   source={source}
   
                   startInLoadingState = {true}
-           
+                
                   renderLoading={this.showLoadingIndicator}
-                  injectedJavaScript = { hideSiteNav } 
+                  injectedJavaScript = {hideSiteNav}
+                  
                   style={{ flex: 1 }}
                   onNavigationStateChange={this.onNavigationStateChange}
                 />
