@@ -199,43 +199,43 @@ class Password extends React.Component {
     })
   }
 
-      componentWillUnmount () {
+  componentWillUnmount () {
 
-        this.keyboardWillShowSub.remove();
-        this.keyboardWillHideSub.remove();
-    }
+      this.keyboardWillShowSub.remove();
+      this.keyboardWillHideSub.remove();
+  }
 
-    keyboardWillShow = (event) => {
+  keyboardWillShow = (event) => {
 
-        this.setState({
-            keyboardVisible: true
-        })
+      this.setState({
+          keyboardVisible: true
+      })
 
-    };
+  };
 
-    keyboardWillHide = (event) => {
+  keyboardWillHide = (event) => {
 
-        this.setState({
-            keyboardVisible: false
-        })
-    };
+      this.setState({
+          keyboardVisible: false
+      })
+  };
 
 
-    keyboardDidShow = (event) => {
+  keyboardDidShow = (event) => {
 
-        this.setState({
-            keyboardVisible: true
-        })
+      this.setState({
+          keyboardVisible: true
+      })
 
-    };
+  };
 
-    keyboardDidHide = (event) => {
+  keyboardDidHide = (event) => {
 
-        this.setState({
-            keyboardVisible: false
-        })
+      this.setState({
+          keyboardVisible: false
+      })
 
-    };
+  };
 
   handleSubmit = () => {
 

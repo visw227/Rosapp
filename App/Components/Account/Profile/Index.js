@@ -11,7 +11,10 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Keyboard
+  Keyboard,
+  Platform,
+  SafeAreaView,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -74,7 +77,8 @@ class Profile extends React.Component {
         phone: '',
         Text : 'Viswa',
         shareEmail: false,
-        sharePhone: false
+        sharePhone: false,
+        keyboardVisible: false
     }
 
 
@@ -90,8 +94,54 @@ class Profile extends React.Component {
       backgroundColor: this.props.screenProps.state.backgroundColor 
     })
 
+    if (Platform.OS=='ios'){
+        this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+        this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+    }
+    else{
+        this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+        this.keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+    }
+
   }
 
+  componentWillUnmount () {
+
+      this.keyboardWillShowSub.remove();
+      this.keyboardWillHideSub.remove();
+  }
+
+  keyboardWillShow = (event) => {
+
+      this.setState({
+          keyboardVisible: true
+      })
+
+  };
+
+  keyboardWillHide = (event) => {
+
+      this.setState({
+          keyboardVisible: false
+      })
+  };
+
+
+  keyboardDidShow = (event) => {
+
+      this.setState({
+          keyboardVisible: true
+      })
+
+  };
+
+  keyboardDidHide = (event) => {
+
+      this.setState({
+          keyboardVisible: false
+      })
+
+  };
 
   handleSubmit = () => {
 
@@ -199,82 +249,29 @@ class Profile extends React.Component {
       
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
-
-
         <View style={styles.header}></View>
 
-        
         <View style={styles.formContainer}>
 
           {this.getAvatar(this.props.screenProps.state.userData)}
 
-
-
           <View style={styles.bodyContent}>
             
-              {/* {member.photo && member.photo.length > 0 &&
-                <Text style={{ color: brand.colors.secondary, paddingTop: 20, paddingBottom: 10 }}>Change Photo</Text>
-              }
-              {!member.photo || member.photo === '' && 
-                <Text style={{ color: brand.colors.secondary, paddingTop: 0, paddingBottom: 10 }}>Add Photo</Text>
-              }  */}
 
+              {this.state.keyboardVisible === false &&
+              <View>
               <Text style={styles.name}>{this.props.screenProps.state.userData.commonName}</Text>
 
-                <Text style={styles.info}>{this.props.screenProps.state.userData.email}</Text>
-                <Text style={styles.info}>{this.props.screenProps.state.userData.phone}</Text>
-
+              <Text style={styles.info}>{this.props.screenProps.state.userData.email}</Text>
+              <Text style={styles.info}>{this.props.screenProps.state.userData.phone}</Text>
+              </View>
+              }
     
 
           </View>
 
-
-          {/* <Text style={styles.inputLabel} >Email</Text> */}
-
-
-          {/* <TextInput style={styles.input} 
-              autoCapitalize="none" 
-              autoCorrect={false} 
-              keyboardType='email-address' 
-              placeholder='Email Address'
-              value={this.props.screenProps.state.userData.email}
-              onChangeText={(text) => this.setState({email: text})}
-          /> */}
-
-          {/* <Text style={styles.inputLabel} >Phone</Text> */}
-
-          {/* <TextInput style={styles.input} 
-              placeholder='Phone Number'
-              value={'555-555-5555'}
-              onChangeText={(text) => this.setState({phone: text})}
-          /> */}
-
-
-          {/* <View style={{ marginLeft: 10, marginRight: 10 }}>
-            <ListItem
-                containerStyle={{ borderBottomColor: 'white', borderTopColor: 'white' }}
-                switchButton
-                switched={true}
-                hideChevron
-                title={'Share Email'}
-                onSwitch={ (e) => this.setState({ shareEmail: e })  }
-
-            />
-    
-            <ListItem
-                containerStyle={{ borderBottomColor: 'white', borderTopColor: 'white' }}
-                switchButton
-                switched={true}
-                hideChevron
-                title={'Share Phone'}
-                onSwitch={ (e) => this.setState({ sharePhone: e }) }
-
-            /> 
-
-          </View>
-          */}
-
-             <Text style={styles.inputLabel} >Job Title</Text> 
+          
+             {/* <Text style={styles.inputLabel} >Job Title</Text>  */}
 
             <TextInput style={styles.input} 
                         autoCapitalize="none" 
@@ -289,13 +286,11 @@ class Profile extends React.Component {
             />
 
 
-
             {this.state.sending &&
             <View style={{ marginTop: 20, marginBottom: 10 }} >
                 <ActivityIndicator size="large" color={brand.colors.primary} />
                 </View>
             }
-
 
             <Text style={styles.message} >
               {this.state.requestStatus.message}
@@ -363,7 +358,7 @@ const styles = StyleSheet.create({
     bodyContent: {
       // flex: 1,
       alignItems: 'center',
-      padding:30,
+      padding:20,
     },
    
 });

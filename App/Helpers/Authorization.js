@@ -159,10 +159,10 @@ export var Authorization = {
 
                             // SRR test user
                             // shilton / "now is the"
-                            if(__DEV__ && userName === 'shilton') {
-                                console.log(">> DJ hack...")
-                                userData.mustChangePassword = true
-                            }
+                            // if(__DEV__ && userName === 'shilton') {
+                            //     console.log(">> DJ hack...")
+                            //     userData.mustChangePassword = true
+                            // }
 
 
                             let selectedClient = ""
