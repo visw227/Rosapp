@@ -38,6 +38,8 @@ if logged in
 import { AsyncStorage } from 'react-native';
 import { Authorization } from './Authorization';
 
+import NavigationService from './NavigationService';
+
 export var OnAppLaunchOrResume = {
 
 
@@ -86,81 +88,121 @@ export var OnAppLaunchOrResume = {
             error: null,
             userData: null,
             lastScreen: null,
-            forcedAction: null,
-            showLock: false
+            // if true, the lock/biometric screen needs to be loaded
+            showLock: false,
+            // the screen/stack that should be loaded
+            stackToLoad: null, 
+            // if showLock=true, redirect to biometricRedirect AFTER showing lock screen
+            // if showLock=fase, redirect to biometricRedirect immediately
+            biometricRedirect: null
         }
 
 
         OnAppLaunchOrResume.GetAllKeys(function(keys){
 
-            let userData = null
+            let userData = keys.userData
+            let lastScreen = keys.lastScreen
+            let statusData = keys.statusData
             let routeName = null
 
             // user has never logged in (or has reinstalled the app)
-            if(keys.userData === null) {
+            if(userData === null) {
 
-                result.forcedScreen = "LoginStack"
+                // forced login
+                NavigationService.navigate('LoginStack')
 
-                return callback(null, result)
+                return callback(null, null)
 
             }
             // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
             // only pasword and token are set to null
-            else if(keys.userData === null || (keys.userData && keys.userData.token === null)) {
+            else if(userData && userData.token === null) {
 
-                result.forcedScreen = "LoginStack"
+                // forced login
+                NavigationService.navigate('LoginStack')
 
-                return callback(null, result)
+                return callback(null, null)
 
 
             }
-            else {
+            else if(userData && userData.token) {
+                    
+                // dont get stuck on one of these screens
+                if(lastScreen && lastScreen === 'LockScreen' || lastScreen === 'Login' || lastScreen === 'ForgotPassword' || lastScreen === 'LoginSelectClient') {
+                    lastScreen = 'DrawerStack'
+                }
 
-                // decided this first - even if a forced action is needed like password reset, we may want to ask for biometric auth first...
-                if(keys.statusData) {
-
-                    result.statusData = keys.statusData
+                // decided this first - even if a forced action is needed like password reset, 
+                // we may want to ask for biometric auth first...
+                if(statusData) {
 
                     let currentTime = new Date().getTime() // in milliseconds
 
-                    let diff = currentTime - keys.statusData.ts
+                    let diff = currentTime - statusData.ts
 
-                    //if(!__DEV__ && (diff >= statusData.limit || (keys.lastScreen && keys.lastScreen === 'LockScreen')) ) {
-                    if( diff >= keys.statusData.limit || (keys.lastScreen && keys.lastScreen === 'LockScreen') ) {
+                    //if(!__DEV__ && (diff >= statusData.limit || (lastScreen && lastScreen === 'LockScreen')) ) {
+                    if( diff >= statusData.limit || (lastScreen && lastScreen === 'LockScreen') ) {
 
-                        result.showLock = true
+                        // show biometric screen, which will refresh the token and redirect to the 
+                        // forced action OR resume at the lastScreen
+                        NavigationService.navigate('LockStack', { 
+                            lastScreen: lastScreen, 
+                            redirectTo: result.redirectTo 
+                        });
+
+                        callback(null, null)
+
+                    }
+                    else {
+
+                        // refresh token now
+                        Authorization.RefreshToken(function(err, resp){
+
+                            if(err) {
+
+                                // forced login
+                                NavigationService.navigate('LoginStack')
+
+                                callback(null, null)
+
+                            }
+                            else {
+
+                                console.log("token refreshed")
+
+                                // if we are refreshing the token, we must reset all global state attributes back to defaults as well
+                                //_this._globalStateChange( { action: "token-refresh", userData: resp.userData })
+
+
+                                // look for any forced actions for the user
+                                if(userData.mustChangePassword ===  true) {
+                                    // forced password change
+                                    NavigationService.navigate('PasswordChangeRequiredStack');
+                                }
+                                else {
+                                    // resume at last screen
+                                    NavigationService.navigate(lastScreen);
+                                }
+
+                                callback(null, resp.userData)
+                            
+                            } // end else
+
+                        }) // end Authorization.RefreshToken
+
                     }
 
 
                 }
+ 
 
-                //console.log("ForcedActions - keys.userData: ", keys.userData)
-
-                if(keys.userData && keys.userData.token) {
-
-                    result.userData = keys.userData
-                    result.lastScreen = keys.lastScreen
-
-
-                    // look for any forced actions for the user
-                    if(keys.userData.mustChangePassword ===  true) {
-                        result.forcedScreen = 'PasswordChangeRequiredStack'
-                    }
-
-                    return callback(null, result)
-
-                } 
-                else {
-                    return callback(null, result)
-                }
-
-            } 
+            } // end if userData
 
         }) // end GetAllKeys
 
 
 
-    } 
+    } // end OnEvent
 
 
 
