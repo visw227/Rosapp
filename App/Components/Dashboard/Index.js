@@ -103,7 +103,7 @@ class DashboardScreen extends React.Component {
 
       
     _this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
-        console.log('DSashboard : token refreshed %%%%%%%*********%%%%%%%')
+        //console.log('DSashboard : token refreshed %%%%%%%*********%%%%%%%')
         //_this._onChangeToken(fcmToken)
     });
 
@@ -136,13 +136,13 @@ class DashboardScreen extends React.Component {
               token : _this.state.userData.token,
               client : _this.props.screenProps.state.selectedClient
             }
-            console.log('Dash req:',request)
+            //console.log('Dash req:',request)
             updateFcmDeviceToken(request,function(err,resp){
               if(err){
-                console.log("UpdateFCMDash Error",err)
+                //console.log("UpdateFCMDash Error",err)
               }
               else{
-                console.log("updated fcm",resp)
+                //console.log("updated fcm",resp)
               }
             })
           }
@@ -173,7 +173,7 @@ class DashboardScreen extends React.Component {
 
   load = () => {
 
-    console.log("Dasbboard - load...")
+    //console.log("Dasbboard - load...")
 
     let _this = this 
 
@@ -254,7 +254,7 @@ class DashboardScreen extends React.Component {
 
   onNavigationStateChange = (navState) => {
 
-    console.log("onNavigationStateChange", navState)
+    //console.log("onNavigationStateChange", navState)
 
     let url = navState.url.toLowerCase()
 
@@ -262,7 +262,7 @@ class DashboardScreen extends React.Component {
     if(history.includes(url) === false) {
       history.push(url)
 
-      console.log("history", JSON.stringify(history, null, 2))
+      //console.log("history", JSON.stringify(history, null, 2))
     }
 
 
@@ -305,7 +305,7 @@ class DashboardScreen extends React.Component {
   }
 
   onHomePress = () => {
-    console.log("onHomePress")
+    //console.log("onHomePress")
 
     // webViewNdx is a hack to trick the webview into reloading the original url
     let source = {

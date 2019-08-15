@@ -103,6 +103,9 @@ class WebViewScreen extends React.Component {
 
     this.loadMenuItem(function(item){
 
+      console.log("----------------- Modules WebView ----------------------")
+      console.log("item", item)
+
 
       _this.props.navigation.setParams({ 
         title: item.name ,
@@ -117,7 +120,7 @@ class WebViewScreen extends React.Component {
       let userData = _this.props.screenProps.state.userData
 
 
-      console.log("----------------- Modules WebView ----------------------")
+
       console.log("Authorization.VerifyToken", _this.props.screenProps.state.selectedClient, userData.token)
 
       // this verifies that the token is still valid and redirects to login if not
@@ -196,7 +199,6 @@ class WebViewScreen extends React.Component {
 
     console.log(">>>>> loadMenuItem", item)
 
-
     // save a copy to local storage in case the user resumes using the app here - after biometrics
     if(item) {
 
@@ -231,7 +233,7 @@ class WebViewScreen extends React.Component {
 
   onNavigationStateChange = (navState) => {
 
-    console.log("onNavigatinStateChange", navState)
+    console.log("onNavigationStateChange", navState)
 
     let url = navState.url.toLowerCase()
 
@@ -250,14 +252,14 @@ class WebViewScreen extends React.Component {
         history: history
     });
 
+    // TODO: change the logic above to resume at this url if deepLink=true
     // hijack the current item and save it with a new title and url - just in case app launches from here 
-    let item = {
-      name: navState.title,
-      url: navState.url,
-      deepLink: true // only set when hijacking the url by moving around in the web view
-    }
-
-    AsyncStorage.setItem('selectedMenuItem', JSON.stringify(item))
+    // let item = {
+    //   name: navState.title,
+    //   url: navState.url,
+    //   deepLink: true // only set when hijacking the url by moving around in the web view
+    // }
+    // AsyncStorage.setItem('selectedMenuItem', JSON.stringify(item))
 
 
     this.props.navigation.setParams({ 

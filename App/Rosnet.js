@@ -52,7 +52,7 @@ import  { Notification, NotificationOpen } from 'react-native-firebase';
 
 import { userLogout } from './Services/Account';
 
-
+import { OnAppLaunchOrResume } from './Helpers/OnAppLaunchOrResume';
 
 
 
@@ -814,7 +814,8 @@ export default class App extends React.Component {
         Authorization.WakeUpServer()
 
         let config = Config.Environment()
-        console.log("*** config", JSON.stringify(config, null, 2))
+        console.log("----------------------- CONFIG -------------------------")
+        console.log(JSON.stringify(config, null, 2))
 
 
         this.state = {
@@ -873,12 +874,12 @@ export default class App extends React.Component {
 
         firebase.messaging().getToken().then((token) => {
             this._onChangeToken(token)
-            console.log('Rosnet: Comp MOunt get token')
+            //console.log('Rosnet: Comp MOunt get token')
         });
     
         firebase.messaging().onTokenRefresh((token) => {
             this._onChangeToken(token)
-            console.log('Rosnet: Comp MOunt refresh token')
+            //console.log('Rosnet: Comp MOunt refresh token')
 
         });
 
@@ -918,7 +919,7 @@ export default class App extends React.Component {
 
         _this = this
         
-        console.log('set bAdge called')
+        //console.log('set bAdge called')
 
         if(_this.state.userData) {
 
@@ -930,10 +931,10 @@ export default class App extends React.Component {
 
           getBadgeCount (request,function(err,resp){
             if (err) {
-              console.log('Badge count error',err)
+              //console.log('Badge count error',err)
             }
             else {
-              console.log('Badge count success',resp)
+              //console.log('Badge count success',resp)
              
               _this.state && _this.setState({
                 notifCount : resp
@@ -965,9 +966,9 @@ export default class App extends React.Component {
         //'device_type': Platform.OS,
         
       };
-      console.log('Rosnet: On change token')
+      //console.log('Rosnet: On change token')
 
-      console.log('Data data',data)
+      //console.log('Data data',data)
       if(data){
         AsyncStorage.setItem('firebaseToken',(data.device_token))
       }
@@ -984,13 +985,13 @@ export default class App extends React.Component {
     
     //3
     async getToken() {
-      console.log('Get permission')
+      //console.log('Get permission')
       if (!fcmToken) {
           fcmToken =  firebase.messaging().getToken();
           if (fcmToken) {
               // user has a device token
                AsyncStorage.setItem('fcmDeviceToken', JSON.stringify(fcmToken));
-               console.log('got permission',JSON.stringify(fcmToken))
+               //console.log('got permission',JSON.stringify(fcmToken))
           }
       }
     }
@@ -1003,7 +1004,7 @@ export default class App extends React.Component {
           this.getToken();
       } catch (error) {
           // User has rejected permissions
-          console.log('permission rejected');
+          //console.log('permission rejected');
       }
     }
 
@@ -1156,20 +1157,20 @@ export default class App extends React.Component {
 
       let _this = this
 
-      console.log("backgroundTokenRefreshTimer...")
+      //console.log("backgroundTokenRefreshTimer...")
 
       // this MAY cause a 401 redirect to login WHILE the biometrics screen is being displayed
       Authorization.RefreshToken(function(err, resp){
         
         if(err) {
-          console.log("err refreshing token", err)
+          //console.log("err refreshing token", err)
 
           _this._globalLogger(false, "App", "Error Refreshing Token", { error: err})
 
         }
         else {
 
-          console.log("token refreshed")
+          //console.log("token refreshed")
 
           // if we are refreshing the token, we must reset all global state attributes back to defaults as well
           _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
@@ -1285,8 +1286,8 @@ export default class App extends React.Component {
       const { appState } = this.state
 
       // active, inactive, background
-      console.log('current appState', appState)
-      console.log('next appState   ', nextAppState)
+      //console.log('current appState', appState)
+      //console.log('next appState   ', nextAppState)
 
       // IMPORTANT: ONLY check for "background" not "inactive" here or the LockScreen will render in a loop
       if (appState.match(/background/) && nextAppState === 'active') {
@@ -1299,52 +1300,60 @@ export default class App extends React.Component {
 
         // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
         // only pasword and token are set to null
-        if(this.state.userData && this.state.userData.token) {
+        // if(this.state.userData && this.state.userData.token) {
 
 
-          //console.log("userData", this.state.userData)
+        //   //console.log("userData", this.state.userData)
 
 
-          // see if the user needs to see the lock screen
-          Biometrics.CheckIfShouldShowLockScreen(function(result){
+        //   // see if the user needs to see the lock screen
+        //   Biometrics.CheckIfShouldShowLockScreen(function(result){
 
-            if(result.showLock) {
-                // this is needed since props.navigation isn't present for unmounted screen components
-                NavigationService.navigate('LockStack');
-            }
+        //     if(result.showLock) {
+        //         // this is needed since props.navigation isn't present for unmounted screen components
+        //         NavigationService.navigate('LockStack');
+        //     }
 
 
-          })
+        //   })
 
-          // this MAY cause a 401 redirect to login WHILE the biometrics screen is being displayed
-          Authorization.RefreshToken(function(err, resp){
+        //   // this MAY cause a 401 redirect to login WHILE the biometrics screen is being displayed
+        //   Authorization.RefreshToken(function(err, resp){
             
-            if(err) {
-              console.log("err refreshing token", err)
+        //     if(err) {
+        //       console.log("err refreshing token", err)
 
-              _this._globalLogger(false, "App", "Error Refreshing Token", { error: err})
+        //       _this._globalLogger(false, "App", "Error Refreshing Token", { error: err})
 
-            }
-            else {
+        //     }
+        //     else {
 
-              console.log("token refreshed")
+        //       console.log("token refreshed")
 
-              // if we are refreshing the token, we must reset all global state attributes back to defaults as well
-              _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
+        //       // if we are refreshing the token, we must reset all global state attributes back to defaults as well
+        //       _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
 
 
-              _this._globalLogger(true, "App", "Token Refreshed Successfully", { userData: resp.userData })
+        //       _this._globalLogger(true, "App", "Token Refreshed Successfully", { userData: resp.userData })
             
             
-            } // end else
+        //     } // end else
 
-          }) // end Authorization.RefreshToken
+        //   }) // end Authorization.RefreshToken
 
 
-        } // end if userData
-        else {
-          console.log("user is not logged in, so dont show biometrics")
-        }
+        // } // end if userData
+        // else {
+        //   console.log("user is not logged in, so dont show biometrics")
+        // }
+
+        
+        OnAppLaunchOrResume.OnEvent('activate', _this._globalStateChange, function(result){
+
+          console.log("----------------------- OnAppLaunchOrResume --------------------------")
+          console.log(">>> Rosnet.js OnAppLaunchOrResume - result", result)
+
+        })
 
           
       }
@@ -1357,29 +1366,8 @@ export default class App extends React.Component {
 
         _this.resetBadge()
 
-        console.log('******** Rest BAdge')
+        //console.log('******** Rest BAdge')
 
-
-        // REMOVED 6-18-2019 - Logic moved to LaunchScreen to rehydrate superUser if available
-        //if(this.state.userData && this.state.userData.token) {
-
-          // IMPORTANT:
-          // revert back to the real user if impersonating - 
-          // THIS IS ESPECIALLY important if the user then exits/closes/terminates the app entirely.
-          // Otherwise, when the user re-launches the app, they will still be logged in as an impersonator
-          // if(this.state.superUser) {
-          //   console.log("reverting superUser back to ", this.state.superUser)
-          //   let userData = this.state.superUser
-          //   _this._globalStateChange( { action: "undo-session-override", userData: userData })
-
-          //   // this is a lazy way to force all screens to reload 
-          //   // and we don't have to undo the red background on every screen individually
-          //   NavigationService.stackReset('DrawerStack')
-
-          // }
-
-        //}
-        
 
         let statusData = {
           limit: this.state.config.BIOMETRICS_WAIT_DURATION, // milliseconds
@@ -1406,9 +1394,9 @@ export default class App extends React.Component {
       
 
 
-        console.log("App inactive :  reset badge called")
+        //console.log("App inactive :  reset badge called")
 
-        console.log('AppState userData',_this.state.userData)
+        //console.log('AppState userData',_this.state.userData)
 
        
   
@@ -1428,15 +1416,15 @@ export default class App extends React.Component {
                 token : _this.state.userData.token,
                 client : _this.state.selectedClient
               }
-              console.log('Dash req:',request)
+              //console.log('Dash req:',request)
 
               resetBadgeCount(request,function(err,resp){
 
                 if(err) {
-                  console.log('errorrrrrr',err)
+                  //console.log('errorrrrrr',err)
                 }
                 else {
-                  console.log('badge success',resp)
+                  //console.log('badge success',resp)
                 }
               })
              
@@ -1492,20 +1480,12 @@ export default class App extends React.Component {
                 //console.log("prevScreen", prevScreen)
 
                 if (prevScreen !== currentScreen) {
+
+                  console.log("------------------------------ SCREEN CHANGE --------------------------------")
                   console.log('navigating to this screen', currentScreen);
 
+                  AsyncStorage.setItem('lastScreen', currentScreen)
 
-                  // 5/18/2019 - IMPORTANT CHANGE: 
-                  {/* 
-                  We WERE excluding the LockScreen as the last screen since want to know where the user really left off and resume there.
-                  However, if the user force closes the app when the LockScreen is shown, knowing that LockScreen
-                  was the last screen used makes it easy with the current logic to not allow them to bypass it when it was necessary
-                  to be shown. The downside is that we can only then resume at the Dashboard, since we lost track of where they really were. 
-                  Is this an okay trade-off?  
-                  */}
-                  //if(currentScreen !== 'LockScreen') {
-                    AsyncStorage.setItem('lastScreen', currentScreen)
-                  //}
                 } 
                 
               }}

@@ -18,7 +18,7 @@ var lastUrl = "";
 export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect_on_401, callback) {
 
     // just so we can see API requests happeing easier...
-    console.log("----------------------- SERVICE WRAPPER -----------------------")
+    //console.log("----------------------- SERVICE WRAPPER -----------------------")
 
     let fullUrl = ''
     let protocol = ''
@@ -31,8 +31,8 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
 
-    console.log("fullUrl", fullUrl)
-    console.log(method, jsonBody)
+    //console.log("fullUrl", fullUrl)
+    //console.log(method, jsonBody)
 
     //Logger.LogEvent(true, "ServiceWrapper", "Starting request", { url: fullUrl, method: method })
 
@@ -81,13 +81,14 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
         if (xhr.status === 200) {
 
             let json = JSON.parse(xhr.response)
-            if(xhr._url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts') == -1) {
-            console.log("************************************* ServiceWrapper - 200 ***********************************************")
-            console.log("url", xhr._url)
-            console.log("xhr", xhr) //JSON.stringify(xhr, null, 2))
-            console.log("xhr.response", json)
 
-            }
+
+            // if(xhr._url.indexOf('api/ManagerAppAlertMethods/unOpenedAlerts') == -1) {
+            //     console.log("************************************* ServiceWrapper - 200 ***********************************************")
+            //     console.log("url", xhr._url)
+            //     console.log("xhr", xhr) //JSON.stringify(xhr, null, 2))
+            //     console.log("xhr.response", json)
+            // }
             
             //Logger.LogEvent(true, "API (200)", url, { request: logRequest, response: json })
 
@@ -110,9 +111,9 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
 
             // the user's token has expired
             // TRY to find out why the we keep seeing the login screen so much
-            console.log("************************************* ServiceWrapper - 401 ***********************************************")
-            console.log("url", xhr._url)
-            console.log("xhr", xhr)
+            // console.log("************************************* ServiceWrapper - 401 ***********************************************")
+            // console.log("url", xhr._url)
+            // console.log("xhr", xhr)
 
             callback({ status: xhr.status, message: message }, null)
 
@@ -132,10 +133,10 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
             // They can be text strings, HTML, or a JSON object... have fun
            
 
-            console.log("************************************* ServiceWrapper - " + xhr.status + " ***********************************************")
-            console.log("url", xhr._url)
+            // console.log("************************************* ServiceWrapper - " + xhr.status + " ***********************************************")
+            // console.log("url", xhr._url)
+            // console.log("xhr._response", xhr._response)
 
-            console.log("xhr._response", xhr._response)
             let message = xhr._response
 
             if(message.indexOf('<html') !== -1) {
@@ -155,7 +156,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
             }
             else {
 
-                console.log("error MAY just be a string", message)
+                //console.log("error MAY just be a string", message)
 
                 // strip out any extra quotes from response - e.g. _response: ""The email address is not associated with any sites""
                 message = Utils.ReplaceAll(message, '"', '')
@@ -165,7 +166,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
 
 
             // What to do when the request has failed
-            console.log('something went wrong', xhr);
+            //console.log('something went wrong', xhr);
             callback({ status: xhr.status, message: message }, null)
 
 

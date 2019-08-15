@@ -23,7 +23,8 @@ import {
   Animated,
   ScrollView,
   AsyncStorage,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from 'react-native';
 
 import { NavigationActions, StackActions } from 'react-navigation'
@@ -43,6 +44,9 @@ import logo_QA from '../../../Images/logo-lg-white-square-QA.png';
 import logo_DEV from '../../../Images/logo-lg-white-square-DEV.png';
 
 import NavigationService from '../../../Helpers/NavigationService';
+
+import { Authorization } from '../../../Helpers/Authorization';
+
 
 //config is optional to be passed in on Android
 const touchConfig = {
@@ -72,12 +76,15 @@ class LockScreen extends React.Component {
 
       const { navigation } = this.props;
 
+      const lastScreen = navigation.getParam('lastScreen', 'DrawerStack');
       const redirectTo = navigation.getParam('redirectTo', 'DrawerStack');
 
-      console.log("redirectTo", redirectTo)
-
+      console.log("----------------------- LOCK SCREEN --------------------------")
+      console.log("param lastScreen", lastScreen)
+      console.log("param redirectTo", redirectTo)
 
       this.state = {
+        receiving: false,
         requestStatus: {
             hasError: false,
             message: "",
@@ -86,7 +93,8 @@ class LockScreen extends React.Component {
         bioType: null,
         password: null,
         passwordValid: false,
-        redirectTo: redirectTo
+        redirectTo: redirectTo,
+        lastScreen: lastScreen
       }
 
   }
@@ -176,7 +184,7 @@ class LockScreen extends React.Component {
     TouchID.isSupported()
     .then(bioType => {
         
-        console.log('<<LockScreen : BioType', bioType)
+        //console.log('<<LockScreen : BioType', bioType)
         // this provides shared logging via screenProps
         this.props.screenProps._globalLogger(true, "LockScreen", "Biometrics Supported", { bioType: bioType })
 
@@ -227,7 +235,7 @@ class LockScreen extends React.Component {
            
         }
 
-        console.log(">>> Biometrics error: ", error)
+        //console.log(">>> Biometrics error: ", error)
 
         // set to null so that user is asked to enter thier Rosnet password
         this.setState({ bioType: null }); 
@@ -252,7 +260,7 @@ class LockScreen extends React.Component {
 
     authenticate = (bioType) => {
 
-        console.log('Authenticate : BioType',bioType)
+        //console.log('Authenticate : BioType',bioType)
         // this provides shared logging via screenProps
         this.props.screenProps._globalLogger(true, "LockScreen", "authenticate - " + bioType, { bioType: bioType })
 
@@ -267,7 +275,7 @@ class LockScreen extends React.Component {
 
         })
         .catch(error => {
-            console.log("authenticate.catch(error) = ", error)
+            //console.log("authenticate.catch(error) = ", error)
 
             // this provides shared logging via screenProps
             this.props.screenProps._globalLogger(false, "LockScreen", bioType, { error: error })
@@ -284,28 +292,69 @@ class LockScreen extends React.Component {
 
     onContinue = () => {
 
+        let _this = this
 
-        let screen = 'Dashboard'
-        AsyncStorage.getItem('lastScreen').then((lastScreen) => {
+        // let screen = 'Dashboard'
+        // AsyncStorage.getItem('lastScreen').then((lastScreen) => {
 
-            console.log('continuing at lastScreen', lastScreen)
+        //     console.log('continuing at lastScreen', lastScreen)
 
            
-            // dont get stuck on one of these screens
-            if(lastScreen && lastScreen !== 'LockScreen' && lastScreen !== 'Login' && lastScreen !== 'ForgotPassword' && lastScreen !== 'LoginSelectClient') {
-                screen = lastScreen
-            }
+        //     // dont get stuck on one of these screens
+        //     if(lastScreen && lastScreen !== 'LockScreen' && lastScreen !== 'Login' && lastScreen !== 'ForgotPassword' && lastScreen !== 'LoginSelectClient') {
+        //         screen = lastScreen
+        //     }
 
-            // this should allow for the back button to appear in the header
-            if(this.state.redirectTo && this.state.redirectTo !== '') {
-                this.props.navigation.navigate(this.state.redirectTo)
-            }
-            else {
-                this.props.navigation.navigate(screen)
-            }
+        //     // this should allow for the back button to appear in the header
+        //     if(this.state.redirectTo && this.state.redirectTo !== '') {
+        //         this.props.navigation.navigate(this.state.redirectTo)
+        //     }
+        //     else {
+        //         this.props.navigation.navigate(screen)
+        //     }
         
 
+        // })
+
+        this.setState({
+            receiving: true
         })
+        // refresh the token AFTER the user sees the biometric screen
+        Authorization.RefreshToken(function(err, resp){
+
+            if(err) {
+
+                _this.setState({
+                    receiving: false
+                })
+
+                //console.log("LockScreen - RefreshToken Error:", err)
+                // if error refreshing token, force back to login screen
+                NavigationService.stackReset('LoginStack')
+
+            }
+            else {
+
+                _this.setState({
+                    receiving: false
+                })
+
+                //console.log("LockScreen - RefreshToken Success:", resp)
+
+                // if we are refreshing the token, we must reset all global state attributes back to defaults as well
+                _this.props.screenProps._globalStateChange({ action: "launch", userData: resp.userData } )
+
+
+                if(_this.state.redirectTo && _this.state.redirectTo !== '') {
+                    _this.props.navigation.navigate(_this.state.redirectTo)
+                }
+                else {
+                    _this.props.navigation.navigate(_this.state.lastScreen)
+                }
+            }
+
+        }) // end Authorization.RefreshToken
+
 
     }
 
@@ -387,6 +436,12 @@ class LockScreen extends React.Component {
                             fontSize: 25,
                             textAlign: 'center'
                         }}>
+
+                            {/* // show something while the token is being refreshed */}
+                            {this.state.receiving &&
+                                <ActivityIndicator size="large" color={brand.colors.white} />
+                            }
+
                             <Text style={styles.message}>
                             As an extra security measure, Rosnet requires authentication using 
                             Face ID, Touch ID, passcode, or your Rosnet password.
@@ -449,6 +504,7 @@ class LockScreen extends React.Component {
                                             Back to Login
                                         </Text>
                                     </View>
+
 
                             </View>
                         }

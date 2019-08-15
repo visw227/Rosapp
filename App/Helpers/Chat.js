@@ -48,11 +48,11 @@ export var Chat = {
                 Chat.RequestHelper(url, 'GET', null, client, resp.Authorization, function(err, resp){
 
                     if(err) {
-                        console.log("Chat.GetUnreadMessageCount error", err)
+                        //console.log("Chat.GetUnreadMessageCount error", err)
                         callback(err, null)
                     }
                     else {
-                        console.log("Chat.GetUnreadMessageCount success", resp)
+                        //console.log("Chat.GetUnreadMessageCount success", resp)
                         callback(null, resp)
                     }
                     
@@ -79,7 +79,7 @@ export var Chat = {
 
         fullUrl = config.DOMAIN_PROTOCOL + subDomain + "." + config.DOMAIN + url
 
-        console.log("Chat.js fullUrl", fullUrl)
+        //console.log("Chat.js fullUrl", fullUrl)
 
         // Set up our HTTP request
         var xhr = new XMLHttpRequest();

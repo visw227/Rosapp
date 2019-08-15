@@ -109,7 +109,7 @@ export var Authorization = {
             if(data) {
 
                 deviceInfo = JSON.parse(data)
-                console.log('<<deviceInfo',deviceInfo)
+                //console.log('<<deviceInfo',deviceInfo)
 
                 let request = {
                     userName: userName, 
@@ -159,7 +159,7 @@ export var Authorization = {
 
                             // SRR test user
                             // shilton / "now is the"
-                            // if(__DEV__ && userName === 'shilton') {
+                            // if(__DEV__ && userName === 'dywayne.johnson') {
                             //     console.log(">> DJ hack...")
                             //     userData.mustChangePassword = true
                             // }
@@ -169,7 +169,7 @@ export var Authorization = {
 
                             AsyncStorage.getItem('selectedClient').then((client) => {
 
-                                console.log("Login - previously selectedClient:", client)
+                                //console.log("Login - previously selectedClient:", client)
 
                                 // if have a selectedClient in local storage
                                 if(client) {
@@ -182,11 +182,11 @@ export var Authorization = {
                                     // just in case the user's selected site is no longer in their list of sites
                                     // reset the selectedClient back to the first in their list
                                     if(userData.sites.includes(selectedClient) === false && userData.sites.length > 0) {
-                                        console.log("Login - previously selected client no longer valid so using first in list")
+                                        //console.log("Login - previously selected client no longer valid so using first in list")
                                         selectedClient = userData.sites[0]
                                     }
 
-                                    console.log("Login - selectedClient", selectedClient)
+                                    //console.log("Login - selectedClient", selectedClient)
 
                                 }
                                 // otherwise, default to the first site in their list
@@ -197,8 +197,8 @@ export var Authorization = {
                                 }
 
 
-                                console.log("------------------------- MENU -----------------------------")
-                                console.log("getting menu items for site: ", selectedClient)
+                                //console.log("------------------------- MENU -----------------------------")
+                                //console.log("getting menu items for site: ", selectedClient)
 
                                 getMobileMenuItems(selectedClient, userData.token, function(err, menuItems){
                                     

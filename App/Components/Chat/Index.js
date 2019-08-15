@@ -103,7 +103,7 @@ class ChatScreen extends React.Component {
             // }
         }
  
-        console.log("Chat screen source", JSON.stringify(source, null, 2))
+        //console.log("Chat screen source", JSON.stringify(source, null, 2))
 
         this.setState({
             source: source
@@ -148,7 +148,7 @@ class ChatScreen extends React.Component {
         // ONLY if something has changed
         if (next_token !== this.props.screenProps.state.userData.token) {
 
-            console.log("Chat screen picked up new token: ", next_token)
+            //console.log("Chat screen picked up new token: ", next_token)
 
             let userData = nextProps.screenProps.state.selectedClient
 
@@ -163,7 +163,7 @@ class ChatScreen extends React.Component {
         // ONLY if something has changed
         if (next_client !== this.props.screenProps.state.selectedClient) {
 
-            console.log("Chat screen picked up new selectedClient: ", next_client)
+            //console.log("Chat screen picked up new selectedClient: ", next_client)
 
             this.setState({
                 selectedClient: next_client
@@ -199,7 +199,7 @@ class ChatScreen extends React.Component {
         Chat.GetUnreadMessageCount('rosnet', this.props.screenProps.state.selectedClient, this.props.screenProps.state.userData.token, function(err, resp){
 
           if(err) {
-            console.log("chat - error resetting unread count", err)
+            //console.log("chat - error resetting unread count", err)
           }
           else {
             let count = 0
@@ -209,7 +209,7 @@ class ChatScreen extends React.Component {
               })
             }
 
-            console.log("chat - reset unread count", count)
+            //console.log("chat - reset unread count", count)
             _this.props && _this.props.screenProps && _this.props.screenProps._globalStateChange( { action: "chat-reset-unread-count", messageCount: count })
           }
         })

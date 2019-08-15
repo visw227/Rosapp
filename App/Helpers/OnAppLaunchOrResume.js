@@ -22,11 +22,13 @@ if logged in
     if time to show biometric screen...
         show biometric screen
             refresh the token
-                redirect to any forced actions (e.g. required password change)
+                rehydrate the global state
+                    redirect to any forced actions (e.g. required password change)
 
     if not time for biometric
         refresh the token
-            redirect to any forced actions
+            rehydrate the global state
+                redirect to any forced actions
 
 
 
@@ -55,6 +57,8 @@ export var OnAppLaunchOrResume = {
                     let key = store[i][0];
                     let value = store[i][1];
 
+                    //console.log("key: ", key, value)
+
                     switch(key) {
                       case "userData":
                         data.userData = JSON.parse(value)
@@ -78,7 +82,7 @@ export var OnAppLaunchOrResume = {
                     
                 })
 
-                console.log(">>> OnAppLaunchOrResume ALL keys", data)
+                console.log("keys", data)
 
 
                 callback(data)
@@ -86,9 +90,12 @@ export var OnAppLaunchOrResume = {
         })
 
     },
+    
 
     // event = 'launch' or 'activate'
     OnEvent: function(event, globalStateChange, callback) {
+
+        console.log("----------------------- OnAppLaunchOrResume.OnEvent --------------------------")
 
         let result = {
             err: null,
@@ -113,6 +120,9 @@ export var OnAppLaunchOrResume = {
             // user has never logged in (or has reinstalled the app)
             if(data.userData === null) {
 
+
+                console.log("userData is null")
+
                 result.firstUse = true
                 result.stackToLoad = 'LoginStack'
 
@@ -126,6 +136,10 @@ export var OnAppLaunchOrResume = {
             // only pasword and token are set to null
             else if(data.userData && data.userData.token === null) {
 
+                console.log("userData, but token is null")
+
+                globalStateChange({ action: "launch", userData: data.userData } )
+
                 result.stackToLoad = 'LoginStack'
 
                 // forced login
@@ -137,9 +151,16 @@ export var OnAppLaunchOrResume = {
             }
             else if(data.userData && data.userData.token) {
 
-                console.log(">>> OnAppLaunchOrResume - user token...")
-                    
-                // if userData, then also check if this is a superUser impersonation
+                console.log("userData & token...", data.userData)
+                
+                // share what was rehydrated, but they may change later in the logic...
+                globalStateChange({ action: "launch", userData: data.userData })
+                globalStateChange({ action: "launch", selectedClient: data.selectedClient  })
+
+                // IMPORTANT:
+                // Rehydrate the superUser object if available 
+                // THIS IS ESPECIALLY important if a superUser exits/closes/terminates the app entirely.
+                // Otherwise, when the superUser re-launches the app, they will still be logged in as an impersonated person
                 if(data.superUser) {
                     globalStateChange({ action: "launch", superUser: data.superUser } )
                 }
@@ -161,20 +182,27 @@ export var OnAppLaunchOrResume = {
                     let diff = currentTime - data.statusData.ts
 
                     // if lastScreen was LockScreen, don't let the user force close the app to get around the lock screen
-                    //if(!__DEV__ && (diff >= data.statusData.limit || (lastScreen && lastScreen === 'LockScreen')) ) {
+                    //if(!__DEV__ && (diff >= data.statusData.limit || (data.lastScreen && data.lastScreen === 'LockScreen')) ) {
                     if( diff >= data.statusData.limit || (data.lastScreen && data.lastScreen === 'LockScreen') ) {
 
                         result.showLock = true
                         result.stackToLoad = 'LockStack'
 
+                        // if forced action, otherwise redirect to lastScreen after biometrics
+                        if(data.userData.mustChangePassword ===  true) {
+                            result.redirectTo = 'PasswordChangeRequiredStack'
+                        }
+                        else {
+                            result.redirectTo = data.lastScreen
+                        }
+
                         // show biometric screen, which will refresh the token and redirect to the 
                         // forced action OR resume at the lastScreen
                         NavigationService.navigate('LockStack', { 
-                            lastScreen: lastScreen, 
                             redirectTo: result.redirectTo 
                         });
 
-                        callback(result)
+                        return callback(result)
 
                     }
                     else {
@@ -196,10 +224,14 @@ export var OnAppLaunchOrResume = {
 
                                 console.log("token refreshed")
 
-                                // if we are refreshing the token, we must reset all global state attributes back to defaults as well
-                                globalStateChange( { action: "token-refresh", userData: resp.userData })
-
                                 result.userData = resp.userData
+                                result.selectedClient = resp.selectedClient
+
+                                // if we are refreshing the token, we must reset all global state attributes back to defaults as well
+                                globalStateChange( { action: "launch", userData: resp.userData })
+                                // set/reset selectedClient
+                                globalStateChange( { action: "launch", selectedClient: resp.selectedClient  })
+
 
                                 // look for any forced actions for the user
                                 if(resp.userData.mustChangePassword ===  true) {
@@ -211,7 +243,7 @@ export var OnAppLaunchOrResume = {
                                     NavigationService.navigate(data.lastScreen);
                                 }
 
-                                callback(result)
+                                return callback(result)
                             
                             } // end else
 
@@ -226,7 +258,13 @@ export var OnAppLaunchOrResume = {
                 else {
 
                     console.log(">>> OnAppLaunchOrResume - no statusData")
-                    callback(result)
+                    result.stackToLoad = 'LoginStack'
+
+                    // forced login
+                    NavigationService.navigate('LoginStack')
+
+                    return callback(result)
+
                 }
 
             } // end if userData
