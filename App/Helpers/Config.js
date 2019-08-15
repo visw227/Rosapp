@@ -1,9 +1,8 @@
 /*
 
-PLEASE DO NOT change anything with this helper. We rely on it to point to production unless specific env vars are available.
-If you need to point to a specific domain for testing, please edit the .env.dev.json file in the root
-IMPORTANT NOTE: in the simulator, any "hot reloads" won't refresh the running app's version of the .env files. If you change 
-a .env* file, you'll need to restart the app (e.g. react-native run-ios)
+PLEASE DO NOT change anything with this helper. We rely on it to point to production unless specific 
+env vars are available. If you need to point to a specific domain for testing, 
+please edit the ./App/Environments/dev.json file in the root
 
 App Center Reference for Build Scripts:
 https://docs.microsoft.com/en-us/appcenter/build/custom/scripts/
@@ -39,7 +38,6 @@ export var Config = {
             ENV = qa
         }
 
-        console.log("ENV", ENV)
 
         return ENV
 

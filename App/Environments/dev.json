@@ -2,5 +2,5 @@
   "ENV": "dev",
   "DOMAIN_PROTOCOL": "https://",
   "DOMAIN": "rosnetqa.com",
-  "BIOMETRICS_WAIT_DURATION": 3000 // 3 seconds for dev testing
+  "BIOMETRICS_WAIT_DURATION": 300000 // 3 seconds for dev testing
 }
