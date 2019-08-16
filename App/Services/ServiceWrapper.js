@@ -31,7 +31,7 @@ export function serviceWrapper(url, method, jsonBody, subDomain, token, redirect
     fullUrl = withCacheBustingTimestamp(fullUrl)
 
 
-    //console.log("fullUrl", fullUrl)
+    console.log("fullUrl", fullUrl)
     //console.log(method, jsonBody)
 
     //Logger.LogEvent(true, "ServiceWrapper", "Starting request", { url: fullUrl, method: method })

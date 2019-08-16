@@ -342,6 +342,12 @@ class Login extends Component {
 
                 )
             }
+            else if(this.props.screenProps.state.config.ENV === "local") {
+                return (
+                    // <Animated.Image source={logo_DEV} style={[Styles.logo, { height: this.imageHeight, maxHeight: this.imageHeight, maxWidth: this.imageHeight }]} />
+                    <Text style={{color:'red',fontWeight:'bold',textAlign:'center'}}>Local</Text>
+                )
+            }
         }
 
         return (

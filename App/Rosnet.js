@@ -495,25 +495,6 @@ let TabStack = createBottomTabNavigator({
             <Ionicon name="ios-list-box" size={20} color={brand.colors.gray} />
           }
 
-          {screenProps.state.messageCount > 0 &&
-            <View style={{ 
-                position: 'absolute', 
-                paddingLeft: 4, 
-                paddingRight: 4,
-                right: -20, 
-                top: 1, 
-                backgroundColor: brand.colors.orange, 
-                borderRadius: 10, 
-                height: 20, 
-                //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
-                minWidth: 20, // this keeps it round with borderRadius=10
-                justifyContent: 'center', 
-                alignItems: 'center' }}>
-              <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.messageCount}</Text>
-            </View>
-          }
-   
-
         </View>
 
   })
