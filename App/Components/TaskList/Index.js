@@ -64,7 +64,7 @@ class TaskListScreen extends React.Component {
             onPress={() => navigate.navigation.toggleDrawer() }
         />,
 
-        headerRight : navigate.navigation.getParam('createTasklist')
+        // headerRight : navigate.navigation.getParam('createTasklist')
 
     })
 
@@ -92,35 +92,31 @@ class TaskListScreen extends React.Component {
 
   
 
-    
+  /*********************** Not creating tasklist for now on the app  ***************/
    
-   createTasklist = () => {
+  //  createTasklist = () => {
 
-    url = "http://" + this.props.screenProps.state.selectedClient + "."+ appConfig.DOMAIN  + "/Tasklist/CreateTasklist/Mobile"
-     source = {
-      uri: url,
-      headers: {
-        "managerAppToken":  this.props.screenProps.state.userData.token
-      }
-    }
+  //   url = "http://" + this.props.screenProps.state.selectedClient + "."+ appConfig.DOMAIN  + "/Tasklist/CreateTasklist/Mobile"
+  //    source = {
+  //     uri: url,
+  //     headers: {
+  //       "managerAppToken":  this.props.screenProps.state.userData.token
+  //     }
+  //   }
 
-    return (
+  //   return (
 
-      <MaterialCommunityIcons name = {'plus-outline'} style={{margin:5}} size={25} color= { brand.colors.white } onPress ={() => this.props.navigation.navigate('TaskListDetail',{source,type:'Create'})} />
-    )
+  //     <MaterialCommunityIcons name = {'plus-outline'} style={{margin:5}} size={25} color= { brand.colors.white } onPress ={() => this.props.navigation.navigate('TaskListDetail',{source,type:'Create'})} />
+  //   )
 
-   }
+  //  }
     
-
-                  
-  
-
 
    getTaskLists = () => {
 
     _this = this
 
-    _this.props.navigation.setParams({createTasklist : this.createTasklist()})
+    // _this.props.navigation.setParams({createTasklist : this.createTasklist()}) // the createTasklist method is not being used -- so need to set param
 
     let userData = _this.props.screenProps.state.userData
     let client  = _this.props.screenProps.state.selectedClient
@@ -638,7 +634,7 @@ class TaskListScreen extends React.Component {
                     
                     <View style={{margin:2,marginTop:'-3%'}}>
        
-                      <DeckSwiper
+                     { this.state && this.state.data && <DeckSwiper
                       style={{backgroundColor:brand.colors.danger,borderWidth:2}}
                       ref={swiper => {
                         this.swiper = swiper;
@@ -743,6 +739,7 @@ class TaskListScreen extends React.Component {
                           </Card>
                         }
                       />
+                      }
                     </View>
                     <Text>
                         
