@@ -342,6 +342,30 @@ let ChatStack = createStackNavigator({ ChatScreen });
 
 
 // *******************************************************************************
+// TaskList -  TAsklist screens 
+// *******************************************************************************
+
+import TaskListScreen from './Components/TaskList/Index'
+import TaskListDetail from './Components/TaskList/Detail/Index'
+
+let TaskListStack = createStackNavigator({ 
+  TaskListScreen: {
+    screen: TaskListScreen,
+    // to hide the back title for any child screens, it must be set to null here
+    navigationOptions: ({ navigation }) => ({
+      headerBackTitle: null
+    }),
+  },
+  TaskListDetail: {
+    screen: TaskListDetail
+  }
+ });
+
+
+
+
+
+// *******************************************************************************
 // Tabbed UI 
 // *******************************************************************************
 
@@ -442,6 +466,38 @@ let TabStack = createBottomTabNavigator({
 
     })
 
+  },
+
+  TaskList : {
+    screen : TaskListStack,
+    navigationOptions: ({ navigation, screenProps }) => ({
+
+      // title and headerTitle DO NOT WORK HERE
+      // the title must be set in the screen
+      // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
+      tabBarLabel: (focused) =><View>
+        {focused.focused ?
+          <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
+            <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Tasklist</Text>
+          </View> 
+        :
+          <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Tasklist</Text>
+        } 
+      </View>,
+
+      // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
+      tabBarIcon: (focused) => 
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+
+          {focused.focused ?
+            <Ionicon name="ios-list-box" size={20} color={brand.colors.primary}/>
+          :             
+            <Ionicon name="ios-list-box" size={20} color={brand.colors.gray} />
+          }
+
+        </View>
+
+  })
   },
 
   Alerts: {
