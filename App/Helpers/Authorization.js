@@ -157,6 +157,7 @@ export var Authorization = {
                                 userData.email = (userName).indexOf('@') !== -1 ? userName : userName+'@rosnet.com'
                             }
 
+                            // TESTING: forced password change
                             // SRR test user
                             // shilton / "now is the"
                             // if(__DEV__ && userName === 'dywayne.johnson') {

@@ -1183,7 +1183,7 @@ export default class App extends React.Component {
 
       }) // end Authorization.RefreshToken
 
-      let timeout = 300000 // 5 minutes = 300,000 milliseconds
+      let timeout = 3600000 // 1 hour = 3,600,000 milliseconds
       setTimeout(_this.backgroundTokenRefreshTimer, timeout);
 
     }
@@ -1297,56 +1297,6 @@ export default class App extends React.Component {
 
         this._globalLogger(true, "App", "Activated", { state: this.state })
 
-
-        // IMPORTANT: userData isn't nulled on logout out since it will cause other dependent screens to crash
-        // only pasword and token are set to null
-        // if(this.state.userData && this.state.userData.token) {
-
-
-        //   //console.log("userData", this.state.userData)
-
-
-        //   // see if the user needs to see the lock screen
-        //   Biometrics.CheckIfShouldShowLockScreen(function(result){
-
-        //     if(result.showLock) {
-        //         // this is needed since props.navigation isn't present for unmounted screen components
-        //         NavigationService.navigate('LockStack');
-        //     }
-
-
-        //   })
-
-        //   // this MAY cause a 401 redirect to login WHILE the biometrics screen is being displayed
-        //   Authorization.RefreshToken(function(err, resp){
-            
-        //     if(err) {
-        //       console.log("err refreshing token", err)
-
-        //       _this._globalLogger(false, "App", "Error Refreshing Token", { error: err})
-
-        //     }
-        //     else {
-
-        //       console.log("token refreshed")
-
-        //       // if we are refreshing the token, we must reset all global state attributes back to defaults as well
-        //       _this._globalStateChange( { action: "token-refresh", userData: resp.userData })
-
-
-        //       _this._globalLogger(true, "App", "Token Refreshed Successfully", { userData: resp.userData })
-            
-            
-        //     } // end else
-
-        //   }) // end Authorization.RefreshToken
-
-
-        // } // end if userData
-        // else {
-        //   console.log("user is not logged in, so dont show biometrics")
-        // }
-
         
         OnAppLaunchOrResume.OnEvent('activate', _this._globalStateChange, function(result){
 
@@ -1368,7 +1318,6 @@ export default class App extends React.Component {
 
         //console.log('******** Rest BAdge')
 
-
         let statusData = {
           limit: this.state.config.BIOMETRICS_WAIT_DURATION, // milliseconds
           ts: new Date().getTime() // add a timestamp to know when inactivated
@@ -1378,9 +1327,7 @@ export default class App extends React.Component {
 
         _this._globalLogger(true, "App", "Inactivated", { statusData: statusData })
 
-
-
-      }
+      } // end if appState
 
       // keep track of last state
       this.setState({appState: nextAppState});
@@ -1392,47 +1339,42 @@ export default class App extends React.Component {
 
       _this = this
       
+      //console.log("App inactive :  reset badge called")
 
+      //console.log('AppState userData',_this.state.userData)
 
-        //console.log("App inactive :  reset badge called")
+      AsyncStorage.getItem('deviceInfo').then((data) => {
+        let deviceInfo = JSON.parse(data)
+        appInstallId = deviceInfo.appInstallId
+        
 
-        //console.log('AppState userData',_this.state.userData)
-
-       
-  
-  
-        AsyncStorage.getItem('deviceInfo').then((data) => {
-          let deviceInfo = JSON.parse(data)
-          appInstallId = deviceInfo.appInstallId
-         
-  
-          AsyncStorage.getItem('firebaseToken').then((token) => {
-            let fcmToken = token
-            if(deviceInfo && fcmToken){
-              let request = {
-                appInstallId : deviceInfo.appInstallId,
-                fcmDeviceToken : fcmToken,
-                userId : _this.state.userData.userId,
-                token : _this.state.userData.token,
-                client : _this.state.selectedClient
-              }
-              //console.log('Dash req:',request)
-
-              resetBadgeCount(request,function(err,resp){
-
-                if(err) {
-                  //console.log('errorrrrrr',err)
-                }
-                else {
-                  //console.log('badge success',resp)
-                }
-              })
-             
+        AsyncStorage.getItem('firebaseToken').then((token) => {
+          let fcmToken = token
+          if(deviceInfo && fcmToken){
+            let request = {
+              appInstallId : deviceInfo.appInstallId,
+              fcmDeviceToken : fcmToken,
+              userId : _this.state.userData.userId,
+              token : _this.state.userData.token,
+              client : _this.state.selectedClient
             }
-          })
-         
+            //console.log('Dash req:',request)
+
+            resetBadgeCount(request,function(err,resp){
+
+              if(err) {
+                //console.log('errorrrrrr',err)
+              }
+              else {
+                //console.log('badge success',resp)
+              }
+            })
+            
+          }
         })
-    }
+        
+      })
+    } // end resetBadge
 
 
     render() {
