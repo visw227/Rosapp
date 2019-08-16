@@ -122,7 +122,7 @@ export class Account extends React.Component {
 
                       subtitle={
                       <View style={Styles.subtitleView}>
-                          <Text style={Styles.ratingText}>Various settings for this app</Text>
+                          <Text style={Styles.ratingText}>Notification settings for this app</Text>
                       </View>
                       }
                       avatar={<Avatar rounded medium 
