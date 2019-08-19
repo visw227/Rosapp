@@ -129,18 +129,6 @@ const metrics = {
   }
 }
 
-
-
-// const images = {
-//   logo: require('../Images/logo.png'),
-//   clearLogo: require('../Images/logo.png'),
-//   launch: require('../Images/launch-icon.png'),
-//   loader: require('../Images/ajax-loader.gif'),
-//   ignite: require('../Images/launch-icon.png'),
-//   tileBg: require('../Images/tile_bg.png'),
-//   background: require('../Images/BG.png')
-// }
-
 const type = {
   base: 'Avenir-Book',
   bold: 'Avenir-Black',
