@@ -42,6 +42,8 @@ import { Authorization } from './Authorization';
 
 import NavigationService from './NavigationService';
 
+import brand from '../Styles/brand'
+
 export var OnAppLaunchOrResume = {
 
     GetAllKeys: function(callback) {
@@ -140,7 +142,14 @@ export var OnAppLaunchOrResume = {
                 // THIS IS ESPECIALLY important if a superUser exits/closes/terminates the app entirely.
                 // Otherwise, when the superUser re-launches the app, they will be "really" logged in as an impersonated person
                 if(data.superUser) {
-                    globalStateChange({ action: "launch", superUser: data.superUser } )
+                    //globalStateChange({ action: "launch", superUser: data.superUser } )
+
+                    globalStateChange({ 
+                        action: "session-override", 
+                        userData: data.userData, 
+                        superUser: data.superUser, 
+                        backgroundColor:brand.colors.danger})
+
                 }
 
                 // dont get stuck on one of these screens
@@ -179,8 +188,12 @@ export var OnAppLaunchOrResume = {
                 }
                 else {
 
-                    // refresh token now
-                    Authorization.RefreshToken(function(err, resp){
+                    // CANNOT use .RefreshToken because it may be a QA session override
+                    // and the impersonated userData.password is not really known and contains "***"
+                    // Instead, just verify the token AFTER the user sees the biometric screen
+                    let token = data.userData.token
+                    let client = data.selectedClient
+                    Authorization.VerifyToken(client, token, function(err, resp){
 
                         if(err) {
 
@@ -200,8 +213,8 @@ export var OnAppLaunchOrResume = {
                             globalStateChange( { action: "launch", selectedClient: resp.selectedClient  })
 
 
-                            // look for any forced actions for the user
-                            if(resp.userData.mustChangePassword ===  true) {
+                            // look for any forced actions that the user might still need to address
+                            if(data.userData.mustChangePassword ===  true) {
                                 // forced password change
                                 NavigationService.navigate('PasswordChangeRequiredStack');
                             }

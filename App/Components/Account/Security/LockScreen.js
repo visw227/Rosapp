@@ -294,33 +294,17 @@ class LockScreen extends React.Component {
 
         let _this = this
 
-        // let screen = 'Dashboard'
-        // AsyncStorage.getItem('lastScreen').then((lastScreen) => {
-
-        //     console.log('continuing at lastScreen', lastScreen)
-
-           
-        //     // dont get stuck on one of these screens
-        //     if(lastScreen && lastScreen !== 'LockScreen' && lastScreen !== 'Login' && lastScreen !== 'ForgotPassword' && lastScreen !== 'LoginSelectClient') {
-        //         screen = lastScreen
-        //     }
-
-        //     // this should allow for the back button to appear in the header
-        //     if(this.state.redirectTo && this.state.redirectTo !== '') {
-        //         this.props.navigation.navigate(this.state.redirectTo)
-        //     }
-        //     else {
-        //         this.props.navigation.navigate(screen)
-        //     }
-        
-
-        // })
 
         this.setState({
             receiving: true
         })
-        // refresh the token AFTER the user sees the biometric screen
-        Authorization.RefreshToken(function(err, resp){
+
+        // CANNOT use .RefreshToken because it may be a QA session override
+        // and the impersonated userData.password is not really known and contains "***"
+        // Instead, just verify the token AFTER the user sees the biometric screen
+        let token = this.props.screenProps.state.userData.token
+        let client = this.props.screenProps.state.selectedClient
+        Authorization.VerifyToken(client, token, function(err, resp){
 
             if(err) {
 
