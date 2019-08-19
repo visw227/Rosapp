@@ -1,15 +1,15 @@
+{
+  "ENV": "dev",
+  "DOMAIN_PROTOCOL": "https://",
+  "DOMAIN": "rosnetqa.com",
+  "BIOMETRICS_WAIT_DURATION": 5000 // 3 seconds for dev testing
+}
+
+/**********  Local Settings below *********/
+
 // {
 //   "ENV": "dev",
 //   "DOMAIN_PROTOCOL": "https://",
 //   "DOMAIN": "rosnetqa.com",
 //   "BIOMETRICS_WAIT_DURATION": 5000 // 3 seconds for dev testing
 // }
-
-/**********  Local Settings below *********/
-
-{
-  "ENV": "local",
-  "DOMAIN_PROTOCOL": "http://",
-  "DOMAIN": "roslocal.com",
-  "BIOMETRICS_WAIT_DURATION": 5000 // 3 seconds for dev testing
-}

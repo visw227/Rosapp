@@ -39,8 +39,6 @@ import Push from 'appcenter-push'
 
 import { Config } from './Helpers/Config';
 
-import { Biometrics } from './Helpers/Biometrics';
-
 import firebase, { RNFirebase } from 'react-native-firebase'
 
 import {LoginSelectClient} from './Components/Account/Login/SelectClient'

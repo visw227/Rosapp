@@ -126,6 +126,7 @@ export var OnAppLaunchOrResume = {
                 return callback(data)
 
             }
+            // if the user successfully logged in earlier...
             else if(data.userData && data.userData.token) {
 
                 console.log("userData & token...", data.userData)
