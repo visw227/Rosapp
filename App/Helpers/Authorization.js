@@ -13,7 +13,6 @@ Using Authorization as a namespace, which includes functions inside of it
 import {  AsyncStorage } from 'react-native';
 
 import { userLogin, verifyToken } from '../Services/Account';
-import { impersonateUser } from '../Services/SessionOverride';
 import { getMobileMenuItems } from '../Services/Menu';
 import {updateFcmDeviceToken} from '../Services/Push'
 import { Parsers } from '../Helpers/Parsers';
@@ -90,20 +89,6 @@ export var Authorization = {
         })
 
     },
-
-    // TODO: finish this for OnAppLaunchOrResume.js functionality
-    // since we don't have the impersonated user's password, we must re-impoersonate to get a new token as them
-    RefreshToken_InSessionOverride: function(selectedClient, superUserToken, impersonatedUserName, callback) {
-
-        impersonateUser(selectedClient, superUserToken, request, function(err, resp){
-
-
-
-        })
-
-
-    },
-
 
 
     UserLogin: function(userName, password, callback) {

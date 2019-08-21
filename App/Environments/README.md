@@ -8,7 +8,7 @@ Pay special attention to the follwowing 2 files
 ./App/Helpers/Config.js
 
 
-The appcenter-pre-build-sh script only runs in App Center and it foes a find
+The appcenter-pre-build-sh script only runs in App Center and it does a find
 and replace on a specific string in Config.js that tells the App Center build to point 
 to the QA envrionment.
 
