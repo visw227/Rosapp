@@ -200,12 +200,8 @@ export var OnAppLaunchOrResume = {
                         return callback(data)
                     }
                     else if(event === 'launch') {
-                        // CANNOT use .RefreshToken because it may be a QA session override
-                        // and the impersonated userData.password is not really known and contains "***"
-                        // Instead, just verify the token AFTER the user sees the biometric screen
-                        let token = data.userData.token
-                        let client = data.selectedClient
-                        Authorization.VerifyToken(client, token, function(err, resp){
+
+                        Authorization.RefreshToken(function(err, resp){
 
                             if(err) {
 

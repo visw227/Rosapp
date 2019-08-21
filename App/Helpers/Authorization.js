@@ -58,33 +58,52 @@ export var Authorization = {
 
     RefreshToken: function(callback) {
 
-        AsyncStorage.getItem('userData').then((data) => {
+        AsyncStorage.getItem('superUser').then((superUserData) => {
 
-            //console.log("refreshToken loginData", data)
+            let superUser = null
+            if(superUserData) {
+                superUser = JSON.parse(superUserData)
+            }
 
-            if(data) {
+            AsyncStorage.getItem('userData').then((data) => {
 
-                let userData = JSON.parse(data)
+                //console.log("refreshToken loginData", data)
 
-                Authorization.UserLogin(userData.userName, userData.password, function(err, resp){
+                if(data) {
 
-                    if(err) {
-                        //_this.showAlert(err.message)
-                        callback( { message: err })
-                    }
-                    else if(resp.userData){
-                        if(resp.userData) {
+                    let userData = JSON.parse(data)
 
-                            callback(null, { userData: resp.userData })
-
-                        }
+                    // we DO NOT have a way to know the real password of the impersonated user
+                    // OTHERWISE, the QA person will get redirected back to login any time they
+                    // launch or re-activate the app in session override mode
+                    if(superUser) {
+                        callback(null, { userData: userData })
                     }
                     else {
-                        callback({ message: "Unhandled Error" } )
-                    }
 
-                })
-            }
+                        Authorization.UserLogin(userData.userName, userData.password, function(err, resp){
+
+                            if(err) {
+
+                                callback( { message: err })
+
+                            }
+                            else if(resp && resp.userData){
+
+                                callback(null, { userData: resp.userData })
+
+                            }
+                            else {
+                                
+                                callback({ message: "Unhandled Error" } )
+
+                            }
+
+                        })
+                    }
+                }
+
+            })
 
         })
 
@@ -93,12 +112,7 @@ export var Authorization = {
 
     UserLogin: function(userName, password, callback) {
 
-        //console.log("login", userName, password)
-
-
         let deviceInfo = null
-
-       
          
         AsyncStorage.getItem('deviceInfo').then((data) => {
 
