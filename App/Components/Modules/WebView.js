@@ -42,14 +42,13 @@ class WebViewScreen extends React.Component {
     headerTintColor: 'white',
 
 
-    headerLeft : <Ionicon
-      name="md-menu"
-      size={35}
-      color={brand.colors.white}
-      style={{ paddingLeft: 10 }}
-      onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
-
-/>,
+    // headerLeft : <Ionicon
+    //   name="md-menu"
+    //   size={35}
+    //   color={brand.colors.white}
+    //   style={{ paddingLeft: 10 }}
+    //   onPress={() => navigate.navigation.state.params.menuIconClickHandler(navigate) }
+    // />
 
 
   })
@@ -72,7 +71,8 @@ class WebViewScreen extends React.Component {
           forwardArrowEnabled: false,
           webviewNdx: 1,
           homeUrl: "",
-          history: []
+          history: [],
+          showWebView: false
       }
 
   }
@@ -171,7 +171,8 @@ class WebViewScreen extends React.Component {
             history: [homeUrl.toLowerCase()], // seed it with the starting url
             homeUrl: homeUrl,
             source: source,
-            item: item
+            item: item,
+            showWebView: true
           })
 
         }
@@ -262,9 +263,10 @@ class WebViewScreen extends React.Component {
     // AsyncStorage.setItem('selectedMenuItem', JSON.stringify(item))
 
 
-    this.props.navigation.setParams({ 
-      title: navState.title
-    });
+    // use this to show the real web page's title
+    // this.props.navigation.setParams({ 
+    //   title: navState.title
+    // });
 
 
   }
@@ -373,7 +375,7 @@ class WebViewScreen extends React.Component {
       
       <View style={{ backgroundColor: '#ffffff', height: '100%' }}>
 
-        {this.state.source &&
+        {this.state.source && this.state.showWebView &&
               <WebView
                 ref={'webview'}
                 source={this.state.source}

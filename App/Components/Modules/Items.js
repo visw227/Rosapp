@@ -33,6 +33,9 @@ class ModuleItems extends React.Component {
         onPress={() => navigate.navigation.toggleDrawer() }
     />,
 
+    // this will suppress the title on the WebView.js back button
+    headerBackTitle: null
+
   })
 
 
