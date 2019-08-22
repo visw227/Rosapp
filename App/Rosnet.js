@@ -379,39 +379,26 @@ let TabStack = createBottomTabNavigator({
         // title and headerTitle DO NOT WORK HERE
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-        tabBarLabel: (focused) =><View>
-        {focused.focused ?<View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}><Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Dashboards</Text></View> :
-     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:"center"}}>Dashboards</Text>
-     } 
-   </View>,
-        tabBarIcon: (focused) =><View>
-           {focused.focused ?<View><FontAwesome name="tachometer" size={20} color={brand.colors.primary}/></View> :
-        <FontAwesome name="tachometer" size={20} color={brand.colors.gray} />
-        } 
-      </View>
+        // tabBarLabel: (focused) =><View>
+        //       {focused.focused ?<View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}><Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Dashboards</Text></View> :
+        //   <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:"center"}}>Dashboards</Text>
+        //   } 
+        // </View>,
+
+        tabBarLabel: "Dashboard",
+
+        tabBarIcon: (focused) =>
+
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+
+            <FontAwesome name="tachometer" size={20} color={ focused.focused ? brand.colors.primary : brand.colors.gray } />
+
+          </View>
+
 
     })
 
   },
-
-
-  // Workflow: {
-  //   screen: WorkflowStack,
-  //   navigationOptions: ({ navigation, screenProps }) => ({
-
-  //       // title and headerTitle DO NOT WORK HERE
-  //       // the title must be set in the screen
-  //       // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-  //       tabBarLabel: 'Workflow',
-  //       tabBarIcon: () => <Entypo name="flow-branch" size={20} color={brand.colors.primary} />
-  //       // tabBarIcon: () => <MaterialCommunityIcon name="clipboard-flow" size={20} color={brand.colors.primary} />
-  //       // tabBarIcon: ({ tintColor }) =>
-  //       //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-  //       //     <Image source={require('./Images/TabBar/list-simple-star-7.png')} />
-  //       //   </View>
-
-  //   })
-  // },
 
 
   Conversations: {
@@ -421,25 +408,23 @@ let TabStack = createBottomTabNavigator({
         // title and headerTitle DO NOT WORK HERE
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-        tabBarLabel: (focused) =><View>
-          {focused.focused ?
-            <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
-              <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Chat</Text>
-            </View> 
-          :
-            <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Chat</Text>
-          } 
-        </View>,
+        // tabBarLabel: (focused) =><View>
+        //   {focused.focused ?
+        //     <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
+        //       <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Chat</Text>
+        //     </View> 
+        //   :
+        //     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Chat</Text>
+        //   } 
+        // </View>,
+        tabBarLabel: "Chat",
+
 
         // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
         tabBarIcon: (focused) => 
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 
-            {focused.focused ?
-              <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.primary}/>
-            :             
-              <Ionicon name="ios-chatbubbles" size={20} color={brand.colors.gray} />
-            }
+            <Ionicon name="ios-chatbubbles" size={20} color={ focused.focused ? brand.colors.primary : brand.colors.gray } />
 
             {screenProps.state.messageCount > 0 &&
               <View style={{ 
@@ -473,25 +458,23 @@ let TabStack = createBottomTabNavigator({
       // title and headerTitle DO NOT WORK HERE
       // the title must be set in the screen
       // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-      tabBarLabel: (focused) =><View>
-        {focused.focused ?
-          <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
-            <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Tasklist</Text>
-          </View> 
-        :
-          <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Tasklist</Text>
-        } 
-      </View>,
+      // tabBarLabel: (focused) =><View>
+      //   {focused.focused ?
+      //     <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
+      //       <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Tasklist</Text>
+      //     </View> 
+      //   :
+      //     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Tasklist</Text>
+      //   } 
+      // </View>,
+
+      tabBarLabel: "Tasklist",
 
       // tabBarIcon: () => <FontAwesome name="tachometer" size={20} color={brand.colors.primary} />
       tabBarIcon: (focused) => 
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 
-          {focused.focused ?
-            <Ionicon name="ios-list-box" size={20} color={brand.colors.primary}/>
-          :             
-            <Ionicon name="ios-list-box" size={20} color={brand.colors.gray} />
-          }
+          <Ionicon name="ios-list-box" size={20} color={ focused.focused ? brand.colors.primary : brand.colors.gray } />
 
         </View>
 
@@ -507,49 +490,47 @@ let TabStack = createBottomTabNavigator({
         // title and headerTitle DO NOT WORK HERE
         // the title must be set in the screen
         // tabBarLabel and tabBarIcon MUST BE SET HERE inside of createBottomTabNavigator
-        tabBarLabel: (focused) =><View>
+        // tabBarLabel: (focused) =><View>
 
-          {focused.focused ?
-            <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
-              <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Alerts</Text>
-            </View> 
-          :
-            <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Alerts</Text>
-          } 
-        </View>,
-        
-        tabBarIcon: (focused) =>      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        //   {focused.focused ?
+        //     <View style = {{borderBottomWidth :2,borderBottomColor:brand.colors.primary}}>
+        //       <Text style = {{color:brand.colors.primary,fontSize:12,textAlign:'center'}}>Alerts</Text>
+        //     </View> 
+        //   :
+        //     <Text style = {{color:brand.colors.gray,fontSize:12,textAlign:'center'}}>Alerts</Text>
+        //   } 
+        // </View>,
 
-        {focused.focused ?
-        
-          <FontAwesome name="bell" size={20} color={brand.colors.primary} />
-        :             
-         
+        // 8/22/2019 - fixed iPad icon issues
+        // per specs, only textual labels belong in the tabBarLabel
+        tabBarlabel: "Alerts",
+   
+        tabBarIcon: (focused) => 
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 
-          <FontAwesome name="bell" size={20} color={brand.colors.gray} />
-          
-        }
+            <FontAwesome name="bell" size={20} color={ focused.focused ? brand.colors.primary : brand.colors.gray } />
 
-        {screenProps.state.notifCount > 0 &&
-          <View style={{ 
-              position: 'absolute', 
-              paddingLeft: 4, 
-              paddingRight: 4,
-              right: -20, 
-              top: 1, 
-              backgroundColor: brand.colors.orange, 
-              borderRadius: 10, 
-              height: 20, 
-              //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
-              minWidth: 20, // this keeps it round with borderRadius=10
-              justifyContent: 'center', 
-              alignItems: 'center' }}>
-            <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.notifCount}</Text>
-          </View>
-        }
- 
+            {screenProps.state.notifCount > 0 &&
+              <View style={{ 
+                  position: 'absolute', 
+                  paddingLeft: 4, 
+                  paddingRight: 4,
+                  right: -20, 
+                  top: 1, 
+                  backgroundColor: brand.colors.orange, 
+                  borderRadius: 10, 
+                  height: 20, 
+                  //width: 20, // DONT set this - let it by dynamic - use minWidth to keep it round if just 1 digit
+                  minWidth: 20, // this keeps it round with borderRadius=10
+                  justifyContent: 'center', 
+                  alignItems: 'center' }}>
+                <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'white' }}>{screenProps.state.notifCount}</Text>
+              </View>
+            }
+    
 
-      </View>
+        </View>
+
 
     })
   },
@@ -567,7 +548,8 @@ let TabStack = createBottomTabNavigator({
         backgroundColor: '#ffffff',
         paddingTop: 5,
       },
-     
+      // this DOES NOT seem to work on the active tab to underline the text
+      activeLabelStyle: { borderBottomWidth :2, borderBottomColor: brand.colors.primary }, 
       showIcon: true,
       showLabel: true
     },
