@@ -13,7 +13,7 @@
     "appcenter-crashes": "1.12.0",
     "appcenter-push": "1.12.0",
     "async-waterfall": "^0.1.5",
-    "moment": "2.10.6",
+    "moment": "2.19.3",
     "native-base": "^2.13.4",
     "react": "16.6.3",
     "react-native": "0.58.3",
